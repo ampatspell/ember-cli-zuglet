@@ -27,4 +27,12 @@ export default EmberObject.extend(ModelMixin, StateMixin, MetaMixin, {
 
   serialized: serialized([ 'id', 'path', ...state, ...meta, 'data' ]),
 
+  load() {
+    return this._internal.load().then(() => this);
+  },
+
+  observe() {
+    return this._internal.observe();
+  }
+
 });

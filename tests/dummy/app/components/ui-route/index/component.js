@@ -7,6 +7,11 @@ export default Component.extend({
   query: window.query,
 
   actions: {
+    select(doc) {
+      this.doc && this.doc();
+      this.doc = doc.observe();
+      // doc.load();
+    },
     start() {
       this.set('cancel', this.get('query').observe());
     },

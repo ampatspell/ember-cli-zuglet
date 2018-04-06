@@ -1,8 +1,8 @@
-import Internal from '../internal';
 import { computed } from '@ember/object';
 import { readOnly } from '@ember/object/computed';
 import { join } from '@ember/runloop';
 import { reject } from 'rsvp';
+import Internal from '../internal';
 import setChangedProperties from '../util/set-changed-properties';
 import task from '../task/computed';
 import { observers } from '../util/observers';
@@ -57,10 +57,7 @@ export default Internal.extend({
     setChangedProperties(this, {
       isLoading: true,
       isError: false,
-      error: null,
-      size: undefined,
-      empty: undefined,
-      _metadata: undefined
+      error: null
     });
   },
 
@@ -79,11 +76,15 @@ export default Internal.extend({
     return reject(err);
   },
 
+  _load() {
+    this.willLoad();
+    let query = this.get('query');
+    return query.get();
+  },
+
   loadTask: task('serialized', {
     perform() {
-      this.willLoad();
-      let query = this.get('query');
-      return query.get();
+      return this._load();
     },
     didResolve(snapshot) {
       return this.didLoad(snapshot);
