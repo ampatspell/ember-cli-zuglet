@@ -21,7 +21,7 @@ const TestStore = Store.extend({
 export default (hooks, identifier='test') => {
   hooks.beforeEach(async function() {
     this.store = this.stores.createStore(identifier, TestStore);
-    await this.store.get('ready');
+    await this.stores.get('ready');
     this.app = this.store._internal.app;
     this.firestore = this.app.firestore();
   });

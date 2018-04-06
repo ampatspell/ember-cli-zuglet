@@ -1,6 +1,7 @@
 import Internal from './internal';
 import { A } from '@ember/array';
 import { getOwner } from '@ember/application';
+import { all } from 'rsvp';
 
 export default Internal.extend({
 
@@ -32,6 +33,10 @@ export default Internal.extend({
     let internal = this._createInternalStore(identifier, factory);
     this.get('stores').pushObject(internal);
     return internal;
+  },
+
+  ready() {
+    return all(this.get('stores').map(store => store.get('ready')));
   },
 
   willDestroy() {
