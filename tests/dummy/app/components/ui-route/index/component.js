@@ -6,7 +6,13 @@ export default Component.extend({
   layout,
 
   query: computed(function() {
-    let query = this.get('store').query({ type: 'array', query: db => db.collection('ducks').orderBy('name') });
+    let store = this.get('store');
+
+    window.store = store;
+    console.log(`window.store = ${store}`);
+
+    let ref = store.collection('ducks').orderBy('name');
+    let query = ref.query();
     query.load();
     return query;
   }),
