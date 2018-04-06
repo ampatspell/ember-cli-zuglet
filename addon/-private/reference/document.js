@@ -1,9 +1,8 @@
 import Reference from './reference';
+import { invokeReturningModel } from '../util/internal-invoke';
 
 export default Reference.extend({
 
-  collection(path) {
-    return this._internal.collection(path).model(true);
-  }
+  collection: invokeReturningModel('collection')
 
 });

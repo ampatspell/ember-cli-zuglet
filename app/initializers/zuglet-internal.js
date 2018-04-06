@@ -12,6 +12,8 @@ import CollectionReference from 'ember-cli-zuglet/-private/reference/collection'
 import CollectionReferenceInternal from 'ember-cli-zuglet/-private/reference/collection-internal';
 import DocumentReference from 'ember-cli-zuglet/-private/reference/document';
 import DocumentReferenceInternal from 'ember-cli-zuglet/-private/reference/document-internal';
+import QueryReference from 'ember-cli-zuglet/-private/reference/query';
+import QueyrReferenceInternal from 'ember-cli-zuglet/-private/reference/query-internal';
 
 export default {
   name: 'zuglet:internal',
@@ -31,6 +33,8 @@ export default {
     container.register('zuglet:reference/collection', CollectionReference);
     container.register('zuglet:reference/document/internal', DocumentReferenceInternal);
     container.register('zuglet:reference/document', DocumentReference);
+    container.register('zuglet:reference/query/internal', QueyrReferenceInternal);
+    container.register('zuglet:reference/query', QueryReference);
 
     container.register('zuglet:task/serialized', TaskSerialized);
     container.register('zuglet:observers', Observers);

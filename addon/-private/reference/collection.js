@@ -1,9 +1,9 @@
 import Reference from './reference';
+import QueryableMixin from './queryable-mixin';
+import { invokeReturningModel } from '../util/internal-invoke';
 
-export default Reference.extend({
+export default Reference.extend(QueryableMixin, {
 
-  doc(path) {
-    return this._internal.doc(path).model(true);
-  }
+  doc: invokeReturningModel('doc')
 
 });

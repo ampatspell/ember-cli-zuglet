@@ -63,17 +63,21 @@ export default Internal.extend({
     return this.factoryFor('zuglet:reference/collection/internal').create({ store: this, ref });
   },
 
-  createInternalCollectionReference(path) {
+  createInternalQueryReferenceForReference(ref) {
+    return this.factoryFor('zuglet:reference/query/internal').create({ store: this, ref });
+  },
+
+  collection(path) {
     let collection = this.app.firestore().collection(path);
     return this.createInternalCollectionReferenceForReference(collection);
   },
 
-  createInternalDocumentReference(path) {
+  doc(path) {
     let ref = this.app.firestore().doc(path);
     return this.createInternalDocumentReferenceForReference(ref);
   },
 
-  createInternalQuery(opts) {
+  query(opts) {
     return this.factoryFor('zuglet:query/array/internal').create({ store: this, opts });
   },
 

@@ -1,6 +1,7 @@
 import EmberObject, { computed } from '@ember/object';
 import { readOnly } from '@ember/object/computed';
 import ModelMixin from './model-mixin';
+import { invokeReturningModel } from './util/internal-invoke';
 
 export default EmberObject.extend(ModelMixin, {
 
@@ -10,17 +11,9 @@ export default EmberObject.extend(ModelMixin, {
     return this.get('_internal.ready').then(() => this);
   }).readOnly(),
 
-  collection(path) {
-    return this._internal.createInternalCollectionReference(path).model(true);
-  },
-
-  doc(path) {
-    return this._internal.createInternalDocumentReference(path).model(true);
-  },
-
-  query(fn) {
-    return this._internal.createInternalQuery(fn).model(true);
-  },
+  collection: invokeReturningModel('collection'),
+  doc:        invokeReturningModel('doc'),
+  query:      invokeReturningModel('query'),
 
   load(opts) {
     return this._internal.load(opts);

@@ -12,6 +12,6 @@ export default Internal.extend({
       return null;
     }
     return this.createParentInternal(parent);
-  }),
+  })
 
 });

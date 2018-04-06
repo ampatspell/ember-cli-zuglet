@@ -1,6 +1,7 @@
 import EmberObject, { computed } from '@ember/object';
 import { getOwner } from '@ember/application';
 import ModelMixin from './model-mixin';
+import { invokeReturningModel } from './util/internal-invoke';
 
 export default EmberObject.extend(ModelMixin, {
 
@@ -13,8 +14,6 @@ export default EmberObject.extend(ModelMixin, {
     return this._internal.ready();
   }).readOnly(),
 
-  createStore(identifier, factory) {
-    return this._internal.createStore(identifier, factory).model(true);
-  }
+  createStore: invokeReturningModel('createStore')
 
 });

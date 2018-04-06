@@ -4,6 +4,7 @@ import createReadOnlyPropertiesMixin from './util/create-read-only-properties-mi
 import ModelMixin from './model-mixin';
 import { state, meta } from './document-internal';
 import serialized from './util/serialized';
+import { invokeReturningModel } from './util/internal-invoke';
 
 const ref = key => computed('ref', function() {
   let ref = this.get('ref');
@@ -31,8 +32,6 @@ export default EmberObject.extend(ModelMixin, StateMixin, MetaMixin, {
     return this._internal.load().then(() => this);
   },
 
-  observe() {
-    return this._internal.observe();
-  }
+  observe: invokeReturningModel('observe')
 
 });

@@ -1,6 +1,7 @@
 import ReferenceInternal from './reference-internal';
+import QueryableInternalMixin from './queryable-internal-mixin';
 
-export default ReferenceInternal.extend({
+export default ReferenceInternal.extend(QueryableInternalMixin, {
 
   createParentInternal(parent) {
     return this.store.createInternalDocumentReferenceForReference(parent);

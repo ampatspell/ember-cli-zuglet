@@ -57,4 +57,9 @@ module('references', function(hooks) {
     assert.equal(doc.get('path'), 'ducks/yellow/feathers/first');
   });
 
+  test('coll query', function(assert) {
+    let query = this.store.collection('ducks').orderBy('name', 'asc').limit(10);
+    assert.ok(query);
+  });
+
 });
