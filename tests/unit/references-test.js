@@ -1,7 +1,9 @@
-import { module, test, setupStoreTest } from '../helpers/setup';
+import { module, test, setupStoreTest, setupDucks } from '../helpers/setup';
+import { all } from 'rsvp';
 
 module('references', function(hooks) {
   setupStoreTest(hooks);
+  setupDucks(hooks);
 
   test('collection', function(assert) {
     let coll = this.store.collection('ducks');
@@ -60,6 +62,45 @@ module('references', function(hooks) {
   test('coll query', function(assert) {
     let query = this.store.collection('ducks').orderBy('name', 'asc').limit(10);
     assert.ok(query);
+  });
+
+  test('create query from query ref', async function(assert) {
+    await this.recreate();
+    await all([
+      this.coll.doc('yellow').set({ name: 'yellow' }),
+      this.coll.doc('green').set({ name: 'green' }),
+      this.coll.doc('blue').set({ name: 'blue' })
+    ]);
+
+    let ref = this.store.collection('ducks').orderBy('name', 'asc').limit(2);
+
+    let query = ref.query();
+    assert.ok(query);
+
+    await query.load();
+
+    assert.deepEqual(query.get('content').mapBy('data.name'), [
+      'blue',
+      'green'
+    ]);
+  });
+
+  test('load from query ref', async function(assert) {
+    await this.recreate();
+    await all([
+      this.coll.doc('yellow').set({ name: 'yellow' }),
+      this.coll.doc('green').set({ name: 'green' }),
+      this.coll.doc('blue').set({ name: 'blue' })
+    ]);
+
+    let ref = this.store.collection('ducks').orderBy('name', 'asc').limit(2);
+
+    let content = await ref.load();
+
+    assert.deepEqual(content.mapBy('data.name'), [
+      'blue',
+      'green'
+    ]);
   });
 
 });

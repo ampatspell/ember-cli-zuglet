@@ -13,7 +13,7 @@ export const meta = [ 'size', 'empty', 'metadata' ];
 export default Internal.extend({
 
   store: null,
-  opts: null,
+  query: null,
 
   isLoading: false,
   isLoaded: false,
@@ -50,12 +50,6 @@ export default Internal.extend({
   },
 
   //
-
-  query: computed(function() {
-    let firestore = this.store.app.firestore();
-    let fn = this.get('opts.query');
-    return fn(firestore);
-  }),
 
   willLoad() {
     setChangedProperties(this, {

@@ -1,18 +1,15 @@
-import { module, test, setupStoreTest } from '../helpers/setup';
-import { recreateCollection } from '../helpers/firebase';
+import { module, test, setupStoreTest, setupDucks } from '../helpers/setup';
 
 module('document-load', function(hooks) {
   setupStoreTest(hooks);
-
-  hooks.beforeEach(async function() {
-    this.coll = this.firestore.collection('ducks');
-    this.recreate = () => recreateCollection(this.coll);
-  });
+  setupDucks(hooks);
 
   test('load', async function(assert) {
     await this.recreate();
     await this.coll.doc('yellow').set({ name: 'yellow' });
-    let doc = await this.store.load({ path: 'ducks/yellow' });
+
+    let doc = await this.store.doc('ducks/yellow').load();
+
     assert.deepEqual(doc.get('serialized'), {
       "id": "yellow",
       "path": "ducks/yellow",
@@ -34,7 +31,7 @@ module('document-load', function(hooks) {
 
   test('load missing optional', async function(assert) {
     await this.recreate();
-    let doc = await this.store.load({ path: 'ducks/yellow', optional: true });
+    let doc = await this.store.doc('ducks/yellow').load({ optional: true });
     assert.deepEqual(doc.get('serialized'), {
       "exists": false,
       "id": "yellow",
@@ -55,7 +52,7 @@ module('document-load', function(hooks) {
   test('load missing required', async function(assert) {
     await this.recreate();
     try {
-      await this.store.load({ path: 'ducks/yellow' });
+      await this.store.doc('ducks/yellow').load();
       assert.ok(false, 'should throw');
     } catch(err) {
       assert.equal(err.code, 'zuglet/document-missing');

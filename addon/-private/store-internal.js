@@ -2,7 +2,6 @@ import { computed } from '@ember/object';
 import { readOnly } from '@ember/object/computed';
 import { assert } from '@ember/debug';
 import { defer, resolve, reject } from 'rsvp';
-import EmberError from '@ember/error';
 import Internal from './internal';
 import firebase from 'firebase';
 
@@ -13,13 +12,6 @@ const initializeFirebase = (identifier, opts) => {
     return resolve(app.firestore().enablePersistence()).catch(() => {}).then(() => app);
   }
   return resolve(app);
-}
-
-const documentMissingError = opts => {
-  let err = new EmberError('Document does not exist');
-  err.code = 'zuglet/document-missing';
-  err.opts = opts;
-  return err;
 }
 
 export default Internal.extend({
@@ -67,6 +59,10 @@ export default Internal.extend({
     return this.factoryFor('zuglet:reference/query/internal').create({ store: this, ref });
   },
 
+  createInternalQueryWithReference(query) {
+    return this.factoryFor('zuglet:query/array/internal').create({ store: this, query });
+  },
+
   collection(path) {
     let collection = this.app.firestore().collection(path);
     return this.createInternalCollectionReferenceForReference(collection);
@@ -75,33 +71,6 @@ export default Internal.extend({
   doc(path) {
     let ref = this.app.firestore().doc(path);
     return this.createInternalDocumentReferenceForReference(ref);
-  },
-
-  query(opts) {
-    return this.factoryFor('zuglet:query/array/internal').create({ store: this, opts });
-  },
-
-  loadInternal(opts={}) {
-    if(opts.path) {
-      let ref = this.app.firestore().doc(opts.path);
-      return resolve(ref.get()).then(snapshot => {
-        if(!snapshot.exists && !opts.optional) {
-          return reject(documentMissingError(opts));
-        }
-        let result = this.createInternalDocumentForSnapshot(snapshot);
-        let type = 'single';
-        return { result, type };
-      });
-    }
-    assert(`unsupported load opts`, false);
-  },
-
-  load(opts={}) {
-    return this.loadInternal(opts).then(({ result, type }) => {
-      if(type === 'single') {
-        return result && result.model(true);
-      }
-    });
   },
 
   createInternalDocumentForSnapshot(snapshot) {

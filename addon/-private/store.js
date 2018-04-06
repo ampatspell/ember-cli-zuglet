@@ -12,11 +12,6 @@ export default EmberObject.extend(ModelMixin, {
   }).readOnly(),
 
   collection: invokeReturningModel('collection'),
-  doc:        invokeReturningModel('doc'),
-  query:      invokeReturningModel('query'),
-
-  load(opts) {
-    return this._internal.load(opts);
-  }
+  doc: invokeReturningModel('doc')
 
 });

@@ -1,4 +1,6 @@
 import ReferenceInternal from './reference-internal';
+import { resolve, reject } from 'rsvp';
+import { documentMissingError } from '../util/errors';
 
 export default ReferenceInternal.extend({
 
@@ -13,6 +15,16 @@ export default ReferenceInternal.extend({
   collection(path) {
     let ref = this.ref.collection(path);
     return this.store.createInternalCollectionReferenceForReference(ref);
+  },
+
+  load(opts={}) {
+    let ref = this.ref;
+    return resolve(ref.get()).then(snapshot => {
+      if(!snapshot.exists && !opts.optional) {
+        return reject(documentMissingError(opts));
+      }
+      return this.store.createInternalDocumentForSnapshot(snapshot);
+    });
   }
 
 });
