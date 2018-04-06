@@ -21,6 +21,7 @@ module('array-query', function(hooks) {
       "isError": false,
       "isLoaded": false,
       "isLoading": false,
+      "isObserving": false,
       "metadata": undefined,
       "size": undefined
     });
@@ -44,6 +45,7 @@ module('array-query', function(hooks) {
       "isError": false,
       "isLoaded": false,
       "isLoading": true,
+      "isObserving": false,
       "metadata": undefined,
       "size": undefined
     });
@@ -56,6 +58,7 @@ module('array-query', function(hooks) {
       "isError": false,
       "isLoaded": true,
       "isLoading": false,
+      "isObserving": false,
       "metadata": {
         "fromCache": false,
         "hasPendingWrites": false,
@@ -81,6 +84,20 @@ module('array-query', function(hooks) {
     ]);
 
     query.observe();
+
+    assert.deepEqual(query.get('serialized'), {
+      "empty": false,
+      "error": null,
+      "isError": false,
+      "isLoaded": true,
+      "isLoading": false,
+      "isObserving": true,
+      "metadata": {
+        "fromCache": false,
+        "hasPendingWrites": false
+      },
+      "size": 1
+    });
 
     await this.coll.doc('yellow').set({ name: 'yellow' });
     await waitForCollectionSize(this.coll, 2);
