@@ -69,7 +69,7 @@ export default Internal.extend({
 
   createNewInternalDocumentWithRef(ref, props) {
     let internal = this.createInternalDocumentWithRef(ref);
-    internal.deserializeProps(props);
+    internal.onNew(props);
     return internal;
   },
 

@@ -11,6 +11,7 @@ module('document-load', function(hooks) {
     let doc = await this.store.doc('ducks/yellow').load();
 
     assert.deepEqual(doc.get('serialized'), {
+      "isNew": false,
       "id": "yellow",
       "path": "ducks/yellow",
       "error": null,
@@ -33,6 +34,7 @@ module('document-load', function(hooks) {
     await this.recreate();
     let doc = await this.store.doc('ducks/yellow').load({ optional: true });
     assert.deepEqual(doc.get('serialized'), {
+      "isNew": false,
       "exists": false,
       "id": "yellow",
       "path": "ducks/yellow",

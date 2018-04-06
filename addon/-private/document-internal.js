@@ -8,19 +8,20 @@ import task from './task/computed';
 import { observers } from './util/observers';
 import { assertDocumentInternalReference } from './reference/document-internal';
 
-export const state = [ 'isLoading', 'isLoaded', 'isObserving', 'isError', 'error' ];
+export const state = [ 'isNew', 'isLoading', 'isLoaded', 'isObserving', 'isError', 'error' ];
 export const meta = [ 'exists', 'metadata' ];
 
 export default Internal.extend({
+
+  store: null,
+  ref: null,
 
   init() {
     this._super(...arguments);
     assertDocumentInternalReference('document-internal.ref', this.get('ref'));
   },
 
-  store: null,
-  ref: null,
-
+  isNew: false,
   isLoading: false,
   isLoaded: false,
   isError: false,
@@ -46,6 +47,10 @@ export default Internal.extend({
     return this.store.factoryFor('zuglet:document').create({ _internal: this });
   },
 
+  onNew(data={}) {
+    setChangedProperties(this, { isNew: true, data });
+  },
+
   _didLoad(snapshot) {
     let { exists, metadata: _metadata } = snapshot;
     setChangedProperties(this, {
@@ -68,10 +73,6 @@ export default Internal.extend({
     }
 
     this._didLoad(snapshot);
-  },
-
-  deserializeProps(props={}) {
-    this.set('data', props);
   },
 
   //
