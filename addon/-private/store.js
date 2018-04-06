@@ -14,6 +14,10 @@ export default EmberObject.extend(ModelMixin, {
     return this._internal.createInternalCollectionReference(path).model(true);
   },
 
+  doc(path) {
+    return this._internal.createInternalDocumentReference(path).model(true);
+  },
+
   query(fn) {
     return this._internal.createInternalQuery(fn).model(true);
   },

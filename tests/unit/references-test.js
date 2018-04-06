@@ -45,4 +45,16 @@ module('references', function(hooks) {
     assert.ok(gen.get('path').length > 'ducks/yellow/feathers/'.length + 19);
   });
 
+  test('store doc', function(assert) {
+    let doc = this.store.doc('ducks/yellow/feathers/first');
+    assert.ok(doc);
+    assert.equal(doc.get('path'), 'ducks/yellow/feathers/first');
+  });
+
+  test('store coll', function(assert) {
+    let doc = this.store.collection('ducks/yellow/feathers').doc('first');
+    assert.ok(doc);
+    assert.equal(doc.get('path'), 'ducks/yellow/feathers/first');
+  });
+
 });

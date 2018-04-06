@@ -68,6 +68,11 @@ export default Internal.extend({
     return this.createInternalCollectionReferenceForReference(collection);
   },
 
+  createInternalDocumentReference(path) {
+    let ref = this.app.firestore().doc(path);
+    return this.createInternalDocumentReferenceForReference(ref);
+  },
+
   createInternalQuery(opts) {
     return this.factoryFor('zuglet:query/array/internal').create({ store: this, opts });
   },
