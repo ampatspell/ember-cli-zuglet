@@ -1,10 +1,15 @@
 import Component from '@ember/component';
 import layout from './template';
+import { computed } from '@ember/object';
 
 export default Component.extend({
   layout,
 
-  query: window.query,
+  query: computed(function() {
+    let query = this.get('store').query({ type: 'array', query: db => db.collection('ducks').orderBy('name') });
+    query.load();
+    return query;
+  }),
 
   actions: {
     select(doc) {

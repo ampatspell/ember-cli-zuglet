@@ -14,6 +14,9 @@ const options = {
     projectId: "ember-cli-zug-travis",
     storageBucket: "ember-cli-zug-travis.appspot.com",
     messagingSenderId: "715071933357"
+  },
+  firestore: {
+    persistenceEnabled: true
   }
 };
 
