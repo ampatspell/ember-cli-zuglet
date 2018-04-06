@@ -1,14 +1,14 @@
 import { computed } from '@ember/object';
 import { readOnly } from '@ember/object/computed';
 import { join } from '@ember/runloop';
-import { reject } from 'rsvp';
+import { resolve, reject } from 'rsvp';
 import Internal from './internal';
 import setChangedProperties from './util/set-changed-properties';
 import task from './task/computed';
 import { observers } from './util/observers';
 import { assertDocumentInternalReference } from './reference/document-internal';
 
-export const state = [ 'isNew', 'isLoading', 'isLoaded', 'isObserving', 'isError', 'error' ];
+export const state = [ 'isNew', 'isLoading', 'isLoaded', 'isSaving', 'isObserving', 'isError', 'error' ];
 export const meta = [ 'exists', 'metadata' ];
 
 export default Internal.extend({
@@ -24,6 +24,7 @@ export default Internal.extend({
   isNew: false,
   isLoading: false,
   isLoaded: false,
+  isSaving: false,
   isError: false,
   error: null,
 
@@ -114,7 +115,37 @@ export default Internal.extend({
   }),
 
   load() {
+    // TODO: queue
     return this.get('loadTask.promise');
+  },
+
+  willSave() {
+    setChangedProperties(this, {
+      isSaving: true,
+      isError: false,
+      error: null
+    });
+  },
+
+  didSave(snapshot) {
+    setChangedProperties(this, {
+      isSaving: false,
+      isLoaded: true,
+      exists: true
+    });
+  },
+
+  saveDidFail(err) {
+    setChangedProperties(this, { isSaving: false, isError: true, error: err });
+    return reject(err);
+  },
+
+  save() {
+    // TODO: queue
+    let ref = this.get('ref.ref');
+    let data = this.get('data');
+    this.willSave();
+    return resolve(ref.set(data)).then(() => this.didSave(), err => this.saveDidFail(err));
   },
 
   //

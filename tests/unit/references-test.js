@@ -103,25 +103,4 @@ module('references', function(hooks) {
     ]);
   });
 
-  test('doc create', async function(assert) {
-    let doc = this.store.doc('ducks/yellow').new({ name: 'yellow', feathers: 'cute' });
-
-    assert.deepEqual(doc.get('serialized'), {
-      "id": "yellow",
-      "path": "ducks/yellow",
-      "data": {
-        "feathers": "cute",
-        "name": "yellow"
-      },
-      "error": null,
-      "exists": undefined,
-      "isNew": true,
-      "isError": false,
-      "isLoaded": false,
-      "isLoading": false,
-      "isObserving": false,
-      "metadata": undefined,
-    });
-  });
-
 });

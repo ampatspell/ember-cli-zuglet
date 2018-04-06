@@ -19,6 +19,7 @@ module('document-load', function(hooks) {
       "isError": false,
       "isLoaded": true,
       "isLoading": false,
+      "isSaving": false,
       "isObserving": false,
       "metadata": {
         "fromCache": false,
@@ -42,6 +43,7 @@ module('document-load', function(hooks) {
       "isError": false,
       "isLoaded": true,
       "isLoading": false,
+      "isSaving": false,
       "isObserving": false,
       "metadata": {
         "fromCache": false,
