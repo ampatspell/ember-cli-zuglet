@@ -1,12 +1,13 @@
 import Internal from '../internal';
 import { computed } from '@ember/object';
+import { readOnly } from '@ember/object/computed';
 import { join } from '@ember/runloop';
 import { reject } from 'rsvp';
 import setChangedProperties from '../util/set-changed-properties';
 import task from '../task/computed';
 import { observers } from '../util/observers';
 
-export const state = [ 'isLoading', 'isLoaded', 'isError', 'error' ];
+export const state = [ 'isLoading', 'isLoaded', 'isObserving', 'isError', 'error' ];
 export const meta = [ 'size', 'empty', 'metadata' ];
 
 export default Internal.extend({
@@ -18,6 +19,8 @@ export default Internal.extend({
   isLoaded: false,
   isError: false,
   error: null,
+
+  isObserving: readOnly('observers.isEnabled'),
 
   size: undefined,
   empty: undefined,

@@ -9,8 +9,9 @@ export default {
     window.store = store;
 
     let playground = async () => {
-      // let query = store.query({ type: 'array', query: db => db.collection('ducks').orderBy('name') });
-      // window.query = query;
+      let query = store.query({ type: 'array', query: db => db.collection('ducks').orderBy('name') });
+      window.query = query;
+      await query.load();
     };
 
     playground();
