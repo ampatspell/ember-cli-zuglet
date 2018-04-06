@@ -32,6 +32,8 @@ export default EmberObject.extend(ModelMixin, StateMixin, MetaMixin, {
     return this._internal.load().then(() => this);
   },
 
-  observe: invokeReturningModel('observe')
+  observe() {
+    return this._internal.observe();
+  }
 
 });
