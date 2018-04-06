@@ -1,5 +1,16 @@
-export const invokeReturningModel = name => function(...args) {
+export const invoke = (name, fn) => function(...args) {
   let internal = this._internal;
   let result = internal[name].call(internal, ...args);
-  return result && result.model(true);
+  if(fn) {
+    result = fn(result, this);
+  }
+  return result;
 };
+
+export const invokeReturningModel = name => invoke(name, internal => internal && internal.model(true));
+
+export const invokePromiseReturningThis = name => invoke(name, (promise, owner) => promise.then(() => owner));
+
+export const invokePromiseReturningModel = name => invoke(name, (promise, owner) => {
+  return promise.then(internal => internal && internal.model(true));
+});

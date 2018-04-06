@@ -4,6 +4,7 @@ import createReadOnlyPropertiesMixin from './util/create-read-only-properties-mi
 import ModelMixin from './model-mixin';
 import { state, meta } from './document-internal';
 import serialized from './util/serialized';
+import { invokePromiseReturningThis, invoke } from './util/internal-invoke';
 
 const StateMixin = createReadOnlyPropertiesMixin(state);
 const MetaMixin = createReadOnlyPropertiesMixin(meta);
@@ -23,20 +24,9 @@ export default EmberObject.extend(ModelMixin, StateMixin, MetaMixin, {
 
   serialized: serialized([ 'id', 'path', ...state, ...meta, 'data' ]),
 
-  load() {
-    return this._internal.load().then(() => this);
-  },
-
-  save() {
-    return this._internal.save().then(() => this);
-  },
-
-  delete() {
-    return this._internal.delete().then(() => this);
-  },
-
-  observe() {
-    return this._internal.observe();
-  }
+  load:    invokePromiseReturningThis('load'),
+  save:    invokePromiseReturningThis('save'),
+  delete:  invokePromiseReturningThis('delete'),
+  observe: invoke('observe'),
 
 });

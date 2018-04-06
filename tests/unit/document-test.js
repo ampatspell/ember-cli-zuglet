@@ -79,7 +79,7 @@ module('document', function(hooks) {
       },
       "error": null,
       "exists": true,
-      "isNew": true,
+      "isNew": false,
       "isError": false,
       "isLoaded": true,
       "isLoading": false,
