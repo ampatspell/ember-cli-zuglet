@@ -1,15 +1,6 @@
 import Internal from './internal';
 import firebase from 'firebase';
 
-/*
-  _createDocumentFromSnapshot(snapshot) {
-    let document = this.stores.factoryFor('zuglet:document').create({ store: this });
-    document._onSnapshot(snapshot);
-    return document;
-  }
-
-*/
-
 export default Internal.extend({
 
   stores: null,
@@ -34,6 +25,13 @@ export default Internal.extend({
 
   createInternalQuery(opts) {
     return this.factoryFor('zuglet:query/array/internal').create({ store: this, opts });
+  },
+
+  createInternalDocumentForSnapshot(snapshot) {
+    let ref = snapshot.ref;
+    let internal = this.factoryFor('zuglet:document/internal').create({ store: this, ref });
+    internal.onSnapshot(snapshot);
+    return internal;
   },
 
   willDestroy() {

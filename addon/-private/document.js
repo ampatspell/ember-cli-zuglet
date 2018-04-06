@@ -1,7 +1,9 @@
 import EmberObject, { computed } from '@ember/object';
+import { readOnly } from '@ember/object/computed';
+import createReadOnlyPropertiesMixin from './util/create-read-only-properties-mixin';
+import ModelMixin from './model-mixin';
+import { state, meta } from './document-internal';
 import serialized from './util/serialized';
-
-let keys = [ 'path', 'exists', 'metadata', 'data' ];
 
 const ref = key => computed('ref', function() {
   let ref = this.get('ref');
@@ -11,26 +13,18 @@ const ref = key => computed('ref', function() {
   return ref[key];
 }).readOnly();
 
-export default EmberObject.extend({
+const StateMixin = createReadOnlyPropertiesMixin(state);
+const MetaMixin = createReadOnlyPropertiesMixin(meta);
 
-  store: null,
+export default EmberObject.extend(ModelMixin, StateMixin, MetaMixin, {
 
-  ref: null,
+  ref: readOnly('_internal.ref'),
 
   id: ref('id'),
   path: ref('path'),
 
-  exists: undefined,
-  metadata: undefined,
+  data: readOnly('_internal.data'),
 
-  data: undefined,
-
-  serialized: serialized(keys),
-
-  _onSnapshot(snapshot) {
-    let { exists, ref, metadata } = snapshot;
-    let data = snapshot.data({ serverTimestamps: 'estimate' });
-    this.setProperties({ exists, ref, metadata, data });
-  }
+  serialized: serialized([ 'id', 'path', ...state, ...meta, 'data' ]),
 
 });

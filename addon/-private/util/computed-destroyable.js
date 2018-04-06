@@ -71,10 +71,16 @@ const _get = (owner, key, opts) => {
 
 export const cacheFor = (owner, key) => _retrieve(owner, key).value;
 
+const defaultGet = internal => internal;
+const defaultDestroy = internal => internal.destroy();
+
 // { ...keys, opts: { reusable, create, get, set, destroy } }
 export default (...args) => {
   let opts = args.pop();
   let keys = A(args).compact();
+
+  opts.get = opts.get || defaultGet;
+  opts.destroy = opts.destroy || defaultDestroy;
 
   let get = function(key) {
     let internal = _get(this, key, opts);

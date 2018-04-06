@@ -3,9 +3,13 @@ export default (object, hash) => {
   let current = object.getProperties(...Object.keys(hash));
   for(let key in hash) {
     let value = hash[key];
-    if(value !== current[value]) {
-      changed[key] = value;
+    let curr = current[value];
+    if(value === curr) {
+      continue;
+    } else if(curr && typeof curr.isEqual === 'function' && curr.isEqual(value)) {
+      continue;
     }
+    changed[key] = value;
   }
   object.setProperties(changed);
 };

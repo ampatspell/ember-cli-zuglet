@@ -1,5 +1,5 @@
 import EmberObject, { computed } from '@ember/object';
-import { resolve, reject } from 'rsvp';
+import { resolve } from 'rsvp';
 
 export default EmberObject.extend({
 

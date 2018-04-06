@@ -1,8 +1,10 @@
 import Internal from '../internal';
 import { computed } from '@ember/object';
-import task from '../task/computed';
-import setChangedProperties from '../util/set-changed-properties';
+import { join } from '@ember/runloop';
 import { reject } from 'rsvp';
+import setChangedProperties from '../util/set-changed-properties';
+import task from '../task/computed';
+import { observers } from '../util/observers';
 
 export const state = [ 'isLoading', 'isLoaded', 'isError', 'error' ];
 export const meta = [ 'size', 'empty', 'metadata' ];
@@ -18,10 +20,27 @@ export default Internal.extend({
   error: null,
 
   size: undefined,
-  metadata: undefined,
   empty: undefined,
+  _metadata: undefined,
+
+  metadata: computed('_metadata', function() {
+    let metadata = this.get('_metadata');
+    if(!metadata) {
+      return;
+    }
+    return {
+      fromCache: metadata.fromCache,
+      hasPendingWrites: metadata.hasPendingWrites
+    };
+  }).readOnly(),
 
   content: null,
+
+  //
+
+  createInternalDocumentForSnapshot(snapshot) {
+    return this.get('store').createInternalDocumentForSnapshot(snapshot);
+  },
 
   //
 
@@ -37,14 +56,14 @@ export default Internal.extend({
       isError: false,
       error: null,
       size: undefined,
-      metadata: undefined,
-      empty: undefined
+      empty: undefined,
+      _metadata: undefined
     });
   },
 
   _didLoad(snapshot) {
     let { size, metadata, empty } = snapshot;
-    setChangedProperties(this, { isLoading: false, isLoaded: true, size, metadata, empty });
+    setChangedProperties(this, { isLoading: false, isLoaded: true, size, empty, _metadata: metadata });
   },
 
   didLoad(snapshot) {
@@ -71,93 +90,36 @@ export default Internal.extend({
     }
   }),
 
-  //
-
   load() {
     return this.get('loadTask.promise');
+  },
+
+  //
+
+  onSnapshot(snapshot) {
+    this._didLoad(snapshot);
+  },
+
+  _subscribeQueryOnSnapshot() {
+    let query = this.get('query');
+    let opts = {
+      includeDocumentMetadataChanges: true,
+      includeQueryMetadataChanges: true
+    };
+    return query.onSnapshot(opts, snapshot => join(() => this.onSnapshot(snapshot)));
+  },
+
+  observers: observers({
+    start(state) {
+      state._cancel = this._subscribeQueryOnSnapshot();
+    },
+    stop(state) {
+      state._cancel();
+    }
+  }),
+
+  observe() {
+    return this.get('observers').add();
   }
 
 });
-
-
-/*
-
-// Observers
-
-  _observers: 0,
-  isObserving: gt('_observers', 0),
-
-  _startObserving() {
-    this._cancelOnSnapshot = this.get('_query').onSnapshot({
-      includeDocumentMetadataChanges: true,
-      includeQueryMetadataChanges: true
-    }, snapshot => join(() => this._onSnapshot(snapshot)));
-  },
-
-  _stopObserving() {
-    this._cancelOnSnapshot();
-    this.__cancelOnSnapshot = null;
-  },
-
-  observe() {
-    let observers = this.get('_observers');
-    if(observers === 0) {
-      this._startObserving();
-    }
-    this.set('_observers', observers + 1);
-
-    let detached = false;
-    return () => {
-      if(detached) {
-        return;
-      }
-      detached = true;
-      let observers = this.get('_observers');
-      if(observers === 1) {
-        this._stopObserving();
-      }
-      this.set('_observers', observers - 1);
-    };
-  }
-
-// Array
-
-  _didLoad(snapshot) {
-    let store = this.store;
-    let documents = A(snapshot.docs.map(doc => store._createDocumentFromSnapshot(doc)));
-    this.set('content', documents);
-    return this._super(...arguments);
-  },
-
-  _onChange(change) {
-    let { type, oldIndex, newIndex, doc: snapshot } = change;
-
-    let path = snapshot.ref.path;
-
-    let content = this.get('content');
-    let document = content.findBy('path', path);
-
-    if(type === 'added') {
-      if(!document) {
-        console.log('add new', path);
-      } else {
-        console.log('add existing', path);
-      }
-    } else if(type === 'modified') {
-      if(document) {
-        document._onSnapshot(snapshot);
-      } else {
-        console.log('modified non existant', path);
-      }
-    } else if(type === 'removed') {
-      console.log('removed', path);
-    }
-  },
-
-  _onSnapshot(snapshot) {
-    snapshot.docChanges.map(change => this._onChange(change));
-    return this._super(...arguments);
-  }
-
-
-*/
