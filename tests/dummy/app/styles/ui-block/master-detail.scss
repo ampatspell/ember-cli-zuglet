@@ -1,0 +1,13 @@
+.ui-block-master-detail {
+  display: flex;
+  flex-direction: row;
+  > .master {
+    width: 250px;
+    border-left: 1px solid #eee;
+    border-right: 1px solid #eee;
+    margin-right: 10px;
+  }
+  > .detail {
+    flex: 1;
+  }
+}

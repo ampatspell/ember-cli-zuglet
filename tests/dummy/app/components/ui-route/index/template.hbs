@@ -1,0 +1,32 @@
+{{#ui-block/rows as |rows|}}
+
+  {{#rows.header}}
+    {{query}}
+  {{/rows.header}}
+
+  {{#rows.row}}
+    {{ui-block/json query.serialized}}
+  {{/rows.row}}
+
+  {{#if query.isLoading}}
+    {{#rows.row}}
+      Loading…
+    {{/rows.row}}
+  {{else}}
+    {{#each query.content as |doc|}}
+      {{#rows.row}}
+        {{doc}} {{doc.ref.path}}
+        {{ui-block/json doc.serialized}}
+      {{/rows.row}}
+    {{/each}}
+  {{/if}}
+
+  {{#rows.row}}
+    {{#if cancel}}
+      <button {{action 'stop'}}>Stop Observing</button>
+    {{else}}
+      <button {{action 'start'}}>Start Observing</button>
+    {{/if}}
+  {{/rows.row}}
+
+{{/ui-block/rows}}

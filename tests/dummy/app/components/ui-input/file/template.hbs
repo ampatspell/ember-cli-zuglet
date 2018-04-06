@@ -1,0 +1,9 @@
+<input class="input" type="file" multiple=false onchange={{action 'onChange'}}>
+<div class="details">
+  {{#if selection}}
+    <span class="prefix">Choose file:</span>
+    <span class="name">{{selection.name}}</span>
+  {{else}}
+    <span class="placeholder">Choose file</span>
+  {{/if}}
+</div>

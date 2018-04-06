@@ -1,0 +1,14 @@
+@import url('https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700&subset=latin-ext');
+
+$font-family: 'Ubuntu Mono', monospace;
+$font-size: 14px;
+
+body {
+  cursor: default;
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-smoothing: subpixel-antialiased;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  font-family: $font-family;
+  font-size: $font-size;
+  margin: 0;
+}

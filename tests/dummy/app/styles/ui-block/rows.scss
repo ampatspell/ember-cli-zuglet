@@ -1,0 +1,40 @@
+.ui-block-rows {
+  margin-bottom: 40px;
+  > .header {
+    border-top: 1px solid #eee;
+    padding: 10px;
+    color: #777;
+    font-weight: 600;
+    .mark {
+      color: #000;
+    }
+  }
+  > .row {
+    padding: 10px;
+    border-top: 1px solid #eee;
+    &.has-action {
+      cursor: pointer;
+    }
+    &:last-child {
+      border-bottom: 1px solid #eee;
+    }
+    > .small,
+    > .key {
+      margin-top: 4px;
+      font-size: 12px;
+      color: #777;
+    }
+    > .strong {
+      font-weight: 600;
+    }
+    > .src {
+      margin: 0 0 5px 0;
+      white-space: pre-line;
+      font-size: 12px;
+      color: #777;
+      &::first-line {
+        line-height: 0;
+      }
+    }
+  }
+}

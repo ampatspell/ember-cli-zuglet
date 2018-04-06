@@ -1,0 +1,9 @@
+.ui-block-json {
+  font-size: 12px;
+  line-height: 14px;
+  white-space: pre-wrap;
+  &.tiny {
+    font-size: 10px;
+    line-height: 13px;
+  }
+}

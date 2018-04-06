@@ -1,0 +1,21 @@
+<div class="header">
+  "{{context.absoluteIdentifier}}" identity
+</div>
+<div class="content">
+  {{#each context.identity as |model|}}
+    <div class="row">
+      {{model.modelName}}
+      {{#if model.isPersistedModel}}
+        {{model.doc.path}}
+      {{else if model.isTransientModel}}
+        {{#if model.path}}
+          {{model.path}}
+        {{/if}}
+        {{model}}
+      {{/if}}
+      <span class="secondary">({{model.modelType}})</span>
+    </div>
+  {{else}}
+    No models in identity
+  {{/each}}
+</div>
