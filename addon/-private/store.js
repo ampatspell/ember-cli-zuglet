@@ -12,6 +12,10 @@ export default EmberObject.extend(ModelMixin, {
 
   query(fn) {
     return this._internal.createInternalQuery(fn).model(true);
+  },
+
+  load(opts) {
+    return this._internal.load(opts);
   }
 
 });
