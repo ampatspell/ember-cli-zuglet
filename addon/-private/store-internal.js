@@ -58,6 +58,11 @@ export default Internal.extend({
     return internal;
   },
 
+  updateInternalDocumentForSnapshot(internal, snapshot) {
+    internal.onSnapshot(snapshot);
+    return internal;
+  },
+
   willDestroy() {
     this.app && this.app.delete();
     this._super(...arguments);

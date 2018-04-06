@@ -45,6 +45,10 @@ export default Internal.extend({
     return this.get('store').createInternalDocumentForSnapshot(snapshot);
   },
 
+  updateInternalDocumentForSnapshot(internal, snapshot) {
+    return this.get('store').updateInternalDocumentForSnapshot(internal, snapshot);
+  },
+
   //
 
   query: computed(function() {

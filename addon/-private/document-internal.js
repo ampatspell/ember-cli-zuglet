@@ -56,9 +56,9 @@ export default Internal.extend({
     if(snapshot.exists) {
       let data = snapshot.data({ serverTimestamps: 'estimate' });
       this.set('data', data);
-      console.log(snapshot.ref.path, data);
+      console.log('document.onSnapshot', snapshot.ref.path, data);
     } else {
-      console.log(snapshot.ref.path, 'exists=false');
+      console.log('document.onSnapshot', snapshot.ref.path, 'missing');
     }
 
     this._didLoad(snapshot);

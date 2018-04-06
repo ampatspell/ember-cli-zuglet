@@ -1,6 +1,7 @@
 import QueryInternal from '../internal';
 import { A } from '@ember/array';
 import { computed } from '@ember/object';
+import { assert } from '@ember/debug';
 
 export default QueryInternal.extend({
 
@@ -19,46 +20,65 @@ export default QueryInternal.extend({
 
   //
 
-  didLoad(snapshot) {
-    // console.log('didLoad', snapshot, this.isMetadataEqual(snapshot.metadata));
-
-    let content = this.get('content');
-    let documents = A(snapshot.docs.map(doc => this.createInternalDocumentForSnapshot(doc)));
-
-    content.replace(0, content.get('length'), documents);
-
-    return this._super(...arguments);
-  },
-
-  _onChange(change) {
+  onChange(change) {
     let { type, oldIndex, newIndex, doc: snapshot } = change;
 
     let path = snapshot.ref.path;
 
     let content = this.get('content');
-    let document = content.findBy('ref.path', path);
 
     if(type === 'added') {
-      if(!document) {
-        console.log('add new', path);
-      } else {
-        console.log('add existing', path);
-      }
+      assert(`added: doc exists ${path}`, !content.findBy('ref.path', path));
+      let doc = this.createInternalDocumentForSnapshot(snapshot);
+      content.insertAt(newIndex, doc);
     } else if(type === 'modified') {
-      if(document) {
-        document._onSnapshot(snapshot);
-      } else {
-        console.log('modified non existant', path);
+      let doc = content.objectAt(oldIndex);
+      if(!doc || doc.get('ref.path') !== path) {
+        doc = content.findBy('ref.path', path);
+      }
+      assert(`modified: doc not found ${path}`, doc);
+      this.updateInternalDocumentForSnapshot(doc, snapshot);
+      if(oldIndex !== newIndex) {
+        content.removeAt(oldIndex);
+        content.insertAt(newIndex, doc);
       }
     } else if(type === 'removed') {
-      console.log('removed', path);
+      content.removeAt(oldIndex);
     }
   },
 
+  onChanges(snapshot) {
+    snapshot.docChanges.map(change => this.onChange(change));
+  },
+
+  onReplace(snapshot) {
+    let content = this.get('content');
+    let documents = A(snapshot.docs.map(doc => {
+      let document = content.findBy('ref.path', doc.ref.path);
+      if(document) {
+        return this.updateInternalDocumentForSnapshot(document, doc);
+      }
+      return this.createInternalDocumentForSnapshot(doc);
+    }));
+    content.replace(0, content.get('length'), documents);
+  },
+
+  needsReplace: true,
+
   onSnapshot(snapshot) {
-    // console.log('onSnapshot', snapshot, this.isMetadataEqual(snapshot.metadata));
-    snapshot.docChanges.map(change => this._onChange(change));
+    if(this.needsReplace) {
+      this.onReplace(snapshot);
+      this.needsReplace = false;
+    } else {
+      this.onChanges(snapshot);
+    }
     return this._super(...arguments);
-  }
+  },
+
+  didLoad(snapshot) {
+    this.onReplace(snapshot);
+    this.needsReplace = true;
+    return this._super(...arguments);
+  },
 
 });

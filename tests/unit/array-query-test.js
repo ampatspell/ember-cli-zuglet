@@ -1,5 +1,5 @@
 import { module, test, setupStoreTest } from '../helpers/setup';
-import { recreateCollection, waitForCollectionSize } from '../helpers/firebase';
+import { recreateCollection, waitForCollectionSize, waitForLength } from '../helpers/firebase';
 import { all } from 'rsvp';
 import { run } from '@ember/runloop';
 
@@ -75,7 +75,7 @@ module('array-query', function(hooks) {
     await this.coll.doc('green').set({ name: 'green' });
     await waitForCollectionSize(this.coll, 1);
 
-    let query = this.store.query({ type: 'array', query: db => db.collection('ducks').orderBy('name') });
+    let query = this.store.query({ type: 'array', query: db => db.collection('ducks').orderBy('name', 'asc') });
 
     await query.load();
 
@@ -109,5 +109,76 @@ module('array-query', function(hooks) {
 
     run(() => query.destroy());
   });
+
+  const makeMutationsTest = testOpts => {
+    let title = `observe mutations – ${testOpts.testOpts ? 'load before observe' : 'observe only'}`;
+    return test(title, async function(assert) {
+
+      await this.recreate();
+
+      let coll = this.coll;
+
+      await all([
+        coll.add({ name: 'yellow' }),
+        coll.add({ name: 'green' }),
+        coll.add({ name: 'red' })
+      ]);
+
+      let query = this.store.query({ type: 'array', query: db => db.collection('ducks').orderBy('name') });
+
+      if(testOpts.loadBeforeObserve) {
+        await query.load();
+        await query.observe();
+      } else {
+        await query.observe();
+        await waitForLength(query.get('content'), 3);
+      }
+
+      let content = query.get('content');
+
+      assert.deepEqual(content.mapBy('data.name'), [
+        "green",
+        "red",
+        "yellow"
+      ]);
+
+      let [ brown, magenta ] = await all([
+        coll.add({ name: 'brown' }),
+        coll.add({ name: 'magenta' })
+      ]);
+
+      await waitForLength(content, 5);
+
+      assert.deepEqual(content.mapBy('data.name'), [
+        "brown",
+        "green",
+        "magenta",
+        "red",
+        "yellow"
+      ]);
+
+      let green = content.findBy('data.name', 'green');
+
+      await all([
+        green.get('_internal.ref').delete(),
+        brown.set({ name: 'white' }),
+        magenta.set({ name: 'pink' })
+      ]);
+
+      await waitForLength(content, 4);
+
+      assert.deepEqual(content.mapBy('data.name'), [
+        "pink",
+        "red",
+        "white",
+        "yellow"
+      ]);
+
+      run(() => query.destroy());
+    });
+  };
+
+  makeMutationsTest({ loadBeforeObserve: true });
+  makeMutationsTest({ loadBeforeObserve: false });
 
 });
