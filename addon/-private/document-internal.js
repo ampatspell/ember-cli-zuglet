@@ -6,11 +6,17 @@ import Internal from './internal';
 import setChangedProperties from './util/set-changed-properties';
 import task from './task/computed';
 import { observers } from './util/observers';
+import { assertDocumentInternalReference } from './reference/document-internal';
 
 export const state = [ 'isLoading', 'isLoaded', 'isObserving', 'isError', 'error' ];
 export const meta = [ 'exists', 'metadata' ];
 
 export default Internal.extend({
+
+  init() {
+    this._super(...arguments);
+    assertDocumentInternalReference('document-internal.ref', this.get('ref'));
+  },
 
   store: null,
   ref: null,
@@ -62,6 +68,10 @@ export default Internal.extend({
     }
 
     this._didLoad(snapshot);
+  },
+
+  deserializeProps(props={}) {
+    this.set('data', props);
   },
 
   //

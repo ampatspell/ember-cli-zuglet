@@ -1,7 +1,7 @@
 import { computed } from '@ember/object';
 import { readOnly } from '@ember/object/computed';
 import { assert } from '@ember/debug';
-import { defer, resolve, reject } from 'rsvp';
+import { defer, resolve } from 'rsvp';
 import Internal from './internal';
 import firebase from 'firebase';
 
@@ -63,6 +63,30 @@ export default Internal.extend({
     return this.factoryFor('zuglet:query/array/internal').create({ store: this, query });
   },
 
+  createInternalDocumentWithRef(ref) {
+    return this.factoryFor('zuglet:document/internal').create({ store: this, ref });
+  },
+
+  createNewInternalDocumentWithRef(ref, props) {
+    let internal = this.createInternalDocumentWithRef(ref);
+    internal.deserializeProps(props);
+    return internal;
+  },
+
+  createInternalDocumentForSnapshot(snapshot) {
+    let ref = this.createInternalDocumentReferenceForReference(snapshot.ref);
+    let internal = this.createInternalDocumentWithRef(ref);
+    internal.onSnapshot(snapshot);
+    return internal;
+  },
+
+  updateInternalDocumentForSnapshot(internal, snapshot) {
+    internal.onSnapshot(snapshot);
+    return internal;
+  },
+
+  //
+
   collection(path) {
     let collection = this.app.firestore().collection(path);
     return this.createInternalCollectionReferenceForReference(collection);
@@ -71,18 +95,6 @@ export default Internal.extend({
   doc(path) {
     let ref = this.app.firestore().doc(path);
     return this.createInternalDocumentReferenceForReference(ref);
-  },
-
-  createInternalDocumentForSnapshot(snapshot) {
-    let ref = snapshot.ref;
-    let internal = this.factoryFor('zuglet:document/internal').create({ store: this, ref });
-    internal.onSnapshot(snapshot);
-    return internal;
-  },
-
-  updateInternalDocumentForSnapshot(internal, snapshot) {
-    internal.onSnapshot(snapshot);
-    return internal;
   },
 
   willDestroy() {

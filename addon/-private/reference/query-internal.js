@@ -1,4 +1,3 @@
-import { computed } from '@ember/object';
 import Internal from '../internal';
 import QueryableInternalMixin from './queryable-internal-mixin';
 

@@ -4,22 +4,17 @@ import createReadOnlyPropertiesMixin from './util/create-read-only-properties-mi
 import ModelMixin from './model-mixin';
 import { state, meta } from './document-internal';
 import serialized from './util/serialized';
-import { invokeReturningModel } from './util/internal-invoke';
-
-const ref = key => computed('ref', function() {
-  let ref = this.get('ref');
-  if(!ref) {
-    return;
-  }
-  return ref[key];
-}).readOnly();
 
 const StateMixin = createReadOnlyPropertiesMixin(state);
 const MetaMixin = createReadOnlyPropertiesMixin(meta);
 
+const ref = key => readOnly(`ref.${key}`);
+
 export default EmberObject.extend(ModelMixin, StateMixin, MetaMixin, {
 
-  ref: readOnly('_internal.ref'),
+  ref: computed('_internal.ref', function() {
+    return this.get('_internal.ref').model(true);
+  }).readOnly(),
 
   id: ref('id'),
   path: ref('path'),

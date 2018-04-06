@@ -160,7 +160,7 @@ module('array-query', function(hooks) {
       let green = content.findBy('data.name', 'green');
 
       await all([
-        green.get('_internal.ref').delete(),
+        green.get('_internal.ref.ref').delete(),
         brown.set({ name: 'white' }),
         magenta.set({ name: 'pink' })
       ]);

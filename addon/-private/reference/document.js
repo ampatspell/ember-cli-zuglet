@@ -9,6 +9,10 @@ export default Reference.extend({
     return this._internal.load(opts).then(internal => {
       return internal && internal.model(true);
     });
+  },
+
+  new(props) {
+    return this._internal.new(props).model(true);
   }
 
 });

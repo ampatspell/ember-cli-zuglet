@@ -1,6 +1,15 @@
 import ReferenceInternal from './reference-internal';
 import { resolve, reject } from 'rsvp';
 import { documentMissingError } from '../util/errors';
+import { assert } from '@ember/debug';
+
+export const isDocumentInternalReference = arg => {
+  return ReferenceInternal.detectInstance(arg);
+};
+
+export const assertDocumentInternalReference = (name, arg) => {
+  assert(`${name} must be document internal reference not ${arg}`, isDocumentInternalReference(arg));
+}
 
 export default ReferenceInternal.extend({
 
@@ -25,6 +34,10 @@ export default ReferenceInternal.extend({
       }
       return this.store.createInternalDocumentForSnapshot(snapshot);
     });
+  },
+
+  new(props) {
+    return this.store.createNewInternalDocumentWithRef(this, props);
   }
 
 });
