@@ -1,6 +1,7 @@
 import Mixin from '@ember/object/mixin';
 import { resolve, reject } from 'rsvp';
 import { documentMissingError } from '../util/errors';
+import { A } from '@ember/array';
 
 export const keys = [
   'where',
@@ -33,13 +34,13 @@ export default Mixin.create(keys.reduce((hash, key) => {
     let ref = this.ref;
     let store = this.store;
     return resolve(ref.get()).then(snapshot => {
-      return snapshot.docs.map(doc => store.createInternalDocumentForSnapshot(snapshot));
+      return snapshot.docs.map(doc => store.createInternalDocumentForSnapshot(doc));
     });
   },
 
   load() {
     return this.loadInternal().then(internals => {
-      return internals.map(internal => internal.model(true));
+      return A(internals.map(internal => internal.model(true)));
     });
   },
 
