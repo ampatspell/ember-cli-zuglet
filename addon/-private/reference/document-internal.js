@@ -1,18 +1,10 @@
-import { computed } from '@ember/object';
-import Internal from '../internal';
+import ReferenceInternal from './reference-internal';
 
-export default Internal.extend({
+export default ReferenceInternal.extend({
 
-  store: null,
-  ref: null,
-
-  parent: computed(function() {
-    let parent = this.ref.parent;
-    if(!parent) {
-      return null;
-    }
+  createParentInternal(parent) {
     return this.store.createInternalCollectionReferenceForReference(parent);
-  }),
+  },
 
   createModel() {
     return this.store.factoryFor('zuglet:reference/document').create({ _internal: this });
