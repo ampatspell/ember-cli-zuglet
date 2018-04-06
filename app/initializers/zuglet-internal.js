@@ -8,6 +8,10 @@ import Observers from 'ember-cli-zuglet/-private/util/observers';
 import DocumentInternal from 'ember-cli-zuglet/-private/document-internal';
 import Document from 'ember-cli-zuglet/-private/document';
 import ModelArrayProxy from 'ember-cli-zuglet/-private/util/read-only-model-array-proxy';
+import CollectionReference from 'ember-cli-zuglet/-private/reference/collection';
+import CollectionReferenceInternal from 'ember-cli-zuglet/-private/reference/collection-internal';
+import DocumentReference from 'ember-cli-zuglet/-private/reference/document';
+import DocumentReferenceInternal from 'ember-cli-zuglet/-private/reference/document-internal';
 
 export default {
   name: 'zuglet:internal',
@@ -22,6 +26,11 @@ export default {
 
     container.register('zuglet:document/internal', DocumentInternal);
     container.register('zuglet:document', Document);
+
+    container.register('zuglet:reference/collection/internal', CollectionReferenceInternal);
+    container.register('zuglet:reference/collection', CollectionReference);
+    container.register('zuglet:reference/document/internal', DocumentReferenceInternal);
+    container.register('zuglet:reference/document', DocumentReference);
 
     container.register('zuglet:task/serialized', TaskSerialized);
     container.register('zuglet:observers', Observers);

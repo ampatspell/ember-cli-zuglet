@@ -1,6 +1,5 @@
 import { module, test, setupStoreTest } from '../helpers/setup';
-import { recreateCollection, waitForCollectionSize, waitForLength } from '../helpers/firebase';
-import { run } from '@ember/runloop';
+import { recreateCollection } from '../helpers/firebase';
 
 module('document-load', function(hooks) {
   setupStoreTest(hooks);

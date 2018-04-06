@@ -10,6 +10,10 @@ export default EmberObject.extend(ModelMixin, {
     return this.get('_internal.ready').then(() => this);
   }).readOnly(),
 
+  collection(path) {
+    return this._internal.createInternalCollectionReference(path).model(true);
+  },
+
   query(fn) {
     return this._internal.createInternalQuery(fn).model(true);
   },
