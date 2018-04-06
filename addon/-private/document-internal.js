@@ -61,7 +61,7 @@ export default Internal.extend({
       console.log(snapshot.ref.path, 'exists=false');
     }
 
-    this._didLoad(snapshot, data);
+    this._didLoad(snapshot);
   },
 
   //
