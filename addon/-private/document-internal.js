@@ -55,6 +55,7 @@ export default Internal.extend({
   _didLoad(snapshot) {
     let { exists, metadata: _metadata } = snapshot;
     setChangedProperties(this, {
+      isNew: false,
       isLoading: false,
       isLoaded: true,
       isError: false,
@@ -127,12 +128,14 @@ export default Internal.extend({
     });
   },
 
-  didSave(snapshot) {
+  didSave() {
     setChangedProperties(this, {
+      isNew: false,
       isSaving: false,
       isLoaded: true,
       exists: true
     });
+    return this;
   },
 
   saveDidFail(err) {
@@ -146,6 +149,36 @@ export default Internal.extend({
     let data = this.get('data');
     this.willSave();
     return resolve(ref.set(data)).then(() => this.didSave(), err => this.saveDidFail(err));
+  },
+
+  willDelete() {
+    setChangedProperties(this, {
+      isSaving: true,
+      isError: false,
+      error: null
+    });
+  },
+
+  didDelete() {
+    setChangedProperties(this, {
+      isNew: false,
+      isSaving: false,
+      isLoaded: true,
+      exists: false
+    });
+    return this;
+  },
+
+  deleteDidFail(err) {
+    setChangedProperties(this, { isSaving: false, isError: true, error: err });
+    return reject(err);
+  },
+
+  delete() {
+    // TODO: queue
+    let ref = this.get('ref.ref');
+    this.willDelete();
+    return resolve(ref.delete()).then(() => this.didDelete(), err => this.deleteDidFail(err));
   },
 
   //

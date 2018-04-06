@@ -89,4 +89,67 @@ module('document', function(hooks) {
     });
   });
 
+  test('delete document', async function(assert) {
+    let doc = this.store.doc('ducks/yellow').new({ name: 'yellow', feathers: 'cute' });
+    await doc.save();
+
+    assert.deepEqual(doc.get('serialized'), {
+      "data": {
+        "feathers": "cute",
+        "name": "yellow"
+      },
+      "error": null,
+      "exists": true,
+      "id": "yellow",
+      "isError": false,
+      "isLoaded": true,
+      "isLoading": false,
+      "isNew": false,
+      "isObserving": false,
+      "isSaving": false,
+      "metadata": undefined,
+      "path": "ducks/yellow"
+    });
+
+    let promise = doc.delete();
+
+    assert.deepEqual(doc.get('serialized'), {
+      "data": {
+        "feathers": "cute",
+        "name": "yellow"
+      },
+      "error": null,
+      "exists": true,
+      "id": "yellow",
+      "isError": false,
+      "isLoaded": true,
+      "isLoading": false,
+      "isNew": false,
+      "isObserving": false,
+      "isSaving": true,
+      "metadata": undefined,
+      "path": "ducks/yellow"
+    });
+
+    await promise;
+
+    assert.deepEqual(doc.get('serialized'), {
+      "data": {
+        "feathers": "cute",
+        "name": "yellow"
+      },
+      "error": null,
+      "exists": false,
+      "id": "yellow",
+      "isError": false,
+      "isLoaded": true,
+      "isLoading": false,
+      "isNew": false,
+      "isObserving": false,
+      "isSaving": false,
+      "metadata": undefined,
+      "path": "ducks/yellow"
+    });
+  });
+
 });

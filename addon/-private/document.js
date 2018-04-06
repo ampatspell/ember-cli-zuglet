@@ -31,6 +31,10 @@ export default EmberObject.extend(ModelMixin, StateMixin, MetaMixin, {
     return this._internal.save().then(() => this);
   },
 
+  delete() {
+    return this._internal.delete().then(() => this);
+  },
+
   observe() {
     return this._internal.observe();
   }
