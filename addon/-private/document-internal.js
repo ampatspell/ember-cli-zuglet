@@ -184,7 +184,7 @@ export default Internal.extend({
   //
 
   _subscribeRefOnSnapshot() {
-    let ref = this.get('ref');
+    let ref = this.get('ref.ref');
     return ref.onSnapshot({ includeMetadataChanges: true }, snapshot => join(() => this.onSnapshot(snapshot)));
   },
 
