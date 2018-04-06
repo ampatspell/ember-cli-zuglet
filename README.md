@@ -4,6 +4,7 @@ Simplification.
 
 ## TODO
 
+* query single/array
 * document operation queue
 * store settle
 * data parsing from-to firestore
