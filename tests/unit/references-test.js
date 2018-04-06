@@ -29,4 +29,20 @@ module('references', function(hooks) {
     assert.equal(root.get('parent'), null);
   });
 
+  test('childs', function(assert) {
+    let coll = this.store.collection('ducks');
+
+    let doc = coll.doc('yellow');
+    assert.ok(doc);
+    assert.equal(doc.get('path'), 'ducks/yellow');
+
+    let nested = doc.collection('feathers');
+    assert.ok(nested);
+    assert.equal(nested.get('path'), 'ducks/yellow/feathers');
+
+    let gen = nested.doc();
+    assert.ok(gen.get('path').startsWith('ducks/yellow/feathers/'));
+    assert.ok(gen.get('path').length > 'ducks/yellow/feathers/'.length + 19);
+  });
+
 });

@@ -8,6 +8,16 @@ export default ReferenceInternal.extend({
 
   createModel() {
     return this.store.factoryFor('zuglet:reference/collection').create({ _internal: this });
+  },
+
+  doc(path) {
+    let ref;
+    if(path) {
+      ref = this.ref.doc(path);
+    } else {
+      ref = this.ref.doc();
+    }
+    return this.store.createInternalDocumentReferenceForReference(ref);
   }
 
 });
