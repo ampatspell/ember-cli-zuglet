@@ -1,6 +1,14 @@
 import Mixin from '@ember/object/mixin';
 
-export const keys = [ 'endAt', 'endBefore', 'limit', 'orderBy', 'startAfter', 'startAt', 'where' ];
+export const keys = [
+  'where',
+  'orderBy',
+  'limit',
+  'startAt',
+  'startAfter',
+  'endAt',
+  'endBefore'
+];
 
 const query = name => {
   return function(...args) {
