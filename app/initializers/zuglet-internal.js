@@ -4,7 +4,7 @@ import StoreInternal from 'ember-cli-zuglet/-private/store-internal';
 import QueryArrayInternal from 'ember-cli-zuglet/-private/query/array/internal';
 import QueryArrayModel from 'ember-cli-zuglet/-private/query/array/query';
 import TaskSerialized from 'ember-cli-zuglet/-private/task/serialized';
-import Observers from 'ember-cli-zuglet/-private/util/observers';
+import Observers from 'ember-cli-zuglet/-private/util/observers/observers';
 import DocumentInternal from 'ember-cli-zuglet/-private/document-internal';
 import Document from 'ember-cli-zuglet/-private/document';
 import ModelArrayProxy from 'ember-cli-zuglet/-private/util/read-only-model-array-proxy';
@@ -14,6 +14,8 @@ import DocumentReference from 'ember-cli-zuglet/-private/reference/document';
 import DocumentReferenceInternal from 'ember-cli-zuglet/-private/reference/document-internal';
 import QueryReference from 'ember-cli-zuglet/-private/reference/query';
 import QueyrReferenceInternal from 'ember-cli-zuglet/-private/reference/query-internal';
+import Queue from 'ember-cli-zuglet/-private/util/queue/queue';
+import QueueOperation from 'ember-cli-zuglet/-private/util/queue/operation';
 
 export default {
   name: 'zuglet:internal',
@@ -38,5 +40,7 @@ export default {
 
     container.register('zuglet:task/serialized', TaskSerialized);
     container.register('zuglet:observers', Observers);
+    container.register('zuglet:queue', Queue);
+    container.register('zuglet:queue/operation', QueueOperation);
   }
 }

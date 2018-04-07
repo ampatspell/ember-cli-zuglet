@@ -5,7 +5,7 @@ import { reject } from 'rsvp';
 import Internal from '../internal';
 import setChangedProperties from '../util/set-changed-properties';
 import task from '../task/computed';
-import { observers } from '../util/observers';
+import observers from '../util/observers/computed';
 
 export const state = [ 'isLoading', 'isLoaded', 'isObserving', 'isError', 'error' ];
 export const meta = [ 'size', 'empty', 'metadata' ];

@@ -1,13 +1,5 @@
 import EmberObject from '@ember/object';
 import { gt } from '@ember/object/computed';
-import destroyable from '../util/computed-destroyable';
-import { getOwner } from '@ember/application';
-
-export const observers = opts => destroyable({
-  create() {
-    return getOwner(this).factoryFor(`zuglet:observers`).create({ owner: this, opts });
-  }
-});
 
 export default EmberObject.extend({
 
