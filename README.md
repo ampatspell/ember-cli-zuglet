@@ -129,7 +129,7 @@ let doc = store.doc('ducks/yellow');
 let coll = doc.collection('feathers');
 ```
 
-### load({ optional }) → Promise for Document
+### load({ optional }) → Promise for Document
 
 Loads a document.
 
