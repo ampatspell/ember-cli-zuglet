@@ -24,6 +24,6 @@ export default EmberObject.extend({
   willDestroy() {
     this._model && this._model.destroy();
     this._super(...arguments);
-  },
+  }
 
 });

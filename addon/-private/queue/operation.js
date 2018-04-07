@@ -3,12 +3,7 @@ import EmberError from '@ember/error';
 import { readOnly } from '@ember/object/computed';
 import { defer, resolve, reject } from 'rsvp';
 import { assert } from '@ember/debug';
-
-const destroyedError = () => {
-  let err = new EmberError('operation is destroyed');
-  err.code = 'zuglet/operation/destroyed';
-  return err;
-};
+import { operationDestroyedError } from '../util/errors';
 
 export default EmberObject.extend({
 
@@ -30,7 +25,7 @@ export default EmberObject.extend({
     let promise = deferred.promise;
 
     if(this.isDestroying) {
-      deferred.reject(destroyedError());
+      deferred.reject(operationDestroyedError());
       return promise;
     }
 

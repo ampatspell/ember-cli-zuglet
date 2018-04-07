@@ -1,8 +1,8 @@
+import Internal from '../util/internal';
 import { computed } from '@ember/object';
 import { readOnly } from '@ember/object/computed';
 import { join } from '@ember/runloop';
 import { resolve, reject } from 'rsvp';
-import Internal from '../util/internal';
 import setChangedProperties from '../util/set-changed-properties';
 import queue from '../queue/computed';
 import observers from '../observers/computed';
