@@ -56,7 +56,7 @@ let stores = getOwner(this).lookup('zuglet:stores');
 let store = stores.createStore('main', Store);
 ```
 
-### store.ready → Promise
+### store.ready → Promise
 
 Store is ready to be used after `store.ready` resolves.
 
