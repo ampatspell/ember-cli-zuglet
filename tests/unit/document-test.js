@@ -1,4 +1,6 @@
 import { module, test, setupStoreTest, setupDucks } from '../helpers/setup';
+import { all } from 'rsvp';
+import { run } from '@ember/runloop';
 
 module('document', function(hooks) {
   setupStoreTest(hooks);
@@ -48,6 +50,8 @@ module('document', function(hooks) {
     });
 
     let promise = doc.save();
+
+    run(() => {});
 
     assert.deepEqual(doc.get('serialized'), {
       "id": "yellow",
@@ -113,6 +117,8 @@ module('document', function(hooks) {
 
     let promise = doc.delete();
 
+    run(() => {});
+
     assert.deepEqual(doc.get('serialized'), {
       "data": {
         "feathers": "cute",
@@ -150,6 +156,38 @@ module('document', function(hooks) {
       "metadata": undefined,
       "path": "ducks/yellow"
     });
+  });
+
+  test('document has a queue', async function(assert) {
+    let doc = this.store.doc('ducks/yellow').new({ name: 'yellow', feathers: 'cute' });
+
+    let first = doc.save('first');
+    let second = doc.save('second');
+    let load = doc.load();
+    let del = doc.delete();
+
+    await all([
+      del,
+      second,
+      first,
+      load,
+    ]);
+
+    assert.equal(doc.get('isNew'), false);
+    assert.equal(doc.get('isLoaded'), true);
+    assert.equal(doc.get('exists'), false);
+  });
+
+  test('two loads yields same promise', async function(assert) {
+    let doc = this.store.doc('ducks/yellow').new({ name: 'yellow', feathers: 'cute' });
+    await doc.save();
+
+    let one = doc._internal.reload();
+    let two = doc._internal.reload();
+
+    assert.ok(one === two);
+
+    await all([ one, two ]);
   });
 
 });

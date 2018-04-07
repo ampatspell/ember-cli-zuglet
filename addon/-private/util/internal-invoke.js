@@ -11,6 +11,6 @@ export const invokeReturningModel = name => invoke(name, internal => internal &&
 
 export const invokePromiseReturningThis = name => invoke(name, (promise, owner) => promise.then(() => owner));
 
-export const invokePromiseReturningModel = name => invoke(name, (promise, owner) => {
+export const invokePromiseReturningModel = name => invoke(name, promise => {
   return promise.then(internal => internal && internal.model(true));
 });

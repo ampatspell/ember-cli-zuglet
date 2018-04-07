@@ -4,8 +4,8 @@ Simplification.
 
 ## TODO
 
-* query single/array
 * document operation queue
+* query single/array
 * store settle
 * data parsing from-to firestore
 * primitives for query, load, .. based on destroyable-computed

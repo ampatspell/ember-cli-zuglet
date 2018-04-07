@@ -4,9 +4,9 @@ import { join } from '@ember/runloop';
 import { resolve, reject } from 'rsvp';
 import Internal from './internal';
 import setChangedProperties from './util/set-changed-properties';
-import task from './task/computed';
-import { observers } from './util/observers';
 import { assertDocumentInternalReference } from './reference/document-internal';
+import observers from './util/observers/computed';
+import queue from './util/queue/computed';
 
 export const state = [ 'isNew', 'isLoading', 'isLoaded', 'isSaving', 'isObserving', 'isError', 'error' ];
 export const meta = [ 'exists', 'metadata' ];
@@ -43,6 +43,8 @@ export default Internal.extend({
       hasPendingWrites: metadata.hasPendingWrites
     };
   }).readOnly(),
+
+  queue: queue(),
 
   createModel() {
     return this.store.factoryFor('zuglet:document').create({ _internal: this });
@@ -97,27 +99,28 @@ export default Internal.extend({
     return reject(err);
   },
 
-  _load() {
-    this.willLoad();
-    let ref = this.get('ref');
-    return ref.get();
+  load(opts={}) {
+    let { isLoaded, isLoading } = this.getProperties('isLoaded', 'isLoading');
+
+    if(isLoaded && !isLoading && !opts.force) {
+      return resolve(this);
+    }
+
+    return this.get('queue').schedule({
+      name: 'load',
+      reuse: operations => operations.findBy('name', 'load'),
+      invoke: () => {
+        this.willLoad();
+        let ref = this.get('ref.ref');
+        return ref.get();
+      },
+      didResolve: snapshot => this.didLoad(snapshot),
+      didReject: err => this.loadDidFail(err)
+    });
   },
 
-  loadTask: task('serialized', {
-    perform() {
-      return this._load();
-    },
-    didResolve(snapshot) {
-      return this.didLoad(snapshot);
-    },
-    didReject(err) {
-      return this.loadDidFail(err);
-    }
-  }),
-
-  load() {
-    // TODO: queue
-    return this.get('loadTask.promise');
+  reload() {
+    return this.load({ force: true });
   },
 
   willSave() {
@@ -144,11 +147,17 @@ export default Internal.extend({
   },
 
   save() {
-    // TODO: queue
-    let ref = this.get('ref.ref');
-    let data = this.get('data');
-    this.willSave();
-    return resolve(ref.set(data)).then(() => this.didSave(), err => this.saveDidFail(err));
+    return this.get('queue').schedule({
+      name: 'save',
+      invoke: () => {
+        let ref = this.get('ref.ref');
+        let data = this.get('data');
+        this.willSave();
+        return ref.set(data);
+      },
+      didResolve: () => this.didSave(),
+      didReject: err => this.saveDidFail(err)
+    });
   },
 
   willDelete() {
@@ -175,10 +184,16 @@ export default Internal.extend({
   },
 
   delete() {
-    // TODO: queue
-    let ref = this.get('ref.ref');
-    this.willDelete();
-    return resolve(ref.delete()).then(() => this.didDelete(), err => this.deleteDidFail(err));
+    return this.get('queue').schedule({
+      name: 'delete',
+      invoke: () => {
+        let ref = this.get('ref.ref');
+        this.willDelete();
+        return ref.delete();
+      },
+      didResolve: () => this.didDelete(),
+      didReject: err => this.deleteDidFail(err)
+    });
   },
 
   //

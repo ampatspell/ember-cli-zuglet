@@ -1,4 +1,4 @@
-import { module, test } from 'qunit';
+import { module, test, only, skip } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import setupStores from './setup-stores';
 import setupStore from './setup-store';
@@ -16,6 +16,9 @@ const setupDucks = hooks => {
     this.recreate = () => recreateCollection(this.coll);
   });
 }
+
+test.only = only;
+test.skip = skip;
 
 export {
   module,

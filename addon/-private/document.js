@@ -25,6 +25,7 @@ export default EmberObject.extend(ModelMixin, StateMixin, MetaMixin, {
   serialized: serialized([ 'id', 'path', ...state, ...meta, 'data' ]),
 
   load:    invokePromiseReturningThis('load'),
+  reload:  invokePromiseReturningThis('reload'),
   save:    invokePromiseReturningThis('save'),
   delete:  invokePromiseReturningThis('delete'),
   observe: invoke('observe'),
