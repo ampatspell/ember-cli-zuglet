@@ -59,7 +59,8 @@ export default Internal.extend({
     return this.factoryFor('zuglet:reference/query/internal').create({ store: this, ref });
   },
 
-  createInternalQueryWithReference(query) {
+  createInternalQueryWithReference(query, opts={}) {
+    assert(`query opts.type must be 'array' or 'first'`, [ 'array', 'first' ].includes(opts.type));
     return this.factoryFor('zuglet:query/array/internal').create({ store: this, query });
   },
 

@@ -12,7 +12,7 @@ module('array-query', function(hooks) {
   });
 
   test('create query', function(assert) {
-    let query = this.store.collection('ducks').query();
+    let query = this.store.collection('ducks').query({ type: 'array' });
     assert.ok(query);
     assert.ok(query._internal);
     assert.deepEqual(query.get('serialized'), {
@@ -35,7 +35,7 @@ module('array-query', function(hooks) {
       this.coll.doc('red').set({ name: 'red' })
     ]);
 
-    let query = this.store.collection('ducks').orderBy('name').query();
+    let query = this.store.collection('ducks').orderBy('name').query({ type: 'array' });
 
     let promise = query.load();
 
@@ -75,7 +75,7 @@ module('array-query', function(hooks) {
     await this.coll.doc('green').set({ name: 'green' });
     await waitForCollectionSize(this.coll, 1);
 
-    let query = this.store.collection('ducks').orderBy('name', 'asc').query();
+    let query = this.store.collection('ducks').orderBy('name', 'asc').query({ type: 'array' });
 
     await query.load();
 
@@ -124,7 +124,7 @@ module('array-query', function(hooks) {
         coll.add({ name: 'red' })
       ]);
 
-      let query = this.store.collection('ducks').orderBy('name').query();
+      let query = this.store.collection('ducks').orderBy('name').query({ type: 'array' });
 
       if(testOpts.loadBeforeObserve) {
         await query.load();

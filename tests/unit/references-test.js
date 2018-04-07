@@ -74,7 +74,7 @@ module('references', function(hooks) {
 
     let ref = this.store.collection('ducks').orderBy('name', 'asc').limit(2);
 
-    let query = ref.query();
+    let query = ref.query({ type: 'array' });
     assert.ok(query);
 
     await query.load();
