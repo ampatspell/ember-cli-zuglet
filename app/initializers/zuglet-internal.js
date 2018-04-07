@@ -25,6 +25,7 @@ export default {
     container.register('zuglet:stores', Stores);
     container.register('zuglet:stores/internal', StoresInternal);
     container.register('zuglet:store/internal', StoreInternal);
+    container.register('zuglet:store/observed', ModelArrayProxy);
 
     container.register('zuglet:query/array/internal', QueryArrayInternal);
     container.register('zuglet:query/array/content', ModelArrayProxy);

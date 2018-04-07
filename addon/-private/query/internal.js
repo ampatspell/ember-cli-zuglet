@@ -114,6 +114,7 @@ export default Internal.extend({
   },
 
   observers: observers({
+    parent: 'store',
     start(state) {
       state._cancel = this._subscribeQueryOnSnapshot();
     },

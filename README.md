@@ -4,7 +4,6 @@ Simplification.
 
 ## TODO
 
-* register observers in store for destroy
 * data parsing from-to firestore
 * primitives for query, load, .. based on destroyable-computed
 * auth

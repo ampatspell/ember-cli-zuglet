@@ -11,6 +11,8 @@ export default EmberObject.extend(ModelMixin, {
     return this.get('_internal.ready').then(() => this);
   }).readOnly(),
 
+  observed: readOnly('_internal.observedProxy'),
+
   collection: invokeReturningModel('collection'),
   doc: invokeReturningModel('doc'),
 

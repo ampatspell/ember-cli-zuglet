@@ -1,6 +1,7 @@
 import { computed } from '@ember/object';
 import { readOnly } from '@ember/object/computed';
 import { assert } from '@ember/debug';
+import { A } from '@ember/array';
 import { defer, resolve } from 'rsvp';
 import Internal from './internal';
 import firebase from 'firebase';
@@ -23,6 +24,15 @@ export default Internal.extend({
   factory: null,
 
   app: null,
+
+  observed: computed(function() {
+    return A();
+  }).readOnly(),
+
+  observedProxy: computed(function() {
+    let content = this.get('observed');
+    return this.factoryFor('zuglet:store/observed').create({ content });
+  }).readOnly(),
 
   _deferred: computed(function() {
     return defer();
@@ -109,13 +119,30 @@ export default Internal.extend({
     return this.createInternalDocumentReferenceForReference(ref);
   },
 
+  //
+
+  registerObservedInternal(internal) {
+    let observed = this.get('observed');
+    assert(`observed already has ${internal} registered`, !observed.includes(internal));
+    observed.pushObject(internal);
+  },
+
+  unregisterObservedInternal(internal) {
+    let observed = this.get('observed');
+    assert(`observed does not have ${internal} registered`, observed.includes(internal));
+    observed.removeObject(internal);
+  },
+
+  //
+
   settle() {
-    return settle(() => [ 
+    return settle(() => [
       ...this.get('queue').promises()
     ]);
   },
 
   willDestroy() {
+    this.get('observed').map(internal => internal.destroy());
     this.app && this.app.delete();
     this._super(...arguments);
   }
