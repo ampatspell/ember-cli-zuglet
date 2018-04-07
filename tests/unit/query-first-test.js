@@ -1,5 +1,5 @@
 import { module, test, setupStoreTest } from '../helpers/setup';
-import { recreateCollection, waitForCollectionSize, waitForLength } from '../helpers/firebase';
+import { recreateCollection, waitForCollectionSize } from '../helpers/firebase';
 import { all } from 'rsvp';
 import { run } from '@ember/runloop';
 
@@ -26,6 +26,90 @@ module('query-first', function(hooks) {
       "metadata": undefined,
       "size": undefined
     });
+  });
+
+  test('load query', async function(assert) {
+    await this.recreate();
+    await all([
+      this.coll.doc('yellow').set({ name: 'yellow' }),
+      this.coll.doc('green').set({ name: 'green' }),
+      this.coll.doc('red').set({ name: 'red' })
+    ]);
+
+    let query = this.store.collection('ducks').orderBy('name').query({ type: 'first' });
+
+    let promise = query.load();
+
+    assert.deepEqual(query.get('serialized'), {
+      "type": "first",
+      "empty": undefined,
+      "error": null,
+      "isError": false,
+      "isLoaded": false,
+      "isLoading": true,
+      "isObserving": false,
+      "metadata": undefined,
+      "size": undefined
+    });
+
+    await promise;
+
+    assert.deepEqual(query.get('serialized'), {
+      "type": "first",
+      "empty": false,
+      "error": null,
+      "isError": false,
+      "isLoaded": true,
+      "isLoading": false,
+      "isObserving": false,
+      "metadata": {
+        "fromCache": false,
+        "hasPendingWrites": false,
+      },
+      "size": 1
+    });
+
+    assert.equal(query.get('content.path'), 'ducks/green');
+
+    run(() => query.destroy());
+  });
+
+  test('mutations', async function(assert) {
+    await this.recreate();
+    // await all([
+    //   this.coll.doc('yellow').set({ name: 'yellow' }),
+    //   this.coll.doc('green').set({ name: 'green' }),
+    //   this.coll.doc('red').set({ name: 'red' })
+    // ]);
+
+    let query = this.store.collection('ducks').orderBy('name').query({ type: 'first' });
+    await query.load();
+
+    assert.equal(query.get('content.path'), undefined);
+
+    query.observe();
+
+    await this.coll.doc('yellow').set({ name: 'yellow' });
+    await waitForCollectionSize(this.coll, 1);
+
+    assert.equal(query.get('content.path'), 'ducks/yellow');
+
+    await this.coll.doc('green').set({ name: 'green' });
+    await waitForCollectionSize(this.coll, 2);
+
+    assert.equal(query.get('content.path'), 'ducks/green');
+
+    await this.coll.doc('green').delete();
+    await waitForCollectionSize(this.coll, 1);
+
+    assert.equal(query.get('content.path'), 'ducks/yellow');
+
+    await this.coll.doc('yellow').delete();
+    await waitForCollectionSize(this.coll, 0);
+
+    assert.equal(query.get('content.path'), undefined);
+
+    run(() => query.destroy());
   });
 
 });

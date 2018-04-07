@@ -1,7 +1,7 @@
 import { computed } from '@ember/object';
 import { readOnly } from '@ember/object/computed';
 import { join } from '@ember/runloop';
-import { reject } from 'rsvp';
+import { resolve, reject } from 'rsvp';
 import Internal from '../internal';
 import setChangedProperties from '../util/set-changed-properties';
 import queue from '../util/queue/computed';
@@ -36,6 +36,8 @@ export default Internal.extend({
       hasPendingWrites: metadata.hasPendingWrites
     };
   }).readOnly(),
+
+  normalizedQuery: readOnly('query'),
 
   queue: queue(),
 
@@ -88,7 +90,7 @@ export default Internal.extend({
       reuse: operations => operations.findBy('name', 'load'),
       invoke: () => {
         this.willLoad();
-        let query = this.get('query');
+        let query = this.get('normalizedQuery');
         return query.get();
       },
       didResolve: snapshot => this.didLoad(snapshot),
