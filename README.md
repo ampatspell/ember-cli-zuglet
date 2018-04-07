@@ -2,7 +2,7 @@
 
 Simplification.
 
-Identity-less, model-less persistence for Google Cloud Firestore. Just stores, documents and queries.
+Identity-less, model-less persistence for Google Cloud Firestore. Just store, documents and queries.
 
 * [ember-cli-zuglet](#ember-cli-zuglet)
   * [Setup](#setup)
@@ -113,7 +113,8 @@ let stores = getOwner(this).lookup('zuglet:stores');
 let store = stores.createStore('main', Store);
 ```
 
-### store.ready → Promise
+### store.ready
+→ Promise
 
 Store is ready to be used after `store.ready` resolves.
 
@@ -134,7 +135,8 @@ export default Route.extend({
 });
 ```
 
-### store.observed → Array
+### store.observed
+→ Array
 
 Contains all documents and queries which are observing `onSnapshot`.
 
