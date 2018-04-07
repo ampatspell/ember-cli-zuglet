@@ -5,6 +5,8 @@ import { assert } from '@ember/debug';
 
 export default QueryInternal.extend({
 
+  type: 'array',
+
   content: computed(function() {
     return A();
   }).readOnly(),

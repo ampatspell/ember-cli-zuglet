@@ -60,8 +60,15 @@ export default Internal.extend({
   },
 
   createInternalQueryWithReference(query, opts={}) {
-    assert(`query opts.type must be 'array' or 'first'`, [ 'array', 'first' ].includes(opts.type));
-    return this.factoryFor('zuglet:query/array/internal').create({ store: this, query });
+    let type = opts.type;
+    assert(`query opts.type must be 'array' or 'first'`, [ 'array', 'first' ].includes(type));
+    let factoryName;
+    if(type === 'array') {
+      factoryName = 'zuglet:query/array/internal';
+    } else if(type === 'first') {
+      factoryName = 'zuglet:query/first/internal';
+    }
+    return this.factoryFor(factoryName).create({ store: this, query });
   },
 
   createInternalDocumentWithRef(ref) {

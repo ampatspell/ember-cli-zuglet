@@ -1,4 +1,5 @@
 import EmberObject from '@ember/object';
+import { readOnly } from '@ember/object/computed';
 import ModelMixin from '../model-mixin';
 import createReadOnlyPropertiesMixin from '../util/create-read-only-properties-mixin';
 import serialized from '../util/serialized';
@@ -8,6 +9,8 @@ const StateMixin = createReadOnlyPropertiesMixin(state);
 const MetaMixin = createReadOnlyPropertiesMixin(meta);
 
 export default EmberObject.extend(ModelMixin, StateMixin, MetaMixin, {
+
+  type: readOnly('_internal.type'),
 
   serialized: serialized([ ...state, ...meta ]),
 

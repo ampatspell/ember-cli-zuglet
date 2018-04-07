@@ -16,6 +16,7 @@ module('query-array', function(hooks) {
     assert.ok(query);
     assert.ok(query._internal);
     assert.deepEqual(query.get('serialized'), {
+      "type": "array",
       "empty": undefined,
       "error": null,
       "isError": false,
@@ -40,6 +41,7 @@ module('query-array', function(hooks) {
     let promise = query.load();
 
     assert.deepEqual(query.get('serialized'), {
+      "type": "array",
       "empty": undefined,
       "error": null,
       "isError": false,
@@ -53,6 +55,7 @@ module('query-array', function(hooks) {
     await promise;
 
     assert.deepEqual(query.get('serialized'), {
+      "type": "array",
       "empty": false,
       "error": null,
       "isError": false,
@@ -86,6 +89,7 @@ module('query-array', function(hooks) {
     query.observe();
 
     assert.deepEqual(query.get('serialized'), {
+      "type": "array",
       "empty": false,
       "error": null,
       "isError": false,
