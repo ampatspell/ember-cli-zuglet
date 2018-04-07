@@ -9,7 +9,6 @@ export default Component.extend({
     let store = this.get('store');
 
     window.store = store;
-    console.log(`window.store = ${store}`);
 
     let query = store.collection('ducks').orderBy('name').query({ type: 'array' });
     query.load();

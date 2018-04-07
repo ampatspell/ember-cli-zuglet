@@ -1,12 +1,22 @@
 import EmberObject, { computed } from '@ember/object';
+import EmberError from '@ember/error';
 import { readOnly } from '@ember/object/computed';
 import { defer, resolve, reject } from 'rsvp';
+import { assert } from '@ember/debug';
+
+const destroyedError = () => {
+  let err = new EmberError('operation is destroyed');
+  err.code = 'zuglet/operation/destroyed';
+  return err;
+};
 
 export default EmberObject.extend({
 
   queue: null,
   owner: null,
   opts: null,
+
+  isInvoked: false,
 
   deferred: computed(function() {
     return defer();
@@ -16,14 +26,18 @@ export default EmberObject.extend({
   promise: readOnly('deferred.promise'),
 
   invoke() {
-    let opts = this.get('opts');
-
     let deferred = this.get('deferred');
+    let promise = deferred.promise;
 
     if(this.isDestroying) {
-      deferred.reject(new Error('Queue is destroyed'));
-      return deferred.promise;
+      deferred.reject(destroyedError());
+      return promise;
     }
+
+    assert(`operation is already invoked`, !this.get('isInvoked'));
+    this.set('isInvoked', true);
+
+    let opts = this.get('opts');
 
     resolve(opts.invoke()).then(arg => {
       if(this.isDestroying) {
@@ -41,7 +55,7 @@ export default EmberObject.extend({
       return deferred.reject(err);
     });
 
-    return deferred.promise;
+    return promise;
   }
 
 });

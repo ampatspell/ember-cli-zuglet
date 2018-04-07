@@ -1,5 +1,5 @@
 import ReferenceInternal from './reference-internal';
-import { resolve, reject } from 'rsvp';
+import { reject } from 'rsvp';
 import { documentMissingError } from '../util/errors';
 import { assert } from '@ember/debug';
 
@@ -26,13 +26,21 @@ export default ReferenceInternal.extend({
     return this.store.createInternalCollectionReferenceForReference(ref);
   },
 
+  didLoad(snapshot, opts) {
+    if(!snapshot.exists && !opts.optional) {
+      return reject(documentMissingError(opts));
+    }
+    return this.store.createInternalDocumentForSnapshot(snapshot);
+  },
+
   load(opts={}) {
-    let ref = this.ref;
-    return resolve(ref.get()).then(snapshot => {
-      if(!snapshot.exists && !opts.optional) {
-        return reject(documentMissingError(opts));
-      }
-      return this.store.createInternalDocumentForSnapshot(snapshot);
+    return this.get('store.queue').schedule({
+      name: 'reference/document/load',
+      invoke: () => {
+        return this.ref.get();
+      },
+      didResolve: snapshot => this.didLoad(snapshot, opts),
+      didReject: err => reject(err)
     });
   },
 

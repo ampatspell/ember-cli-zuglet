@@ -44,7 +44,7 @@ export default Internal.extend({
     };
   }).readOnly(),
 
-  queue: queue(),
+  queue: queue('serialized', 'store.queue'),
 
   createModel() {
     return this.store.factoryFor('zuglet:document').create({ _internal: this });
@@ -107,8 +107,8 @@ export default Internal.extend({
     }
 
     return this.get('queue').schedule({
-      name: 'load',
-      reuse: operations => operations.findBy('name', 'load'),
+      name: 'document/load',
+      reuse: operations => operations.findBy('name', 'document/load'),
       invoke: () => {
         this.willLoad();
         let ref = this.get('ref.ref');
@@ -148,7 +148,7 @@ export default Internal.extend({
 
   save() {
     return this.get('queue').schedule({
-      name: 'save',
+      name: 'document/save',
       invoke: () => {
         let ref = this.get('ref.ref');
         let data = this.get('data');
@@ -185,7 +185,7 @@ export default Internal.extend({
 
   delete() {
     return this.get('queue').schedule({
-      name: 'delete',
+      name: 'document/delete',
       invoke: () => {
         let ref = this.get('ref.ref');
         this.willDelete();
@@ -200,7 +200,12 @@ export default Internal.extend({
 
   _subscribeRefOnSnapshot() {
     let ref = this.get('ref.ref');
-    return ref.onSnapshot({ includeMetadataChanges: true }, snapshot => join(() => this.onSnapshot(snapshot)));
+    return ref.onSnapshot({ includeMetadataChanges: true }, snapshot => join(() => {
+      if(this.isDestroying) {
+        return;
+      }
+      this.onSnapshot(snapshot);
+    }));
   },
 
   observers: observers({

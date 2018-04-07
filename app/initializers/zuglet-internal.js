@@ -15,7 +15,8 @@ import DocumentReference from 'ember-cli-zuglet/-private/reference/document';
 import DocumentReferenceInternal from 'ember-cli-zuglet/-private/reference/document-internal';
 import QueryReference from 'ember-cli-zuglet/-private/reference/query';
 import QueyrReferenceInternal from 'ember-cli-zuglet/-private/reference/query-internal';
-import Queue from 'ember-cli-zuglet/-private/util/queue/queue';
+import SerializedQueue from 'ember-cli-zuglet/-private/util/queue/serialized-queue';
+import ConcurrentQueue from 'ember-cli-zuglet/-private/util/queue/concurrent-queue';
 import QueueOperation from 'ember-cli-zuglet/-private/util/queue/operation';
 
 export default {
@@ -43,7 +44,8 @@ export default {
     container.register('zuglet:reference/query', QueryReference);
 
     container.register('zuglet:observers', Observers);
-    container.register('zuglet:queue', Queue);
+    container.register('zuglet:queue/serialized', SerializedQueue);
+    container.register('zuglet:queue/concurrent', ConcurrentQueue);
     container.register('zuglet:queue/operation', QueueOperation);
   }
 }

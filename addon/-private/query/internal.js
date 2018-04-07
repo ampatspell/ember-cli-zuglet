@@ -39,7 +39,7 @@ export default Internal.extend({
 
   normalizedQuery: readOnly('query'),
 
-  queue: queue(),
+  queue: queue('serialized', 'store.queue'),
 
   content: null,
 
@@ -86,8 +86,8 @@ export default Internal.extend({
     }
 
     return this.get('queue').schedule({
-      name: 'load',
-      reuse: operations => operations.findBy('name', 'load'),
+      name: 'query/load',
+      reuse: operations => operations.findBy('name', 'query/load'),
       invoke: () => {
         this.willLoad();
         let query = this.get('normalizedQuery');

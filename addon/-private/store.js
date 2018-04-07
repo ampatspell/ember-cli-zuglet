@@ -1,7 +1,7 @@
 import EmberObject, { computed } from '@ember/object';
 import { readOnly } from '@ember/object/computed';
 import ModelMixin from './model-mixin';
-import { invokeReturningModel } from './util/internal-invoke';
+import { invokeReturningModel, invokePromiseReturningModel } from './util/internal-invoke';
 
 export default EmberObject.extend(ModelMixin, {
 
@@ -12,6 +12,8 @@ export default EmberObject.extend(ModelMixin, {
   }).readOnly(),
 
   collection: invokeReturningModel('collection'),
-  doc: invokeReturningModel('doc')
+  doc: invokeReturningModel('doc'),
+
+  settle: invokePromiseReturningModel('settle')
 
 });

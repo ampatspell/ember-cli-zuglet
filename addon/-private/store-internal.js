@@ -4,6 +4,8 @@ import { assert } from '@ember/debug';
 import { defer, resolve } from 'rsvp';
 import Internal from './internal';
 import firebase from 'firebase';
+import queue from './util/queue/computed';
+import settle from './util/settle';
 
 const initializeFirebase = (identifier, opts) => {
   let config = opts.firebase;
@@ -27,6 +29,8 @@ export default Internal.extend({
   }).readOnly(),
 
   ready: readOnly('_deferred.promise'),
+
+  queue: queue('concurrent'),
 
   factoryFor(name) {
     return this.stores.factoryFor(name);
@@ -103,6 +107,12 @@ export default Internal.extend({
   doc(path) {
     let ref = this.app.firestore().doc(path);
     return this.createInternalDocumentReferenceForReference(ref);
+  },
+
+  settle() {
+    return settle(() => [ 
+      ...this.get('queue').promises()
+    ]);
   },
 
   willDestroy() {

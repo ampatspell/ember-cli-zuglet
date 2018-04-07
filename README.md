@@ -5,7 +5,6 @@ Simplification.
 ## TODO
 
 * data parsing from-to firestore
-* store settle (reference loads, queues)
 * primitives for query, load, .. based on destroyable-computed
 * auth
 * storage

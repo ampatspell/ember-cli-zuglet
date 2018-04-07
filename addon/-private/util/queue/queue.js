@@ -1,9 +1,10 @@
 import EmberObject, { computed } from '@ember/object';
 import { getOwner } from '@ember/application';
 import { A } from '@ember/array';
-import { assert } from '@ember/debug';
 
 export default EmberObject.extend({
+
+  parent: null,
 
   operations: computed(function() {
     return A();
@@ -21,41 +22,38 @@ export default EmberObject.extend({
     }
   },
 
-  schedule(opts) {
-    let operation = this.reuse(opts);
-    if(!operation) {
-      operation = this.createOperation(opts);
-      this.get('operations').pushObject(operation);
-      this.next();
+  didCreateOperation(operation) {
+    let parent = this.get('parent');
+    if(parent) {
+      parent.register(operation);
     }
-    return operation.get('promise');
   },
 
-  next() {
+  register(operation) {
+    let operations = this.get('operations');
+    operations.pushObject(operation);
+    operation.get('promise').catch(() => {}).finally(() => {
+      operations.removeObject(operation);
+    });
+  },
+
+  schedule(opts) {
     if(this.isDestroying) {
       return;
     }
 
-    if(this.get('running')) {
-      return;
-    }
-
-    let operations = this.get('operations');
-
-    let operation = operations.get('firstObject');
+    let operation = this.reuse(opts);
     if(!operation) {
-      return;
+      operation = this.createOperation(opts);
+      this.register(operation);
+      this.didCreateOperation(operation);
     }
 
-    this.set('running', operation);
+    return operation.get('promise');
+  },
 
-    operation.invoke().catch(() => {}).finally(() => {
-      assert('running operation must match operation in scope', this.get('running') === operation);
-      assert('first operation must be operation in scope', operations.get('firstObject') === operation);
-      operations.shiftObject();
-      this.set('running', null);
-      this.next();
-    });
+  promises() {
+    return this.get('operations').mapBy('promise');
   },
 
   willDestroy() {

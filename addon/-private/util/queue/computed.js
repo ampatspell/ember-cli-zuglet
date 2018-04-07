@@ -1,8 +1,14 @@
 import destroyable from '../computed-destroyable';
 import { getOwner } from '@ember/application';
+import { assert } from '@ember/debug';
 
-export default () => destroyable({
+export default (type, parentKey) => destroyable({
   create() {
-    return getOwner(this).factoryFor(`zuglet:queue`).create({ owner: this });
+    let parent;
+    if(parentKey) {
+      parent = this.get(parentKey);
+      assert(`parent ${parentKey} is not set`, !!parent);
+    }
+    return getOwner(this).factoryFor(`zuglet:queue/${type}`).create({ owner: this, parent });
   }
 });
