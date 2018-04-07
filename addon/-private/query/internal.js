@@ -104,7 +104,7 @@ export default Internal.extend({
     this._didLoad(snapshot);
   },
 
-  _subscribeQueryOnSnapshot() {
+  subscribeQueryOnSnapshot() {
     let query = this.get('query');
     let opts = {
       includeDocumentMetadataChanges: true,
@@ -116,7 +116,7 @@ export default Internal.extend({
   observers: observers({
     parent: 'store',
     start(state) {
-      state._cancel = this._subscribeQueryOnSnapshot();
+      state._cancel = this.subscribeQueryOnSnapshot();
     },
     stop(state) {
       state._cancel();

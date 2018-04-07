@@ -83,4 +83,9 @@ export default QueryInternal.extend({
     return this._super(...arguments);
   },
 
+  subscribeQueryOnSnapshot() {
+    this.needsReplace = true;
+    return this._super(...arguments);
+  }
+
 });
