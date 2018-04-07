@@ -13,12 +13,25 @@
       Loading…
     {{/rows.row}}
   {{else}}
-    {{#each query.content as |doc|}}
-      {{#rows.row click=(action 'select' doc)}}
-        {{doc}} {{doc.ref.path}}
-        {{ui-block/json doc.serialized}}
+
+    {{#if query.isArray}}
+
+      {{#each query.content as |doc|}}
+        {{#rows.row click=(action 'select' doc)}}
+          {{doc}} {{doc.ref.path}}
+          {{ui-block/json doc.serialized}}
+        {{/rows.row}}
+      {{/each}}
+
+    {{else if query.isFirst}}
+
+      {{#rows.row click=(action 'select' query.content)}}
+        {{query.content}} {{query.content.ref.path}}
+        {{ui-block/json query.content.serialized}}
       {{/rows.row}}
-    {{/each}}
+
+    {{/if}}
+
   {{/if}}
 
   {{#rows.row}}

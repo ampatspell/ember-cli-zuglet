@@ -11,8 +11,7 @@ export default Component.extend({
     window.store = store;
     console.log(`window.store = ${store}`);
 
-    let ref = store.collection('ducks').orderBy('name');
-    let query = ref.query();
+    let query = store.collection('ducks').orderBy('name').query({ type: 'array' });
     query.load();
     return query;
   }),
