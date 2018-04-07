@@ -1,4 +1,4 @@
-import Internal from '../util/internal';
+import Internal from '../internal/internal';
 import { computed } from '@ember/object';
 import { readOnly } from '@ember/object/computed';
 

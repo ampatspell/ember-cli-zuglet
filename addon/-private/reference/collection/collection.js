@@ -1,7 +1,7 @@
 import Reference from '../reference';
 import { readOnly } from '@ember/object/computed';
 import QueryableMixin from '../queryable/mixin';
-import { invokeReturningModel } from '../../util/internal-invoke';
+import { invokeReturningModel } from '../../internal/invoke';
 
 export default Reference.extend(QueryableMixin, {
 

@@ -1,6 +1,6 @@
 import EmberObject, { computed } from '@ember/object';
 import { readOnly } from '@ember/object/computed';
-import ModelMixin from '../util/model-mixin';
+import ModelMixin from '../internal/model-mixin';
 
 export default EmberObject.extend(ModelMixin, {
 

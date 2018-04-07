@@ -1,6 +1,6 @@
 import Reference from '../reference';
 import { readOnly } from '@ember/object/computed';
-import { invokeReturningModel, invokePromiseReturningModel } from '../../util/internal-invoke';
+import { invokeReturningModel, invokePromiseReturningModel } from '../../internal/invoke';
 
 export default Reference.extend({
 
