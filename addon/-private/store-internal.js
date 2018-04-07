@@ -61,16 +61,16 @@ export default Internal.extend({
     return this.factory.create({ _internal: this });
   },
 
-  createInternalDocumentReferenceForReference(ref) {
-    return this.factoryFor('zuglet:reference/document/internal').create({ store: this, ref });
+  createInternalDocumentReferenceForReference(ref, _parent) {
+    return this.factoryFor('zuglet:reference/document/internal').create({ store: this, ref, _parent });
   },
 
-  createInternalCollectionReferenceForReference(ref) {
-    return this.factoryFor('zuglet:reference/collection/internal').create({ store: this, ref });
+  createInternalCollectionReferenceForReference(ref, _parent) {
+    return this.factoryFor('zuglet:reference/collection/internal').create({ store: this, ref, _parent });
   },
 
-  createInternalQueryReferenceForReference(ref, info) {
-    return this.factoryFor('zuglet:reference/query/internal').create({ store: this, ref, info });
+  createInternalQueryReferenceForReference(ref, _parent, info) {
+    return this.factoryFor('zuglet:reference/query/internal').create({ store: this, ref, _parent, info });
   },
 
   createInternalQueryWithReference(query, opts={}) {

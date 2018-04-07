@@ -9,7 +9,8 @@ const formatter = () => ({
   },
   object(info) {
     return {
-      type: info.name,
+      type: 'query',
+      id: info.name,
       args: info.args
     };
   }
@@ -32,7 +33,7 @@ const query = name => {
     let ref = this.ref;
     let nested = ref[name].call(ref, ...args);
     let formatter = types[name];
-    return this.store.createInternalQueryReferenceForReference(nested, { name, args, formatter });
+    return this.store.createInternalQueryReferenceForReference(nested, this, { name, args, formatter });
   }
 }
 

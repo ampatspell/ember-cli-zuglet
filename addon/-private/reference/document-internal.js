@@ -17,6 +17,8 @@ export default ReferenceInternal.extend({
   id: readOnly('ref.id'),
   path: readOnly('ref.path'),
 
+  type: 'document',
+
   createParentInternal(parent) {
     return this.store.createInternalCollectionReferenceForReference(parent);
   },
@@ -27,7 +29,7 @@ export default ReferenceInternal.extend({
 
   collection(path) {
     let ref = this.ref.collection(path);
-    return this.store.createInternalCollectionReferenceForReference(ref);
+    return this.store.createInternalCollectionReferenceForReference(ref, this);
   },
 
   didLoad(snapshot, opts) {

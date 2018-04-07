@@ -8,11 +8,6 @@ export default Reference.extend(QueryableMixin, {
   id: readOnly('_internal.id'),
   path: readOnly('_internal.path'),
 
-  doc: invokeReturningModel('doc'),
-
-  toStringExtension() {
-    let path = this.get('path');
-    return `${path}`;
-  }
-
+  doc: invokeReturningModel('doc')
+  
 });

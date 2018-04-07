@@ -10,11 +10,6 @@ export default Reference.extend({
   collection: invokeReturningModel('collection'),
 
   load: invokePromiseReturningModel('load'),
-  new:  invokeReturningModel('new'),
-
-  toStringExtension() {
-    let path = this.get('path');
-    return `${path}`;
-  }
-
+  new:  invokeReturningModel('new')
+  
 });

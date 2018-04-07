@@ -4,7 +4,6 @@ Simplification.
 
 ## TODO
 
-* finish up reference toStringExtension and details (query should show all parents and so on)
 * data parsing from-to firestore
 * primitives for query, load, .. based on destroyable-computed
 * auth

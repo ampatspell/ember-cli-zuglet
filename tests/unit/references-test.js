@@ -31,6 +31,26 @@ module('references', function(hooks) {
     assert.equal(root.get('parent'), null);
   });
 
+  test('parents are reused', function(assert) {
+    let ducks = this.store.collection('ducks');
+    let doc = ducks.doc('yellow');
+    let feathers = doc.collection('feathers');
+    let where = feathers.where('name', '==', 'qwe');
+    let limit = where.limit(1);
+    assert.ok(feathers.get('parent') === doc);
+    assert.ok(doc.get('parent') === ducks);
+    assert.ok(where.get('parent') === feathers);
+    assert.ok(limit.get('parent') === where);
+    assert.deepEqual(limit.get('serialized'), [
+      { "type": "collection", "id": "ducks" },
+      { "type": "document", "id": "yellow" },
+      { "type": "collection", "id": "feathers" },
+      { "type": "query", "id": "where", "args": [ "name", "==", "qwe" ] },
+      { "type": "query", "id": "limit", "args": [ 1 ] }
+    ]);
+    assert.equal(limit.get('_internal.string'), 'ducks/yellow/feathers.where(name, ==, qwe).limit(1)');
+  });
+
   test('childs', function(assert) {
     let coll = this.store.collection('ducks');
 

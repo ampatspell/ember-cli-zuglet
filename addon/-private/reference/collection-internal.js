@@ -7,6 +7,8 @@ export default ReferenceInternal.extend(QueryableInternalMixin, {
   id: readOnly('ref.id'),
   path: readOnly('ref.path'),
 
+  type: 'collection',
+
   createParentInternal(parent) {
     return this.store.createInternalDocumentReferenceForReference(parent);
   },
@@ -22,7 +24,7 @@ export default ReferenceInternal.extend(QueryableInternalMixin, {
     } else {
       ref = this.ref.doc();
     }
-    return this.store.createInternalDocumentReferenceForReference(ref);
+    return this.store.createInternalDocumentReferenceForReference(ref, this);
   }
 
 });

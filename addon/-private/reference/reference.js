@@ -10,6 +10,11 @@ export default EmberObject.extend(ModelMixin, {
   parent: computed(function() {
     let parent =  this._internal.get('parent');
     return parent && parent.model(true);
-  })
+  }),
+
+  toStringExtension() {
+    let string = this.get('_internal.string');
+    return `${string}`;
+  }
 
 });
