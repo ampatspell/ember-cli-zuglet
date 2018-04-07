@@ -10,3 +10,4 @@ Simplification.
 * auth
 * storage
 * maybe something which resembles identity -- union of multiple queries as a computed property
+* transaction
