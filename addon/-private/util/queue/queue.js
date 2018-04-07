@@ -59,8 +59,8 @@ export default EmberObject.extend({
   },
 
   willDestroy() {
-    this.operations.forEach(op => op.destroy());
-    super.willDestroy();
+    this.get('operations').forEach(operation => operation.destroy());
+    this._super(...arguments);
   }
 
 });

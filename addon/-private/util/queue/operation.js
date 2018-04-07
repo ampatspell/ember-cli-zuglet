@@ -25,9 +25,7 @@ export default EmberObject.extend({
       return deferred.promise;
     }
 
-    resolve().then(() => {
-      return opts.invoke();
-    }).then(arg => {
+    resolve(opts.invoke()).then(arg => {
       if(this.isDestroying) {
         return;
       }

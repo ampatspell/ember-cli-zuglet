@@ -1,6 +1,5 @@
 import { module, test, setupStoreTest, setupDucks } from '../helpers/setup';
 import { all } from 'rsvp';
-import { run } from '@ember/runloop';
 
 module('document', function(hooks) {
   setupStoreTest(hooks);
@@ -50,8 +49,6 @@ module('document', function(hooks) {
     });
 
     let promise = doc.save();
-
-    run(() => {});
 
     assert.deepEqual(doc.get('serialized'), {
       "id": "yellow",
@@ -116,8 +113,6 @@ module('document', function(hooks) {
     });
 
     let promise = doc.delete();
-
-    run(() => {});
 
     assert.deepEqual(doc.get('serialized'), {
       "data": {
