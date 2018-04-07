@@ -1,4 +1,5 @@
 import { module, test, setupStoreTest, setupDucks } from '../helpers/setup';
+import { run } from '@ember/runloop';
 
 module('store', function(hooks) {
   setupStoreTest(hooks);
@@ -30,6 +31,23 @@ module('store', function(hooks) {
 
     assert.equal(foobar.get('isNew'), false);
     assert.equal(query.get('isLoaded'), true);
+  });
+
+  test('observed models are destroyed', async function(assert) {
+    let foobar = this.store.doc('ducks/foobar').new({ name: 'foobar' });
+    await foobar.save();
+    foobar.observe();
+
+    let query = this.store.collection('ducks').query({ type: 'array' });
+    await query.load();
+    query.observe();
+
+    assert.equal(this.store.get('observed.length'), 2);
+
+    run(() => this.store.destroy());
+
+    assert.ok(foobar.isDestroyed);
+    assert.ok(query.isDestroyed);
   });
 
 });
