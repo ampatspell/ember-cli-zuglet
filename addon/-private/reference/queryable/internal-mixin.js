@@ -1,6 +1,6 @@
 import Mixin from '@ember/object/mixin';
 import { reject } from 'rsvp';
-import { documentMissingError } from '../util/errors';
+import { documentMissingError } from '../../util/errors';
 import { A } from '@ember/array';
 
 const formatter = () => ({

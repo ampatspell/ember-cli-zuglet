@@ -1,4 +1,4 @@
-import Internal from './internal';
+import Internal from '../util/internal';
 import { A } from '@ember/array';
 import { getOwner } from '@ember/application';
 import { all } from 'rsvp';

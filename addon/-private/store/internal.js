@@ -3,10 +3,10 @@ import { readOnly } from '@ember/object/computed';
 import { assert } from '@ember/debug';
 import { A } from '@ember/array';
 import { defer, resolve } from 'rsvp';
-import Internal from './internal';
+import Internal from '../util/internal';
+import queue from '../queue/computed';
+import settle from '../util/settle';
 import firebase from 'firebase';
-import queue from './util/queue/computed';
-import settle from './util/settle';
 
 const initializeFirebase = (identifier, opts) => {
   let config = opts.firebase;

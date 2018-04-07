@@ -1,7 +1,7 @@
 import { readOnly } from '@ember/object/computed';
-import ReferenceInternal from './reference-internal';
+import ReferenceInternal from '../internal';
 import { reject } from 'rsvp';
-import { documentMissingError } from '../util/errors';
+import { documentMissingError } from '../../util/errors';
 import { assert } from '@ember/debug';
 
 export const isDocumentInternalReference = arg => {

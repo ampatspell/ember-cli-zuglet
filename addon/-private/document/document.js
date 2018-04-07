@@ -1,10 +1,10 @@
 import EmberObject, { computed } from '@ember/object';
 import { readOnly } from '@ember/object/computed';
-import createReadOnlyPropertiesMixin from './util/create-read-only-properties-mixin';
-import ModelMixin from './model-mixin';
-import { state, meta } from './document-internal';
-import serialized from './util/serialized';
-import { invokePromiseReturningThis, invoke } from './util/internal-invoke';
+import createReadOnlyPropertiesMixin from '../util/create-read-only-properties-mixin';
+import ModelMixin from '../util/model-mixin';
+import { state, meta } from './internal';
+import serialized from '../util/serialized';
+import { invokePromiseReturningThis, invoke } from '../util/internal-invoke';
 
 const StateMixin = createReadOnlyPropertiesMixin(state);
 const MetaMixin = createReadOnlyPropertiesMixin(meta);

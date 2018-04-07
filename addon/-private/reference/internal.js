@@ -1,6 +1,6 @@
+import Internal from '../util/internal';
 import { computed } from '@ember/object';
 import { readOnly } from '@ember/object/computed';
-import Internal from '../internal';
 
 export default Internal.extend({
 

@@ -1,7 +1,7 @@
 import EmberObject, { computed } from '@ember/object';
 import { getOwner } from '@ember/application';
-import ModelMixin from './model-mixin';
-import { invokeReturningModel } from './util/internal-invoke';
+import ModelMixin from '../util/model-mixin';
+import { invokeReturningModel } from '../util/internal-invoke';
 
 export default EmberObject.extend(ModelMixin, {
 

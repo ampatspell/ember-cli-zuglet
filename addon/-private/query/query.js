@@ -1,6 +1,6 @@
 import EmberObject, { computed } from '@ember/object';
 import { equal, readOnly } from '@ember/object/computed';
-import ModelMixin from '../model-mixin';
+import ModelMixin from '../util/model-mixin';
 import createReadOnlyPropertiesMixin from '../util/create-read-only-properties-mixin';
 import serialized from '../util/serialized';
 import { state, meta } from './internal';

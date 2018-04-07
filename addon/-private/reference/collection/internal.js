@@ -1,6 +1,6 @@
 import { readOnly } from '@ember/object/computed';
-import ReferenceInternal from './reference-internal';
-import QueryableInternalMixin from './queryable-internal-mixin';
+import ReferenceInternal from '../internal';
+import QueryableInternalMixin from '../queryable/internal-mixin';
 
 export default ReferenceInternal.extend(QueryableInternalMixin, {
 

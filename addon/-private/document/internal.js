@@ -1,12 +1,12 @@
+import Internal from '../util/internal';
 import { computed } from '@ember/object';
 import { readOnly } from '@ember/object/computed';
 import { join } from '@ember/runloop';
 import { resolve, reject } from 'rsvp';
-import Internal from './internal';
-import setChangedProperties from './util/set-changed-properties';
-import { assertDocumentInternalReference } from './reference/document-internal';
-import observers from './util/observers/computed';
-import queue from './util/queue/computed';
+import setChangedProperties from '../util/set-changed-properties';
+import { assertDocumentInternalReference } from '../reference/document/internal';
+import observers from '../observers/computed';
+import queue from '../queue/computed';
 
 export const state = [ 'isNew', 'isLoading', 'isLoaded', 'isSaving', 'isObserving', 'isError', 'error' ];
 export const meta = [ 'exists', 'metadata' ];

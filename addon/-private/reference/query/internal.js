@@ -1,5 +1,5 @@
-import Internal from '../internal';
-import QueryableInternalMixin from './queryable-internal-mixin';
+import Internal from '../../util/internal';
+import QueryableInternalMixin from '../queryable/internal-mixin';
 import { computed } from '@ember/object';
 import { readOnly } from '@ember/object/computed';
 

@@ -1,1 +1,1 @@
-export { default } from './-private/store';
+export { default } from './-private/store/store';
