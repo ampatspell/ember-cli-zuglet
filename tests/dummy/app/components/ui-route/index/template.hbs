@@ -18,7 +18,7 @@
 
       {{#each query.content as |doc|}}
         {{#rows.row click=(action 'select' doc)}}
-          {{doc}} {{doc.ref.path}}
+          {{doc}}
           {{ui-block/json doc.serialized}}
         {{/rows.row}}
       {{/each}}
