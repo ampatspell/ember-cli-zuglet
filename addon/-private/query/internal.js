@@ -8,7 +8,7 @@ import queue from '../util/queue/computed';
 import observers from '../util/observers/computed';
 
 export const state = [ 'isLoading', 'isLoaded', 'isObserving', 'isError', 'error' ];
-export const meta = [ 'size', 'empty', 'metadata' ];
+export const meta = [ 'type', 'size', 'empty', 'metadata' ];
 
 export default Internal.extend({
 
