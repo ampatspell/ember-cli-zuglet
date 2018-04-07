@@ -43,3 +43,18 @@
   {{/rows.row}}
 
 {{/ui-block/rows}}
+
+
+{{#ui-block/rows as |rows|}}
+
+  {{#rows.header}}
+    Observers
+  {{/rows.header}}
+
+  {{#each store.observed as |model|}}
+    {{#rows.row}}
+      {{model}}
+    {{/rows.row}}
+  {{/each}}
+
+{{/ui-block/rows}}

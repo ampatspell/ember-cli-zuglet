@@ -16,10 +16,13 @@ export default Component.extend({
   }),
 
   actions: {
-    select(doc) {
-      this.doc && this.doc();
-      this.doc = doc.observe();
-      // doc.load();
+    select(model) {
+      if(model.get('isObserving')) {
+        model.cancel && model.cancel();
+      } else {
+        let cancel = model.observe();
+        model.cancel = cancel;
+      }
     },
     start() {
       this.set('cancel', this.get('query').observe());
