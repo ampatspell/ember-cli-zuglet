@@ -4,57 +4,60 @@ Simplification.
 
 Identity-less, model-less persistence for Google Cloud Firestore. Just store, documents and queries.
 
-* [Setup](#setup)
-* [Store](#store)
-  * [store.ready → Promise](#storeready--promise)
-  * [store.observed → Array](#storeobserved--array)
-  * [store.identifier → String](#storeidentifier--string)
-  * [store.collection(name) → CollectionReference](#storecollectionname--collectionreference)
-  * [store.doc(path) → DocumentReference or CollectionReference](#storedocpath--documentreference-or-collectionreference)
-  * [store.settle() → Promise](#storesettle--promise)
-* [DocumentReference](#documentreference)
-  * [id → String](#id--string)
-  * [parent → CollectionReference](#parent--collectionreference)
-  * [path → String](#path--string)
-  * [collection(name) → CollectionReference](#collectionname--collectionreference)
-  * [load({ optional }) → Promise for Document](#load-optional---promise-for-document)
-  * [new() → Document](#new--document)
-* [CollectionReference extends QueryableReference](#collectionreference-extends-queryablereference)
-  * [id → String](#id--string-1)
-  * [path → String](#path--string-1)
-  * [parent → DocumentReference](#parent--documentreference)
-  * [doc(name) → DocumentReference](#docname--documentreference)
-* [QueryReference extends QueryableReference](#queryreference-extends-queryablereference)
-  * [parent → QueryableReference](#parent--queryablereference)
-* [QueryableReference](#queryablereference)
-  * [endAt](#endat)
-  * [endBefore](#endbefore)
-  * [limit](#limit)
-  * [orderBy](#orderby)
-  * [startAfter](#startafter)
-  * [startAt](#startat)
-  * [where](#where)
-  * [first({ optional }) → Promise for Document](#first-optional---promise-for-document)
-  * [load() → Promise for [ Document, ... ]](#load--promise-for--document--)
-  * [query() → Query](#query--query)
-* [Query](#query)
-  * [isArray → Boolean](#isarray--boolean)
-  * [isFirst → Boolean](#isfirst--boolean)
-  * [state](#state)
-  * [query → QueryReference or CollectionReference](#query--queryreference-or-collectionreference)
-  * [size](#size)
-  * [metadata](#metadata)
-* [Document](#document)
-  * [id](#id)
-  * [path](#path)
-  * [state](#state-1)
-  * [meta](#meta)
-  * [data → TODO](#data--todo)
-  * [load() → Promise](#load--promise)
-  * [reload() → Promise](#reload--promise)
-  * [save() → Promise](#save--promise)
-  * [delete() → Promise](#delete--promise)
-  * [observe() → cancellable](#observe--cancellable)
+* [ember-cli-zuglet](#ember-cli-zuglet)
+  * [Setup](#setup)
+  * [Store](#store)
+     * [store.ready → Promise](#storeready--promise)
+     * [store.observed → Array](#storeobserved--array)
+     * [store.identifier → String](#storeidentifier--string)
+     * [store.collection(name) → CollectionReference](#storecollectionname--collectionreference)
+     * [store.doc(path) → DocumentReference or CollectionReference](#storedocpath--documentreference-or-collectionreference)
+     * [store.settle() → Promise](#storesettle--promise)
+  * [DocumentReference](#documentreference)
+     * [id → String](#id--string)
+     * [parent → CollectionReference](#parent--collectionreference)
+     * [path → String](#path--string)
+     * [collection(name) → CollectionReference](#collectionname--collectionreference)
+     * [load({ optional }) → Promise for Document](#load-optional---promise-for-document)
+     * [new() → Document](#new--document)
+  * [CollectionReference extends QueryableReference](#collectionreference-extends-queryablereference)
+     * [id → String](#id--string-1)
+     * [path → String](#path--string-1)
+     * [parent → DocumentReference](#parent--documentreference)
+     * [doc(name) → DocumentReference](#docname--documentreference)
+  * [QueryReference extends QueryableReference](#queryreference-extends-queryablereference)
+     * [parent → QueryableReference](#parent--queryablereference)
+  * [QueryableReference](#queryablereference)
+     * [endAt → QueryReference](#endat--queryreference)
+     * [endBefore → QueryReference](#endbefore--queryreference)
+     * [limit → QueryReference](#limit--queryreference)
+     * [orderBy → QueryReference](#orderby--queryreference)
+     * [startAfter → QueryReference](#startafter--queryreference)
+     * [startAt → QueryReference](#startat--queryreference)
+     * [where → QueryReference](#where--queryreference)
+     * [first({ optional }) → Promise for Document](#first-optional---promise-for-document)
+     * [load() → Promise for [ Document, ... ]](#load--promise-for--document--)
+     * [query() → Query](#query--query)
+  * [Query](#query)
+     * [isArray → Boolean](#isarray--boolean)
+     * [isFirst → Boolean](#isfirst--boolean)
+     * [state](#state)
+     * [serialized → Object](#serialized--object)
+     * [query → QueryReference or CollectionReference](#query--queryreference-or-collectionreference)
+     * [size → Number](#size--number)
+     * [metadata → Object](#metadata--object)
+  * [Document](#document)
+     * [id → String](#id--string-2)
+     * [path → String](#path--string-2)
+     * [serialized → Object](#serialized--object-1)
+     * [state](#state-1)
+     * [meta](#meta)
+     * [data → TODO](#data--todo)
+     * [load() → Promise](#load--promise)
+     * [reload() → Promise](#reload--promise)
+     * [save() → Promise](#save--promise)
+     * [delete() → Promise](#delete--promise)
+     * [observe() → cancellable](#observe--cancellable)
 
 ## Setup
 
@@ -252,31 +255,31 @@ parent for this reference. may be CollectionReference or QueryReference
 
 ## QueryableReference
 
-### endAt
+### endAt → QueryReference
 
 creates nested QueryReference with endAt
 
-### endBefore
+### endBefore → QueryReference
 
 creates nested QueryReference with endBefore
 
-### limit
+### limit → QueryReference
 
 creates nested QueryReference with limit
 
-### orderBy
+### orderBy → QueryReference
 
 creates nested QueryReference with orderBy
 
-### startAfter
+### startAfter → QueryReference
 
 creates nested QueryReference with startAfter
 
-### startAt
+### startAt → QueryReference
 
 creates nested QueryReference with startAt
 
-### where
+### where → QueryReference
 
 creates nested QueryReference with where
 
@@ -341,17 +344,37 @@ return true if type is first
 
 ### state
 
+* isLoading
+* isLoaded
+* isError
+* error
+
 ``` javascript
 query.get('isLoading'); // → Bolean
-query.get('state'); // → Object
 ```
 
+### serialized → Object
+
+Serializes query state and meta as a single object. For debugging.
+
 ``` javascript
+let json = query.get('serialized');
+```
+
+``` json
 {
-  isLoading: false,
-  isLoaded:  false,
-  isError:   false,
-  error:     null  
+  "isLoading": false,
+  "isLoaded": true,
+  "isObserving": true,
+  "isError": false,
+  "error": null,
+  "type": "array",
+  "empty": false,
+  "size": 4,
+  "metadata": {
+    "fromCache": false,
+    "hasPendingWrites": false
+  }
 }
 ```
 
@@ -359,11 +382,11 @@ query.get('state'); // → Object
 
 reference with which this query was created.
 
-### size
+### size → Number
 
 latest `onSnapshot` size property.
 
-### metadata
+### metadata → Object
 
 latest `onSnapshot` metadata
 
@@ -381,20 +404,42 @@ doc.save();
 let doc = await store.doc('ducks/yellow').load();
 ```
 
-### id
+### id → String
 
 Document id
 
-### path
+### path → String
 
 Document absolute path
 
-### serialized
+### serialized → Object
 
 Serializes doc state, meta and data as a single object. For debugging.
 
 ``` javascript
 let json = doc.get('serialized');
+```
+
+``` json
+{
+  "id": "blue",
+  "path": "ducks/blue",
+  "isNew": false,
+  "isLoading": false,
+  "isLoaded": true,
+  "isSaving": false,
+  "isObserving": true,
+  "isError": false,
+  "error": null,
+  "exists": true,
+  "metadata": {
+    "fromCache": true,
+    "hasPendingWrites": false
+  },
+  "data": {
+    "name": "blue"
+  }
+}
 ```
 
 ### state
