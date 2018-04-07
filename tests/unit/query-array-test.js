@@ -3,7 +3,7 @@ import { recreateCollection, waitForCollectionSize, waitForLength } from '../hel
 import { all } from 'rsvp';
 import { run } from '@ember/runloop';
 
-module('array-query', function(hooks) {
+module('query-array', function(hooks) {
   setupStoreTest(hooks);
 
   hooks.beforeEach(async function() {
