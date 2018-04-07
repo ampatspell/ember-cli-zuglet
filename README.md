@@ -112,7 +112,7 @@ let doc = store.collection('ducks').doc('yellow');
 
 document id
 
-### parent → CollectionReference
+### parent → CollectionReference
 
 document parent collection
 
