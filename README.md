@@ -163,7 +163,7 @@ let things = store.doc('ducks/yellow').collection('things');
 
 collection id
 
-### path → String
+### path → String
 
 collection absolute path
 
