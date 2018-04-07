@@ -42,9 +42,10 @@ Identity-less, model-less persistence for Google Cloud Firestore. Just store, do
    * [isFirst](#isfirst)
    * [state](#state)
    * [serialized](#serialized)
-   * [query](#query-2)
+   * [ref](#ref)
    * [size](#size)
    * [metadata](#metadata)
+   * [observe()](#observe)
 * [Document](#document)
    * [id](#id-2)
    * [path](#path-2)
@@ -56,7 +57,7 @@ Identity-less, model-less persistence for Google Cloud Firestore. Just store, do
    * [reload()](#reload)
    * [save()](#save)
    * [delete()](#delete)
-   * [observe()](#observe)
+   * [observe()](#observe-1)
 
 ## Setup
 
@@ -407,7 +408,7 @@ let json = query.get('serialized');
 }
 ```
 
-### query
+### ref
 `→ QueryReference or CollectionReference`
 
 reference with which this query was created.
@@ -421,6 +422,22 @@ latest `onSnapshot` size property.
 `→ Object`
 
 latest `onSnapshot` metadata
+
+### observe()
+`→ function`
+
+Starts observing query onSnapshot changes. Returns function which can be used to stop observation.
+
+``` javascript
+let query = await store.collection('ducks').query({ type: 'array' });
+let cancel = query.observe();
+
+// to stop observing
+cancel();
+
+// or just destroy query
+query.destroy();
+```
 
 ## Document
 
@@ -518,9 +535,9 @@ Saves document.
 Deletes document.
 
 ### observe()
-`→ cancellable`
+`→ function`
 
-Starts observing document onSnapshot changes.
+Starts observing document onSnapshot changes. Returns function which can be used to top observation.
 
 ``` javascript
 let doc = await store.doc('ducks/yellow').load();
