@@ -231,7 +231,7 @@ Loads all documents. They are not observed by default.
 let documents = await store.collection('ducks').load();
 ```
 
-### query() → Query
+### query() → Query
 
 Creates a long-lived query which can be loaded, reloaded and observed.
 
@@ -298,7 +298,7 @@ reference with which this query was created.
 
 latest `onSnapshot` size property.
 
-### metadata
+### metadata
 
 latest `onSnapshot` metadata
 
@@ -320,7 +320,7 @@ let doc = await store.doc('ducks/yellow').load();
 
 Document id
 
-### path
+### path
 
 Document absolute path
 
