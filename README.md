@@ -6,53 +6,55 @@ Identity-less, model-less persistence for Google Cloud Firestore. Just store, do
 
 * [Setup](#setup)
 * [Store](#store)
-   * [store.ready → Promise](#storeready--promise)
-   * [store.observed → Array](#storeobserved--array)
-   * [store.identifier → String](#storeidentifier--string)
-   * [store.collection(name) → CollectionReference](#storecollectionname--collectionreference)
-   * [store.doc(path) → DocumentReference or CollectionReference](#storedocpath--documentreference-or-collectionreference)
-   * [store.settle() → Promise](#storesettle--promise)
+  * [store.ready → Promise](#storeready--promise)
+  * [store.observed → Array](#storeobserved--array)
+  * [store.identifier → String](#storeidentifier--string)
+  * [store.collection(name) → CollectionReference](#storecollectionname--collectionreference)
+  * [store.doc(path) → DocumentReference or CollectionReference](#storedocpath--documentreference-or-collectionreference)
+  * [store.settle() → Promise](#storesettle--promise)
 * [DocumentReference](#documentreference)
-   * [id → String](#id--string)
-   * [parent → CollectionReference](#parent--collectionreference)
-   * [path → String](#path--string)
-   * [collection(name) → CollectionReference](#collectionname--collectionreference)
-   * [load({ optional }) → Promise for Document](#load-optional---promise-for-document)
-   * [new() → Document](#new--document)
+  * [id → String](#id--string)
+  * [parent → CollectionReference](#parent--collectionreference)
+  * [path → String](#path--string)
+  * [collection(name) → CollectionReference](#collectionname--collectionreference)
+  * [load({ optional }) → Promise for Document](#load-optional---promise-for-document)
+  * [new() → Document](#new--document)
 * [CollectionReference extends QueryableReference](#collectionreference-extends-queryablereference)
-   * [id → String](#id--string-1)
-   * [path → String](#path--string-1)
-   * [parent → DocumentReference](#parent--documentreference)
-   * [doc(name) → DocumentReference](#docname--documentreference)
+  * [id → String](#id--string-1)
+  * [path → String](#path--string-1)
+  * [parent → DocumentReference](#parent--documentreference)
+  * [doc(name) → DocumentReference](#docname--documentreference)
 * [QueryReference extends QueryableReference](#queryreference-extends-queryablereference)
-   * [parent → QueryableReference](#parent--queryablereference)
+  * [parent → QueryableReference](#parent--queryablereference)
 * [QueryableReference](#queryablereference)
-   * [endAt](#endat)
-   * [endBefore](#endbefore)
-   * [limit](#limit)
-   * [orderBy](#orderby)
-   * [startAfter](#startafter)
-   * [startAt](#startat)
-   * [where](#where)
-   * [first({ optional }) → Promise for Document](#first-optional---promise-for-document)
-   * [load() → Promise for [ Document, ... ]](#load--promise-for--document--)
-   * [query() → Query](#query--query)
+  * [endAt](#endat)
+  * [endBefore](#endbefore)
+  * [limit](#limit)
+  * [orderBy](#orderby)
+  * [startAfter](#startafter)
+  * [startAt](#startat)
+  * [where](#where)
+  * [first({ optional }) → Promise for Document](#first-optional---promise-for-document)
+  * [load() → Promise for [ Document, ... ]](#load--promise-for--document--)
+  * [query() → Query](#query--query)
 * [Query](#query)
-   * [isArray → Boolean](#isarray--boolean)
-   * [isFirst → Boolean](#isfirst--boolean)
-   * [state](#state)
-   * [query → QueryReference or CollectionReference](#query--queryreference-or-collectionreference)
-   * [size](#size)
-   * [metadata](#metadata)
+  * [isArray → Boolean](#isarray--boolean)
+  * [isFirst → Boolean](#isfirst--boolean)
+  * [state](#state)
+  * [query → QueryReference or CollectionReference](#query--queryreference-or-collectionreference)
+  * [size](#size)
+  * [metadata](#metadata)
 * [Document](#document)
-   * [id](#id)
-   * [path](#path)
-   * [data → TODO](#data--todo)
-   * [load() → Promise](#load--promise)
-   * [reload() → Promise](#reload--promise)
-   * [save() → Promise](#save--promise)
-   * [delete() → Promise](#delete--promise)
-   * [observe() → cancellable](#observe--cancellable)
+  * [id](#id)
+  * [path](#path)
+  * [state](#state-1)
+  * [meta](#meta)
+  * [data → TODO](#data--todo)
+  * [load() → Promise](#load--promise)
+  * [reload() → Promise](#reload--promise)
+  * [save() → Promise](#save--promise)
+  * [delete() → Promise](#delete--promise)
+  * [observe() → cancellable](#observe--cancellable)
 
 ## Setup
 
@@ -386,6 +388,29 @@ Document id
 ### path
 
 Document absolute path
+
+### serialized
+
+Serializes doc state, meta and data as a single object. For debugging.
+
+``` javascript
+let json = doc.get('serialized');
+```
+
+### state
+
+* isNew
+* isLoading
+* isLoaded
+* isSaving
+* isObserving
+* isError
+* error
+
+### meta
+
+* exists
+* metadata
 
 ### data → TODO
 
