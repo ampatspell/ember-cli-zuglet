@@ -114,7 +114,7 @@ let store = stores.createStore('main', Store);
 ```
 
 ### store.ready
-→ Promise
+`→ Promise`
 
 Store is ready to be used after `store.ready` resolves.
 
@@ -136,7 +136,7 @@ export default Route.extend({
 ```
 
 ### store.observed
-→ Array
+`→ Array`
 
 Contains all documents and queries which are observing `onSnapshot`.
 
