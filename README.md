@@ -181,6 +181,17 @@ let doc = store.collection('ducks').doc('yellow');
 
 ## QueryReference extends QueryableReference
 
+``` javascript
+let ref = store
+  .collection('ducks')
+  .where('name', '==', 'yellow')
+  .orderBy('name')
+  .limit(10);
+
+let query = ref.query();
+await query.load();
+```
+
 ### parent → QueryableReference
 
 parent for this reference. may be CollectionReference or QueryReference
