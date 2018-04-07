@@ -26,7 +26,7 @@ import QueueOperation from 'ember-cli-zuglet/-private/queue/operation';
 
 import Observers from 'ember-cli-zuglet/-private/observers/observers';
 
-import ModelArrayProxy from 'ember-cli-zuglet/-private/util/read-only-model-array-proxy';
+import ModelArrayProxy from 'ember-cli-zuglet/-private/util/array-proxy';
 
 export default {
   name: 'zuglet:internal',

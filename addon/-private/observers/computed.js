@@ -1,4 +1,4 @@
-import destroyable from '../util/computed-destroyable';
+import destroyable from '../util/destroyable';
 import { getOwner } from '@ember/application';
 
 export default opts => destroyable({

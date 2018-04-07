@@ -1,6 +1,6 @@
 import ArrayProxy from '@ember/array/proxy';
 import { assert } from '@ember/debug';
-import createTransform from './create-array-transform-mixin';
+import createTransform from './array-transform-mixin';
 
 const TransformMixin = createTransform({
   internal() {
