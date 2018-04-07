@@ -537,7 +537,7 @@ Deletes document.
 ### observe()
 `→ function`
 
-Starts observing document onSnapshot changes. Returns function which can be used to top observation.
+Starts observing document onSnapshot changes. Returns function which can be used to stop observation.
 
 ``` javascript
 let doc = await store.doc('ducks/yellow').load();
