@@ -1,5 +1,4 @@
 import EmberObject, { computed } from '@ember/object';
-import EmberError from '@ember/error';
 import { readOnly } from '@ember/object/computed';
 import { defer, resolve, reject } from 'rsvp';
 import { assert } from '@ember/debug';
