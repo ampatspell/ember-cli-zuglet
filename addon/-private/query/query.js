@@ -1,4 +1,4 @@
-import EmberObject from '@ember/object';
+import EmberObject, { computed } from '@ember/object';
 import { equal, readOnly } from '@ember/object/computed';
 import ModelMixin from '../model-mixin';
 import createReadOnlyPropertiesMixin from '../util/create-read-only-properties-mixin';
@@ -15,7 +15,10 @@ export default EmberObject.extend(ModelMixin, StateMixin, MetaMixin, {
   isQuery: true,
 
   type: readOnly('_internal.type'),
-  query: readOnly('_internal.query'),
+
+  ref: computed('_internal.normalizedQuery', function() {
+    return this.get('_internal.normalizedQuery').model(true);
+  }).readOnly(),
 
   isArray: type('array'),
   isFirst: type('first'),
@@ -31,7 +34,7 @@ export default EmberObject.extend(ModelMixin, StateMixin, MetaMixin, {
   },
 
   toStringExtension() {
-    let query = this.get('query.string');
+    let query = this.get('ref.string');
     return `${query}`;
   }
 
