@@ -4,7 +4,7 @@ import { join } from '@ember/runloop';
 import { reject } from 'rsvp';
 import Internal from '../internal';
 import setChangedProperties from '../util/set-changed-properties';
-import task from '../task/computed';
+import queue from '../util/queue/computed';
 import observers from '../util/observers/computed';
 
 export const state = [ 'isLoading', 'isLoaded', 'isObserving', 'isError', 'error' ];
@@ -36,6 +36,8 @@ export default Internal.extend({
       hasPendingWrites: metadata.hasPendingWrites
     };
   }).readOnly(),
+
+  queue: queue(),
 
   content: null,
 
@@ -74,26 +76,24 @@ export default Internal.extend({
     return reject(err);
   },
 
-  _load() {
-    this.willLoad();
-    let query = this.get('query');
-    return query.get();
-  },
+  load(opts) {
+    let { isLoaded, isLoading } = this.getProperties('isLoaded', 'isLoading');
 
-  loadTask: task('serialized', {
-    perform() {
-      return this._load();
-    },
-    didResolve(snapshot) {
-      return this.didLoad(snapshot);
-    },
-    didReject(err) {
-      return this.loadDidFail(err);
+    if(isLoaded && !isLoading && !opts.force) {
+      return resolve(this);
     }
-  }),
 
-  load() {
-    return this.get('loadTask.promise');
+    return this.get('queue').schedule({
+      name: 'load',
+      reuse: operations => operations.findBy('name', 'load'),
+      invoke: () => {
+        this.willLoad();
+        let query = this.get('query');
+        return query.get();
+      },
+      didResolve: snapshot => this.didLoad(snapshot),
+      didReject: err => this.loadDidFail(err)
+    });
   },
 
   //
