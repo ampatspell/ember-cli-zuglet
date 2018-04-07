@@ -43,7 +43,7 @@ export default Mixin.create(keys.reduce((hash, key) => {
 }, {}), {
 
   query(opts) {
-    return this.store.createInternalQueryWithReference(this.ref, opts);
+    return this.store.createInternalQueryWithReference(this, opts);
   },
 
   didLoad(snapshot) {

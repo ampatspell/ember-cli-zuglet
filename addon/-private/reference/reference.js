@@ -4,6 +4,8 @@ import ModelMixin from '../model-mixin';
 
 export default EmberObject.extend(ModelMixin, {
 
+  isReference: true,
+
   id:   readOnly(`_internal.ref.id`),
   path: readOnly(`_internal.ref.path`),
 
@@ -12,8 +14,11 @@ export default EmberObject.extend(ModelMixin, {
     return parent && parent.model(true);
   }),
 
+  serialized: readOnly('_internal.serialized'),
+  string:     readOnly('_internal.string'),
+
   toStringExtension() {
-    let string = this.get('_internal.string');
+    let string = this.get('string');
     return `${string}`;
   }
 

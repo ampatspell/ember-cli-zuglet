@@ -13,6 +13,8 @@ const ref = key => readOnly(`ref.${key}`);
 
 export default EmberObject.extend(ModelMixin, StateMixin, MetaMixin, {
 
+  isDocument: true,
+
   ref: computed('_internal.ref', function() {
     return this.get('_internal.ref').model(true);
   }).readOnly(),
@@ -29,5 +31,10 @@ export default EmberObject.extend(ModelMixin, StateMixin, MetaMixin, {
   save:    invokePromiseReturningThis('save'),
   delete:  invokePromiseReturningThis('delete'),
   observe: invoke('observe'),
+
+  toStringExtension() {
+    let path = this.get('path');
+    return `${path}`;
+  }
 
 });

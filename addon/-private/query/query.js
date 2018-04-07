@@ -12,7 +12,10 @@ const type = value => equal('type', value).readOnly();
 
 export default EmberObject.extend(ModelMixin, StateMixin, MetaMixin, {
 
+  isQuery: true,
+
   type: readOnly('_internal.type'),
+  query: readOnly('_internal.query'),
 
   isArray: type('array'),
   isFirst: type('first'),
@@ -25,6 +28,11 @@ export default EmberObject.extend(ModelMixin, StateMixin, MetaMixin, {
 
   observe() {
     return this._internal.observe();
+  },
+
+  toStringExtension() {
+    let query = this.get('query.string');
+    return `${query}`;
   }
 
 });

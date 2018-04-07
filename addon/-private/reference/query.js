@@ -5,6 +5,8 @@ import QueryableMixin from './queryable-mixin';
 
 export default EmberObject.extend(ModelMixin, QueryableMixin, {
 
+  isReference: true,
+
   type: readOnly('_internal.type'),
   args: readOnly('_internal.args'),
 
@@ -14,9 +16,10 @@ export default EmberObject.extend(ModelMixin, QueryableMixin, {
   }),
 
   serialized: readOnly('_internal.serialized'),
+  string:     readOnly('_internal.string'),
 
   toStringExtension() {
-    let string = this.get('_internal.string');
+    let string = this.get('string');
     return `${string}`;
   }
 

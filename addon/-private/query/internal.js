@@ -39,6 +39,10 @@ export default Internal.extend({
 
   normalizedQuery: readOnly('query'),
 
+  unwrappedQuery: computed('normalizedQuery', function() {
+    return this.get('normalizedQuery').ref;
+  }).readOnly(),
+
   queue: queue('serialized', 'store.queue'),
 
   content: null,
@@ -90,7 +94,7 @@ export default Internal.extend({
       reuse: operations => operations.findBy('name', 'query/load'),
       invoke: () => {
         this.willLoad();
-        let query = this.get('normalizedQuery');
+        let query = this.get('unwrappedQuery');
         return query.get();
       },
       didResolve: snapshot => this.didLoad(snapshot),
@@ -105,7 +109,7 @@ export default Internal.extend({
   },
 
   subscribeQueryOnSnapshot() {
-    let query = this.get('query');
+    let query = this.get('unwrappedQuery');
     let opts = {
       includeDocumentMetadataChanges: true,
       includeQueryMetadataChanges: true
