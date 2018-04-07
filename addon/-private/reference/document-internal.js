@@ -1,3 +1,4 @@
+import { readOnly } from '@ember/object/computed';
 import ReferenceInternal from './reference-internal';
 import { reject } from 'rsvp';
 import { documentMissingError } from '../util/errors';
@@ -12,6 +13,9 @@ export const assertDocumentInternalReference = (name, arg) => {
 }
 
 export default ReferenceInternal.extend({
+
+  id: readOnly('ref.id'),
+  path: readOnly('ref.path'),
 
   createParentInternal(parent) {
     return this.store.createInternalCollectionReferenceForReference(parent);

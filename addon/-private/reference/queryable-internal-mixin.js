@@ -3,21 +3,36 @@ import { reject } from 'rsvp';
 import { documentMissingError } from '../util/errors';
 import { A } from '@ember/array';
 
-export const keys = [
-  'where',
-  'orderBy',
-  'limit',
-  'startAt',
-  'startAfter',
-  'endAt',
-  'endBefore'
-];
+const formatter = () => ({
+  string(info) {
+    return `${info.name}(${info.args.join(', ')})`;
+  },
+  object(info) {
+    return {
+      type: info.name,
+      args: info.args
+    };
+  }
+});
+
+const types = {
+  'where':      formatter(),
+  'orderBy':    formatter(),
+  'limit':      formatter(),
+  'startAt':    formatter(),
+  'startAfter': formatter(),
+  'endAt':      formatter(),
+  'endBefore':  formatter()
+};
+
+export const keys = Object.keys(types);
 
 const query = name => {
   return function(...args) {
     let ref = this.ref;
     let nested = ref[name].call(ref, ...args);
-    return this.store.createInternalQueryReferenceForReference(nested);
+    let formatter = types[name];
+    return this.store.createInternalQueryReferenceForReference(nested, { name, args, formatter });
   }
 }
 

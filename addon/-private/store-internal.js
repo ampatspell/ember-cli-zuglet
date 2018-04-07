@@ -69,8 +69,8 @@ export default Internal.extend({
     return this.factoryFor('zuglet:reference/collection/internal').create({ store: this, ref });
   },
 
-  createInternalQueryReferenceForReference(ref) {
-    return this.factoryFor('zuglet:reference/query/internal').create({ store: this, ref });
+  createInternalQueryReferenceForReference(ref, info) {
+    return this.factoryFor('zuglet:reference/query/internal').create({ store: this, ref, info });
   },
 
   createInternalQueryWithReference(query, opts={}) {
