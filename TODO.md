@@ -6,3 +6,19 @@
 * storage
 * maybe something which resembles identity -- union of multiple queries as a computed property
 * transaction
+
+## Data
+
+``` javascript
+let store = this.get('store');
+let doc = await store.doc('ducks/yellow').load({ optional: true });
+let data = doc.get('data');
+
+data.set('address', { city: 'Riga' });
+data.set('address', store.object({ city: 'Riga' }));
+
+data.set('names', [ 'one', 'two' ]);
+data.set('names', store.array([ 'one', 'two' ]));
+
+data._internal.serialize('storage / preview');
+```
