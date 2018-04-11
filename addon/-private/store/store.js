@@ -16,6 +16,8 @@ export default EmberObject.extend(ModelMixin, {
   collection: invokeReturningModel('collection'),
   doc: invokeReturningModel('doc'),
 
+  object: invokeReturningModel('object'),
+
   settle: invokePromiseReturningModel('settle')
 
 });

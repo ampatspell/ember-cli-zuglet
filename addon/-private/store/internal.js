@@ -121,6 +121,16 @@ export default Internal.extend({
 
   //
 
+  createInternalObject() {
+    return this.factoryFor('zuglet:data/object/internal').create({ store: this });
+  },
+
+  object() {
+    return this.createInternalObject();
+  },
+
+  //
+
   registerObservedInternal(internal) {
     let observed = this.get('observed');
     assert(`observed already has ${internal} registered`, !observed.includes(internal));
