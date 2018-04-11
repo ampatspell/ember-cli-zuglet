@@ -21,4 +21,5 @@ data.set('names', [ 'one', 'two' ]);
 data.set('names', store.array([ 'one', 'two' ]));
 
 data._internal.serialize('storage / preview');
+data._internal.deserialize(json, 'storage'); // diffing
 ```
