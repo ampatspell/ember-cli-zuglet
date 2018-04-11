@@ -23,3 +23,9 @@ data.set('names', store.array([ 'one', 'two' ]));
 data._internal.serialize('storage / preview');
 data._internal.deserialize(json, 'storage'); // diffing
 ```
+
+* checkpoint on deserialize
+* changedProperties
+* rollback nested object
+* isDirty is based on changedProperties
+* deserialize overwrites _or_ keeps changed properties

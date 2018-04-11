@@ -16,6 +16,7 @@ export default Internal.extend({
   },
 
   setModelValue(key, value) {
+    // deserialize(value, 'model');
     this.content[key] = value;
   }
 
