@@ -78,12 +78,14 @@ export default Internal.extend({
     });
     pristine.clear();
     pristine.addObjects(values);
+    values.forEach(value => value.checkpoint());
   },
 
   rollback() {
     let { pristine, values } = this.content;
     let len = values.get('length');
     this.replace(0, len, pristine);
+    pristine.forEach(value => value.rollback());
   },
 
   serialize(type) {

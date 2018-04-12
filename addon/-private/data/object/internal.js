@@ -82,6 +82,7 @@ export default Internal.extend({
           pr.detach();
         }
         pristine[key] = value;
+        value.checkpoint();
       }
     }
   },
@@ -101,7 +102,9 @@ export default Internal.extend({
       }
 
       for(let key in pristine) {
-        values[key] = pristine[key];
+        let pr = pristine[key];
+        values[key] = pr;
+        pr.rollback();
         changed(key);
       }
 

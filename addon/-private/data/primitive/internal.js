@@ -14,6 +14,12 @@ export default Internal.extend({
 
   serialize(type) {
     return this.content;
+  },
+
+  rollback() {
+  },
+
+  checkpoint() {
   }
 
 });

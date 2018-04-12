@@ -286,4 +286,93 @@ module('data', function(hooks) {
     ]);
   });
 
+  test('nested checkpoint and rollback', function(assert) {
+    let data = this.store.object({
+      name: 'duck',
+      address: {
+        lines: [
+          { line: 'duckland' },
+          { line: '55' }
+        ],
+        po: {
+          value: '123',
+          array: [ 'a', 'b', 'c' ]
+        }
+      }
+    });
+
+    assert.deepEqual(data.get('serialized'), {
+      "address": {
+        "lines": [
+          {
+            "line": "duckland"
+          },
+          {
+            "line": "55"
+          }
+        ],
+        "po": {
+          "array": [
+            "a",
+            "b",
+            "c"
+          ],
+          "value": "123"
+        }
+      },
+      "name": "duck"
+    });
+
+    data.get('address.po.array').pushObject('d');
+    data.set('address.po.value', '321');
+    data.set('address.lines.lastObject.line', '123');
+
+    assert.deepEqual(data.get('serialized'), {
+      "address": {
+        "lines": [
+          {
+            "line": "duckland"
+          },
+          {
+            "line": "123"
+          }
+        ],
+        "po": {
+          "array": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "value": "321"
+        }
+      },
+      "name": "duck"
+    });
+
+    data._internal.rollback();
+
+    assert.deepEqual(data.get('serialized'), {
+      "address": {
+        "lines": [
+          {
+            "line": "duckland"
+          },
+          {
+            "line": "55"
+          }
+        ],
+        "po": {
+          "array": [
+            "a",
+            "b",
+            "c"
+          ],
+          "value": "123"
+        }
+      },
+      "name": "duck"
+    });
+  });
+
 });
