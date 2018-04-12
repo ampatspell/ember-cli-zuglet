@@ -13,7 +13,8 @@ export default EmberObject.extend(MutableArray, ModelMixin, DataModelMixin, {
   },
 
   replace(idx, amt, objects) {
-    return this._internal.replaceModelValues(idx, amt, objects);
+    this._internal.replaceModelValues(idx, amt, objects);
+    return this;
   }
 
 });
