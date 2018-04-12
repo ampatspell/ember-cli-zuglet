@@ -46,9 +46,10 @@ export default Internal.extend({
 
   childDidUpdate(internal) {
     this.withPropertyChanges(true, changed => changed('serialized'));
+    this.notifyDidUpdate();
   },
 
-  didUpdate() {
+  notifyDidUpdate() {
     let parent = this.parent;
     if(!parent) {
       return;

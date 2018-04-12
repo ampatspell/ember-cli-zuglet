@@ -24,10 +24,8 @@ export default Internal.extend({
     if(!changed.any) {
       return;
     }
-
     changed('serialized');
-
-    this._super();
+    this.notifyDidUpdate();
   },
 
   setModelValue(key, value) {

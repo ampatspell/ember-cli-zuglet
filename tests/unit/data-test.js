@@ -198,6 +198,11 @@ module('data', function(hooks) {
       ]
     });
 
+    assert.deepEqual(data.get('names.serialized'), [
+      "yellow",
+      "green"
+    ]);
+
     data.get('names').pushObject('red');
 
     assert.deepEqual(data.get('serialized'), {
@@ -207,6 +212,55 @@ module('data', function(hooks) {
         "red"
       ]
     });
+
+    assert.deepEqual(data.get('names.serialized'), [
+      "yellow",
+      "green",
+      "red"
+    ]);
+
+    data.get('names').clear();
+
+    assert.deepEqual(data.get('serialized'), {
+      "names": [
+      ]
+    });
+
+    assert.deepEqual(data.get('names.serialized'), [
+    ]);
+
+    let name = this.store.object({ name: 'Duck' });
+    data.get('names').pushObject(name);
+
+    assert.deepEqual(data.get('serialized'), {
+      "names": [
+        {
+          "name": "Duck"
+        }
+      ]
+    });
+
+    assert.deepEqual(data.get('names.serialized'), [
+      {
+        "name": "Duck"
+      }
+    ]);
+
+    name.set('name', 'Ducky');
+
+    assert.deepEqual(data.get('serialized'), {
+      "names": [
+        {
+          "name": "Ducky"
+        }
+      ]
+    });
+
+    assert.deepEqual(data.get('names.serialized'), [
+      {
+        "name": "Ducky"
+      }
+    ]);
   });
 
 });

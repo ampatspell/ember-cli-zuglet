@@ -3,6 +3,14 @@ import { isInternal, toModel } from '../internal/util';
 import { get } from '@ember/object';
 import { A } from '@ember/array';
 
+const indexes = (idx, amt) => {
+  let values = [];
+  for(let i = 0; i < amt; i++) {
+    values.push(idx + i);
+  }
+  return values;
+}
+
 export default Internal.extend({
 
   init() {
@@ -30,6 +38,11 @@ export default Internal.extend({
     this.replace(idx, amt, internals);
   },
 
+  didUpdate() {
+    this.withPropertyChanges(true, changed => changed('serialized'));
+    this.notifyDidUpdate();
+  },
+
   replace(idx, amt, internals) {
     let model = this.model(false);
     let values = this.content.values;
@@ -40,7 +53,11 @@ export default Internal.extend({
       model.arrayContentWillChange(idx, amt, len);
     }
 
+    values.objectsAt(indexes(idx, amt)).map(internal => internal.detach(this));
+
     values.replace(idx, amt, internals);
+
+    internals.map(internal => internal.attach(this));
 
     if(model) {
       model.arrayContentDidChange(0, amt, len);
