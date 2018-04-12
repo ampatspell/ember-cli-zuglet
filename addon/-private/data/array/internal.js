@@ -53,7 +53,8 @@ export default Internal.extend({
       model.arrayContentWillChange(idx, amt, len);
     }
 
-    values.objectsAt(indexes(idx, amt)).map(internal => internal.detach(this));
+    let removing = values.objectsAt(indexes(idx, amt));
+    removing.map(internal => internal.detach(this));
 
     values.replace(idx, amt, internals);
 
