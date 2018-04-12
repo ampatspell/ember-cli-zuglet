@@ -44,8 +44,18 @@ module('data', function(hooks) {
 
   test('object pristine', function(assert) {
     let address = this.store.object({ city: 'duckland' });
-    assert.ok(address._internal.content.pristine.city);
-    assert.ok(!address._internal.content.values.city);
+
+    let pristine = address._internal.content.pristine;
+    let values = address._internal.content.values;
+
+    assert.ok(pristine.city);
+    assert.ok(!values.city);
+
+    address.set('city', 'another');
+
+    assert.ok(pristine.city);
+    assert.ok(values.city);
+    assert.ok(pristine.city !== values.city);
   });
 
 });
