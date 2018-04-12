@@ -40,10 +40,8 @@ export default (sender, hash) => {
     cancelOnDestroy();
   };
 
-  if(owner) {
-    let stores = owner.lookup('zuglet:stores');
-    cancelOnDestroy = stores._internal.registerWillDestroyListener(() => cancel());
-  }
+  let stores = owner.lookup('zuglet:stores');
+  cancelOnDestroy = stores._internal.registerWillDestroyListener(() => cancel());
 
   return cancel;
 };
