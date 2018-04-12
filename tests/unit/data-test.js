@@ -42,4 +42,10 @@ module('data', function(hooks) {
     assert.ok(got === address);
   });
 
+  test('object pristine', function(assert) {
+    let address = this.store.object({ city: 'duckland' });
+    assert.ok(address._internal.content.pristine.city);
+    assert.ok(!address._internal.content.values.city);
+  });
+
 });

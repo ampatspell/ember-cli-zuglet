@@ -16,7 +16,12 @@ export default Internal.extend({
   },
 
   getModelValue(key) {
-    return toModel(this.content.values[key]);
+    let content = this.content;
+    let value = content.pristine[key];
+    if(!value) {
+      value = content.values[key];
+    }
+    return toModel(value);
   },
 
   setModelValue(key, value) {
@@ -36,8 +41,45 @@ export default Internal.extend({
   },
 
   update(key, value) {
-    value.attach(this);
+    let current = this.content.values[key];
+
+    if(current === value) {
+      return;
+    }
+
+    if(current) {
+      current.detach();
+    }
+
+    if(value) {
+      value.attach(this);
+    }
+
     this.content.values[key] = value;
+  },
+
+  checkpoint() {
+    let { pristine, values } = this.content;
+
+    for(let key in pristine) {
+      if(!values[key]) {
+        pristine[key].detach();
+        delete pristine[key];
+      }
+    }
+
+    for(let key in values) {
+      let value = values[key];
+      let prev = pristine[key];
+      if(prev) {
+        if(value !== prev) {
+          prev.detach();
+        }
+      } else {
+        pristine[key] = value;
+      }
+      delete values[key];
+    }
   }
 
 });

@@ -23,7 +23,9 @@ export default Serializer.extend({
   //
 
   createNewInternal(props) {
-    return this.deserialize(props, 'model');
+    let internal = this.deserialize(props, 'model');
+    internal.checkpoint();
+    return internal;
   },
 
 });
