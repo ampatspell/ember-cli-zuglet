@@ -2,7 +2,8 @@ import Internal from '../internal/internal';
 import { computed } from '@ember/object';
 
 const serializers = [
-  'object'
+  'object',
+  'primitive'
 ];
 
 export default Internal.extend({

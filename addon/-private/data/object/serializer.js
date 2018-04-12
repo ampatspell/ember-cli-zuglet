@@ -2,12 +2,12 @@ import Serializer from '../internal/serializer';
 
 export default Serializer.extend({
 
-  createInternalObject() {
+  createInternal() {
     return this.factoryFor('zuglet:data/object/internal').create({ manager: this });
   },
 
   createNewInternal(props) {
-    return this.createInternalObject();
+    return this.createInternal();
   }
 
 });
