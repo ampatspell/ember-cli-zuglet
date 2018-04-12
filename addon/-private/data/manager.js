@@ -3,6 +3,7 @@ import { computed } from '@ember/object';
 import { A } from '@ember/array';
 
 const serializers = [
+  'array',
   'object',
   'primitive'
 ];
@@ -50,6 +51,11 @@ export default Internal.extend({
 
   createNewInternalObject(...args) {
     let serializer = this.serializerForName('object');
+    return serializer.createNewInternal(...args);
+  },
+
+  createNewInternalArray(...args) {
+    let serializer = this.serializerForName('array');
     return serializer.createNewInternal(...args);
   },
 

@@ -130,6 +130,10 @@ export default Internal.extend({
     return this.get('dataManager').createNewInternalObject(...args);
   },
 
+  array(...args) {
+    return this.get('dataManager').createNewInternalArray(...args);
+  },
+
   //
 
   registerObservedInternal(internal) {

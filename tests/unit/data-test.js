@@ -1,5 +1,4 @@
 import { module, test, setupStoreTest } from '../helpers/setup';
-import { all } from 'rsvp';
 import DataObject from 'ember-cli-zuglet/-private/data/object/object';
 
 module('data', function(hooks) {
@@ -163,6 +162,17 @@ module('data', function(hooks) {
         }
       }
     });
+  });
+
+  test('array', function(assert) {
+    let array = this.store.array([ 'one', 'two' ]);
+    assert.ok(array);
+    assert.ok(array._internal);
+    assert.equal(array.get('length'), 2);
+    assert.deepEqual(array.map(i => i), [ 'one', 'two' ]);
+    array.pushObject('three');
+    array.removeObject('two');
+    array.reverseObjects();
   });
 
 });
