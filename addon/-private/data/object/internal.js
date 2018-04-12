@@ -27,12 +27,7 @@ export default Internal.extend({
 
     changed('serialized');
 
-    let parent = this.parent;
-    if(!parent) {
-      return;
-    }
-
-    parent.childDidUpdate(this);
+    this._super();
   },
 
   setModelValue(key, value) {

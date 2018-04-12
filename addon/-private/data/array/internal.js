@@ -8,6 +8,7 @@ export default Internal.extend({
   init() {
     this._super(...arguments);
     this.content = {
+      pristine: null,
       values: A()
     };
   },
@@ -44,9 +45,20 @@ export default Internal.extend({
     if(model) {
       model.arrayContentDidChange(0, amt, len);
     }
+
+    if(amt > 0 || len > 0) {
+      this.didUpdate();
+    }
   },
 
   checkpoint() {
+    console.log('array.checkpoint');
   },
+
+  serialize(type) {
+    return this.content.values.map(internal => {
+      return internal.serialize(type);
+    });
+  }
 
 });

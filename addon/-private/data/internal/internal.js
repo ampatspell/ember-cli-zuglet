@@ -48,6 +48,14 @@ export default Internal.extend({
     this.withPropertyChanges(true, changed => changed('serialized'));
   },
 
+  didUpdate() {
+    let parent = this.parent;
+    if(!parent) {
+      return;
+    }
+    parent.childDidUpdate(this);
+  },
+
   //
 
   toInternal(value) {

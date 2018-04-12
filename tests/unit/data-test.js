@@ -188,4 +188,25 @@ module('data', function(hooks) {
     assert.equal(values.objectAt(0).content, 'three');
   });
 
+  test('array notifies parent', function(assert) {
+    let data = this.store.object({ names: [ 'yellow', 'green' ]});
+
+    assert.deepEqual(data.get('serialized'), {
+      "names": [
+        "yellow",
+        "green"
+      ]
+    });
+
+    data.get('names').pushObject('red');
+
+    assert.deepEqual(data.get('serialized'), {
+      "names": [
+        "yellow",
+        "green",
+        "red"
+      ]
+    });
+  });
+
 });
