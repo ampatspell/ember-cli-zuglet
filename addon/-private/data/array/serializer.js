@@ -16,7 +16,7 @@ export default Serializer.extend({
     let internal = this.createInternal();
     let manager = this.manager;
     let internals = A(values).map(value => manager.deserialize(value, type));
-    internal.replace(internals);
+    internal.replace(0, 0, internals);
     return internal;
   },
 

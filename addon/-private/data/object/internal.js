@@ -36,18 +36,8 @@ export default Internal.extend({
   },
 
   setModelValue(key, value) {
-    let internal = toInternal(value);
-
-    if(isInternal(internal)) {
-      if(internal.isAttached()) {
-        throw new Error('not implemented');
-      }
-    } else {
-      internal = this.manager.deserialize(value, 'model');
-    }
-
+    let internal = this.toInternal(value);
     this.update(key, internal);
-
     return toModel(internal);
   },
 

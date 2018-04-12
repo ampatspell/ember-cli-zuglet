@@ -164,15 +164,28 @@ module('data', function(hooks) {
     });
   });
 
-  test('array', function(assert) {
+  test('array create and operations', function(assert) {
     let array = this.store.array([ 'one', 'two' ]);
     assert.ok(array);
     assert.ok(array._internal);
     assert.equal(array.get('length'), 2);
+
+    let values = array._internal.content.values;
     assert.deepEqual(array.map(i => i), [ 'one', 'two' ]);
+    assert.equal(values.objectAt(0).content, 'one');
+    assert.equal(values.objectAt(1).content, 'two');
+
     array.pushObject('three');
+    assert.deepEqual(array.map(i => i), [ 'one', 'two', 'three' ]);
+    assert.equal(values.objectAt(2).content, 'three');
+
     array.removeObject('two');
+    assert.deepEqual(array.map(i => i), [ 'one', 'three' ]);
+    assert.equal(values.objectAt(1).content, 'three');
+
     array.reverseObjects();
+    assert.deepEqual(array.map(i => i), [ 'three', 'one' ]);
+    assert.equal(values.objectAt(0).content, 'three');
   });
 
 });

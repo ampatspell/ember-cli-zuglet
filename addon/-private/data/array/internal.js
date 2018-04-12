@@ -1,5 +1,6 @@
 import Internal from '../internal/internal';
-import { toInternal, isInternal, toModel } from '../internal/util';
+import { isInternal, toModel } from '../internal/util';
+import { get } from '@ember/object';
 import { A } from '@ember/array';
 
 export default Internal.extend({
@@ -23,27 +24,25 @@ export default Internal.extend({
     return internal.model(true);
   },
 
-  replaceModelValues(idx, amt, objects) {
-    console.log('replaceModelValues', idx, amt, objects);
+  replaceModelValues(idx, amt, values) {
+    let internals = A(values).map(value => this.toInternal(value));
+    this.replace(idx, amt, internals);
   },
 
-  replace(internals) {
+  replace(idx, amt, internals) {
     let model = this.model(false);
-
     let values = this.content.values;
 
-    let remove = values.get('length');
-    let add = internals.length;
+    let len = get(internals, 'length');
 
     if(model) {
-      model.arrayContentWillChange(0, remove, add);
+      model.arrayContentWillChange(idx, amt, len);
     }
 
-    values.clear();
-    values.addObjects(internals);
+    values.replace(idx, amt, internals);
 
     if(model) {
-      model.arrayContentDidChange(0, remove, add);
+      model.arrayContentDidChange(0, amt, len);
     }
   },
 

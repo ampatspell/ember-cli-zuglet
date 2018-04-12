@@ -2,6 +2,7 @@ import Internal from '../../internal/internal';
 import { get } from '@ember/object';
 import { assert } from '@ember/debug';
 import { isModel } from './model-mixin';
+import { toInternal } from './util';
 import withPropertyChanges from '../../internal/with-property-changes';
 
 const key = '_isZugletDataInternal';
@@ -45,6 +46,20 @@ export default Internal.extend({
 
   childDidUpdate(internal) {
     this.withPropertyChanges(true, changed => changed('serialized'));
+  },
+
+  //
+
+  toInternal(value) {
+    let internal = toInternal(value);
+    if(isInternal(internal)) {
+      if(internal.isAttached()) {
+        throw new Error('attached internal: not implemented');
+      }
+    } else {
+      internal = this.manager.deserialize(value, 'model');
+    }
+    return internal;
   }
 
 });
