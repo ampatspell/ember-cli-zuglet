@@ -52,6 +52,8 @@ export default Internal.extend({
       model.arrayContentWillChange(idx, amt, len);
     }
 
+    // TODO: make this smarter -- don't detach and attach again existing
+
     let removing = values.objectsAt(indexes(idx, amt));
     removing.map(internal => internal.detach(this));
 
@@ -77,6 +79,7 @@ export default Internal.extend({
       internal.detach();
     });
     pristine.clear();
+    // TODO: messy
     pristine.addObjects(values);
     values.forEach(value => value.checkpoint());
   },
@@ -84,6 +87,7 @@ export default Internal.extend({
   rollback() {
     let { pristine, values } = this.content;
     let len = values.get('length');
+    // TODO: messy
     this.replace(0, len, pristine);
     pristine.forEach(value => value.rollback());
   },
