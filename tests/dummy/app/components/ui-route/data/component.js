@@ -6,10 +6,7 @@ export default Component.extend({
   layout,
 
   data: computed(function() {
-    let data = this.get('store').object({ ok: true, user: { name: 'Duck' } });
-    window.data = data;
-    console.log(`window.data = ${data}`);
-    return data;
+    return this.get('store').object({ ok: true, user: { name: 'Duck' } });
   }).readOnly()
 
 });

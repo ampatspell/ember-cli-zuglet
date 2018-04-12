@@ -8,6 +8,7 @@ export default Internal.extend({
   init() {
     this._super(...arguments);
     this.stores = A();
+    this.willDestroyListeners = A();
   },
 
   factoryFor(name) {
@@ -39,7 +40,21 @@ export default Internal.extend({
     return all(this.get('stores').map(store => store.get('ready')));
   },
 
+  registerWillDestroyListener(fn) {
+    let array = this.get('willDestroyListeners');
+    array.pushObject(fn);
+    let removed = false;
+    return () => {
+      if(removed) {
+        return;
+      }
+      removed = true;
+      array.removeObject(fn);
+    };
+  },
+
   willDestroy() {
+    this.get('willDestroyListeners').map(fn => fn());
     this.get('stores').map(store => store.destroy());
     this._super(...arguments);
   }

@@ -7,9 +7,6 @@ export default Component.extend({
 
   query: computed(function() {
     let store = this.get('store');
-
-    window.store = store;
-
     let query = store.collection('ducks').orderBy('name').query({ type: 'array' });
     query.load();
     return query;
