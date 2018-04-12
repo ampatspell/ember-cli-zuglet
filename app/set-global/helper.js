@@ -1,1 +1,1 @@
-export { default, setGlobal } from 'ember-cli-zuglet/helpers/set-global';
+export { default } from 'ember-cli-zuglet/helpers/set-global';
