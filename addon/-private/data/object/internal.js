@@ -1,5 +1,5 @@
 import Internal from '../internal/internal';
-import { toInternal, isInternal, toModel } from '../internal/util';
+import { toModel } from '../internal/util';
 
 export default Internal.extend({
 

@@ -1,5 +1,4 @@
 import Internal from '../internal/internal';
-import { isInternal, toModel } from '../internal/util';
 import { get } from '@ember/object';
 import { A } from '@ember/array';
 

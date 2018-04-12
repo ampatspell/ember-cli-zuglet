@@ -1,7 +1,6 @@
 import Internal from '../../internal/internal';
 import { get } from '@ember/object';
 import { assert } from '@ember/debug';
-import { isModel } from './model-mixin';
 import { toInternal } from './util';
 import withPropertyChanges from '../../internal/with-property-changes';
 
@@ -44,7 +43,7 @@ export default Internal.extend({
     return withPropertyChanges(this, notify, fn);
   },
 
-  childDidUpdate(internal) {
+  childDidUpdate() {
     this.withPropertyChanges(true, changed => changed('serialized'));
     this.notifyDidUpdate();
   },
