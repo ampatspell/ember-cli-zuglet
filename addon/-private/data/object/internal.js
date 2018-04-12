@@ -8,7 +8,7 @@ export default Internal.extend({
   },
 
   createModel() {
-    return this.store.factoryFor('zuglet:data/object').create({ _internal: this });
+    return this.factoryFor('zuglet:data/object').create({ _internal: this });
   },
 
   getModelValue(key) {
