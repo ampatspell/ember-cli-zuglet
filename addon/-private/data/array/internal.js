@@ -82,7 +82,8 @@ export default Internal.extend({
 
   rollback() {
     let { pristine, values } = this.content;
-    this.replace(0, values.get('length'), pristine);
+    let len = values.get('length');
+    this.replace(0, len, pristine);
   },
 
   serialize(type) {
