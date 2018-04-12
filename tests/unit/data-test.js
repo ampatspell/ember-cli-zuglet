@@ -48,6 +48,11 @@ module('data', function(hooks) {
     let pristine = address._internal.content.pristine;
     let values = address._internal.content.values;
 
+    let city = pristine.city;
+    let city_ = city;
+
+    assert.ok(city.parent === address._internal);
+
     assert.ok(pristine.city);
     assert.ok(!values.city);
 
@@ -57,7 +62,11 @@ module('data', function(hooks) {
     assert.ok(values.city);
     assert.ok(pristine.city !== values.city);
 
-    let city = values.city;
+    assert.ok(city.parent === address._internal);
+
+    city = values.city;
+
+    assert.ok(city.parent === address._internal);
 
     address._internal.checkpoint();
 
@@ -65,6 +74,7 @@ module('data', function(hooks) {
     assert.ok(!values.city);
 
     assert.ok(pristine.city === city);
+    assert.ok(city_.parent === null);
   });
 
 });
