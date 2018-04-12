@@ -23,7 +23,9 @@ export default Internal.extend({
     let internal = toInternal(value);
 
     if(isInternal(internal)) {
-      // TODO: clone if attached
+      if(internal.isAttached()) {
+        throw new Error('not implemented');
+      }
     } else {
       internal = this.manager.deserialize(value, 'model');
     }
@@ -34,7 +36,8 @@ export default Internal.extend({
   },
 
   update(key, value) {
+    value.attach(this);
     this.content.values[key] = value;
-  },
+  }
 
 });
