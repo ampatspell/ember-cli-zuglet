@@ -2,6 +2,7 @@ import Internal from '../../internal/internal';
 import { get } from '@ember/object';
 import { assert } from '@ember/debug';
 import { isModel } from './model-mixin';
+import withPropertyChanges from '../../internal/with-property-changes';
 
 const key = '_isZugletDataInternal';
 
@@ -36,6 +37,14 @@ export default Internal.extend({
 
   isAttached() {
     return !!this.parent;
+  },
+
+  withPropertyChanges(notify, fn) {
+    return withPropertyChanges(this, notify, fn);
+  },
+
+  childDidUpdate(internal) {
+    this.withPropertyChanges(true, changed => changed('serialized'));
   }
 
 });

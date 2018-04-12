@@ -1,6 +1,5 @@
 import Internal from '../internal/internal';
 import { toInternal, isInternal, toModel } from '../internal/util';
-import withPropertyChanges from '../../internal/with-property-changes';
 
 export default Internal.extend({
 
@@ -21,6 +20,21 @@ export default Internal.extend({
     return toModel(value);
   },
 
+  didUpdate(changed) {
+    if(!changed.any) {
+      return;
+    }
+
+    changed('serialized');
+
+    let parent = this.parent;
+    if(!parent) {
+      return;
+    }
+
+    parent.childDidUpdate(this);
+  },
+
   setModelValue(key, value) {
     let internal = toInternal(value);
 
@@ -38,7 +52,7 @@ export default Internal.extend({
   },
 
   update(key, value) {
-    withPropertyChanges(this, true, changed => {
+    this.withPropertyChanges(true, changed => {
       let { pristine, values } = this.content;
       let current = values[key];
 
@@ -61,7 +75,7 @@ export default Internal.extend({
       }
 
       changed(key);
-      changed('serialized');
+      this.didUpdate(changed);
     });
   },
 
@@ -91,7 +105,7 @@ export default Internal.extend({
 
   // copies pristine over values
   rollback() {
-    withPropertyChanges(this, true, changed => {
+    this.withPropertyChanges(true, changed => {
       let { pristine, values } = this.content;
 
       for(let key in values) {
@@ -108,9 +122,7 @@ export default Internal.extend({
         changed(key);
       }
 
-      if(changed.any) {
-        changed('serialized');
-      }
+      this.didUpdate(changed);
     });
   },
 

@@ -120,4 +120,49 @@ module('data', function(hooks) {
     });
   });
 
+  test('parent serialized', function(assert) {
+    let data = this.store.object({ city: 'Duckland' });
+
+    assert.deepEqual(data.get('serialized'), {
+      "city": "Duckland"
+    });
+
+    data.set('city');
+
+    data.set('address', {
+      city: 'Yellow',
+      country: 'Duckland'
+    });
+
+    assert.deepEqual(data.get('serialized'), {
+      "address": {
+        "city": "Yellow",
+        "country": "Duckland"
+      }
+    });
+
+    data.set('address.street', 'Duckstr 1');
+
+    assert.deepEqual(data.get('serialized'), {
+      "address": {
+        "city": "Yellow",
+        "country": "Duckland",
+        "street": "Duckstr 1"
+      }
+    });
+
+    data.set('address.street', { name: 'Duckstr', number: 1 });
+
+    assert.deepEqual(data.get('serialized'), {
+      "address": {
+        "city": "Yellow",
+        "country": "Duckland",
+        "street": {
+          "name": "Duckstr",
+          "number": 1
+        }
+      }
+    });
+  });
+
 });
