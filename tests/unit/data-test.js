@@ -42,7 +42,7 @@ module('data', function(hooks) {
     assert.ok(got === address);
   });
 
-  test('object pristine', function(assert) {
+  test('object checkpoint', function(assert) {
     let address = this.store.object({ city: 'duckland' });
 
     let pristine = address._internal.content.pristine;
@@ -56,6 +56,15 @@ module('data', function(hooks) {
     assert.ok(pristine.city);
     assert.ok(values.city);
     assert.ok(pristine.city !== values.city);
+
+    let city = values.city;
+
+    address._internal.checkpoint();
+
+    assert.ok(pristine.city);
+    assert.ok(!values.city);
+
+    assert.ok(pristine.city === city);
   });
 
 });

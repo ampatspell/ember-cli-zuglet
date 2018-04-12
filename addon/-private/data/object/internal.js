@@ -71,11 +71,10 @@ export default Internal.extend({
     for(let key in values) {
       let value = values[key];
       let prev = pristine[key];
-      if(prev) {
-        if(value !== prev) {
-          prev.detach();
-        }
-      } else {
+      if(prev && value !== prev) {
+        prev.detach();
+      }
+      if(prev !== value) {
         pristine[key] = value;
       }
       delete values[key];
