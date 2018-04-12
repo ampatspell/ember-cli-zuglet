@@ -1,10 +1,14 @@
 import Internal from '../internal/internal';
+import { toInternal, isInternal, toModel } from '../internal/util';
 
 export default Internal.extend({
 
   init() {
     this._super(...arguments);
-    this.content = Object.create(null);
+    this.content = {
+      pristine: Object.create(null),
+      values:   Object.create(null)
+    };
   },
 
   createModel() {
@@ -12,12 +16,25 @@ export default Internal.extend({
   },
 
   getModelValue(key) {
-    return this.content[key];
+    return toModel(this.content.values[key]);
   },
 
   setModelValue(key, value) {
-    // deserialize(value, 'model');
-    this.content[key] = value;
-  }
+    let internal = toInternal(value);
+
+    if(isInternal(internal)) {
+      // TODO: clone if attached
+    } else {
+      internal = this.manager.deserialize(value, 'model');
+    }
+
+    this.update(key, internal);
+
+    return toModel(internal);
+  },
+
+  update(key, value) {
+    this.content.values[key] = value;
+  },
 
 });

@@ -6,6 +6,10 @@ export default Internal.extend({
 
   model() {
     return this.content;
+  },
+
+  update(value) {
+    this.set('content', value);
   }
 
 });

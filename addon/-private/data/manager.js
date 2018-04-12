@@ -1,5 +1,6 @@
 import Internal from '../internal/internal';
 import { computed } from '@ember/object';
+import { A } from '@ember/array';
 
 const serializers = [
   'object',
@@ -14,7 +15,7 @@ export default Internal.extend({
     return this.store.factoryFor(name);
   },
 
-  serializers: computed(function() {
+  serializersByName: computed(function() {
     return serializers.reduce((hash, name) => {
       let value = this.factoryFor(`zuglet:data/${name}/serializer`).create({ manager: this });
       hash[name] = value;
@@ -22,9 +23,30 @@ export default Internal.extend({
     }, {});
   }).readOnly(),
 
+  serializers: computed(function() {
+    return A(Object.values(this.get('serializersByName')));
+  }).readOnly(),
+
   serializerForName(name) {
-    return this.get('serializers')[name];
+    return this.get('serializersByName')[name];
   },
+
+  findSerializer(cb) {
+    return this.get('serializers').find(cb);
+  },
+
+  //
+
+  serializerForPrimitive(value) {
+    return this.findSerializer(serializer => serializer.supports(value));
+  },
+
+  deserialize(value, type) {
+    let serializer = this.serializerForPrimitive(value);
+    return serializer.deserialize(value, type);
+  },
+
+  //
 
   createNewInternalObject(...args) {
     let serializer = this.serializerForName('object');
