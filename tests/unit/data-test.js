@@ -263,4 +263,27 @@ module('data', function(hooks) {
     ]);
   });
 
+  test('array checkpoint', function(assert) {
+    let array = this.store.array([ 'one', 'two', 'three' ]);
+
+    assert.deepEqual(array.map(i => i), [
+      "one",
+      "two",
+      "three"
+    ]);
+
+    array.clear();
+
+    assert.deepEqual(array.map(i => i), [
+    ]);
+
+    array._internal.rollback();
+
+    assert.deepEqual(array.map(i => i), [
+      "one",
+      "two",
+      "three"
+    ]);
+  });
+
 });

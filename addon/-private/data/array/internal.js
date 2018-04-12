@@ -15,7 +15,7 @@ export default Internal.extend({
   init() {
     this._super(...arguments);
     this.content = {
-      pristine: null,
+      pristine: A(),
       values: A()
     };
   },
@@ -69,7 +69,20 @@ export default Internal.extend({
   },
 
   checkpoint() {
-    console.log('array.checkpoint');
+    let { pristine, values } = this.content;
+    pristine.map(internal => {
+      if(values.includes(internal)) {
+        return;
+      }
+      internal.detach();
+    });
+    pristine.clear();
+    pristine.addObjects(values);
+  },
+
+  rollback() {
+    let { pristine, values } = this.content;
+    this.replace(0, values.get('length'), pristine);
   },
 
   serialize(type) {
