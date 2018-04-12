@@ -10,6 +10,10 @@ export default Internal.extend({
 
   update(value) {
     this.set('content', value);
+  },
+
+  serialize(type) {
+    return this.content;
   }
 
 });

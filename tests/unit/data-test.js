@@ -54,7 +54,8 @@ module('data', function(hooks) {
     assert.ok(city.parent === address._internal);
 
     assert.ok(pristine.city);
-    assert.ok(!values.city);
+    assert.ok(values.city);
+    assert.ok(pristine.city === values.city);
 
     address.set('city', 'another');
 
@@ -71,10 +72,52 @@ module('data', function(hooks) {
     address._internal.checkpoint();
 
     assert.ok(pristine.city);
-    assert.ok(!values.city);
+    assert.ok(values.city);
+    assert.ok(pristine.city === values.city);
 
     assert.ok(pristine.city === city);
     assert.ok(city_.parent === null);
+  });
+
+  test('object serialized', function(assert) {
+    let address = this.store.object({ city: 'duckland' });
+
+    assert.deepEqual(address.get('serialized'), {
+      city: 'duckland'
+    });
+
+    address.set('country', 'Ducky');
+
+    assert.deepEqual(address.get('serialized'), {
+      city: 'duckland',
+      country: 'Ducky'
+    });
+
+    address.set('country');
+
+    assert.deepEqual(address.get('serialized'), {
+      city: 'duckland'
+    });
+
+    address.set('city', 'fooland');
+    address.set('country', 'Ducky')
+
+    assert.deepEqual(address.get('serialized'), {
+      city: 'fooland',
+      country: 'Ducky'
+    });
+
+    assert.equal(address.get('city'), 'fooland');
+    assert.equal(address.get('country'), 'Ducky');
+
+    address._internal.rollback();
+
+    assert.equal(address.get('city'), 'duckland');
+    assert.equal(address.get('country'), undefined);
+
+    assert.deepEqual(address.get('serialized'), {
+      city: 'duckland'
+    });
   });
 
 });

@@ -1,5 +1,6 @@
 import Internal from '../internal/internal';
 import { toInternal, isInternal, toModel } from '../internal/util';
+import withPropertyChanges from '../../internal/with-property-changes';
 
 export default Internal.extend({
 
@@ -16,11 +17,7 @@ export default Internal.extend({
   },
 
   getModelValue(key) {
-    let content = this.content;
-    let value = content.pristine[key];
-    if(!value) {
-      value = content.values[key];
-    }
+    let value = this.content.values[key];
     return toModel(value);
   },
 
@@ -41,44 +38,92 @@ export default Internal.extend({
   },
 
   update(key, value) {
-    let current = this.content.values[key];
+    withPropertyChanges(this, true, changed => {
+      let { pristine, values } = this.content;
+      let current = values[key];
 
-    if(current === value) {
-      return;
-    }
+      if(current === value) {
+        return;
+      }
 
-    if(current) {
-      current.detach();
-    }
+      if(current) {
+        let pr = pristine[key];
+        if(pr !== current) {
+          current.detach();
+        }
+      }
 
-    if(value) {
-      value.attach(this);
-    }
+      if(value) {
+        value.attach(this);
+        values[key] = value;
+      } else {
+        delete values[key];
+      }
 
-    this.content.values[key] = value;
+      changed(key);
+      changed('serialized');
+    });
   },
 
+  // moves all values to pristine
   checkpoint() {
     let { pristine, values } = this.content;
 
     for(let key in pristine) {
-      if(!values[key]) {
-        pristine[key].detach();
+      let pr = pristine[key];
+      if(pr && pr !== values[key]) {
+        pr.detach();
         delete pristine[key];
       }
     }
 
     for(let key in values) {
       let value = values[key];
-      let prev = pristine[key];
-      if(value !== prev) {
-        if(prev) {
-          prev.detach();
+      let pr = pristine[key];
+      if(value !== pr) {
+        if(pr) {
+          pr.detach();
         }
         pristine[key] = value;
       }
-      delete values[key];
     }
+  },
+
+  // copies pristine over values
+  rollback() {
+    withPropertyChanges(this, true, changed => {
+      let { pristine, values } = this.content;
+
+      for(let key in values) {
+        let value = values[key];
+        let pr = pristine[key];
+        if(value !== pr) {
+          value.detach();
+          delete values[key];
+        }
+      }
+
+      for(let key in pristine) {
+        values[key] = pristine[key];
+        changed(key);
+      }
+
+      if(changed.any) {
+        changed('serialized');
+      }
+    });
+  },
+
+  serialize(type) {
+    let json = {};
+    let values = this.content.values;
+    for(let key in values) {
+      let value = values[key].serialize(type);
+      if(typeof value !== 'undefined') {
+        json[key] = value;
+      }
+    }
+    return json;
   }
 
 });
