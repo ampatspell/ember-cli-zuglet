@@ -1,7 +1,7 @@
 # TODO
 
 * data parsing from-to firestore
-* primitives for query, load, .. based on destroyable-computed
+* primitives for query, load, .. based on destroyable-computed (`{ immediate: true }`)
 * auth
 * storage
 * maybe something which resembles identity -- union of multiple queries as a computed property
