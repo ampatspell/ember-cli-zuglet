@@ -60,7 +60,7 @@ export default Internal.extend({
     internals.map(internal => internal.attach(this));
 
     if(model) {
-      model.arrayContentDidChange(0, amt, len);
+      model.arrayContentDidChange(idx, amt, len);
     }
 
     if(amt > 0 || len > 0) {
