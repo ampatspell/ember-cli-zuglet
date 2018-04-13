@@ -81,11 +81,34 @@ export default Serializer.extend({
   },
 
   update(internal, array, type, build) {
+    array = A(array);
     let values = internal.content.values;
+
+    let remaining = A(values.copy());
+    const reusable = item => {
+      let found = remaining.find(value => value.matches(item));
+      if(found) {
+        remaining.removeObject(found);
+      }
+      return found;
+    };
+
+    let internals = A(array.map(item => {
+      let internal = reusable(item);
+      if(internal) {
+        let result = internal.update(item, type);
+        internal = result.internal;
+      } else {
+        internal = this.manager.deserialize(item, type);
+      }
+      return internal;
+    }));
+
     let oldLen = values.get('length');
-    let newLen = A(array).get('length');
+    let newLen = internals.get('length');
+
     return build(0, oldLen, newLen, changed => {
-      this.replace(internal, 0, oldLen, array, type, changed);
+      this.internalReplace(internal, 0, oldLen, internals);
       return {
         replace: false,
         internal

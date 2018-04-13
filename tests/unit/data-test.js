@@ -623,7 +623,7 @@ module('data', function(hooks) {
       ],
       "second": [ 'ok' ]
     });
-
+    
     assert.deepEqual(data.get('serialized'), {
       "array": [
         { "name": "three" },
@@ -634,6 +634,48 @@ module('data', function(hooks) {
       ],
       "second": [ 'ok' ]
     });
+  });
+
+  test('update array primitives append', function(assert) {
+    let data = this.store.object({
+      array: [
+        'one',
+        'two'
+      ]
+    });
+
+
+    let fetch = () => data._internal.content.values.array.content.values.map(i => i);
+
+    let start = fetch();
+
+    assert.deepEqual(data.get('serialized'), {
+      "array": [
+        "one",
+        "two"
+      ]
+    });
+
+    data._internal.update({
+      "array": [
+        "one",
+        "two",
+        "three"
+      ]
+    });
+
+    let end = fetch();
+
+    assert.deepEqual(data.get('serialized'), {
+      "array": [
+        "one",
+        "two",
+        "three"
+      ]
+    });
+
+    assert.ok(start[0] === end[0]);
+    assert.ok(start[1] === end[1]);
   });
 
 });
