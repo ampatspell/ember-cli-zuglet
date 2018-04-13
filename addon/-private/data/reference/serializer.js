@@ -51,6 +51,23 @@ export default Serializer.extend({
 
   deserialize(value) {
     return this.createInternal(value);
+  },
+
+  update(internal, value) {
+    value = this.toInternalReference(value);
+
+    if(internal.content.isEqual(value)) {
+      return {
+        replace: false,
+        internal
+      };
+    }
+
+    internal = this.createInternal(value);
+    return {
+      replace: true,
+      internal
+    };
   }
 
 });

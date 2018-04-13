@@ -12,6 +12,10 @@ export default Internal.extend({
   },
 
   checkpoint() {
+  },
+
+  update(arg, type) {
+    return this.serializer.update(this, arg, type);
   }
 
 });

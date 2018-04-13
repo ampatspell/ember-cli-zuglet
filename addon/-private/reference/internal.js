@@ -41,4 +41,11 @@ export default Internal.extend({
     return arr;
   }),
 
+  isEqual(other) {
+    if(!this.constructor.detectInstance(other)) {
+      return false;
+    }
+    return this.ref.isEqual(other.ref);
+  }
+
 });

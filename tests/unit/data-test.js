@@ -457,7 +457,7 @@ module('data', function(hooks) {
     assert.ok(raw.doc.isEqual(doc));
   });
 
-  test.only('update object with primitives', function(assert) {
+  test('update object with primitives', function(assert) {
     let data = this.store.object({
       address: {
         city: 'Yeelo',
@@ -521,6 +521,77 @@ module('data', function(hooks) {
     assert.ok(start.name !== end.name);
     assert.ok(!end.email);
     assert.ok(start.ok !== end.ok);
+  });
+
+  test('update reference', function(assert) {
+    let data = this.store.object({
+      identical: {
+        coll: this.store.collection('ducks'),
+        doc: this.store.doc('ducks/yellow')
+      },
+      changed: {
+        coll: this.store.collection('hamsters'),
+        doc: this.store.doc('hamster/yellow')
+      }
+    });
+
+    let fetch = () => {
+      let values = data._internal.content.values;
+      let identical = values.identical.content.values;
+      let changed = values.changed.content.values;
+      return {
+        identical: {
+          coll: identical.coll,
+          doc: identical.doc
+        },
+        changed: {
+          coll: changed.coll,
+          doc: changed.doc
+        }
+      };
+    };
+
+    let start = fetch();
+
+    assert.deepEqual(data.get('serialized'), {
+      "changed": {
+        "coll": "reference:hamsters",
+        "doc": "reference:hamster/yellow"
+      },
+      "identical": {
+        "coll": "reference:ducks",
+        "doc": "reference:ducks/yellow"
+      }
+    });
+
+    data._internal.update({
+      identical: {
+        coll: data.get('identical')._internal.content.values.coll.content.ref,
+        doc: data.get('identical')._internal.content.values.doc.content.ref,
+      },
+      changed: {
+        coll: this.store.collection('zeebas')._internal.ref,
+        doc: this.store.doc('zeebas/yellow')._internal.ref,
+      }
+    });
+
+    assert.deepEqual(data.get('serialized'), {
+      "changed": {
+        "coll": "reference:zeebas",
+        "doc": "reference:zeebas/yellow"
+      },
+      "identical": {
+        "coll": "reference:ducks",
+        "doc": "reference:ducks/yellow"
+      }
+    });
+
+    let end = fetch();
+
+    assert.ok(start.identical.coll === end.identical.coll);
+    assert.ok(start.identical.doc === end.identical.doc);
+    assert.ok(start.changed.coll !== end.changed.coll);
+    assert.ok(start.changed.doc !== end.changed.doc);
   });
 
 });
