@@ -390,6 +390,9 @@ module('data', function(hooks) {
     data._internal.checkpoint();
 
     assert.ok(!ducks._internal.isAttached());
+
+    data.set('ducks', ducks);
+    assert.ok(ducks._internal.isAttached());
   });
 
   test('array detach items', function(assert) {
