@@ -23,10 +23,7 @@ export default Internal.extend({
 
   replaceModelValues(idx, amt, values) {
     this.withArrayContentChanges(true, builder => {
-      let len = A(values).get('length');
-      builder(idx, amt, len, changed => {
-        this.serializer.replace(this, idx, amt, values, 'model', changed);
-      });
+      this.serializer.replaceModelValues(this, idx, amt, values, 'model', builder);
     });
   },
 
@@ -52,24 +49,6 @@ export default Internal.extend({
         return result;
       }
       return cb(builder);
-    });
-  },
-
-  checkpoint() {
-    this.withArrayContentChanges(true, build => {
-      this.serializer.checkpoint(this, build);
-    });
-  },
-
-  rollback() {
-    this.withArrayContentChanges(true, build => {
-      this.serializer.rollback(this, build);
-    });
-  },
-
-  update(arg, type) {
-    return this.withArrayContentChanges(true, build => {
-      return this.serializer.update(this, arg, type, build);
     });
   }
 

@@ -12,14 +12,14 @@ export default Internal.extend({
     return this.content;
   },
 
+  update(value, type) {
+    return this.serializer.update(this, value, type);
+  },
+
+  fetch() {
+  },
+
   rollback() {
-  },
-
-  checkpoint() {
-  },
-
-  update(arg, type) {
-    return this.serializer.update(this, arg, type);
   }
 
 });

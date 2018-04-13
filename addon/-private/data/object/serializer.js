@@ -5,24 +5,79 @@ import { A } from '@ember/array';
 
 export default Serializer.extend({
 
-  createInternal() {
-    return this.factoryFor('zuglet:data/object/internal').create({ serializer: this });
-  },
-
   supports(value) {
     return typeOf(value) === 'object';
   },
 
-  //
+  createInternals(props, type) {
+    let manager = this.manager;
+    return map(props, (key, value) => manager.createInternal(value, type));
+  },
 
-  internalReplaceKey(internal, key, value, changed) {
-    let { values } = internal.content;
+  internalReplacePristine(internal, values) {
+    let pristine = internal.content.pristine;
+    let remove = A(Object.keys(values));
 
+    map(values, (key, value) => {
+      remove.removeObject(key);
+      pristine[key] = value;
+    });
+
+    remove.map(key => {
+      delete pristine[key];
+    });
+  },
+
+  fetch(internal, changed) {
+    let { pristine, values } = internal.content;
+
+    map(values, (key, value) => {
+      value.detach();
+      delete values[key];
+      changed(key);
+    });
+
+    map(pristine, (key, value) => {
+      value.attach(internal);
+      values[key] = value;
+      changed(key);
+      value.fetch();
+    });
+  },
+
+  update(internal, values, type) {
+    let pristine = internal.content.pristine;
+    let remove = A(Object.keys(pristine));
+
+    map(values, (key, value) => {
+      remove.removeObject(key);
+      let current = pristine[key];
+      if(current && current.matches(value)) {
+        let updated = current.update(value, type);
+        if(updated.replace) {
+          pristine[key] = updated.internal;
+        }
+      } else {
+        let internal = this.manager.createInternal(value, type);
+        pristine[key] = internal;
+      }
+    });
+
+    remove.forEach(key => {
+      delete pristine[key];
+    });
+
+    return {
+      replace: false,
+      internal
+    };
+  },
+
+  setModelValueForKey(internal, key, value, type, changed) {
+    value = this.manager.createInternal(value, type);
+
+    let values = internal.content.values;
     let current = values[key];
-
-    if(current === value) {
-      return;
-    }
 
     if(current) {
       current.detach();
@@ -38,71 +93,31 @@ export default Serializer.extend({
     changed(key);
   },
 
-  internalReplaceAll(internal, hash, changed) {
-    let { values } = internal.content;
-
+  rollback(internal, changed) {
+    let { pristine, values } = internal.content;
     let remove = A(Object.keys(values));
 
-    map(hash, (key, value) => {
+    map(pristine, (key, value) => {
       remove.removeObject(key);
-      this.internalReplaceKey(internal, key, value, changed);
+      value.attach(internal);
+      values[key] = value;
+      changed(key);
     });
 
     remove.map(key => {
-      this.internalReplaceKey(internal, key, undefined, changed);
-    });
-  },
-
-  replaceKey(internal, key, value, type, changed) {
-    value = this.manager.deserialize(value, type);
-    return this.internalReplaceKey(internal, key, value, changed);
-  },
-
-  //
-
-  checkpoint(internal) {
-    let { pristine, values } = internal.content;
-
-    map(pristine, (key, value) => {
-      value.detach();
-      delete pristine[key];
-    });
-
-    map(values, (key, value) => {
-      value.attach(internal);
-      pristine[key] = value;
-      value.checkpoint();
-    });
-  },
-
-  rollback(internal, changed) {
-    let { pristine, values } = internal.content;
-
-    map(values, (key, value) => {
+      let value = values[key];
       value.detach();
       delete values[key];
       changed(key);
     });
-
-    map(pristine, (key, value) => {
-      value.attach(internal);
-      values[key] = value;
-      changed(key);
-      value.rollback();
-    });
   },
 
-  toInternals(props, type) {
-    let manager = this.manager;
-    return map(props, (key, value) => manager.deserialize(value, type));
-  },
-
-  deserialize(props, type) {
-    let internal = this.createInternal();
-    let values = this.toInternals(props, type);
+  createInternal(props, type) {
+    let internal = this.factoryFor('zuglet:data/object/internal').create({ serializer: this });
+    let values = this.createInternals(props, type);
     internal.withPropertyChanges(false, changed => {
-      this.internalReplaceAll(internal, values, changed);
-      this.checkpoint(internal, changed);
+      this.internalReplacePristine(internal, values);
+      this.fetch(internal, changed);
     });
     return internal;
   },
@@ -111,39 +126,6 @@ export default Serializer.extend({
     return map(internal.content.values, (key, value) => {
       return value.serialize(type);
     });
-  },
-
-  update(internal, props, type, changed) {
-    let values = internal.content.values;
-    let remove = A(Object.keys(values));
-
-    map(props, (key, value) => {
-      remove.removeObject(key);
-      let current = values[key];
-      if(current && current.matches(value)) {
-        let updated = current.update(value, type);
-        if(updated.replace) {
-          this.internalReplaceKey(internal, key, updated.internal, changed);
-        }
-      } else {
-        this.replaceKey(internal, key, value, type, changed);
-      }
-    });
-
-    remove.forEach(key => {
-      this.internalReplaceKey(internal, key, undefined, changed);
-    });
-
-    this.checkpoint(internal);
-
-    return {
-      replace: false,
-      internal
-    };
-  },
-
-  createNewInternal(props) {
-    return this.deserialize(props, 'model');
-  },
+  }
 
 });

@@ -22,26 +22,24 @@ export default Internal.extend({
 
   setModelValue(key, value) {
     return this.withPropertyChanges(true, changed => {
-      let internal = this.serializer.replaceKey(this, key, value, 'model', changed);
+      let internal = this.serializer.setModelValueForKey(this, key, value, 'model', changed);
       return toModel(internal);
     });
   },
 
-  checkpoint() {
-    this.withPropertyChanges(true, changed => {
-      this.serializer.checkpoint(this, changed);
+  update(value, type) {
+    return this.serializer.update(this, value, type);
+  },
+
+  fetch() {
+    return this.withPropertyChanges(true, changed => {
+      return this.serializer.fetch(this, changed);
     });
   },
 
   rollback() {
-    this.withPropertyChanges(true, changed => {
-      this.serializer.rollback(this, changed);
-    });
-  },
-
-  update(arg, type) {
     return this.withPropertyChanges(true, changed => {
-      return this.serializer.update(this, arg, type, changed);
+      return this.serializer.rollback(this, changed);
     });
   }
 

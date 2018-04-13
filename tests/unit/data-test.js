@@ -41,43 +41,6 @@ module('data', function(hooks) {
     assert.ok(got === address);
   });
 
-  test('object checkpoint', function(assert) {
-    let address = this.store.object({ city: 'duckland' });
-
-    let pristine = address._internal.content.pristine;
-    let values = address._internal.content.values;
-
-    let city = pristine.city;
-    let city_ = city;
-
-    assert.ok(city.parent === address._internal);
-
-    assert.ok(pristine.city);
-    assert.ok(values.city);
-    assert.ok(pristine.city === values.city);
-
-    address.set('city', 'another');
-
-    assert.ok(pristine.city);
-    assert.ok(values.city);
-    assert.ok(pristine.city !== values.city);
-
-    assert.ok(city.parent === null);
-
-    city = values.city;
-
-    assert.ok(city.parent === address._internal);
-
-    address._internal.checkpoint();
-
-    assert.ok(pristine.city);
-    assert.ok(values.city);
-    assert.ok(pristine.city === values.city);
-
-    assert.ok(pristine.city === city);
-    assert.ok(city_.parent === null);
-  });
-
   test('object serialized', function(assert) {
     let address = this.store.object({ city: 'duckland' });
 
@@ -623,7 +586,7 @@ module('data', function(hooks) {
       ],
       "second": [ 'ok' ]
     });
-    
+
     assert.deepEqual(data.get('serialized'), {
       "array": [
         { "name": "three" },
@@ -676,6 +639,78 @@ module('data', function(hooks) {
 
     assert.ok(start[0] === end[0]);
     assert.ok(start[1] === end[1]);
+  });
+
+  test('deserialize to pristine', function(assert) {
+    let data = this.store.object({
+      ok: true
+    });
+
+    let fetch = () => {
+      let values = data._internal.content.values;
+      return {
+        ok: values.ok,
+        name: values.name
+      };
+    }
+
+    let start = fetch();
+
+    assert.deepEqual(data.get('serialized'), {
+      "ok": true
+    });
+
+    data._internal.update({
+      ok: true,
+      name: 'firestore'
+    }, 'raw');
+
+    data._internal.fetch();
+
+    assert.deepEqual(data.get('serialized'), {
+      "ok": true,
+      "name": "firestore"
+    });
+
+    let end = fetch();
+
+    assert.ok(start.ok === end.ok);
+    assert.ok(end.name);
+  });
+
+  test('deserialize to pristine set object value', function(assert) {
+    let data = this.store.object({
+      ok: true
+    });
+
+    assert.deepEqual(data.get('serialized'), {
+      "ok": true
+    });
+
+    data.set('ok', false);
+    data.set('name', 'firestore');
+
+    assert.deepEqual(data.get('serialized'), {
+      "name": "firestore",
+      "ok": false
+    });
+  });
+
+  test('deserialize to pristine array', function(assert) {
+    let array = this.store.array([ 'one', 'two' ]);
+
+    assert.deepEqual(array.get('serialized'), [
+      "one",
+      "two"
+    ]);
+
+    array.pushObject('three');
+
+    assert.deepEqual(array.get('serialized'), [
+      "one",
+      "two",
+      "three"
+    ]);
   });
 
 });
