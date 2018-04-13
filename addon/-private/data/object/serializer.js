@@ -29,9 +29,6 @@ export default Serializer.extend({
     }
 
     if(value) {
-      if(!value.attach) {
-        debugger;
-      }
       value.attach(internal);
       values[key] = value;
     } else {
@@ -117,7 +114,7 @@ export default Serializer.extend({
   },
 
   update(internal, props, type, changed) {
-    let { pristine, values } = internal.content;
+    let values = internal.content.values;
     let remove = A(Object.keys(values));
 
     map(props, (key, value) => {
@@ -136,6 +133,8 @@ export default Serializer.extend({
     remove.forEach(key => {
       this.internalReplaceKey(internal, key, undefined, changed);
     });
+
+    this.checkpoint(internal);
 
     return {
       replace: false,

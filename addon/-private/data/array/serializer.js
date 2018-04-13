@@ -109,6 +109,7 @@ export default Serializer.extend({
 
     return build(0, oldLen, newLen, changed => {
       this.internalReplace(internal, 0, oldLen, internals);
+      this.internalCheckpoint(internal, changed);
       return {
         replace: false,
         internal

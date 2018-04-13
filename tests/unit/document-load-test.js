@@ -49,7 +49,7 @@ module('document-load', function(hooks) {
         "fromCache": false,
         "hasPendingWrites": false
       },
-      "data": undefined
+      "data": {}
     });
   });
 
