@@ -6,6 +6,7 @@ import { A } from '@ember/array';
 import { defer, resolve } from 'rsvp';
 import queue from '../queue/computed';
 import settle from '../util/settle';
+import destroyCached from '../util/destroy-cached';
 import firebase from 'firebase';
 
 const initializeFirebase = (identifier, opts) => {
@@ -121,6 +122,20 @@ export default Internal.extend({
 
   //
 
+  dataManager: computed(function() {
+    return this.factoryFor('zuglet:data/manager').create({ store: this });
+  }),
+
+  object(...args) {
+    return this.get('dataManager').createNewInternalObject(...args);
+  },
+
+  array(...args) {
+    return this.get('dataManager').createNewInternalArray(...args);
+  },
+
+  //
+
   registerObservedInternal(internal) {
     let observed = this.get('observed');
     assert(`observed already has ${internal} registered`, !observed.includes(internal));
@@ -142,6 +157,7 @@ export default Internal.extend({
   },
 
   willDestroy() {
+    destroyCached(this, 'dataManager');
     this.get('observed').map(internal => internal.destroy());
     this.app && this.app.delete();
     this._super(...arguments);

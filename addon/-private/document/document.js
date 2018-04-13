@@ -3,13 +3,14 @@ import { readOnly } from '@ember/object/computed';
 import createReadOnlyPropertiesMixin from '../internal/read-only-props-mixin';
 import ModelMixin from '../internal/model-mixin';
 import { state, meta } from './internal';
-import serialized from '../util/serialized';
 import { invokePromiseReturningThis, invoke } from '../internal/invoke';
 
 const StateMixin = createReadOnlyPropertiesMixin(state);
 const MetaMixin = createReadOnlyPropertiesMixin(meta);
 
 const ref = key => readOnly(`ref.${key}`);
+
+const serialized = [ 'id', 'path', ...state, ...meta ];
 
 export default EmberObject.extend(ModelMixin, StateMixin, MetaMixin, {
 
@@ -22,9 +23,15 @@ export default EmberObject.extend(ModelMixin, StateMixin, MetaMixin, {
   id: ref('id'),
   path: ref('path'),
 
-  data: readOnly('_internal.data'),
+  data: computed(function() {
+    return this.get('_internal.data').model(true);
+  }).readOnly(),
 
-  serialized: serialized([ 'id', 'path', ...state, ...meta, 'data' ]),
+  serialized: computed(...serialized, 'data.serialized', function() {
+    let props = this.getProperties(...serialized);
+    props.data = this.get('data.serialized');
+    return props;
+  }).readOnly(),
 
   load:    invokePromiseReturningThis('load'),
   reload:  invokePromiseReturningThis('reload'),

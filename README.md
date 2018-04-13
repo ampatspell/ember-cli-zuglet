@@ -549,3 +549,9 @@ cancel();
 // or just destroy document
 doc.destroy();
 ```
+
+## TODO
+
+* `store.object`
+* `store.array`
+* `doc.data`

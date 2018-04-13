@@ -28,6 +28,22 @@ import Observers from 'ember-cli-zuglet/-private/observers/observers';
 
 import ModelArrayProxy from 'ember-cli-zuglet/-private/util/array-proxy';
 
+import DataManagerInternal from 'ember-cli-zuglet/-private/data/manager';
+
+import DataObjectSerializer from 'ember-cli-zuglet/-private/data/object/serializer';
+import DataObjectInternal from 'ember-cli-zuglet/-private/data/object/internal';
+import DataObject from 'ember-cli-zuglet/-private/data/object/object';
+
+import DataPrimitiveSerializer from 'ember-cli-zuglet/-private/data/primitive/serializer';
+import DataPrimitiveInternal from 'ember-cli-zuglet/-private/data/primitive/internal';
+
+import DataArraySerializer from 'ember-cli-zuglet/-private/data/array/serializer';
+import DataArrayInternal from 'ember-cli-zuglet/-private/data/array/internal';
+import DataArray from 'ember-cli-zuglet/-private/data/array/array';
+
+import DataReferenceSerializer from 'ember-cli-zuglet/-private/data/reference/serializer';
+import DataReferenceInternal from 'ember-cli-zuglet/-private/data/reference/internal';
+
 export default {
   name: 'zuglet:internal',
   initialize(container) {
@@ -57,5 +73,21 @@ export default {
     container.register('zuglet:queue/serialized', SerializedQueue);
     container.register('zuglet:queue/concurrent', ConcurrentQueue);
     container.register('zuglet:queue/operation', QueueOperation);
+
+    container.register('zuglet:data/manager', DataManagerInternal);
+
+    container.register('zuglet:data/object/serializer', DataObjectSerializer);
+    container.register('zuglet:data/object/internal', DataObjectInternal);
+    container.register('zuglet:data/object', DataObject);
+
+    container.register('zuglet:data/array/serializer', DataArraySerializer);
+    container.register('zuglet:data/array/internal', DataArrayInternal);
+    container.register('zuglet:data/array', DataArray);
+
+    container.register('zuglet:data/reference/serializer', DataReferenceSerializer);
+    container.register('zuglet:data/reference/internal', DataReferenceInternal);
+
+    container.register('zuglet:data/primitive/serializer', DataPrimitiveSerializer);
+    container.register('zuglet:data/primitive/internal', DataPrimitiveInternal);
   }
 }

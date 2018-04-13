@@ -1,11 +1,17 @@
 import { module, test, only, skip } from 'qunit';
-import { setupTest } from 'ember-qunit';
+import { setupTest, setupRenderingTest } from 'ember-qunit';
 import setupStores from './setup-stores';
 import setupStore from './setup-store';
 import { recreateCollection } from './firebase';
 
 const setupStoreTest = hooks => {
   setupTest(hooks);
+  setupStores(hooks);
+  setupStore(hooks);
+};
+
+const setupStoreRenderingTest = hooks => {
+  setupRenderingTest(hooks);
   setupStores(hooks);
   setupStore(hooks);
 };
@@ -27,5 +33,6 @@ export {
   setupStores,
   setupStore,
   setupStoreTest,
+  setupStoreRenderingTest,
   setupDucks
 }

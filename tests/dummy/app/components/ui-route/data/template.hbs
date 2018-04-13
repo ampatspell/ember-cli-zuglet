@@ -1,0 +1,28 @@
+{{#ui-block/rows as |rows|}}
+
+  {{#rows.header}}
+    {{data}}
+  {{/rows.header}}
+
+  {{#rows.row}}
+    <div class="key">user</div>
+    <div class="value">{{data.user}}</div>
+  {{/rows.row}}
+
+  {{#rows.row}}
+    <div class="key">user.name</div>
+    <div class="value">{{data.user.name}}</div>
+  {{/rows.row}}
+
+  {{#rows.row}}
+    <div class="key">ok</div>
+    <div class="value">{{data.ok}}</div>
+  {{/rows.row}}
+
+  {{#rows.row}}
+    {{ui-block/json data.serialized}}
+  {{/rows.row}}
+
+{{/ui-block/rows}}
+
+{{set-global component=this data=data}}

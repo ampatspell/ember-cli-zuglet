@@ -44,14 +44,20 @@ export default Internal.extend({
     };
   }).readOnly(),
 
+  data: computed(function() {
+    return this.store.get('dataManager').createNewInternalObject();
+  }).readOnly(),
+
   queue: queue('serialized', 'store.queue'),
 
   createModel() {
     return this.store.factoryFor('zuglet:document').create({ _internal: this });
   },
 
-  onNew(data={}) {
-    setChangedProperties(this, { isNew: true, data });
+  onNew(props) {
+    let data = this.get('data')
+    data.update(props, 'model');
+    setChangedProperties(this, { isNew: true });
   },
 
   _didLoad(snapshot) {
@@ -69,13 +75,10 @@ export default Internal.extend({
 
   onSnapshot(snapshot) {
     if(snapshot.exists) {
-      let data = snapshot.data({ serverTimestamps: 'estimate' });
-      this.set('data', data);
-      console.log('document.onSnapshot', snapshot.ref.path, data);
-    } else {
-      console.log('document.onSnapshot', snapshot.ref.path, 'missing');
+      let json = snapshot.data({ serverTimestamps: 'estimate' });
+      let data = this.get('data');
+      data.update(json, 'raw');
     }
-
     this._didLoad(snapshot);
   },
 
@@ -151,7 +154,7 @@ export default Internal.extend({
       name: 'document/save',
       invoke: () => {
         let ref = this.get('ref.ref');
-        let data = this.get('data');
+        let data = this.get('data').serialize('raw');
         this.willSave();
         return ref.set(data);
       },
