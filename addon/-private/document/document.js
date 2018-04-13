@@ -37,7 +37,10 @@ export default EmberObject.extend(ModelMixin, StateMixin, MetaMixin, {
   reload:  invokePromiseReturningThis('reload'),
   save:    invokePromiseReturningThis('save'),
   delete:  invokePromiseReturningThis('delete'),
+
   observe: invoke('observe'),
+
+  reset: invoke('reset'),
 
   toStringExtension() {
     let path = this.get('path');

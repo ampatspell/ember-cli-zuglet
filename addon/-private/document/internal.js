@@ -226,6 +226,11 @@ export default Internal.extend({
 
   observe() {
     return this.get('observers').add();
-  }
+  },
+
+  reset() {
+    let data = this.data;
+    data.fetch();
+  },
 
 });
