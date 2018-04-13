@@ -2,14 +2,6 @@ import Serializer from '../internal/serializer';
 import { typeOf } from '@ember/utils';
 import { A } from '@ember/array';
 
-const indexes = (idx, amt) => {
-  let values = [];
-  for(let i = 0; i < amt; i++) {
-    values.push(idx + i);
-  }
-  return values;
-};
-
 export default Serializer.extend({
 
   supports(value) {
@@ -28,8 +20,11 @@ export default Serializer.extend({
     let newLen = pristine.get('length');
     return build(0, oldLen, newLen, changed => {
       values.forEach(item => item.detach());
-      pristine.forEach(item => item.attach(internal));
       values.replace(0, oldLen, pristine);
+      values.forEach(item => {
+        item.attach(internal);
+        item.fetch();
+      });
     });
   },
 
@@ -52,8 +47,8 @@ export default Serializer.extend({
     let values = internal.content.values;
     let len = A(array).get('length');
     builder(idx, amt, len, changed => {
-      let removing = values.splice(idx, amt);
-      removing.map(item => internal.detach());
+      let removing = values.slice(idx, amt);
+      removing.map(item => item.detach());
 
       let adding = this.createInternals(array, type);
       adding.map(item => item.attach(internal));

@@ -50,6 +50,12 @@ export default Internal.extend({
       }
       return cb(builder);
     });
+  },
+
+  fetch() {
+    this.withArrayContentChanges(true, builder => {
+      return this.serializer.fetch(this, builder);
+    });
   }
 
 });

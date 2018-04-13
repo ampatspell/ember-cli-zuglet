@@ -32,16 +32,16 @@ export default Serializer.extend({
     let { pristine, values } = internal.content;
 
     map(values, (key, value) => {
-      value.detach();
       delete values[key];
+      value.detach();
       changed(key);
     });
 
     map(pristine, (key, value) => {
-      value.attach(internal);
       values[key] = value;
-      changed(key);
+      value.attach(internal);
       value.fetch();
+      changed(key);
     });
   },
 
