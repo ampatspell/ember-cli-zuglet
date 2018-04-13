@@ -78,6 +78,10 @@ export default Internal.extend({
 
   serialize(type) {
     return this.serializer.serialize(this, type);
+  },
+
+  update(value, type) {
+    return this.serializer.update(this, value, type);
   }
 
 });

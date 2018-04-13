@@ -56,10 +56,6 @@ export default Internal.extend({
     this.withArrayContentChanges(true, builder => {
       return this.serializer.fetch(this, builder);
     });
-  },
-
-  update(value, type) {
-    return this.serializer.update(this, value, type);
   }
 
 });

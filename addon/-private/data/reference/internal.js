@@ -8,10 +8,6 @@ export default Internal.extend({
     return this.content.model(true);
   },
 
-  update(arg, type) {
-    return this.serializer.update(this, arg, type);
-  },
-
   fetch() {
   }
 

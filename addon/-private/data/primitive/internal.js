@@ -12,10 +12,6 @@ export default Internal.extend({
     return this.content;
   },
 
-  update(value, type) {
-    return this.serializer.update(this, value, type);
-  },
-
   fetch() {
   }
 

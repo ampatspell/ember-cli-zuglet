@@ -27,10 +27,6 @@ export default Internal.extend({
     });
   },
 
-  update(value, type) {
-    return this.serializer.update(this, value, type);
-  },
-
   fetch() {
     return this.withPropertyChanges(true, changed => {
       return this.serializer.fetch(this, changed);
