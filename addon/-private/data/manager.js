@@ -4,6 +4,7 @@ import { A } from '@ember/array';
 import { toInternal, isInternal } from './internal/util';
 
 const serializers = [
+  'reference',
   'array',
   'object',
   'primitive'
@@ -18,8 +19,9 @@ export default Internal.extend({
   },
 
   serializersByName: computed(function() {
+    let store = this.store;
     return serializers.reduce((hash, name) => {
-      let value = this.factoryFor(`zuglet:data/${name}/serializer`).create({ manager: this });
+      let value = this.factoryFor(`zuglet:data/${name}/serializer`).create({ manager: this, store });
       hash[name] = value;
       return hash;
     }, {});

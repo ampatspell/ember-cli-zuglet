@@ -417,4 +417,44 @@ module('data', function(hooks) {
     assert.ok(yellow._internal.isAttached());
   });
 
+  test('set reference', function(assert) {
+    let coll = this.store.collection('ducks');
+    let doc = this.store.doc('ducks/yellow');
+    let data = this.store.object({ coll, doc });
+
+    assert.deepEqual(data.get('serialized'), {
+      "coll": "reference:ducks",
+      "doc": "reference:ducks/yellow"
+    });
+
+    assert.ok(data.get('coll') === coll);
+    assert.ok(data.get('doc') === doc);
+
+    let raw = data.serialize('raw');
+    assert.ok(raw.coll.isEqual(this.firestore.collection('ducks')));
+    assert.ok(raw.doc.isEqual(this.firestore.doc('ducks/yellow')));
+
+    let model = data.serialize('model');
+    assert.ok(model.coll === coll);
+    assert.ok(model.doc === doc);
+  });
+
+  test('set ref', function(assert) {
+    let coll = this.firestore.collection('ducks');
+    let doc = this.firestore.doc('ducks/yellow');
+    let data = this.store.object({ coll, doc });
+
+    assert.deepEqual(data.get('serialized'), {
+      "coll": "reference:ducks",
+      "doc": "reference:ducks/yellow"
+    });
+
+    assert.ok(data.get('coll')._internal.ref === coll);
+    assert.ok(data.get('doc')._internal.ref === doc);
+
+    let raw = data.serialize('raw');
+    assert.ok(raw.coll.isEqual(coll));
+    assert.ok(raw.doc.isEqual(doc));
+  });
+
 });
