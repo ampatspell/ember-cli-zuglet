@@ -18,7 +18,7 @@ export default Serializer.extend({
     let { pristine, values } = internal.content;
     let oldLen = values.get('length');
     let newLen = pristine.get('length');
-    return builder(0, oldLen, newLen, changed => {
+    return builder(0, oldLen, newLen, () => {
       values.forEach(item => item.detach());
       values.replace(0, oldLen, pristine);
       values.forEach(item => {
@@ -46,7 +46,7 @@ export default Serializer.extend({
   replaceModelValues(internal, idx, amt, array, type, builder) {
     let values = internal.content.values;
     let len = A(array).get('length');
-    builder(idx, amt, len, changed => {
+    builder(idx, amt, len, () => {
       let removing = values.slice(idx, amt);
       removing.map(item => item.detach());
 
