@@ -338,7 +338,7 @@ module('data', function(hooks) {
     });
   });
 
-  test.skip('array detach', function(assert) {
+  test('array detach', function(assert) {
     let data = this.store.object({
       ducks: [
         { name: 'yellow' },
@@ -350,15 +350,13 @@ module('data', function(hooks) {
     assert.ok(ducks._internal.isAttached());
 
     data.set('ducks');
-    data._internal.checkpoint();
-
     assert.ok(!ducks._internal.isAttached());
 
     data.set('ducks', ducks);
     assert.ok(ducks._internal.isAttached());
   });
 
-  test.skip('array detach items', function(assert) {
+  test('array detach items', function(assert) {
     let data = this.store.object({
       ducks: [
         { name: 'yellow' },
@@ -371,12 +369,9 @@ module('data', function(hooks) {
     assert.ok(yellow._internal.isAttached());
 
     ducks.removeObject(yellow);
-    data._internal.checkpoint();
-
     assert.ok(!yellow._internal.isAttached());
 
     ducks.pushObject(yellow);
-
     assert.ok(yellow._internal.isAttached());
   });
 
