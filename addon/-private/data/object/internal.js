@@ -37,6 +37,12 @@ export default Internal.extend({
     this.withPropertyChanges(true, changed => {
       this.serializer.rollback(this, changed);
     });
+  },
+
+  update(arg, type) {
+    return this.withPropertyChanges(true, changed => {
+      return this.serializer.update(this, arg, type, changed);
+    });
   }
 
 });

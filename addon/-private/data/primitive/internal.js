@@ -8,10 +8,6 @@ export default Internal.extend({
     return this.content;
   },
 
-  update(value) {
-    this.set('content', value);
-  },
-
   serialize() {
     return this.content;
   },
@@ -20,6 +16,10 @@ export default Internal.extend({
   },
 
   checkpoint() {
+  },
+
+  update(arg, type) {
+    return this.serializer.update(this, arg, type);
   }
 
 });

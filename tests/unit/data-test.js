@@ -457,4 +457,70 @@ module('data', function(hooks) {
     assert.ok(raw.doc.isEqual(doc));
   });
 
+  test.only('update object with primitives', function(assert) {
+    let data = this.store.object({
+      address: {
+        city: 'Yeelo',
+        box: 101,
+      },
+      name: 'duck',
+      email: 'foo@bar.com',
+      ok: true,
+    });
+
+    let fetch = () => {
+      let values = data._internal.content.values;
+      let address = values.address.content.values;
+      return {
+        address: values.address,
+        city: address.city,
+        box: address.box,
+        name: values.name,
+        email: values.email,
+        ok: values.ok
+      };
+    };
+
+    let start = fetch();
+
+    assert.deepEqual(data.get('serialized'), {
+      "address": {
+        "city": "Yeelo",
+        "box": 101,
+      },
+      "name": "duck",
+      "email": "foo@bar.com",
+      "ok": true
+    });
+
+    data._internal.update({
+      address: {
+        city: 'Yello',
+        country: 'Yellowish',
+        box: 101,
+      },
+      name: 'Duck',
+      ok: 'yes'
+    }, 'raw');
+
+    assert.deepEqual(data.get('serialized'), {
+      "address": {
+        "city": "Yello",
+        "country": "Yellowish",
+        "box": 101,
+      },
+      "name": "Duck",
+      "ok": "yes"
+    });
+
+    let end = fetch();
+
+    assert.ok(start.address === end.address);
+    assert.ok(start.city !== end.city);
+    assert.ok(start.box === end.box);
+    assert.ok(start.name !== end.name);
+    assert.ok(!end.email);
+    assert.ok(start.ok !== end.ok);
+  });
+
 });

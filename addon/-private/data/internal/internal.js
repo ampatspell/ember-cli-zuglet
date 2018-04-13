@@ -27,6 +27,12 @@ export default Internal.extend({
 
   //
 
+  matches(value) {
+    return this.serializer.matches(this, value);
+  },
+
+  //
+
   attach(parent) {
     assert(`parent must be data internal`, isInternal(parent));
     this.parent = parent;

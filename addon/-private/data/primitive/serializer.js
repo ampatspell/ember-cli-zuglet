@@ -6,14 +6,31 @@ export default Serializer.extend({
     return true;
   },
 
-  createInternal() {
-    return this.factoryFor('zuglet:data/primitive/internal').create({ serializer: this });
+  matches(internal, value) {
+    return typeof internal.content === typeof value;
+  },
+
+  createInternal(content) {
+    return this.factoryFor('zuglet:data/primitive/internal').create({ serializer: this, content });
   },
 
   deserialize(value) {
-    let internal = this.createInternal();
-    internal.update(value);
-    return internal;
+    return this.createInternal(value);
+  },
+
+  update(internal, value) {
+    if(internal.content === value) {
+      return {
+        replace: false,
+        internal
+      };
+    }
+
+    internal = this.createInternal(value);
+    return {
+      replace: true,
+      internal
+    };
   }
 
 });

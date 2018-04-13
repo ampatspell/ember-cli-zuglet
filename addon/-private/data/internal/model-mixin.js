@@ -9,12 +9,12 @@ export default Mixin.create({
 
   [key]: true,
 
-  serialize(type) {
-    return this._internal.serialize(type);
-  },
-
   serialized: computed(function() {
     return this.serialize('preview');
   }).readOnly(),
+
+  serialize(type) {
+    return this._internal.serialize(type);
+  }
 
 });

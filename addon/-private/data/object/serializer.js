@@ -29,6 +29,9 @@ export default Serializer.extend({
     }
 
     if(value) {
+      if(!value.attach) {
+        debugger;
+      }
       value.attach(internal);
       values[key] = value;
     } else {
@@ -111,6 +114,33 @@ export default Serializer.extend({
     return map(internal.content.values, (key, value) => {
       return value.serialize(type);
     });
+  },
+
+  update(internal, props, type, changed) {
+    let { pristine, values } = internal.content;
+    let remove = A(Object.keys(values));
+
+    map(props, (key, value) => {
+      remove.removeObject(key);
+      let current = values[key];
+      if(current && current.matches(value)) {
+        let updated = current.update(value, type);
+        if(updated.replace) {
+          this.internalReplaceKey(internal, key, updated.internal, changed);
+        }
+      } else {
+        this.replaceKey(internal, key, value, type, changed);
+      }
+    });
+
+    remove.forEach(key => {
+      this.internalReplaceKey(internal, key, undefined, changed);
+    });
+
+    return {
+      replace: false,
+      internal
+    };
   },
 
   createNewInternal(props) {
