@@ -8,14 +8,7 @@ export default Internal.extend({
     return this.content.model(true);
   },
 
-  rollback() {
-  },
-
-  checkpoint() {
-  },
-
-  update(arg, type) {
-    return this.serializer.update(this, arg, type);
+  fetch() {
   }
 
 });

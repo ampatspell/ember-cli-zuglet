@@ -45,7 +45,7 @@ export default Internal.extend({
 
   //
 
-  deserialize(value, type) {
+  createInternal(value, type) {
     let internal = toInternal(value);
     if(isInternal(internal)) {
       if(internal.isAttached()) {
@@ -53,21 +53,21 @@ export default Internal.extend({
       }
     } else {
       let serializer = this.serializerForPrimitive(value);
-      internal = serializer.deserialize(value, type);
+      internal = serializer.createInternal(value, type);
     }
     return internal;
   },
 
   //
 
-  createNewInternalObject(...args) {
+  createNewInternalObject(value) {
     let serializer = this.serializerForName('object');
-    return serializer.createNewInternal(...args);
+    return serializer.createInternal(value, 'model');
   },
 
-  createNewInternalArray(...args) {
+  createNewInternalArray(value) {
     let serializer = this.serializerForName('array');
-    return serializer.createNewInternal(...args);
+    return serializer.createInternal(value, 'model');
   },
 
 });

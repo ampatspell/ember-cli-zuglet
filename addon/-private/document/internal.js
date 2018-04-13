@@ -15,6 +15,7 @@ export default Internal.extend({
 
   store: null,
   ref: null,
+  data: null,
 
   init() {
     this._super(...arguments);
@@ -44,19 +45,22 @@ export default Internal.extend({
     };
   }).readOnly(),
 
-  data: computed(function() {
-    return this.store.get('dataManager').createNewInternalObject();
-  }).readOnly(),
-
   queue: queue('serialized', 'store.queue'),
 
   createModel() {
     return this.store.factoryFor('zuglet:document').create({ _internal: this });
   },
 
-  onNew(props) {
-    let data = this.get('data')
+  onData(props, type, fetch) {
+    let data = this.data;
     data.update(props, 'model');
+    if(fetch) {
+      data.fetch();
+    }
+  },
+
+  onNew(props) {
+    this.onData(props, 'model', true);
     setChangedProperties(this, { isNew: true });
   },
 
@@ -76,8 +80,7 @@ export default Internal.extend({
   onSnapshot(snapshot) {
     if(snapshot.exists) {
       let json = snapshot.data({ serverTimestamps: 'estimate' });
-      let data = this.get('data');
-      data.update(json, 'raw');
+      this.onData(json, 'raw', true);
     }
     this._didLoad(snapshot);
   },

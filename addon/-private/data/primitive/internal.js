@@ -12,14 +12,7 @@ export default Internal.extend({
     return this.content;
   },
 
-  rollback() {
-  },
-
-  checkpoint() {
-  },
-
-  update(arg, type) {
-    return this.serializer.update(this, arg, type);
+  fetch() {
   }
 
 });
