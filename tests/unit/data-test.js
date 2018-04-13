@@ -375,4 +375,43 @@ module('data', function(hooks) {
     });
   });
 
+  test('array detach', function(assert) {
+    let data = this.store.object({
+      ducks: [
+        { name: 'yellow' },
+        { name: 'green' }
+      ]
+    });
+
+    let ducks = data.get('ducks');
+    assert.ok(ducks._internal.isAttached());
+
+    data.set('ducks');
+    data._internal.checkpoint();
+
+    assert.ok(!ducks._internal.isAttached());
+  });
+
+  test('array detach items', function(assert) {
+    let data = this.store.object({
+      ducks: [
+        { name: 'yellow' },
+        { name: 'green' }
+      ]
+    });
+
+    let ducks = data.get('ducks');
+    let yellow = ducks.get('firstObject');
+    assert.ok(yellow._internal.isAttached());
+
+    ducks.removeObject(yellow);
+    data._internal.checkpoint();
+
+    assert.ok(!yellow._internal.isAttached());
+
+    ducks.pushObject(yellow);
+
+    assert.ok(yellow._internal.isAttached());
+  });
+
 });
