@@ -62,7 +62,7 @@ module('data', function(hooks) {
     assert.ok(values.city);
     assert.ok(pristine.city !== values.city);
 
-    assert.ok(city.parent === address._internal);
+    assert.ok(city.parent === null);
 
     city = values.city;
 

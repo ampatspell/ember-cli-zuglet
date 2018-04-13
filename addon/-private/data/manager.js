@@ -1,6 +1,7 @@
 import Internal from '../internal/internal';
 import { computed } from '@ember/object';
 import { A } from '@ember/array';
+import { toInternal, isInternal } from './internal/util';
 
 const serializers = [
   'array',
@@ -36,15 +37,23 @@ export default Internal.extend({
     return this.get('serializers').find(cb);
   },
 
-  //
-
   serializerForPrimitive(value) {
     return this.findSerializer(serializer => serializer.supports(value));
   },
 
+  //
+
   deserialize(value, type) {
-    let serializer = this.serializerForPrimitive(value);
-    return serializer.deserialize(value, type);
+    let internal = toInternal(value);
+    if(isInternal(internal)) {
+      if(internal.isAttached()) {
+        throw new Error('attached internal: not implemented');
+      }
+    } else {
+      let serializer = this.serializerForPrimitive(value);
+      internal = serializer.deserialize(value, type);
+    }
+    return internal;
   },
 
   //

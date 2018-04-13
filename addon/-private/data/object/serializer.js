@@ -1,5 +1,7 @@
 import Serializer from '../internal/serializer';
+import { map } from '../internal/util';
 import { typeOf } from '@ember/utils';
+import { A } from '@ember/array';
 
 export default Serializer.extend({
 
@@ -11,21 +13,108 @@ export default Serializer.extend({
     return typeOf(value) === 'object';
   },
 
-  deserialize(values={}, type) {
-    let internal = this.createInternal();
-    for(let key in values) {
-      let value = this.manager.deserialize(values[key], type);
-      internal.update(key, value);
+  //
+
+  internalReplaceKey(internal, key, value, changed) {
+    let { values } = internal.content;
+
+    let current = values[key];
+
+    if(current === value) {
+      return;
     }
-    return internal;
+
+    if(current) {
+      current.detach();
+    }
+
+    if(value) {
+      value.attach(internal);
+      values[key] = value;
+    } else {
+      delete values[key];
+    }
+
+    changed(key);
+  },
+
+  internalReplaceAll(internal, hash, changed) {
+    let { values } = internal.content;
+
+    let remove = A(Object.keys(values));
+
+    map(hash, (key, value) => {
+      remove.removeObject(key);
+      this.internalReplaceKey(internal, key, value, changed);
+    });
+
+    remove.map(key => {
+      this.internalReplaceKey(internal, key, undefined, changed);
+    });
+  },
+
+  replaceKey(internal, key, value, type, changed) {
+    value = this.manager.deserialize(value, type);
+    return this.internalReplaceKey(internal, key, value, changed);
   },
 
   //
 
-  createNewInternal(props) {
-    let internal = this.deserialize(props, 'model');
-    internal.checkpoint();
+  checkpoint(internal) {
+    let { pristine, values } = internal.content;
+
+    map(pristine, (key, value) => {
+      value.detach();
+      delete pristine[key];
+    });
+
+    map(values, (key, value) => {
+      value.attach(internal);
+      pristine[key] = value;
+      value.checkpoint();
+    });
+  },
+
+  rollback(internal, changed) {
+    let { pristine, values } = internal.content;
+
+    map(values, (key, value) => {
+      value.detach();
+      delete values[key];
+      changed(key);
+    });
+
+    map(pristine, (key, value) => {
+      value.attach(internal);
+      values[key] = value;
+      changed(key);
+      value.rollback();
+    });
+  },
+
+  toInternals(props, type) {
+    let manager = this.manager;
+    return map(props, (key, value) => manager.deserialize(value, type));
+  },
+
+  deserialize(props, type) {
+    let internal = this.createInternal();
+    let values = this.toInternals(props, type);
+    internal.withPropertyChanges(false, changed => {
+      this.internalReplaceAll(internal, values, changed);
+      this.checkpoint(internal, changed);
+    });
     return internal;
+  },
+
+  serialize(internal, type) {
+    return map(internal.content.values, (key, value) => {
+      return value.serialize(type);
+    });
+  },
+
+  createNewInternal(props) {
+    return this.deserialize(props, 'model');
   },
 
 });

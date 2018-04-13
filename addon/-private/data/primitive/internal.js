@@ -12,7 +12,7 @@ export default Internal.extend({
     this.set('content', value);
   },
 
-  serialize(type) {
+  serialize() {
     return this.content;
   },
 

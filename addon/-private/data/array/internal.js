@@ -1,14 +1,6 @@
 import Internal from '../internal/internal';
-import { get } from '@ember/object';
 import { A } from '@ember/array';
-
-const indexes = (idx, amt) => {
-  let values = [];
-  for(let i = 0; i < amt; i++) {
-    values.push(idx + i);
-  }
-  return values;
-}
+import { toModel } from '../internal/util';
 
 export default Internal.extend({
 
@@ -26,71 +18,52 @@ export default Internal.extend({
 
   getModelValue(idx) {
     let internal = this.content.values.objectAt(idx);
-    if(!internal) {
-      return;
-    }
-    return internal.model(true);
+    return toModel(internal);
   },
 
   replaceModelValues(idx, amt, values) {
-    let internals = A(values).map(value => this.toInternal(value));
-    this.replace(idx, amt, internals);
+    this.withArrayContentChanges(true, builder => {
+      let len = A(values).get('length');
+      builder(idx, amt, len, changed => {
+        this.serializer.replace(this, idx, amt, values, 'model', changed);
+      });
+    });
   },
 
-  didUpdate() {
-    this.withPropertyChanges(true, changed => changed('serialized'));
-    this.notifyDidUpdate();
-  },
+  withArrayContentChanges(notify, cb) {
+    return this.withPropertyChanges(notify, changed => {
+      let builder = (idx, amt, len, runtime) => {
+        let model = this.model(false);
 
-  replace(idx, amt, internals) {
-    let model = this.model(false);
-    let values = this.content.values;
+        if(model) {
+          model.arrayContentWillChange(idx, amt, len);
+        }
 
-    let len = get(internals, 'length');
+        let result = runtime(changed);
 
-    if(model) {
-      model.arrayContentWillChange(idx, amt, len);
-    }
+        if(model) {
+          model.arrayContentDidChange(idx, amt, len);
+        }
 
-    let removing = values.objectsAt(indexes(idx, amt));
-    removing.map(internal => internal.detach(this));
+        if(amt > 0 || len > 0) {
+          changed();
+        }
 
-    values.replace(idx, amt, internals);
-
-    internals.map(internal => internal.attach(this));
-
-    if(model) {
-      model.arrayContentDidChange(idx, amt, len);
-    }
-
-    if(amt > 0 || len > 0) {
-      this.didUpdate();
-    }
+        return result;
+      }
+      return cb(builder);
+    });
   },
 
   checkpoint() {
-    let { pristine, values } = this.content;
-    pristine.map(internal => {
-      if(values.includes(internal)) {
-        return;
-      }
-      internal.detach();
+    this.withArrayContentChanges(true, build => {
+      this.serializer.checkpoint(this, build);
     });
-    pristine.clear();
-    pristine.addObjects(values);
-    values.forEach(value => value.checkpoint());
   },
 
   rollback() {
-    let { pristine, values } = this.content;
-    let len = values.get('length');
-    this.replace(0, len, pristine);
-    pristine.forEach(value => value.rollback());
-  },
-
-  serialize(type) {
-    return this.content.values.map(internal => {
-      return internal.serialize(type);
+    this.withArrayContentChanges(true, build => {
+      this.serializer.rollback(this, build);
     });
   }
 

@@ -2,7 +2,7 @@ import Serializer from '../internal/serializer';
 
 export default Serializer.extend({
 
-  supports(value) {
+  supports() {
     return true;
   },
 
@@ -10,7 +10,7 @@ export default Serializer.extend({
     return this.factoryFor('zuglet:data/primitive/internal').create({ serializer: this });
   },
 
-  deserialize(value, type) {
+  deserialize(value) {
     let internal = this.createInternal();
     internal.update(value);
     return internal;

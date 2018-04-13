@@ -1,4 +1,4 @@
-export default (internal, notify, cb) => {
+export default (internal, notify, cb, done) => {
   let model;
 
   if(notify) {
@@ -15,7 +15,9 @@ export default (internal, notify, cb) => {
 
   let changed = key => {
     if(enabled && !changes.includes(key)) {
-      model.notifyPropertyChange(key);
+      if(key) {
+        model.notifyPropertyChange(key);
+      }
     }
     changes.push(key);
   };
@@ -27,7 +29,9 @@ export default (internal, notify, cb) => {
   });
 
   try {
-    return cb(changed);
+    let result = cb(changed);
+    done && done(changed, result);
+    return result;
   } finally {
     if(enabled) {
       model.endPropertyChanges();

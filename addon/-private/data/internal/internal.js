@@ -1,7 +1,6 @@
 import Internal from '../../internal/internal';
 import { get } from '@ember/object';
 import { assert } from '@ember/debug';
-import { toInternal } from './util';
 import withPropertyChanges from '../../internal/with-property-changes';
 
 const key = '_isZugletDataInternal';
@@ -26,6 +25,8 @@ export default Internal.extend({
     return this.serializer.factoryFor(name);
   },
 
+  //
+
   attach(parent) {
     assert(`parent must be data internal`, isInternal(parent));
     this.parent = parent;
@@ -39,9 +40,7 @@ export default Internal.extend({
     return !!this.parent;
   },
 
-  withPropertyChanges(notify, fn) {
-    return withPropertyChanges(this, notify, fn);
-  },
+  //
 
   childDidUpdate() {
     this.withPropertyChanges(true, changed => changed('serialized'));
@@ -56,18 +55,23 @@ export default Internal.extend({
     parent.childDidUpdate(this);
   },
 
+  didUpdate(changed) {
+    changed('serialized');
+    this.notifyDidUpdate();
+  },
+
+  withPropertyChanges(notify, fn) {
+    return withPropertyChanges(this, notify, fn, changed => {
+      if(changed.any) {
+        this.didUpdate(changed);
+      }
+    });
+  },
+
   //
 
-  toInternal(value) {
-    let internal = toInternal(value);
-    if(isInternal(internal)) {
-      if(internal.isAttached()) {
-        throw new Error('attached internal: not implemented');
-      }
-    } else {
-      internal = this.manager.deserialize(value, 'model');
-    }
-    return internal;
+  serialize(type) {
+    return this.serializer.serialize(this, type);
   }
 
 });
