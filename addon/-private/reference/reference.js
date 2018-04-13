@@ -20,6 +20,10 @@ export default EmberObject.extend(ModelMixin, {
   toStringExtension() {
     let string = this.get('string');
     return `${string}`;
+  },
+
+  isEqual(b) {
+    return this._internal.isEqual(b && b._internal);
   }
 
 });
