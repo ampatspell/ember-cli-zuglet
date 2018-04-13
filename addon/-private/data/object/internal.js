@@ -62,7 +62,6 @@ export default Internal.extend({
     });
   },
 
-  // moves all values to pristine
   checkpoint() {
     let { pristine, values } = this.content;
 
@@ -87,7 +86,6 @@ export default Internal.extend({
     }
   },
 
-  // copies pristine over values
   rollback() {
     this.withPropertyChanges(true, changed => {
       let { pristine, values } = this.content;
