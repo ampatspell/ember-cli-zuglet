@@ -72,7 +72,7 @@ module('data', function(hooks) {
     assert.equal(address.get('city'), 'fooland');
     assert.equal(address.get('country'), 'Ducky');
 
-    address._internal.rollback();
+    address._internal.fetch();
 
     assert.equal(address.get('city'), 'duckland');
     assert.equal(address.get('country'), undefined);
@@ -240,7 +240,7 @@ module('data', function(hooks) {
     assert.deepEqual(array.map(i => i), [
     ]);
 
-    array._internal.rollback();
+    array._internal.fetch();
 
     assert.deepEqual(array.map(i => i), [
       "one",
@@ -313,7 +313,7 @@ module('data', function(hooks) {
       "name": "duck"
     });
 
-    data._internal.rollback();
+    data._internal.fetch();
 
     assert.deepEqual(data.get('serialized'), {
       "address": {
@@ -466,6 +466,8 @@ module('data', function(hooks) {
       ok: 'yes'
     }, 'raw');
 
+    data._internal.fetch();
+
     assert.deepEqual(data.get('serialized'), {
       "address": {
         "city": "Yello",
@@ -538,6 +540,8 @@ module('data', function(hooks) {
       }
     });
 
+    data._internal.fetch();
+
     assert.deepEqual(data.get('serialized'), {
       "changed": {
         "coll": "reference:zeebas",
@@ -587,6 +591,8 @@ module('data', function(hooks) {
       "second": [ 'ok' ]
     });
 
+    data._internal.fetch();
+
     assert.deepEqual(data.get('serialized'), {
       "array": [
         { "name": "three" },
@@ -607,7 +613,6 @@ module('data', function(hooks) {
       ]
     });
 
-
     let fetch = () => data._internal.content.values.array.content.values.map(i => i);
 
     let start = fetch();
@@ -626,6 +631,8 @@ module('data', function(hooks) {
         "three"
       ]
     });
+
+    data._internal.fetch();
 
     let end = fetch();
 

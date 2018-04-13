@@ -14,11 +14,11 @@ export default Serializer.extend({
     pristine.replace(0, oldLen, values);
   },
 
-  fetch(internal, build) {
+  fetch(internal, builder) {
     let { pristine, values } = internal.content;
     let oldLen = values.get('length');
     let newLen = pristine.get('length');
-    return build(0, oldLen, newLen, changed => {
+    return builder(0, oldLen, newLen, changed => {
       values.forEach(item => item.detach());
       values.replace(0, oldLen, pristine);
       values.forEach(item => {
@@ -55,6 +55,37 @@ export default Serializer.extend({
 
       values.replace(idx, amt, adding);
     });
+  },
+
+  update(internal, array, type) {
+    let pristine = internal.content.pristine;
+
+    let remaining = A(pristine.copy());
+    const reusable = item => {
+      let found = remaining.find(value => value.matches(item));
+      if(found) {
+        remaining.removeObject(found);
+      }
+      return found;
+    };
+
+    let internals = A(array.map(item => {
+      let internal = reusable(item);
+      if(internal) {
+        let result = internal.update(item, type);
+        internal = result.internal;
+      } else {
+        internal = this.manager.createInternal(item, type);
+      }
+      return internal;
+    }));
+
+    this.internalReplacePristine(internal, internals);
+
+    return {
+      replace: false,
+      internal
+    };
   },
 
   serialize(internal, type) {

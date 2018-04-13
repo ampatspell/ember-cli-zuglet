@@ -28,23 +28,6 @@ export default Serializer.extend({
     });
   },
 
-  fetch(internal, changed) {
-    let { pristine, values } = internal.content;
-
-    map(values, (key, value) => {
-      delete values[key];
-      value.detach();
-      changed(key);
-    });
-
-    map(pristine, (key, value) => {
-      values[key] = value;
-      value.attach(internal);
-      value.fetch();
-      changed(key);
-    });
-  },
-
   update(internal, values, type) {
     let pristine = internal.content.pristine;
     let remove = A(Object.keys(pristine));
@@ -93,13 +76,14 @@ export default Serializer.extend({
     changed(key);
   },
 
-  rollback(internal, changed) {
+  fetch(internal, changed) {
     let { pristine, values } = internal.content;
     let remove = A(Object.keys(values));
 
     map(pristine, (key, value) => {
       remove.removeObject(key);
       value.attach(internal);
+      value.fetch();
       values[key] = value;
       changed(key);
     });
