@@ -31,6 +31,14 @@ export default Serializer.extend({
     return toInternalDocumentOrCollectionReference(value);
   },
 
+  toFirestoreReference(value) {
+    if(isFirestoreDocumentOrCollectionReference(value)) {
+      return value;
+    }
+    let internal = toInternalDocumentOrCollectionReference(value);
+    return internal.ref;
+  },
+
   createInternal(value) {
     let content = this.toInternalReference(value);
     return this.factoryFor('zuglet:data/reference/internal').create({ serializer: this, content });
@@ -54,9 +62,8 @@ export default Serializer.extend({
   },
 
   update(internal, value) {
-    value = this.toInternalReference(value);
-
-    if(internal.content.isEqual(value)) {
+    let ref = this.toFirestoreReference(value);
+    if(internal.content.ref.isEqual(ref)) {
       return {
         replace: false,
         internal
