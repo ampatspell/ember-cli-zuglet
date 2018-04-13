@@ -65,6 +65,12 @@ export default Internal.extend({
     this.withArrayContentChanges(true, build => {
       this.serializer.rollback(this, build);
     });
+  },
+
+  update(arg, type) {
+    return this.withArrayContentChanges(true, build => {
+      return this.serializer.update(this, arg, type, build);
+    });
   }
 
 });

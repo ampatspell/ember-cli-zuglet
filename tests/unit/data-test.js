@@ -594,4 +594,46 @@ module('data', function(hooks) {
     assert.ok(start.changed.doc !== end.changed.doc);
   });
 
+  test('update array', function(assert) {
+    let data = this.store.object({
+      array: [
+        { name: 'one' },
+        { name: 'two' },
+        { name: 'three' },
+        'four'
+      ]
+    });
+
+    assert.deepEqual(data.get('serialized'), {
+      "array": [
+        { "name": "one" },
+        { "name": "two" },
+        { "name": "three" },
+        "four"
+      ]
+    });
+
+    data._internal.update({
+      "array": [
+        { "name": "three" },
+        { "name": "one" },
+        "four",
+        "five",
+        { "name": "six" }
+      ],
+      "second": [ 'ok' ]
+    });
+
+    assert.deepEqual(data.get('serialized'), {
+      "array": [
+        { "name": "three" },
+        { "name": "one" },
+        "four",
+        "five",
+        { "name": "six" }
+      ],
+      "second": [ 'ok' ]
+    });
+  });
+
 });

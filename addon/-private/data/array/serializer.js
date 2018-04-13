@@ -80,6 +80,19 @@ export default Serializer.extend({
     });
   },
 
+  update(internal, array, type, build) {
+    let values = internal.content.values;
+    let oldLen = values.get('length');
+    let newLen = A(array).get('length');
+    return build(0, oldLen, newLen, changed => {
+      this.replace(internal, 0, oldLen, array, type, changed);
+      return {
+        replace: false,
+        internal
+      };
+    });
+  },
+
   //
 
   createNewInternal(values) {
