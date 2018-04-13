@@ -1,0 +1,7 @@
+.ui-route-document {
+  display: flex;
+  flex-direction: row;
+  > .item {
+    flex: 1;
+  }
+}

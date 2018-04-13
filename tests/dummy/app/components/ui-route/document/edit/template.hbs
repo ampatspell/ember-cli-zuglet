@@ -1,0 +1,36 @@
+{{#ui-block/rows as |rows|}}
+
+  {{#if doc}}
+
+    {{#rows.header}}
+      {{doc}}
+    {{/rows.header}}
+
+    {{#rows.row}}
+      {{ui-block/json doc.serialized}}
+    {{/rows.row}}
+
+    {{#rows.row}}
+      <div class="key">author</div>
+      {{input value=doc.data.author}}
+    {{/rows.row}}
+
+    {{#rows.row}}
+      <div class="key">text</div>
+      {{input value=doc.data.text}}
+    {{/rows.row}}
+
+    {{#rows.row}}
+      <button {{action 'save' doc}}>Save</button>
+      <button {{action 'reset' doc}}>Reset</button>
+    {{/rows.row}}
+
+  {{else}}
+
+    {{#rows.row}}
+      Loading…
+    {{/rows.row}}
+
+  {{/if}}
+
+{{/ui-block/rows}}
