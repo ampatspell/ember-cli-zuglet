@@ -82,7 +82,7 @@ export default Internal.extend({
     return reject(err);
   },
 
-  load(opts) {
+  load(opts={}) {
     let { isLoaded, isLoading } = this.getProperties('isLoaded', 'isLoading');
 
     if(isLoaded && !isLoading && !opts.force) {
