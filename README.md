@@ -555,3 +555,4 @@ doc.destroy();
 * `store.object`
 * `store.array`
 * `doc.data`
+* `doc.reset()`
