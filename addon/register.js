@@ -54,7 +54,6 @@ export default opts => {
       window[key] = store;
       console.log(`window.${key} = ${store}`);
       stores._internal.registerWillDestroyListener(() => {
-        console.log('remove', key);
         delete window[key];
       });
     }
