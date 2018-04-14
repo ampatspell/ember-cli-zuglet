@@ -1,5 +1,6 @@
 # TODO
 
+* messaging
 * store restore hook
 * GeoPoint for data
 * data changed properties
