@@ -2,6 +2,7 @@ import EmberObject, { computed } from '@ember/object';
 import ModelMixin from '../../internal/model-mixin';
 import Mixin from '@ember/object/mixin';
 import { invokePromiseReturningUndefined } from '../../internal/invoke';
+import serialized from '../../util/serialized';
 
 const keys = [
   'uid',
@@ -23,6 +24,8 @@ const UserPropertiesMixin = Mixin.create(keys.reduce((hash, key) => {
 
 export default EmberObject.extend(ModelMixin, UserPropertiesMixin, {
 
-  delete: invokePromiseReturningUndefined('delete')
+  delete: invokePromiseReturningUndefined('delete'),
+
+  serialized: serialized(keys)
 
 });
