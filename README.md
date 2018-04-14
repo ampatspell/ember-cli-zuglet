@@ -556,3 +556,5 @@ doc.destroy();
 * `store.array`
 * `doc.data`
 * `doc.reset()`
+* `store.auth`
+* `store.onRestoreUser`

@@ -47,15 +47,25 @@ export default Internal.extend({
     return this.stores.factoryFor(name);
   },
 
-  didCreateModel(model) {
+  prepareFirebase(model) {
     let identifier = this.get('identifier');
     let options = model.get('options');
     assert(`identifier is required`, !!identifier);
     assert(`options must be object`, typeof options === 'object');
-    initializeFirebase(identifier, options).then(app => {
+    return initializeFirebase(identifier, options).then(app => {
       this.app = app;
-      this.get('_deferred').resolve();
     });
+  },
+
+  prepareAuth() {
+    return this.get('auth').prepare();
+  },
+
+  didCreateModel(model) {
+    resolve()
+      .then(() => this.prepareFirebase(model))
+      .then(() => this.prepareAuth(model))
+      .then(() => this.get('_deferred').resolve());
   },
 
   createModel() {
@@ -137,6 +147,12 @@ export default Internal.extend({
 
   //
 
+  auth: computed(function() {
+    return this.factoryFor('zuglet:auth/internal').create({ store: this });
+  }),
+
+  //
+
   registerObservedInternal(internal) {
     let observed = this.get('observed');
     assert(`observed already has ${internal} registered`, !observed.includes(internal));
@@ -159,6 +175,7 @@ export default Internal.extend({
 
   willDestroy() {
     destroyCached(this, 'dataManager');
+    destroyCached(this, 'auth');
     this.get('observed').map(internal => internal.destroy());
     this.app && this.app.delete();
     this._super(...arguments);
