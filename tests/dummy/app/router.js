@@ -9,6 +9,7 @@ const Router = EmberRouter.extend({
 Router.map(function() {
   this.route('document');
   this.route('data');
+  this.route('image');
 });
 
 export default Router;
