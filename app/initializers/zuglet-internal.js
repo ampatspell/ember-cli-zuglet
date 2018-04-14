@@ -22,7 +22,8 @@ import QueryReferenceInternal from 'ember-cli-zuglet/-private/reference/query/in
 
 import SerializedQueue from 'ember-cli-zuglet/-private/queue/serialized-queue';
 import ConcurrentQueue from 'ember-cli-zuglet/-private/queue/concurrent-queue';
-import QueueOperation from 'ember-cli-zuglet/-private/queue/operation';
+import QueueOperationInvocable from 'ember-cli-zuglet/-private/queue/operation/invocable';
+import QueueOperationPromise from 'ember-cli-zuglet/-private/queue/operation/promise';
 
 import Observers from 'ember-cli-zuglet/-private/observers/observers';
 
@@ -55,6 +56,19 @@ import AuthMethodAnonymousInternal from 'ember-cli-zuglet/-private/auth/methods/
 import AuthMethodAnonymous from 'ember-cli-zuglet/-private/auth/methods/anonymous/anonymous';
 import AuthMethodEmailInternal from 'ember-cli-zuglet/-private/auth/methods/email/internal';
 import AuthMethodEmail from 'ember-cli-zuglet/-private/auth/methods/email/email';
+
+import StorageInternal from 'ember-cli-zuglet/-private/storage/storage/internal';
+import Storage from 'ember-cli-zuglet/-private/storage/storage/storage';
+import StorageTasks from 'ember-cli-zuglet/-private/storage/storage/tasks';
+
+import StorageReferenceInternal from 'ember-cli-zuglet/-private/storage/reference/internal';
+import StorageReference from 'ember-cli-zuglet/-private/storage/reference/reference';
+
+import StorageReferenceMetadataInternal from 'ember-cli-zuglet/-private/storage/reference/metadata/internal';
+import StorageReferenceMetadata from 'ember-cli-zuglet/-private/storage/reference/metadata/metadata';
+
+import StorageTaskInternal from 'ember-cli-zuglet/-private/storage/task/internal';
+import StorageTask from 'ember-cli-zuglet/-private/storage/task/task';
 
 export default {
   name: 'zuglet:internal',
@@ -105,7 +119,8 @@ export default {
 
     container.register('zuglet:queue/serialized', SerializedQueue);
     container.register('zuglet:queue/concurrent', ConcurrentQueue);
-    container.register('zuglet:queue/operation', QueueOperation);
+    container.register('zuglet:queue/operation/invocable', QueueOperationInvocable);
+    container.register('zuglet:queue/operation/promise', QueueOperationPromise);
 
     //
 
@@ -141,5 +156,20 @@ export default {
 
     container.register('zuglet:auth/method/email/internal', AuthMethodEmailInternal);
     container.register('zuglet:auth/method/email', AuthMethodEmail);
+
+    //
+
+    container.register('zuglet:storage/internal', StorageInternal);
+    container.register('zuglet:storage', Storage);
+    container.register('zuglet:storage/tasks', StorageTasks);
+
+    container.register('zuglet:storage/reference/internal', StorageReferenceInternal);
+    container.register('zuglet:storage/reference', StorageReference);
+
+    container.register('zuglet:storage/reference/metadata/internal', StorageReferenceMetadataInternal);
+    container.register('zuglet:storage/reference/metadata', StorageReferenceMetadata);
+
+    container.register('zuglet:storage/task/internal', StorageTaskInternal);
+    container.register('zuglet:storage/task', StorageTask);
   }
 }

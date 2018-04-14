@@ -10,9 +10,14 @@ export default EmberObject.extend({
     return A();
   }).readOnly(),
 
-  createOperation(opts) {
+  createInvocableOperation(opts) {
     let owner = this.get('owner');
-    return getOwner(this).factoryFor('zuglet:queue/operation').create({ queue: this, owner, opts });
+    return getOwner(this).factoryFor('zuglet:queue/operation/invocable').create({ queue: this, owner, opts });
+  },
+
+  createPromiseOperation(opts) {
+    let owner = this.get('owner');
+    return getOwner(this).factoryFor('zuglet:queue/operation/promise').create({ queue: this, owner, opts });
   },
 
   reuse(opts) {
@@ -22,19 +27,17 @@ export default EmberObject.extend({
     }
   },
 
-  didCreateOperation(operation) {
-    let parent = this.get('parent');
-    if(parent) {
-      parent.register(operation);
-    }
-  },
-
   register(operation) {
     let operations = this.get('operations');
     operations.pushObject(operation);
     operation.get('promise').catch(() => {}).finally(() => {
       operations.removeObject(operation);
     });
+
+    let parent = this.get('parent');
+    if(parent) {
+      parent.register(operation);
+    }
   },
 
   schedule(opts) {
@@ -43,11 +46,17 @@ export default EmberObject.extend({
     }
 
     let operation = this.reuse(opts);
+
     if(!operation) {
-      operation = this.createOperation(opts);
-      this.register(operation);
-      this.didCreateOperation(operation);
+      if(opts.promise) {
+        operation = this.createPromiseOperation(opts);
+      } else {
+        operation = this.createInvocableOperation(opts);
+      }
     }
+
+    this.register(operation);
+    this.didCreateOperation(operation);
 
     return operation.get('promise');
   },

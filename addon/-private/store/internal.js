@@ -149,7 +149,11 @@ export default Internal.extend({
 
   auth: computed(function() {
     return this.factoryFor('zuglet:auth/internal').create({ store: this });
-  }),
+  }).readOnly(),
+
+  storage: computed(function() {
+    return this.factoryFor('zuglet:storage/internal').create({ store: this });
+  }).readOnly(),
 
   //
 
@@ -176,6 +180,7 @@ export default Internal.extend({
   willDestroy() {
     destroyCached(this, 'dataManager');
     destroyCached(this, 'auth');
+    destroyCached(this, 'storage');
     this.get('observed').map(internal => internal.destroy());
     this.app && this.app.delete();
     this._super(...arguments);
