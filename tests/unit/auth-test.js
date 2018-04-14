@@ -1,4 +1,6 @@
 import { module, test, setupStoreTest } from '../helpers/setup';
+import { wait } from '../helpers/firebase';
+import { run } from '@ember/runloop';
 
 module('auth', function(hooks) {
   setupStoreTest(hooks);
@@ -13,6 +15,18 @@ module('auth', function(hooks) {
     let methods = this.store.get('auth.methods');
     assert.ok(methods);
     assert.ok(methods._internal);
+  });
+
+  test('auth is destroyed when store is', function(assert) {
+    let auth = this.store.get('auth');
+    run(() => this.store.destroy());
+    assert.ok(auth.isDestroyed);
+  });
+
+  test('auth internal has auth', function(assert) {
+    let internal = this.store.get('auth._internal');
+    let auth = internal.get('auth');
+    assert.ok(auth);
   });
 
   test('methods has available', function(assert) {
@@ -34,12 +48,6 @@ module('auth', function(hooks) {
     assert.ok(method);
     assert.ok(method._internal);
     assert.equal(method.get('type'), 'email');
-  });
-
-  test('temporary -- auth has user', function(assert) {
-    let user = this.store.get('auth.user');
-    assert.ok(user);
-    assert.ok(user._internal);
   });
 
   test('sign out', async function(assert) {
@@ -140,7 +148,7 @@ module('auth', function(hooks) {
     await auth.signOut();
 
     let log = [];
-    this.store._internal.opts.restoreUser = user => {
+    this.store.onRestoreUser = user => {
       log.push(user.get('uid'));
       return wait(10)
         .then(() => user.set('ok', true))

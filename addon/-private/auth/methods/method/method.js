@@ -4,6 +4,6 @@ import ModelMixin from '../../../internal/model-mixin';
 
 export default EmberObject.extend(ModelMixin, {
 
-  type: readOnly('_internal.type'),
+  type: readOnly('_internal.type')
 
 });

@@ -10,6 +10,10 @@ export default EmberObject.extend(ModelMixin, {
   user: computed('_internal.user', function() {
     let internal = this.get('_internal.user');
     return internal && internal.model(true);
-  }).readOnly()
+  }).readOnly(),
+
+  signOut() {
+    return this._internal.signOut();
+  }
 
 });
