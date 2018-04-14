@@ -1,7 +1,9 @@
 import EmberObject, { computed } from '@ember/object';
+import { readOnly } from '@ember/object/computed';
 import ModelMixin from '../../internal/model-mixin';
 import Mixin from '@ember/object/mixin';
 import serialized from '../../util/serialized';
+import { invokePromiseReturningThis } from '../../internal/invoke';
 
 let ref = [
   'fullPath',
@@ -23,10 +25,11 @@ export default EmberObject.extend(ModelMixin, RefPropertiesMixin, {
     return internal && internal.model(true);
   }).readOnly(),
 
+  url: readOnly('metadata.downloadURL'),
+
   serialized: serialized(ref),
 
-  load(opts) {
-    return this._internal.load(opts);
-  }
+  // { optional }
+  load: invokePromiseReturningThis('load'),
 
 });

@@ -1,6 +1,7 @@
 import { module, test, setupStoreTest } from '../helpers/setup';
 import { run } from '@ember/runloop';
 import { resolve } from 'rsvp';
+import { typeOf } from '@ember/utils';
 
 module('storage', function(hooks) {
   setupStoreTest(hooks);
@@ -216,214 +217,252 @@ module('storage', function(hooks) {
   //   assert.ok(error);
   //   assert.ok(error.code === 'storage/unauthorized');
   // });
-  //
-  // test('ref load resolves with ref', async function(assert) {
-  //   await this.signIn();
-  //   await this._put();
-  //
-  //   let ref = this.storage.ref({ path: 'hello' });
-  //   let result = await ref.load();
-  //   assert.ok(ref === result);
-  // });
-  //
-  // test('ref load reject', async function(assert) {
-  //   await this.signIn();
-  //
-  //   let ref = this.storage.ref({ path: 'missing' });
-  //   try {
-  //     await ref.load();
-  //     assert.ok(false, 'should throw');
-  //   } catch(err) {
-  //     assert.ok(true);
-  //     assert.equal(err.code, 'storage/object-not-found');
-  //   }
-  // });
-  //
-  // test('ref load optional', async function(assert) {
-  //   await this.signIn();
-  //
-  //   let ref = this.storage.ref({ path: 'missing' });
-  //   let result = await ref.load({ optional: true });
-  //   assert.ok(result === ref);
-  // });
-  //
-  // test('ref has metadata', async function(assert) {
-  //   let ref = this.storage.ref({ path: 'missing' });
-  //   let metadata = ref.get('metadata');
-  //   assert.ok(metadata);
-  //   assert.ok(metadata._internal);
-  //   assert.ok(metadata.get('reference') === ref);
-  //
-  //   assert.deepEqual(metadata.get('serialized'), {
-  //     "error": null,
-  //     "isError": false,
-  //     "isExisting": undefined,
-  //     "isLoading": false,
-  //     "isLoaded": false
-  //   });
-  // });
-  //
-  // test('metadata is destroyed with ref', async function(assert) {
-  //   let ref = this.storage.ref({ path: 'missing' });
-  //   let metadata = ref.get('metadata');
-  //   run(() => ref.destroy());
-  //   assert.ok(metadata.isDestroyed);
-  // });
-  //
-  // test('load metadata', async function(assert) {
-  //   await this.signIn();
-  //   await this._put();
-  //
-  //   let ref = this.storage.ref({ path: 'hello' });
-  //   let metadata = ref.get('metadata');
-  //
-  //   assert.deepEqual(metadata.get('serialized'), {
-  //     "error": null,
-  //     "isError": false,
-  //     "isExisting": undefined,
-  //     "isLoaded": false,
-  //     "isLoading": false
-  //   });
-  //
-  //   await metadata.load();
-  //
-  //   assert.deepEqual(metadata.get('serialized'), {
-  //     "contentType": "text/plain",
-  //     "error": null,
-  //     "isError": false,
-  //     "isExisting": true,
-  //     "isLoaded": true,
-  //     "isLoading": false,
-  //     "name": "hello",
-  //     "size": 11
-  //   });
-  // });
-  //
-  // test('load optional metadata for missing', async function(assert) {
-  //   await this.signIn();
-  //
-  //   let ref = this.storage.ref({ path: 'missing' });
-  //   let metadata = ref.get('metadata');
-  //
-  //   assert.deepEqual(metadata.get('serialized'), {
-  //     "error": null,
-  //     "isError": false,
-  //     "isExisting": undefined,
-  //     "isLoaded": false,
-  //     "isLoading": false
-  //   });
-  //
-  //   await metadata.load({ optional: true });
-  //
-  //   assert.deepEqual(metadata.get('serialized'), {
-  //     "error": null,
-  //     "isError": false,
-  //     "isExisting": false,
-  //     "isLoaded": true,
-  //     "isLoading": false
-  //   });
-  // });
-  //
-  // test('load metadata for missing', async function(assert) {
-  //   await this.signIn();
-  //
-  //   let ref = this.storage.ref({ path: 'missing' });
-  //   let metadata = ref.get('metadata');
-  //
-  //   assert.deepEqual(metadata.get('serialized'), {
-  //     "error": null,
-  //     "isError": false,
-  //     "isExisting": undefined,
-  //     "isLoaded": false,
-  //     "isLoading": false
-  //   });
-  //
-  //   try {
-  //     await metadata.load();
-  //   } catch(err) {
-  //     assert.equal(err.code, 'storage/object-not-found');
-  //   }
-  //
-  //   let error = metadata.get('error');
-  //
-  //   assert.ok(error);
-  //
-  //   assert.deepEqual(metadata.get('serialized'), {
-  //     "error": error,
-  //     "isError": true,
-  //     "isExisting": false,
-  //     "isLoaded": true,
-  //     "isLoading": false
-  //   });
-  // });
-  //
-  // test('metadata load succeeds', async function(assert) {
-  //   await this.signIn();
-  //   await this._put();
-  //
-  //   let ref = this.storage.ref({ path: 'hello' });
-  //   let metadata = ref.get('metadata');
-  //
-  //   await metadata.load();
-  //
-  //   assert.ok(metadata.get('raw'));
-  //
-  //   assert.deepEqual(metadata.get('serialized'), {
-  //     "isLoading": false,
-  //     "isLoaded": true,
-  //     "isExisting": true,
-  //     "isError": false,
-  //     "error": null,
-  //     "name": "hello",
-  //     "size": 11,
-  //     "contentType": "text/plain"
-  //   });
-  //
-  //   assert.ok(typeOf(metadata.get('createdAt')) === 'date');
-  // });
-  //
-  // test('ref download url', async function(assert) {
-  //   await this.signIn();
-  //   await this._put();
-  //
-  //   let ref = this.storage.ref({ path: 'hello' });
-  //
-  //   assert.equal(ref.get('url'), undefined);
-  //
-  //   await ref.load();
-  //
-  //   assert.ok(ref.get('url').includes('/o/hello'));
-  // });
-  //
-  // test('metadata update', async function(assert) {
-  //   await this.signIn();
-  //   await this._put();
-  //
-  //   let ref = this.storage.ref({ path: 'hello' });
-  //   let metadata = ref.get('metadata');
-  //
-  //   await metadata.update({ contentType: 'text/plainest', customMetadata: { hello: 'world' } });
-  //
-  //   assert.deepEqual(metadata.get('serialized'), {
-  //     "isLoading": false,
-  //     "contentType": "text/plainest",
-  //     "error": null,
-  //     "isError": false,
-  //     "isExisting": true,
-  //     "isLoaded": true,
-  //     "name": "hello",
-  //     "size": 11,
-  //     "customMetadata": {
-  //       "hello": "world"
-  //     }
-  //   });
-  // });
-  //
-  // test('ref as a string', async function(assert) {
-  //   let images = this.storage.ref('images/hello');
-  //   assert.equal(images.get('fullPath'), 'images/hello');
-  // });
-  //
+
+  test('ref load resolves with ref', async function(assert) {
+    await this.signIn();
+    await this._put();
+
+    let ref = this.storage.ref({ path: 'hello' });
+    let result = await ref.load();
+    assert.ok(ref === result);
+  });
+
+  test('ref load reject', async function(assert) {
+    await this.signIn();
+
+    let ref = this.storage.ref({ path: 'missing' });
+    try {
+      await ref.load();
+      assert.ok(false, 'should throw');
+    } catch(err) {
+      assert.ok(true);
+      assert.equal(err.code, 'storage/object-not-found');
+    }
+  });
+
+  test('ref load optional', async function(assert) {
+    await this.signIn();
+
+    let ref = this.storage.ref({ path: 'missing' });
+
+    assert.deepEqual(ref.get('metadata.serialized'), {
+      "error": null,
+      "isError": false,
+      "isExisting": undefined,
+      "isLoaded": false,
+      "isLoading": false
+    });
+
+    let result = await ref.load({ optional: true });
+    assert.ok(result === ref);
+
+    assert.deepEqual(ref.get('metadata.serialized'), {
+      "error": null,
+      "isError": false,
+      "isExisting": false,
+      "isLoaded": true,
+      "isLoading": false
+    });
+  });
+
+  test('ref has metadata', async function(assert) {
+    let ref = this.storage.ref({ path: 'missing' });
+    let metadata = ref.get('metadata');
+    assert.ok(metadata);
+    assert.ok(metadata._internal);
+    assert.ok(metadata.get('reference') === ref);
+
+    assert.deepEqual(metadata.get('serialized'), {
+      "error": null,
+      "isError": false,
+      "isExisting": undefined,
+      "isLoading": false,
+      "isLoaded": false
+    });
+  });
+
+  test('metadata is destroyed with ref', async function(assert) {
+    let ref = this.storage.ref({ path: 'missing' });
+    let metadata = ref.get('metadata');
+    run(() => ref.destroy());
+    assert.ok(metadata.isDestroyed);
+  });
+
+  test('load metadata', async function(assert) {
+    await this.signIn();
+    await this._put();
+
+    let ref = this.storage.ref({ path: 'hello' });
+    let metadata = ref.get('metadata');
+
+    assert.deepEqual(metadata.get('serialized'), {
+      "error": null,
+      "isError": false,
+      "isExisting": undefined,
+      "isLoaded": false,
+      "isLoading": false
+    });
+
+    await metadata.load();
+
+    assert.deepEqual(metadata.get('serialized'), {
+      "contentType": "text/plain",
+      "error": null,
+      "isError": false,
+      "isExisting": true,
+      "isLoaded": true,
+      "isLoading": false,
+      "name": "hello",
+      "size": 11
+    });
+  });
+
+  test('load optional metadata for missing', async function(assert) {
+    await this.signIn();
+
+    let ref = this.storage.ref({ path: 'missing' });
+    let metadata = ref.get('metadata');
+
+    assert.deepEqual(metadata.get('serialized'), {
+      "error": null,
+      "isError": false,
+      "isExisting": undefined,
+      "isLoaded": false,
+      "isLoading": false
+    });
+
+    await metadata.load({ optional: true });
+
+    assert.deepEqual(metadata.get('serialized'), {
+      "error": null,
+      "isError": false,
+      "isExisting": false,
+      "isLoaded": true,
+      "isLoading": false
+    });
+  });
+
+  test('load metadata for missing', async function(assert) {
+    await this.signIn();
+
+    let ref = this.storage.ref({ path: 'missing' });
+    let metadata = ref.get('metadata');
+
+    assert.deepEqual(metadata.get('serialized'), {
+      "error": null,
+      "isError": false,
+      "isExisting": undefined,
+      "isLoaded": false,
+      "isLoading": false
+    });
+
+    try {
+      await metadata.load();
+    } catch(err) {
+      assert.equal(err.code, 'storage/object-not-found');
+    }
+
+    let error = metadata.get('error');
+
+    assert.ok(error);
+
+    assert.deepEqual(metadata.get('serialized'), {
+      "error": error,
+      "isError": true,
+      "isExisting": false,
+      "isLoaded": true,
+      "isLoading": false
+    });
+  });
+
+  test('metadata load succeeds', async function(assert) {
+    await this.signIn();
+    await this._put();
+
+    let ref = this.storage.ref({ path: 'hello' });
+    let metadata = ref.get('metadata');
+
+    await metadata.load();
+
+    assert.ok(metadata.get('raw'));
+
+    assert.deepEqual(metadata.get('serialized'), {
+      "isLoading": false,
+      "isLoaded": true,
+      "isExisting": true,
+      "isError": false,
+      "error": null,
+      "name": "hello",
+      "size": 11,
+      "contentType": "text/plain"
+    });
+
+    assert.ok(typeOf(metadata.get('createdAt')) === 'date');
+  });
+
+  test('ref download url', async function(assert) {
+    await this.signIn();
+    await this._put();
+
+    let ref = this.storage.ref({ path: 'hello' });
+
+    assert.equal(ref.get('url'), undefined);
+
+    await ref.load();
+
+    assert.ok(ref.get('url').includes('/o/hello'));
+  });
+
+  test('metadata update', async function(assert) {
+    await this.signIn();
+    await this._put();
+
+    let ref = this.storage.ref({ path: 'hello' });
+    let metadata = ref.get('metadata');
+
+    await metadata.update({ contentType: 'text/plainest', customMetadata: { hello: 'world' } });
+
+    assert.deepEqual(metadata.get('serialized'), {
+      "isLoading": false,
+      "contentType": "text/plainest",
+      "error": null,
+      "isError": false,
+      "isExisting": true,
+      "isLoaded": true,
+      "name": "hello",
+      "size": 11,
+      "customMetadata": {
+        "hello": "world"
+      }
+    });
+  });
+
+  test('metadata update fails', async function(assert) {
+    await this.signIn();
+
+    let ref = this.storage.ref({ path: 'missing' });
+    let metadata = ref.get('metadata');
+
+    try {
+      await metadata.update({ contentType: 'text/plainest', customMetadata: { hello: 'world' } });
+      assert.ok(false, 'should throw');
+    } catch(err) {
+      assert.equal(err.code, 'storage/object-not-found');
+      assert.deepEqual(metadata.get('serialized'), {
+        "isExisting": false,
+        "isLoaded": true,
+        "isLoading": false,
+        "isError": true,
+        error: err
+      });
+    }
+  });
+
+  test('ref as a string', async function(assert) {
+    let images = this.storage.ref('images/hello');
+    assert.equal(images.get('fullPath'), 'images/hello');
+  });
+
   // test('ref child', async function(assert) {
   //   let images = this.storage.ref('images');
   //   let image = images.child('image');
@@ -436,27 +475,6 @@ module('storage', function(hooks) {
   //   let images = image.get('parent');
   //   assert.equal(images.get('fullPath'), 'images');
   //   assert.ok(this.storage.ref('images') === images);
-  // });
-  //
-  // test('reference is added to identity', async function(assert) {
-  //   let one = this.storage.ref('images/image');
-  //   let two = this.storage.ref('images/image');
-  //   assert.ok(one === two);
-  // });
-  //
-  // test('destroy ref is removed from identity', async function(assert) {
-  //   let ref = this.storage.ref('images/image');
-  //   let internal = ref._internal;
-  //
-  //   let url = internal.ref.toString();
-  //
-  //   assert.ok(this.identity.storage.all.includes(internal));
-  //   assert.ok(this.identity.storage.ref[url] === internal);
-  //
-  //   run(() => ref.destroy());
-  //
-  //   assert.ok(!this.identity.storage.all.includes(internal));
-  //   assert.ok(!this.identity.storage.ref[url]);
   // });
 
 });

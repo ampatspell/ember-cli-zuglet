@@ -1,5 +1,6 @@
 import Internal from '../../internal/internal';
 import { computed } from '@ember/object';
+import destroyCached from '../../util/destroy-cached';
 
 export default Internal.extend({
 
@@ -20,6 +21,11 @@ export default Internal.extend({
 
   load(opts) {
     return this.get('metadata').load(opts);
+  },
+
+  willDestroy() {
+    destroyCached(this, 'metadata');
+    this._super(...arguments);
   }
 
 });
