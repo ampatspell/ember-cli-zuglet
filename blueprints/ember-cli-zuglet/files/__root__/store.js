@@ -17,6 +17,7 @@ const options = {
 if(!options.firebase.projectId) {
   // eslint-disable-next-line no-console
   console.log([
+    '',
     '🔥',
     '',
     'No Firebase config provided.',
