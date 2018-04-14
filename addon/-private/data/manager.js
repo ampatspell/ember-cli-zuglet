@@ -5,6 +5,7 @@ import { toInternal, isInternal } from './internal/util';
 
 const serializers = [
   'reference',
+  'server-timestamp',
   'array',
   'object',
   'primitive'

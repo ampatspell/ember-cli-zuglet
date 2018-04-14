@@ -9,3 +9,7 @@ export const isFirestoreDocumentReference = value => value instanceof DocumentRe
 export const isFirestoreCollectionReference = value => value instanceof CollectionReference;
 
 export const isFirestoreDocumentOrCollectionReference = value => isFirestoreDocumentReference(value) || isFirestoreCollectionReference(value);
+
+export const isFirestoreServerTimestamp = value => {
+  return value && value.methodName === 'FieldValue.serverTimestamp()';
+};

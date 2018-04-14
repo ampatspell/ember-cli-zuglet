@@ -1,5 +1,6 @@
 import { module, test, setupStoreTest } from '../helpers/setup';
 import DataObject from 'ember-cli-zuglet/-private/data/object/object';
+import serverTimestamp from 'ember-cli-zuglet/-private/util/server-timestamp';
 
 module('data', function(hooks) {
   setupStoreTest(hooks);
@@ -713,6 +714,20 @@ module('data', function(hooks) {
       "two",
       "three"
     ]);
+  });
+
+  test('server timestamp', function(assert) {
+    let ts = serverTimestamp();
+    let object = this.store.object({
+      now: ts
+    });
+
+    let raw = object.serialize('raw');
+    assert.ok(raw.now === ts);
+
+    assert.deepEqual(object.get('serialized'), {
+      "now": "server-timestamp"
+    });
   });
 
 });
