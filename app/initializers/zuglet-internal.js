@@ -44,35 +44,70 @@ import DataArray from 'ember-cli-zuglet/-private/data/array/array';
 import DataReferenceSerializer from 'ember-cli-zuglet/-private/data/reference/serializer';
 import DataReferenceInternal from 'ember-cli-zuglet/-private/data/reference/internal';
 
+import AuthInternal from 'ember-cli-zuglet/-private/auth/auth/internal';
+import Auth from 'ember-cli-zuglet/-private/auth/auth/auth';
+import AuthUserInternal from 'ember-cli-zuglet/-private/auth/user/internal';
+import AuthUser from 'ember-cli-zuglet/-private/auth/user/user';
+
+import AuthMethodsInternal from 'ember-cli-zuglet/-private/auth/methods/internal';
+import AuthMethods from 'ember-cli-zuglet/-private/auth/methods/methods';
+import AuthMethodAnonymousInternal from 'ember-cli-zuglet/-private/auth/methods/anonymous/internal';
+import AuthMethodAnonymous from 'ember-cli-zuglet/-private/auth/methods/anonymous/anonymous';
+import AuthMethodEmailInternal from 'ember-cli-zuglet/-private/auth/methods/email/internal';
+import AuthMethodEmail from 'ember-cli-zuglet/-private/auth/methods/email/email';
+
 export default {
   name: 'zuglet:internal',
   initialize(container) {
+
+    //
+
     container.register('zuglet:stores', Stores);
     container.register('zuglet:stores/internal', StoresInternal);
+
+    //
+
     container.register('zuglet:store/internal', StoreInternal);
     container.register('zuglet:store/observed', ModelArrayProxy);
+
+    //
 
     container.register('zuglet:query/array/internal', QueryArrayInternal);
     container.register('zuglet:query/array/content', ModelArrayProxy);
     container.register('zuglet:query/array', QueryArrayModel);
 
+    //
+
     container.register('zuglet:query/first/internal', QueryFirstInternal);
     container.register('zuglet:query/first', QueryFirstModel);
+
+    //
 
     container.register('zuglet:document/internal', DocumentInternal);
     container.register('zuglet:document', Document);
 
+    //
+
     container.register('zuglet:reference/collection/internal', CollectionReferenceInternal);
     container.register('zuglet:reference/collection', CollectionReference);
+
     container.register('zuglet:reference/document/internal', DocumentReferenceInternal);
     container.register('zuglet:reference/document', DocumentReference);
+
     container.register('zuglet:reference/query/internal', QueryReferenceInternal);
     container.register('zuglet:reference/query', QueryReference);
 
+    //
+
     container.register('zuglet:observers', Observers);
+
+    //
+
     container.register('zuglet:queue/serialized', SerializedQueue);
     container.register('zuglet:queue/concurrent', ConcurrentQueue);
     container.register('zuglet:queue/operation', QueueOperation);
+
+    //
 
     container.register('zuglet:data/manager', DataManagerInternal);
 
@@ -89,5 +124,22 @@ export default {
 
     container.register('zuglet:data/primitive/serializer', DataPrimitiveSerializer);
     container.register('zuglet:data/primitive/internal', DataPrimitiveInternal);
+
+    //
+
+    container.register('zuglet:auth/internal', AuthInternal);
+    container.register('zuglet:auth', Auth);
+
+    container.register('zuglet:auth/user/internal', AuthUserInternal);
+    container.register('zuglet:auth/user', AuthUser);
+
+    container.register('zuglet:auth/methods/internal', AuthMethodsInternal);
+    container.register('zuglet:auth/methods', AuthMethods);
+
+    container.register('zuglet:auth/method/anonymous/internal', AuthMethodAnonymousInternal);
+    container.register('zuglet:auth/method/anonymous', AuthMethodAnonymous);
+
+    container.register('zuglet:auth/method/email/internal', AuthMethodEmailInternal);
+    container.register('zuglet:auth/method/email', AuthMethodEmail);
   }
 }
