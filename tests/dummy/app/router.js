@@ -10,6 +10,7 @@ Router.map(function() {
   this.route('document');
   this.route('data');
   this.route('image');
+  this.route('auth');
 });
 
 export default Router;

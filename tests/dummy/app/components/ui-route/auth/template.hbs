@@ -1,0 +1,44 @@
+{{#ui-block/rows as |rows|}}
+
+  {{#rows.header}}
+    {{#if store.auth.user}}
+      Logged in as
+      {{#if store.auth.user.isAnonymous}}
+        anonymous.
+      {{else}}
+        {{store.auth.user.email}}.
+      {{/if}}
+    {{else}}
+      Not logged in
+    {{/if}}
+  {{/rows.header}}
+
+  {{#if store.auth.user}}
+    {{#rows.row}}
+      {{ui-block/json store.auth.user.serialized}}
+    {{/rows.row}}
+
+    {{#rows.row}}
+      <button {{action 'signOut'}}>Sign out</button>
+    {{/rows.row}}
+  {{/if}}
+
+{{/ui-block/rows}}
+
+{{#ui-block/rows as |rows|}}
+  {{#rows.row}}
+    <button {{action 'signInAnonymous'}}>Sign in anonymously</button>
+  {{/rows.row}}
+{{/ui-block/rows}}
+
+{{#ui-block/rows as |rows|}}
+  {{#rows.row}}
+    {{input value=email}}
+  {{/rows.row}}
+  {{#rows.row}}
+    {{input value=password}}
+  {{/rows.row}}
+  {{#rows.row}}
+    <button {{action 'signInEmail' email password}}>Sign in with email</button>
+  {{/rows.row}}
+{{/ui-block/rows}}
