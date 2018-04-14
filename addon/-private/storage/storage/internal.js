@@ -1,6 +1,5 @@
 import Internal from '../../internal/internal';
 import { computed } from '@ember/object';
-import { resolve } from 'rsvp';
 import { assert } from '@ember/debug';
 import queue from '../../queue/computed';
 

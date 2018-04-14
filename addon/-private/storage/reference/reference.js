@@ -3,7 +3,7 @@ import { readOnly } from '@ember/object/computed';
 import ModelMixin from '../../internal/model-mixin';
 import Mixin from '@ember/object/mixin';
 import serialized from '../../util/serialized';
-import { invokeReturningModel, invokePromiseReturningThis, invokePromiseReturningModel } from '../../internal/invoke';
+import { invokeReturningModel, invokePromiseReturningThis } from '../../internal/invoke';
 
 let ref = [
   'fullPath',

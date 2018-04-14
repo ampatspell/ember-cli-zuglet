@@ -1,7 +1,7 @@
 import Internal from '../../../internal/internal';
 import queue from '../../../queue/computed';
 import setChangedProperties from '../../../util/set-changed-properties';
-import { reject } from 'rsvp';
+import { resolve, reject } from 'rsvp';
 
 export const state = [ 'isExisting', 'isLoading', 'isLoaded', 'isError', 'error' ];
 
