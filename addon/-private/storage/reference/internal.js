@@ -87,6 +87,12 @@ export default Internal.extend({
 
   //
 
+  onTaskCompleted(task) {
+    this.get('metadata').onMetadata(task.get('snapshot').metadata);
+  },
+
+  //
+
   willDestroy() {
     destroyCached(this, 'metadata');
     this._super(...arguments);

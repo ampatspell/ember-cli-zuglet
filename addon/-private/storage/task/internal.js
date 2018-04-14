@@ -57,6 +57,7 @@ export default Internal.extend({
 
   onCompleted() {
     setChangedProperties(this, { isCompleted: true });
+    this.ref.onTaskCompleted(this);
     this.taskDidFinish();
   },
 
