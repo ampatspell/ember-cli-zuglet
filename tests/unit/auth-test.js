@@ -148,7 +148,7 @@ module('auth', function(hooks) {
     await auth.signOut();
 
     let log = [];
-    this.store.onRestoreUser = user => {
+    this.store.restoreUser = user => {
       log.push(user.get('uid'));
       return wait(10)
         .then(() => user.set('ok', true))

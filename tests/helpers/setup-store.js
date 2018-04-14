@@ -14,7 +14,7 @@ const options = {
   }
 };
 
-const TestStore = Store.extend({
+export const TestStore = Store.extend({
   options
 });
 

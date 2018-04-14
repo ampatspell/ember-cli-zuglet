@@ -29,8 +29,12 @@ export default Store.extend({
 
   options,
 
-  // onRestoreUser(user) {
-  //   console.log('onRestoreUser', user);
+  // restore() {
+  //
+  // },
+
+  // restoreUser(user) {
+  //   console.log('restoreUser', user);
   // }
 
 });

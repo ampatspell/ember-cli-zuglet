@@ -61,10 +61,15 @@ export default Internal.extend({
     return this.get('auth').prepare();
   },
 
+  prepareModel(model) {
+    return resolve(model.restore());
+  },
+
   didCreateModel(model) {
     resolve()
       .then(() => this.prepareFirebase(model))
       .then(() => this.prepareAuth(model))
+      .then(() => this.prepareModel(model))
       .then(() => this.get('_deferred').resolve());
   },
 

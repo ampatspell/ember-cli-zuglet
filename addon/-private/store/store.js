@@ -29,7 +29,8 @@ export default EmberObject.extend(ModelMixin, {
 
   settle: invokePromiseReturningModel('settle'),
 
-  onRestoreUser() {
-  },
+  restore() {},
+  
+  restoreUser() {},
 
 });

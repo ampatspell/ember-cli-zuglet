@@ -19,7 +19,7 @@ export default Internal.extend({
       if(store.isDestroying) {
         return;
       }
-      return store.model(true).onRestoreUser(this.model(true));
+      return store.model(true).restoreUser(this.model(true));
     });
   },
 
