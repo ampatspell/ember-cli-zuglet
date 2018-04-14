@@ -3,11 +3,14 @@ import { computed } from '@ember/object';
 import { join } from '@ember/runloop';
 import { resolve } from 'rsvp';
 import destroyCached from '../../util/destroy-cached';
+import queue from '../../queue/computed';
 
 export default Internal.extend({
 
   store: null,
   user: null,
+
+  queue: queue('serialized', 'store.queue'),
 
   init() {
     this._super(...arguments);
@@ -107,7 +110,10 @@ export default Internal.extend({
   },
 
   withAuthReturningUser(fn) {
-    return this.withAuth(fn).then(() => this.settle()).then(() => this.get('user'));
+    return this.get('queue').schedule({
+      name: 'auth',
+      promise: this.withAuth(fn).then(() => this.settle()).then(() => this.get('user'))
+    });
   },
 
   //

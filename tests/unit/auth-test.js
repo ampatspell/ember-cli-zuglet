@@ -167,4 +167,17 @@ module('auth', function(hooks) {
     ]);
   });
 
+  test.only('settle', async function(assert) {
+    let auth = this.store.get('auth');
+    await auth.signOut();
+
+    auth.get('methods.anonymous').signIn();
+
+    assert.ok(!auth.get('user'));
+
+    await this.store.settle();
+
+    assert.ok(auth.get('user'));
+  });
+
 });
