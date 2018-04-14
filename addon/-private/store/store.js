@@ -15,6 +15,10 @@ export default EmberObject.extend(ModelMixin, {
     return this.get('_internal.auth').model(true);
   }).readOnly(),
 
+  storage: computed(function() {
+    return this.get('_internal.storage').model(true);
+  }).readOnly(),
+
   observed: readOnly('_internal.observedProxy'),
 
   collection: invokeReturningModel('collection'),

@@ -56,6 +56,15 @@ import AuthMethodAnonymous from 'ember-cli-zuglet/-private/auth/methods/anonymou
 import AuthMethodEmailInternal from 'ember-cli-zuglet/-private/auth/methods/email/internal';
 import AuthMethodEmail from 'ember-cli-zuglet/-private/auth/methods/email/email';
 
+import StorageInternal from 'ember-cli-zuglet/-private/storage/storage/internal';
+import Storage from 'ember-cli-zuglet/-private/storage/storage/storage';
+
+import StorageReferenceInternal from 'ember-cli-zuglet/-private/storage/reference/internal';
+import StorageReference from 'ember-cli-zuglet/-private/storage/reference/reference';
+
+import StorageReferenceMetadataInternal from 'ember-cli-zuglet/-private/storage/reference/metadata/internal';
+import StorageReferenceMetadata from 'ember-cli-zuglet/-private/storage/reference/metadata/metadata';
+
 export default {
   name: 'zuglet:internal',
   initialize(container) {
@@ -141,5 +150,16 @@ export default {
 
     container.register('zuglet:auth/method/email/internal', AuthMethodEmailInternal);
     container.register('zuglet:auth/method/email', AuthMethodEmail);
+
+    //
+
+    container.register('zuglet:storage/internal', StorageInternal);
+    container.register('zuglet:storage', Storage);
+
+    container.register('zuglet:storage/reference/internal', StorageReferenceInternal);
+    container.register('zuglet:storage/reference', StorageReference);
+
+    container.register('zuglet:storage/reference/metadata/internal', StorageReferenceMetadataInternal);
+    container.register('zuglet:storage/reference/metadata', StorageReferenceMetadata);
   }
 }
