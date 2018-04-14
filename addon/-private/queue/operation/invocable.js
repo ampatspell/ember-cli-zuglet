@@ -2,7 +2,7 @@ import EmberObject, { computed } from '@ember/object';
 import { readOnly } from '@ember/object/computed';
 import { defer, resolve, reject } from 'rsvp';
 import { assert } from '@ember/debug';
-import { operationDestroyedError } from '../util/errors';
+import { operationDestroyedError } from '../../util/errors';
 
 export default EmberObject.extend({
 

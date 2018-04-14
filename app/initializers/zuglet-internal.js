@@ -22,7 +22,8 @@ import QueryReferenceInternal from 'ember-cli-zuglet/-private/reference/query/in
 
 import SerializedQueue from 'ember-cli-zuglet/-private/queue/serialized-queue';
 import ConcurrentQueue from 'ember-cli-zuglet/-private/queue/concurrent-queue';
-import QueueOperation from 'ember-cli-zuglet/-private/queue/operation';
+import QueueOperationInvocable from 'ember-cli-zuglet/-private/queue/operation/invocable';
+import QueueOperationPromise from 'ember-cli-zuglet/-private/queue/operation/promise';
 
 import Observers from 'ember-cli-zuglet/-private/observers/observers';
 
@@ -117,7 +118,8 @@ export default {
 
     container.register('zuglet:queue/serialized', SerializedQueue);
     container.register('zuglet:queue/concurrent', ConcurrentQueue);
-    container.register('zuglet:queue/operation', QueueOperation);
+    container.register('zuglet:queue/operation/invocable', QueueOperationInvocable);
+    container.register('zuglet:queue/operation/promise', QueueOperationPromise);
 
     //
 
