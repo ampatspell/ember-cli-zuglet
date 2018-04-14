@@ -568,3 +568,4 @@ doc.destroy();
 * `doc.reset()`
 * `store.auth`
 * `store.onRestoreUser`
+* `store.storage`
