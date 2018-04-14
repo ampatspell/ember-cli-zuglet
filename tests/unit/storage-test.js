@@ -120,37 +120,48 @@ module('storage', function(hooks) {
     await promise;
   });
 
-  // test('settle', async function(assert) {
-  //   await this.signIn();
-  //   let task = this.put();
-  //
-  //   await this.store.settle();
-  //
-  //   assert.ok(task.get('isCompleted'));
-  //   assert.ok(this.storage.get('tasks.length') === 0);
-  // });
-  //
-  // test('running tasks are registered in storage', async function(assert) {
-  //   await this.signIn();
-  //   let tasks = this.storage.get('tasks');
-  //
-  //   assert.ok(tasks.get('length') === 0);
-  //
-  //   let task = this.put();
-  //
-  //   assert.ok(tasks.get('length') === 1);
-  //   assert.ok(tasks.includes(task));
-  //
-  //   await task.get('promise');
-  //
-  //   assert.ok(tasks.get('length') === 0);
-  // });
+  test('settle', async function(assert) {
+    await this.signIn();
+    let task = this.put();
+
+    await this.store.settle();
+
+    assert.ok(task.get('isCompleted'));
+    assert.ok(this.storage.get('tasks.length') === 0);
+  });
+
+  test('running tasks are registered in storage', async function(assert) {
+    await this.signIn();
+    let internal = this.storage.get('_internal.queue.operations');
+    let root = this.store.get('_internal.queue.operations');
+
+    let tasks = this.storage.get('tasks');
+
+    assert.ok(internal.get('length') === 0);
+    assert.ok(root.get('length') === 0);
+
+    assert.ok(tasks.get('length') === 0);
+
+    let task = this.put();
+
+    assert.ok(internal.get('length') === 1);
+    assert.ok(root.get('length') === 1);
+
+    assert.ok(tasks.get('length') === 1);
+    assert.ok(tasks.includes(task));
+
+    await task.get('promise');
+
+    assert.ok(tasks.get('length') === 0);
+
+    assert.ok(internal.get('length') === 0);
+    assert.ok(root.get('length') === 0);
+  });
 
   test('task has ref', async function(assert) {
     await this.signIn();
     let task = this.put();
     assert.ok(task.get('reference') === this.ref);
-    await task.get('promise'); // temporary
   });
 
   test('task properties', async function(assert) {
@@ -186,18 +197,6 @@ module('storage', function(hooks) {
     });
   });
 
-  // test('destroy nested context while uploading', async function(assert) {
-  //   await this.signIn();
-  //
-  //   let nested = this.store.nest('nested');
-  //   let ref = nested.get('storage').ref({ path: 'hello' });
-  //   let task = ref.put({ type: 'string', data: 'hey', format: 'raw', metadata: { contentType: 'text/plain' } });
-  //
-  //   run(() => nested.destroy());
-  //
-  //   assert.ok(task.isDestroyed);
-  // });
-  
   test('task upload error', async function(assert) {
     await this.signIn();
 
@@ -476,18 +475,16 @@ module('storage', function(hooks) {
     assert.equal(images.get('fullPath'), 'images/hello');
   });
 
-  // test('ref child', async function(assert) {
-  //   let images = this.storage.ref('images');
-  //   let image = images.child('image');
-  //   assert.equal(image.get('fullPath'), 'images/image');
-  //   assert.ok(this.storage.ref('images') === images);
-  // });
-  //
-  // test('ref parent', async function(assert) {
-  //   let image = this.storage.ref('images/image');
-  //   let images = image.get('parent');
-  //   assert.equal(images.get('fullPath'), 'images');
-  //   assert.ok(this.storage.ref('images') === images);
-  // });
+  test('ref child', async function(assert) {
+    let images = this.storage.ref('images');
+    let image = images.child('image');
+    assert.equal(image.get('fullPath'), 'images/image');
+  });
+
+  test('ref parent', async function(assert) {
+    let image = this.storage.ref('images/image');
+    let images = image.get('parent');
+    assert.equal(images.get('fullPath'), 'images');
+  });
 
 });

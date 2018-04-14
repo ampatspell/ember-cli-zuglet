@@ -59,6 +59,7 @@ import AuthMethodEmail from 'ember-cli-zuglet/-private/auth/methods/email/email'
 
 import StorageInternal from 'ember-cli-zuglet/-private/storage/storage/internal';
 import Storage from 'ember-cli-zuglet/-private/storage/storage/storage';
+import StorageTasks from 'ember-cli-zuglet/-private/storage/storage/tasks';
 
 import StorageReferenceInternal from 'ember-cli-zuglet/-private/storage/reference/internal';
 import StorageReference from 'ember-cli-zuglet/-private/storage/reference/reference';
@@ -160,6 +161,7 @@ export default {
 
     container.register('zuglet:storage/internal', StorageInternal);
     container.register('zuglet:storage', Storage);
+    container.register('zuglet:storage/tasks', StorageTasks);
 
     container.register('zuglet:storage/reference/internal', StorageReferenceInternal);
     container.register('zuglet:storage/reference', StorageReference);

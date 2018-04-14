@@ -15,7 +15,7 @@ export default Internal.extend({
   isError:    false,
   error:      null,
 
-  queue: queue('serialized', 'ref.storage.store.queue'),
+  queue: queue('serialized', 'ref.storage.queue'),
 
   _metadata: null,
 

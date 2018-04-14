@@ -2,10 +2,13 @@ import Internal from '../../internal/internal';
 import { computed } from '@ember/object';
 import { resolve } from 'rsvp';
 import { assert } from '@ember/debug';
+import queue from '../../queue/computed';
 
 export default Internal.extend({
 
   store: null,
+
+  queue: queue('concurrent', 'store.queue'),
 
   factoryFor(name) {
     return this.store.factoryFor(name);
@@ -19,10 +22,10 @@ export default Internal.extend({
     return this.store.app.storage();
   }).readOnly(),
 
-  withStorage(fn) {
-    let storage = this.get('storage');
-    return resolve(fn(storage));
-  },
+  tasks: computed(function() {
+    let content = this.get('queue.operations');
+    return this.factoryFor('zuglet:storage/tasks').create({ content });
+  }).readOnly(),
 
   //
 

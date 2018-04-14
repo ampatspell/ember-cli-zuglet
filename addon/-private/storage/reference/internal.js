@@ -3,6 +3,7 @@ import { computed } from '@ember/object';
 import destroyCached from '../../util/destroy-cached';
 import firebase from 'firebase';
 import { assert } from '@ember/debug';
+import queue from '../../queue/computed';
 
 const {
   StringFormat
@@ -19,6 +20,8 @@ export default Internal.extend({
 
   storage: null,
   ref: null,
+
+  queue: queue('serialized', 'storage.queue'),
 
   factoryFor(name) {
     return this.storage.factoryFor(name);
@@ -58,8 +61,31 @@ export default Internal.extend({
 
   put(opts) {
     let { task, type } = this.createStorageTask(opts);
-    return this.createInternalTask(type, task);
+    let internal = this.createInternalTask(type, task);
+    this.get('queue').schedule({
+      name: 'storage/task/put',
+      task: internal,
+      promise: internal.get('promise')
+    });
+    return internal;
   },
+
+  //
+
+  child(path) {
+    let ref = this.ref.child(path);
+    return this.storage.createInternalReference(ref);
+  },
+
+  parent: computed(function() {
+    let ref = this.ref.parent;
+    if(!ref) {
+      return;
+    }
+    return this.storage.createInternalReference(ref);
+  }).readOnly(),
+
+  //
 
   willDestroy() {
     destroyCached(this, 'metadata');
