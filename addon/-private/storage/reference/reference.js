@@ -3,7 +3,7 @@ import { readOnly } from '@ember/object/computed';
 import ModelMixin from '../../internal/model-mixin';
 import Mixin from '@ember/object/mixin';
 import serialized from '../../util/serialized';
-import { invokePromiseReturningThis } from '../../internal/invoke';
+import { invokePromiseReturningThis, invokePromiseReturningModel } from '../../internal/invoke';
 
 let ref = [
   'fullPath',
@@ -31,5 +31,11 @@ export default EmberObject.extend(ModelMixin, RefPropertiesMixin, {
 
   // { optional }
   load: invokePromiseReturningThis('load'),
+
+  // { type: 'data', data: ..., metadata: { } }
+  // { type: 'string', data: ..., format: 'raw' / 'base64' / 'base64-url' / 'data-url', metadata: {} }
+  put(opts) {
+    return this._internal.put(opts).model(true);
+  }
 
 });

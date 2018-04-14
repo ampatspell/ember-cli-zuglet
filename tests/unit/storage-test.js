@@ -11,6 +11,18 @@ module('storage', function(hooks) {
 
     this.signIn = () => this.store.get('auth.methods.anonymous').signIn();
 
+    this.ref = this.storage.ref({ path: 'hello' });
+
+    this.put = () => this.ref.put({
+      type: 'string',
+      data: 'hello world as a raw string',
+      format: 'raw',
+      metadata: {
+        contentType: 'text/plain',
+        customMetadata: { ok: true }
+      }
+    });
+
     this._put = (path='hello') => {
       let storage = this.store._internal.app.storage();
       let ref = storage.ref(path);
@@ -61,53 +73,53 @@ module('storage', function(hooks) {
     assert.ok(metadata._internal);
   });
 
-  // test('put string', async function(assert) {
-  //   await this.signIn();
-  //
-  //   let ref = this.storage.ref({ path: 'hello' });
-  //
-  //   let task = ref.put({
-  //     type: 'string',
-  //     data: 'hello world as a raw string',
-  //     format: 'raw',
-  //     metadata: {
-  //       contentType: 'text/plain',
-  //       customMetadata: { ok: true }
-  //     }
-  //   });
-  //
-  //   assert.ok(task);
-  //   assert.equal(task.get('type'), 'string');
-  //
-  //   let promise = task.get('promise');
-  //   assert.ok(promise);
-  //
-  //   await promise;
-  // });
-  //
-  // test('put blob', async function(assert) {
-  //   await this.signIn();
-  //
-  //   let ref = this.storage.ref({ path: 'hello' });
-  //
-  //   let task = ref.put({
-  //     type: 'data',
-  //     data: new Blob([ 'hello world as a blob' ]),
-  //     metadata: {
-  //       contentType: 'text/plain',
-  //       customMetadata: { ok: true }
-  //     }
-  //   });
-  //
-  //   assert.ok(task);
-  //   assert.equal(task.get('type'), 'data');
-  //
-  //   let promise = task.get('promise');
-  //   assert.ok(promise);
-  //
-  //   await promise;
-  // });
-  //
+  test('put string', async function(assert) {
+    await this.signIn();
+
+    let ref = this.storage.ref({ path: 'hello' });
+
+    let task = ref.put({
+      type: 'string',
+      data: 'hello world as a raw string',
+      format: 'raw',
+      metadata: {
+        contentType: 'text/plain',
+        customMetadata: { ok: true }
+      }
+    });
+
+    assert.ok(task);
+    assert.equal(task.get('type'), 'string');
+
+    let promise = task.get('promise');
+    assert.ok(promise);
+
+    await promise;
+  });
+
+  test('put blob', async function(assert) {
+    await this.signIn();
+
+    let ref = this.storage.ref({ path: 'hello' });
+
+    let task = ref.put({
+      type: 'data',
+      data: new Blob([ 'hello world as a blob' ]),
+      metadata: {
+        contentType: 'text/plain',
+        customMetadata: { ok: true }
+      }
+    });
+
+    assert.ok(task);
+    assert.equal(task.get('type'), 'data');
+
+    let promise = task.get('promise');
+    assert.ok(promise);
+
+    await promise;
+  });
+
   // test('settle', async function(assert) {
   //   await this.signIn();
   //   let task = this.put();
@@ -133,46 +145,47 @@ module('storage', function(hooks) {
   //
   //   assert.ok(tasks.get('length') === 0);
   // });
-  //
-  // test('task has ref', async function(assert) {
-  //   await this.signIn();
-  //   let task = this.put();
-  //   assert.ok(task.get('reference') === this.ref);
-  // });
-  //
-  // test('task properties', async function(assert) {
-  //   await this.signIn();
-  //   let task = this.put();
-  //
-  //   assert.deepEqual(task.get('serialized'), {
-  //     "bytesTransferred": 0,
-  //     "downloadURL": null,
-  //     "error": null,
-  //     "isCompleted": false,
-  //     "isError": false,
-  //     "isRunning": true,
-  //     "percent": 0,
-  //     "totalBytes": 27,
-  //     "type": "string"
-  //   });
-  //
-  //   await task.get('promise');
-  //
-  //   let downloadURL = task.get('downloadURL');
-  //   assert.ok(downloadURL.includes('https://firebasestorage.googleapis.com'));
-  //   assert.deepEqual(task.get('serialized'), {
-  //     "bytesTransferred": 27,
-  //     "downloadURL": downloadURL,
-  //     "error": null,
-  //     "isCompleted": true,
-  //     "isError": false,
-  //     "isRunning": false,
-  //     "percent": 100,
-  //     "totalBytes": 27,
-  //     "type": "string"
-  //   });
-  // });
-  //
+
+  test('task has ref', async function(assert) {
+    await this.signIn();
+    let task = this.put();
+    assert.ok(task.get('reference') === this.ref);
+    await task.get('promise'); // temporary
+  });
+
+  test('task properties', async function(assert) {
+    await this.signIn();
+    let task = this.put();
+
+    assert.deepEqual(task.get('serialized'), {
+      "bytesTransferred": 0,
+      "downloadURL": null,
+      "error": null,
+      "isCompleted": false,
+      "isError": false,
+      "isRunning": true,
+      "percent": 0,
+      "totalBytes": 27,
+      "type": "string"
+    });
+
+    await task.get('promise');
+
+    let downloadURL = task.get('downloadURL');
+    assert.ok(downloadURL.includes('https://firebasestorage.googleapis.com'));
+    assert.deepEqual(task.get('serialized'), {
+      "bytesTransferred": 27,
+      "downloadURL": downloadURL,
+      "error": null,
+      "isCompleted": true,
+      "isError": false,
+      "isRunning": false,
+      "percent": 100,
+      "totalBytes": 27,
+      "type": "string"
+    });
+  });
+
   // test('destroy nested context while uploading', async function(assert) {
   //   await this.signIn();
   //
@@ -184,39 +197,39 @@ module('storage', function(hooks) {
   //
   //   assert.ok(task.isDestroyed);
   // });
-  //
-  // test('task upload error', async function(assert) {
-  //   await this.signIn();
-  //
-  //   let ref = this.storage.ref({ path: 'forbidden/hello' });
-  //
-  //   let task = ref.put({
-  //     type: 'string',
-  //     data: 'hello world as a raw string',
-  //     format: 'raw',
-  //     metadata: {
-  //       contentType: 'text/plain',
-  //     }
-  //   });
-  //
-  //   let error;
-  //   await task.get('promise').catch(err => error = err);
-  //
-  //   assert.deepEqual(task.get('serialized'), {
-  //     "bytesTransferred": 0,
-  //     "downloadURL": null,
-  //     "error": error,
-  //     "isCompleted": true,
-  //     "isError": true,
-  //     "isRunning": false,
-  //     "percent": 0,
-  //     "totalBytes": 27,
-  //     "type": "string"
-  //   });
-  //
-  //   assert.ok(error);
-  //   assert.ok(error.code === 'storage/unauthorized');
-  // });
+  
+  test('task upload error', async function(assert) {
+    await this.signIn();
+
+    let ref = this.storage.ref({ path: 'forbidden/hello' });
+
+    let task = ref.put({
+      type: 'string',
+      data: 'hello world as a raw string',
+      format: 'raw',
+      metadata: {
+        contentType: 'text/plain',
+      }
+    });
+
+    let error;
+    await task.get('promise').catch(err => error = err);
+
+    assert.deepEqual(task.get('serialized'), {
+      "bytesTransferred": 0,
+      "downloadURL": null,
+      "error": error,
+      "isCompleted": true,
+      "isError": true,
+      "isRunning": false,
+      "percent": 0,
+      "totalBytes": 27,
+      "type": "string"
+    });
+
+    assert.ok(error);
+    assert.ok(error.code === 'storage/unauthorized');
+  });
 
   test('ref load resolves with ref', async function(assert) {
     await this.signIn();
