@@ -22,4 +22,13 @@
     border-left: 2px solid #ddd;
     padding: 0 0 0 10px;
   }
+  li {
+    padding: 0 0 5px 0;
+    > p {
+      margin: 0;
+    }
+    &:last-child {
+      padding: 0;
+    }
+  }
 }
