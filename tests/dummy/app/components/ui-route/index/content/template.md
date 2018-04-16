@@ -20,7 +20,7 @@ const options = {
 };
 ```
 
-Save your first document:
+And save your first document:
 
 ``` javascript
 // create new document
@@ -32,7 +32,7 @@ doc.get('data').setProperties({
   text: 'To whom it may concern: It is springtime. It is late afternoon.'
 });
 
-// save it document
+// save the document
 await doc.save();
 
 // check out the doc
