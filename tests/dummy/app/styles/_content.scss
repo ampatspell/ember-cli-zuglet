@@ -6,4 +6,7 @@
 @import "ui-block/master-detail";
 @import "ui-block/rows";
 
-@import "ui-route/document";
+@import "ui-route/index";
+@import "ui-route/docs/index";
+
+@import "ui-route/experiments/document";

@@ -1,0 +1,66 @@
+{{#ui-block/rows as |rows|}}
+
+  {{#rows.header}}
+    {{query}}
+  {{/rows.header}}
+
+  {{#rows.row}}
+    {{ui-block/json query.serialized}}
+  {{/rows.row}}
+
+  {{#if query.isLoading}}
+    {{#rows.row}}
+      Loading…
+    {{/rows.row}}
+  {{else}}
+
+    {{#if query.isArray}}
+
+      {{#each query.content as |doc|}}
+        {{#rows.row click=(action 'select' doc)}}
+          {{doc}}
+          {{ui-block/json doc.serialized}}
+        {{/rows.row}}
+      {{/each}}
+
+    {{else if query.isFirst}}
+
+      {{#rows.row click=(action 'select' query.content)}}
+        {{query.content}} {{query.content.ref.path}}
+        {{ui-block/json query.content.serialized}}
+      {{/rows.row}}
+
+    {{/if}}
+
+  {{/if}}
+
+  {{#rows.row}}
+    {{#if cancel}}
+      <button {{action 'stop'}}>Stop Observing</button>
+    {{else}}
+      <button {{action 'start'}}>Start Observing</button>
+    {{/if}}
+  {{/rows.row}}
+
+{{/ui-block/rows}}
+
+
+{{#ui-block/rows as |rows|}}
+
+  {{#rows.header}}
+    Observers
+  {{/rows.header}}
+
+  {{#each store.observed as |model|}}
+    {{#rows.row}}
+      {{model}}
+    {{/rows.row}}
+  {{else}}
+    {{#rows.row}}
+      No observed documents or queries
+    {{/rows.row}}
+  {{/each}}
+
+{{/ui-block/rows}}
+
+{{set-global component=this query=query}}

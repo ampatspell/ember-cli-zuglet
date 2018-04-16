@@ -1,24 +1,6 @@
 .ui-application {
   @import "global";
-  > .header {
-    padding: 10px;
-    > .title {
-      font-weight: 600;
-    }
-    > .pages {
-      display: flex;
-      flex-direction: row;
-      > a {
-        margin-right: 5px;
-        text-decoration: none;
-        color: #000;
-        &.active {
-          text-decoration: underline;
-        }
-      }
-    }
-  }
-  > .content {
-    @import "content";
-  }
+  @import "hljs/index";
+  @import "content";
+  @import "markdown";
 }

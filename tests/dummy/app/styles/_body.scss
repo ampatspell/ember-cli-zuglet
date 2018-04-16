@@ -1,14 +1,16 @@
-@import url('https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700&subset=latin-ext');
+// https://fonts.google.com/?query=ubuntu&selection.family=Raleway:400,500|Ubuntu+Mono:400,700
+@import url('https://fonts.googleapis.com/css?family=Raleway:200,400,500|Ubuntu+Mono:400,700');
 
-$font-family: 'Ubuntu Mono', monospace;
-$font-size: 14px;
+$font-normal: 'Raleway';
+$font-mono: 'Ubuntu Mono';
+$font-size: 15px;
 
 body {
   cursor: default;
   -webkit-text-size-adjust: 100%;
   -webkit-font-smoothing: subpixel-antialiased;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-  font-family: $font-family;
+  font-family: $font-normal;
   font-size: $font-size;
   margin: 0;
 }
