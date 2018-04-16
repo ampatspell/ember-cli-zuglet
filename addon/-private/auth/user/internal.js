@@ -11,12 +11,9 @@ export default Internal.extend({
   },
 
   restore() {
+    let store = this.get('auth.store');
     return resolve().then(() => {
-      if(this.isDestroying) {
-        return;
-      }
-      let store = this.get('auth.store');
-      if(store.isDestroying) {
+      if(this.isDestroying || store.isDestroying) {
         return;
       }
       return store.model(true).restoreUser(this.model(true));
