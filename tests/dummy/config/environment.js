@@ -14,7 +14,8 @@ module.exports = function(environment) {
       }
     },
     APP: {
-    }
+    },
+    version: require('../../../package.json').version
   };
 
   let config;

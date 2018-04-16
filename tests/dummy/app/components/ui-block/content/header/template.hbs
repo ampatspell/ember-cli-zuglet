@@ -1,4 +1,6 @@
 <div class="content">
-  {{link-to 'ember-cli-zuglet' 'index' class='item main'}}
+  {{#link-to 'index' class='item main'}}
+    ember-cli-zuglet<span class="version">{{version}}</span>
+  {{/link-to}}
   {{link-to title route class='item title'}}
 </div>

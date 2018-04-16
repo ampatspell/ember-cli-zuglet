@@ -33,6 +33,13 @@
     }
     > .main {
       font-weight: 600;
+      > .version {
+        font-size: 13px;
+        padding-left: 5px;
+        &:before {
+          content: 'v';
+        }
+      }
     }
   }
 }
