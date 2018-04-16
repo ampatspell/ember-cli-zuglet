@@ -1,7 +1,7 @@
 {
   "name": "ember-cli-zuglet",
   "version": "0.0.4",
-  "description": "The default blueprint for ember-cli addons.",
+  "description": "Google Cloud Firestore documents for Ember.js",
   "keywords": [
     "ember-addon"
   ],
