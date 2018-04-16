@@ -10,6 +10,7 @@ Router.map(function() {
 
   this.route('docs', function() {
     this.route('about');
+    this.route('quick-start');
   });
 
   // development nonsense
