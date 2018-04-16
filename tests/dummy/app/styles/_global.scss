@@ -7,7 +7,7 @@ a {
 }
 
 button {
-  font-family: $font-family;
+  font-family: $font-normal;
   font-size: $font-size;
   -webkit-appearance: none;
   border: 1px solid #ddd;
@@ -27,7 +27,7 @@ label {
 
 input[type='text'],
 input[type='password'] {
-  font-family: $font-family;
+  font-family: $font-normal;
   font-size: $font-size;
   -webkit-appearance: none;
   width: 100%;
