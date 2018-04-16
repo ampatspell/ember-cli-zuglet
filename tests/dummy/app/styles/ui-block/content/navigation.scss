@@ -1,0 +1,26 @@
+.ui-block-content-navigation {
+  .items {
+    > .item {
+      > .title {
+        font-size: 14px;
+        line-height: 21px;
+        color: #999;
+        > a {
+          color: #000;
+          text-decoration: none;
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+      > .items {
+        padding: 0 0 0 10px;
+      }
+    }
+  }
+  > .items {
+    > .item {
+      margin-bottom: 15px;
+    }
+  }
+}

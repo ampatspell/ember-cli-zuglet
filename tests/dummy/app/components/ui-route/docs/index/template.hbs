@@ -1,0 +1,28 @@
+{{#ui-block/content/master-detail as |md|}}
+
+  {{#md.master}}
+    {{#ui-block/content/navigation as |nav|}}
+      {{nav.item title='About' route='docs.about'}}
+      {{nav.item title='Quick Start'}}
+      {{#nav.item title='API' as |api|}}
+        {{api.item title='register'}}
+        {{#api.item title='Store' as |api|}}
+          {{api.item title='References'}}
+          {{api.item title='Document'}}
+        {{/api.item}}
+        {{#api.item title='Storage' as |api|}}
+          {{api.item title='Reference'}}
+          {{api.item title='Task'}}
+        {{/api.item}}
+        {{#api.item title='Auth' as |api|}}
+          {{api.item title='Methods'}}
+        {{/api.item}}
+      {{/nav.item}}
+    {{/ui-block/content/navigation}}
+  {{/md.master}}
+
+  {{#md.detail}}
+    Documentation coming soon
+  {{/md.detail}}
+
+{{/ui-block/content/master-detail}}

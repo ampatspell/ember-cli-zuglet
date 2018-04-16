@@ -1,0 +1,14 @@
+.ui-block-content-master-detail {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  > .master {
+    width: 230px;
+    padding: 25px;
+    border-right: 1px solid fade-out(#000, 0.95);
+  }
+  > .detail {
+    flex: 1;
+    padding: 25px;
+  }
+}
