@@ -16,7 +16,11 @@
     "build": "ember build",
     "lint:js": "eslint ./*.js addon addon-test-support app config lib server test-support tests",
     "start": "ember serve",
-    "test": "ember try:each"
+    "test": "ember try:each",
+    "bump": "npm version patch; git push --follow-tags",
+    "deploy": "ember build -prod && firebase deploy",
+    "deploy:storage": "firebase deploy --only storage",
+    "deploy:travis": "firebase deploy --except hosting --project ember-cli-zuglet-travis"
   },
   "dependencies": {
     "broccoli-file-creator": "^1.1.1",

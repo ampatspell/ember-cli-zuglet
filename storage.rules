@@ -1,0 +1,33 @@
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    match /forbidden/{all=**} {
+      allow write: if false;
+      allow read: if false;
+    }
+
+    match /hello {
+      allow write: if isLoggedIn() && isLessThanMB(2);
+      allow read: if true;
+    }
+
+    match /missing {
+      allow write: if false;
+      allow read: if true;
+    }
+
+    match /experimental/{name} {
+      allow write: if isLoggedIn() && isLessThanMB(2);
+      allow read: if true;
+    }
+
+  }
+}
+
+function isLessThanMB(m) {
+  return request.resource.size < m * 1024 * 1024;
+}
+
+function isLoggedIn() {
+  return request.auth != null;
+}

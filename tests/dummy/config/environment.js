@@ -8,22 +8,40 @@ module.exports = function(environment) {
     locationType: 'auto',
     EmberENV: {
       FEATURES: {
-        // Here you can enable experimental features on an ember canary build
-        // e.g. 'with-controller': true
       },
       EXTEND_PROTOTYPES: {
-        // Prevent Ember Data from overriding Date.parse.
         Date: false
       }
     },
-
     APP: {
-      // Here you can pass flags/options to your application instance
-      // when it is created
     }
   };
 
-  if (environment === 'development') {
+  let config;
+
+  if(process.env.CI) {
+    config = {
+      apiKey: "AIzaSyDoUTp48KAjzcRLRhf1AofFdrsHI6KujHw",
+      authDomain: "ember-cli-zuglet-travis.firebaseapp.com",
+      databaseURL: "https://ember-cli-zuglet-travis.firebaseio.com",
+      projectId: "ember-cli-zuglet-travis",
+      storageBucket: "ember-cli-zuglet-travis.appspot.com",
+      messagingSenderId: "1053333094712"
+    };
+  } else {
+    config = {
+      apiKey: "AIzaSyDlYqLJJYWK7cdYBAtkZR5efA8HoYvcd6I",
+      authDomain: "ember-cli-zuglet.firebaseapp.com",
+      databaseURL: "https://ember-cli-zuglet.firebaseio.com",
+      projectId: "ember-cli-zuglet",
+      storageBucket: "ember-cli-zuglet.appspot.com",
+      messagingSenderId: "337740781111"
+    };
+  }
+
+  ENV.firebase = config;
+
+  if(environment === 'development') {
     // ENV.APP.LOG_RESOLVER = true;
     // ENV.APP.LOG_ACTIVE_GENERATION = true;
     // ENV.APP.LOG_TRANSITIONS = true;
@@ -31,20 +49,15 @@ module.exports = function(environment) {
     // ENV.APP.LOG_VIEW_LOOKUPS = true;
   }
 
-  if (environment === 'test') {
-    // Testem prefers this...
+  if(environment === 'test') {
     ENV.locationType = 'none';
-
-    // keep test console output quieter
     ENV.APP.LOG_ACTIVE_GENERATION = false;
     ENV.APP.LOG_VIEW_LOOKUPS = false;
-
     ENV.APP.rootElement = '#ember-testing';
     ENV.APP.autoboot = false;
   }
 
-  if (environment === 'production') {
-    // here you can enable a production-specific feature
+  if(environment === 'production') {
   }
 
   return ENV;

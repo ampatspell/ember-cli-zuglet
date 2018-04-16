@@ -20,7 +20,7 @@ const options = {
 };
 ```
 
-Save your first document in console:
+Save your first document:
 
 ``` javascript
 // create new document
