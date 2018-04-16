@@ -1,14 +1,12 @@
 import Store from 'ember-cli-zuglet/store';
+import environment from '../../config/environment';
+
+const {
+  firebase
+} = environment;
 
 const options = {
-  firebase: {
-    apiKey: "AIzaSyAvm8v8kXS3iHsg3EBxAk-mZZcYdeOuj3E",
-    authDomain: "ember-cli-zug-travis.firebaseapp.com",
-    databaseURL: "https://ember-cli-zug-travis.firebaseio.com",
-    projectId: "ember-cli-zug-travis",
-    storageBucket: "ember-cli-zug-travis.appspot.com",
-    messagingSenderId: "715071933357"
-  },
+  firebase,
   firestore: {
     persistenceEnabled: false
   }
