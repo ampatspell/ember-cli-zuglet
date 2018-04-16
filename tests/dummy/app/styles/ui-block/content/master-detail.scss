@@ -4,8 +4,19 @@
   flex-direction: row;
   > .master {
     width: 230px;
-    padding: 25px;
     border-right: 1px solid fade-out(#000, 0.95);
+    position: relative;
+    padding: 25px;
+    > .sticky {
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      > .content {
+        padding: 25px;
+      }
+    }
   }
   > .detail {
     flex: 1;
