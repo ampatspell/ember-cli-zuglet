@@ -1,0 +1,26 @@
+.ui-block-content-header {
+  padding: 20px 25px;
+  box-shadow: 0 1px 2px fade-out(#000, 0.9);
+  display: flex;
+  flex-direction: row;
+  > .item {
+    text-decoration: none;
+    margin-right: 10px;
+    &:after {
+      margin-left: 10px;
+      font-weight: 400;
+      content: '/';
+      color: #666;
+    }
+    &:last-child {
+      margin: 0;
+      &:after {
+        margin: 0;
+        content: '';
+      }
+    }
+  }
+  > .main {
+    font-weight: 600;
+  }
+}

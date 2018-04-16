@@ -1,9 +1,5 @@
 {{#ui-block/rows as |rows|}}
 
-  {{#rows.header}}
-    Experiments
-  {{/rows.header}}
-
   {{#each experiments as |experiment|}}
     {{#rows.row}}
       <div class="strong">{{link-to experiment.name experiment.route}}</div>
