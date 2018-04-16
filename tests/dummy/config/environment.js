@@ -14,18 +14,34 @@ module.exports = function(environment) {
       }
     },
     APP: {
-    },
-    firebase: {
+    }
+  };
+
+  let config;
+
+  if(process.env.CI) {
+    config = {
+      apiKey: "AIzaSyDoUTp48KAjzcRLRhf1AofFdrsHI6KujHw",
+      authDomain: "ember-cli-zuglet-travis.firebaseapp.com",
+      databaseURL: "https://ember-cli-zuglet-travis.firebaseio.com",
+      projectId: "ember-cli-zuglet-travis",
+      storageBucket: "ember-cli-zuglet-travis.appspot.com",
+      messagingSenderId: "1053333094712"
+    };
+  } else {
+    config = {
       apiKey: "AIzaSyDlYqLJJYWK7cdYBAtkZR5efA8HoYvcd6I",
       authDomain: "ember-cli-zuglet.firebaseapp.com",
       databaseURL: "https://ember-cli-zuglet.firebaseio.com",
       projectId: "ember-cli-zuglet",
       storageBucket: "ember-cli-zuglet.appspot.com",
       messagingSenderId: "337740781111"
-    }
-  };
+    };
+  }
 
-  if (environment === 'development') {
+  ENV.firebase = config;
+
+  if(environment === 'development') {
     // ENV.APP.LOG_RESOLVER = true;
     // ENV.APP.LOG_ACTIVE_GENERATION = true;
     // ENV.APP.LOG_TRANSITIONS = true;
@@ -33,7 +49,7 @@ module.exports = function(environment) {
     // ENV.APP.LOG_VIEW_LOOKUPS = true;
   }
 
-  if (environment === 'test') {
+  if(environment === 'test') {
     ENV.locationType = 'none';
     ENV.APP.LOG_ACTIVE_GENERATION = false;
     ENV.APP.LOG_VIEW_LOOKUPS = false;
@@ -41,7 +57,7 @@ module.exports = function(environment) {
     ENV.APP.autoboot = false;
   }
 
-  if (environment === 'production') {
+  if(environment === 'production') {
   }
 
   return ENV;
