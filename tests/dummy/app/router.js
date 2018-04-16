@@ -7,11 +7,19 @@ const Router = EmberRouter.extend({
 });
 
 Router.map(function() {
-  this.route('docs');
-  this.route('document');
-  this.route('data');
-  this.route('image');
-  this.route('auth');
+
+  this.route('docs', function() {
+
+  });
+
+  // development nonsense
+  this.route('experiments', function() {
+    this.route('query');
+    this.route('document');
+    this.route('data');
+    this.route('image');
+    this.route('auth');
+  });
 });
 
 export default Router;
