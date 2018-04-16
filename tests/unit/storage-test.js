@@ -150,7 +150,8 @@ module('storage', function(hooks) {
     assert.ok(tasks.get('length') === 1);
     assert.ok(tasks.includes(task));
 
-    await task.get('promise');
+    let r = await task.get('promise');
+    assert.ok(r === task);
 
     assert.ok(tasks.get('length') === 0);
 

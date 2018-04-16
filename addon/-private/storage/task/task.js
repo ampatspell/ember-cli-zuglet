@@ -43,6 +43,8 @@ export default EmberObject.extend(ModelMixin, TaskPropertiesMixin, SnapshotPrope
 
   serialized: serialized([ ...task, ...snapshot ]),
 
-  promise: readOnly('_internal.promise'),
+  promise: computed('_internal.promise', function() {
+    return this.get('_internal.promise').then(() => this);
+  }).readOnly(),
 
 });
