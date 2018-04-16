@@ -1,0 +1,32 @@
+.ui-route-index {
+  > .ui-route-index-header {
+    padding: 100px 0 0 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    > .title {
+      font-size: 28px;
+      font-weight: 200;
+    }
+    > .subtitle {
+    }
+  }
+  > .ui-route-index-navigation {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    padding: 50px 0 40px 0;
+    > a {
+      padding: 0 5px;
+      text-decoration: none;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+  > .ui-route-index-content {
+    max-width: 600px;
+    margin: 0 auto 50px auto;
+  }
+}
