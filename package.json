@@ -3,7 +3,14 @@
   "version": "0.0.5",
   "description": "Google Cloud Firestore documents for Ember.js",
   "keywords": [
-    "ember-addon"
+    "ember-addon",
+    "ember",
+    "persistence",
+    "storage",
+    "documents",
+    "firebase",
+    "firestore",
+    "auth"
   ],
   "license": "MIT",
   "author": "Arnis Vuskans <ampatspell@gmail.com> (http://www.amateurinmotion.com/)",
