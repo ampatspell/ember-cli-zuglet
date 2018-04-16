@@ -2,15 +2,10 @@ import Store from 'ember-cli-zuglet/store';
 import environment from '../../config/environment';
 
 const {
-  firebase
+  firebase: options
 } = environment;
 
-const options = {
-  firebase,
-  firestore: {
-    persistenceEnabled: false
-  }
-};
+options.firestore.persistenceEnabled = false;
 
 export const TestStore = Store.extend({
   options
