@@ -2,7 +2,7 @@
 
 Simplification.
 
-Identity-less, model-less persistence for Google Cloud Firestore. Just store, documents and queries.
+Identity-less, model-less persistence for Google Cloud Firestore. Just store, documents and queries (also auth and storage).
 
 ## Setup
 
