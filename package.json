@@ -19,7 +19,8 @@
     "test": "ember try:each",
     "bump": "npm version patch; git push --follow-tags",
     "deploy": "ember build -prod && firebase deploy",
-    "deploy:storage": "firebase deploy --only storage"
+    "deploy:storage": "firebase deploy --only storage",
+    "deploy:travis": "firebase deploy --except hosting --project ember-cli-zuglet-travis"
   },
   "dependencies": {
     "broccoli-file-creator": "^1.1.1",
