@@ -1,4 +1,4 @@
-# ember-cli-zuglet
+# ember-cli-zuglet [![Build Status](https://travis-ci.org/ampatspell/ember-cli-zuglet.svg?branch=master)](https://travis-ci.org/ampatspell/ember-cli-zuglet)
 
 Simplification.
 
