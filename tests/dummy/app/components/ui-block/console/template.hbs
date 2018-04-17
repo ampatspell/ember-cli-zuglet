@@ -1,0 +1,4 @@
+{{#each lines as |line|}}
+  <div class="line">{{line}}</div>
+{{/each}}
+<div class="line input"><div class="marker">$</div>{{input placeholder='…' value=input enter=(action 'enter')}}</div>
