@@ -13,7 +13,9 @@ export default Component.extend({
   }),
 
   context: computed(function() {
-    return {};
+    return {
+      store: this.get('store')
+    };
   }),
 
   actions: {
