@@ -37,6 +37,7 @@ Router.map(function() {
     this.route('data');
     this.route('image');
     this.route('auth');
+    this.route('browser');
   });
 });
 
