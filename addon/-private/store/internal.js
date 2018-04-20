@@ -12,8 +12,10 @@ import firebase from 'firebase';
 const initializeFirebase = (identifier, opts) => {
   let config = opts.firebase;
   let app = firebase.initializeApp(config, identifier);
+  let firestore = app.firestore();
+  firestore.settings({ timestampsInSnapshots: true });
   if(opts.firestore && opts.firestore.persistenceEnabled) {
-    return resolve(app.firestore().enablePersistence()).catch(() => {}).then(() => app);
+    return resolve(firestore.enablePersistence()).catch(() => {}).then(() => app);
   }
   return resolve(app);
 }
