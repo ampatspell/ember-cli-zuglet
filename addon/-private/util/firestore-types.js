@@ -3,7 +3,8 @@ import firebase from 'firebase';
 const {
   DocumentReference,
   CollectionReference,
-  FieldValue
+  FieldValue,
+  Timestamp
 } = firebase.firestore;
 
 export const isFirestoreDocumentReference = value => value instanceof DocumentReference;
@@ -15,3 +16,5 @@ export const isFirestoreDocumentOrCollectionReference = value => {
 
 const serverTimestamp = FieldValue.serverTimestamp();
 export const isFirestoreServerTimestamp = value => serverTimestamp.isEqual(value);
+
+export const isFirestoreTimestamp = value => value instanceof Timestamp;

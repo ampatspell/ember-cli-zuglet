@@ -730,4 +730,21 @@ module('data', function(hooks) {
     });
   });
 
+  test('save and load date', async function(assert) {
+    let date = new Date();
+    let saved = this.store.doc('ducks/yellow').new({ date });
+    await saved.save();
+    assert.equal(saved.get('data.date'), date);
+
+    let doc = await this.store.doc('ducks/yellow').load();
+    assert.equal(doc.get('data.date').getTime(), date.getTime());
+
+    let second = new Date();
+    doc.set('data.date', second);
+    await doc.save();
+
+    doc = await this.store.doc('ducks/yellow').load();
+    assert.equal(doc.get('data.date').getTime(), second.getTime());
+  });
+
 });
