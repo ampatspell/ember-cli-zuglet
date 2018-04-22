@@ -47,6 +47,9 @@ export default Internal.extend({
 
   scheduleUser(user) {
     this.promise = this.promise.finally(() => {
+      if(this.isDestroying) {
+        return;
+      }
       let internal = this.createUserInternal(user);
       return internal.restore().then(() => {
         if(this.isDestroying) {
