@@ -1,12 +1,12 @@
 'use strict';
 
 const functions = require('firebase-functions');
-const CORS = require('cors');
+const HttpsError = functions.https.HttpsError;
 
-const cors = CORS({ origin: true });
+exports.callable_success = functions.https.onCall((data, context) => {
+  return { request: data };
+});
 
-exports.hello = functions.https.onRequest((req, res) => {
-  cors(req, res, () => {
-    res.json({ data: { hello: true, body: req.body } });
-  });
+exports.callable_error = functions.https.onCall(() => {
+  throw new HttpsError('not-found', 'something was not found', { id: 'foobar' });
 });
