@@ -5,6 +5,8 @@ const {
   firebase: options
 } = environment;
 
+delete options.firebase.messagingSenderId;
+
 options.firestore.persistenceEnabled = false;
 
 export const TestStore = Store.extend({
