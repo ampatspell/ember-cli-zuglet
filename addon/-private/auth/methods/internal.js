@@ -2,10 +2,10 @@ import Internal from '../../internal/internal';
 import { computed } from '@ember/object';
 import { A } from '@ember/array';
 
-const types = [
+export const types = A([
   'anonymous',
   'email'
-];
+]);
 
 export default Internal.extend({
 
