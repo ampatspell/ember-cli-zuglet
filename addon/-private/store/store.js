@@ -19,6 +19,10 @@ export default EmberObject.extend(ModelMixin, {
     return this.get('_internal.storage').model(true);
   }).readOnly(),
 
+  functions: computed(function() {
+    return this.get('_internal.functions').model(true);
+  }).readOnly(),
+
   observed: readOnly('_internal.observedProxy'),
 
   collection: invokeReturningModel('collection'),
@@ -30,7 +34,7 @@ export default EmberObject.extend(ModelMixin, {
   settle: invokePromiseReturningModel('settle'),
 
   restore() {},
-  
+
   restoreUser() {},
 
 });

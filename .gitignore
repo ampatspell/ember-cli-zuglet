@@ -23,3 +23,5 @@ bower.json.ember-try
 package.json.ember-try
 
 .DS_Store
+
+functions/node_modules
