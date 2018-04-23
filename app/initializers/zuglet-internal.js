@@ -76,8 +76,10 @@ import StorageReferenceMetadata from 'ember-cli-zuglet/-private/storage/referenc
 import StorageTaskInternal from 'ember-cli-zuglet/-private/storage/task/internal';
 import StorageTask from 'ember-cli-zuglet/-private/storage/task/task';
 
-import FunctionsInternal from 'ember-cli-zuglet/-private/functions/internal';
-import Functions from 'ember-cli-zuglet/-private/functions/functions';
+import FunctionsInternal from 'ember-cli-zuglet/-private/functions/functions/internal';
+import Functions from 'ember-cli-zuglet/-private/functions/functions/functions';
+import FunctionsCallableInternal from 'ember-cli-zuglet/-private/functions/callable/internal';
+import FunctionsCallable from 'ember-cli-zuglet/-private/functions/callable/callable';
 
 export default {
   name: 'zuglet:internal',
@@ -190,6 +192,9 @@ export default {
     //
 
     container.register('zuglet:functions/internal', FunctionsInternal);
-    container.register('zuglet:functions', Functions);    
+    container.register('zuglet:functions', Functions);
+
+    container.register('zuglet:functions/callable/internal', FunctionsCallableInternal);
+    container.register('zuglet:functions/callable', FunctionsCallable);
   }
 }

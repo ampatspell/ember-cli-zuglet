@@ -37,12 +37,12 @@ export default EmberObject.extend({
       if(this.isDestroying) {
         return;
       }
-      return opts.didResolve(arg);
+      return opts.didResolve ? opts.didResolve(arg) : arg;
     }, err => {
       if(this.isDestroying) {
         return reject(err);
       }
-      return opts.didReject(err);
+      return opts.didReject ? opts.didReject(err) : reject(err);
     }).then(arg => {
       return deferred.resolve(arg);
     }, err => {

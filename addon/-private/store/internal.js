@@ -162,6 +162,10 @@ export default Internal.extend({
     return this.factoryFor('zuglet:storage/internal').create({ store: this });
   }).readOnly(),
 
+  functions: computed(function() {
+    return this.factoryFor('zuglet:functions/internal').create({ store: this });    
+  }).readOnly(),
+
   //
 
   registerObservedInternal(internal) {
