@@ -5,7 +5,7 @@ export default Internal.extend({
   content: null,
 
   model() {
-    return this.content.model(true);
+    return this.content;
   },
 
   fetch() {

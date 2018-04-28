@@ -1,4 +1,6 @@
 import { module, test, setupStoreTest, setupDucks } from '../helpers/setup';
+import serverTimestamp from 'ember-cli-zuglet/util/server-timestamp';
+import { typeOf } from '@ember/utils';
 
 module('document-load', function(hooks) {
   setupStoreTest(hooks);
@@ -61,6 +63,39 @@ module('document-load', function(hooks) {
     } catch(err) {
       assert.equal(err.code, 'zuglet/document-missing');
     }
+  });
+
+  test('document with server timestamp', async function(assert) {
+    await this.recreate();
+    let doc = this.store.doc('ducks/yellow').new();
+    doc.set('data.name', 'duck');
+    doc.set('data.created_at', serverTimestamp());
+    assert.deepEqual(doc.data.serialized, {
+      "created_at": "server-timestamp",
+      "name": "duck"
+    });
+
+    let created = doc.get('data.created_at');
+    assert.ok(created);
+
+    await doc.save();
+
+    assert.deepEqual(doc.data.serialized, {
+      "created_at": "server-timestamp",
+      "name": "duck"
+    });
+
+    await doc.reload();
+
+    let date = doc.get('data.created_at');
+
+    assert.ok(created !== date);
+    assert.ok(typeOf(date) === 'date');
+
+    assert.deepEqual(doc.data.serialized, {
+      "created_at": date,
+      "name": "duck"
+    });
   });
 
 });

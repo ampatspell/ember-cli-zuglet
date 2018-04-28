@@ -1,6 +1,7 @@
 # TODO
 
 * GeoPoint for data
+* server timestamp model with `estimate` prop
 * data changed properties
 * doc.isDirty based on data state
 * doc.isEditing which makes data updates go to pristine is there is changed properties in data
