@@ -70,7 +70,7 @@ module('document-load', function(hooks) {
     let doc = this.store.doc('ducks/yellow').new();
     doc.set('data.name', 'duck');
     doc.set('data.created_at', serverTimestamp());
-    assert.deepEqual(doc.data.serialized, {
+    assert.deepEqual(doc.get('data.serialized'), {
       "created_at": "server-timestamp",
       "name": "duck"
     });
@@ -80,7 +80,7 @@ module('document-load', function(hooks) {
 
     await doc.save();
 
-    assert.deepEqual(doc.data.serialized, {
+    assert.deepEqual(doc.get('data.serialized'), {
       "created_at": "server-timestamp",
       "name": "duck"
     });
@@ -92,7 +92,7 @@ module('document-load', function(hooks) {
     assert.ok(created !== date);
     assert.ok(typeOf(date) === 'date');
 
-    assert.deepEqual(doc.data.serialized, {
+    assert.deepEqual(doc.get('data.serialized'), {
       "created_at": date,
       "name": "duck"
     });
