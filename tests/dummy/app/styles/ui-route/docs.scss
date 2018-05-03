@@ -2,23 +2,15 @@
   $w: 250px;
   > .toc {
     position: fixed;
-    top: 0;
+    top: 60px;
     left: 0;
     bottom: 0;
     width: $w;
-    background: fade-out(#000, 0.98);
     border-right: 1px solid fade-out(#000, 0.95);
-    padding: 39px 20px 20px 30px;
-    > .name {
-      text-decoration: none;
-      font-weight: 500;
-    }
-    > .content {
-      padding-top: 15px;
-    }
+    padding: 35px 20px 20px 25px;
   }
   > .content {
     border-left: $w solid rgba(0,0,0,0);
-    padding: 20px 40px 40px 40px;
+    padding: 15px 40px 40px 40px;
   }
 }

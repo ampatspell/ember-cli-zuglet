@@ -1,5 +1,5 @@
 ---
-title: Collection
+title: Collection Reference
 pos: 2
 ---
 
