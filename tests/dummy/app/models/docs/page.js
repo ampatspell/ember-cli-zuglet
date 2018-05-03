@@ -15,6 +15,11 @@ export default EmberObject.extend(PromiseMixin, {
   },
 
   preprocessNode(parent, node) {
+  },
+
+  toStringExtension() {
+    let id = this.get('id');
+    return `${id}`;
   }
 
 });

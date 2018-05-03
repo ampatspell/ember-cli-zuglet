@@ -1,0 +1,11 @@
+{{#unless node.root}}
+  {{link-to node.title 'docs.page' node.id class='title'}}
+{{/unless}}
+
+{{#if node.nodes}}
+  <div class="nodes">
+    {{#each node.nodes as |nested|}}
+      {{ui-block/pages/toc/node node=nested}}
+    {{/each}}
+  </div>
+{{/if}}
