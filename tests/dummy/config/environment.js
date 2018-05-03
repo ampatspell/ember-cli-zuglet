@@ -28,7 +28,7 @@ module.exports = function(environment) {
         databaseURL: "https://ember-cli-zuglet-travis.firebaseio.com",
         projectId: "ember-cli-zuglet-travis",
         storageBucket: "ember-cli-zuglet-travis.appspot.com",
-        messagingSenderId: "1053333094712"
+        // messagingSenderId: "1053333094712"
       },
       firestore: {
         persistenceEnabled: false
@@ -42,7 +42,7 @@ module.exports = function(environment) {
         databaseURL: "https://ember-cli-zuglet.firebaseio.com",
         projectId: "ember-cli-zuglet",
         storageBucket: "ember-cli-zuglet.appspot.com",
-        messagingSenderId: "337740781111"
+        // messagingSenderId: "337740781111"
       },
       firestore: {
         persistenceEnabled: true

@@ -10,4 +10,4 @@ export default Route.extend({
     return this.get('docs').page(id).load();
   }
 
-})
+});
