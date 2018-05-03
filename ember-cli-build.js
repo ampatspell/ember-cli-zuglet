@@ -8,9 +8,6 @@ module.exports = function(defaults) {
       paths: {
         'docs': 'docs'
       }
-    },
-    fingerprint: {
-      exclude: [ 'assets/ember-cli-remark-static' ]
     }
   });
 
