@@ -1,3 +1,8 @@
+---
+title: Document
+pos: 1
+---
+
 # Document Reference
 
 ``` javascript

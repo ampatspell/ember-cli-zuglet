@@ -1,3 +1,8 @@
+---
+title: Collection
+pos: 2
+---
+
 # Collection Reference `extends QueryableReference`
 
 ``` javascript

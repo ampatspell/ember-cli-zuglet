@@ -1,4 +1,9 @@
-# About
+---
+pos: 1
+title: About
+---
+
+# ember-cli-zuglet
 
 This addon is dead simple way to use Google Cloud Firestore, Storage and Auth in your Ember.js apps.
 

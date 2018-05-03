@@ -1,3 +1,7 @@
+---
+pos: 2
+---
+
 # Quick Start
 
 To start using `ember-cli-zuglet`, first we need to create a new ember app. Make sure you have `ember-cli` installed:

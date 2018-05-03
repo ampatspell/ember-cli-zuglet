@@ -1,3 +1,8 @@
+---
+title: Queryable
+pos: 4
+---
+
 # Queryable Reference
 
 ## first({ optional }) `→ Promise<Document>`
