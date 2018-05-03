@@ -1,4 +1,5 @@
-.markdown {
+.ui-remark-render {
+  @import "hljs/index";
   @mixin header-code() {
     > code {
       display: inline-block;
