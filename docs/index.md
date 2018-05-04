@@ -1,6 +1,7 @@
 ---
 hidden: true
 ---
+
 ``` bash
 $ ember install ember-cli-zuglet
 ```
