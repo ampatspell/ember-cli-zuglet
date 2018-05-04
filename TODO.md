@@ -1,6 +1,6 @@
 # TODO
 
-* unify server-timestamp with timestamp, have model
+* timestamp update equal should not replace internal
 * GeoPoint for data
 * data changed properties
 * doc.isDirty based on data state
