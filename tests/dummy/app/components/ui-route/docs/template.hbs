@@ -1,44 +1,9 @@
-<div class="header">
+{{ui-block/content/header title='Documentation' route='docs'}}
 
-  {{ui-block/content/header title='Documentation' route='docs'}}
-
+<div class="toc">
+  {{ui-block/pages/toc}}
 </div>
+
 <div class="content">
-
-  {{#ui-block/content/master-detail as |md|}}
-
-    {{#md.master}}
-      {{#ui-block/content/navigation as |nav|}}
-        {{nav.item title='About' route='docs.about'}}
-        {{nav.item title='Quick Start' route='docs.quick-start'}}
-        {{#nav.item title='API' as |api|}}
-          {{#api.item title='Store' route='docs.api.store' as |api|}}
-            {{api.item title='register' route='docs.api.store.register'}}
-            {{#api.item title='References' route='docs.api.store.references' as |api|}}
-              {{api.item title='Document' route='docs.api.store.references.document'}}
-              {{api.item title='Collection' route='docs.api.store.references.collection'}}
-              {{api.item title='Query' route='docs.api.store.references.query'}}
-              {{api.item title='Queryable' route='docs.api.store.references.queryable'}}
-            {{/api.item}}
-            {{api.item title='Document' route='docs.api.store.document'}}
-            {{api.item title='Query' route='docs.api.store.query'}}
-          {{/api.item}}
-          {{#api.item title='Storage' route='docs.api.storage' as |api|}}
-            {{api.item title='Reference'}}
-            {{api.item title='Task'}}
-          {{/api.item}}
-          {{#api.item title='Auth' route='docs.api.auth' as |api|}}
-            {{api.item title='Anonymous'}}
-            {{api.item title='Email'}}
-          {{/api.item}}
-        {{/nav.item}}
-      {{/ui-block/content/navigation}}
-    {{/md.master}}
-
-    {{#md.detail}}
-      {{outlet}}
-    {{/md.detail}}
-
-  {{/ui-block/content/master-detail}}
-
+  {{yield}}
 </div>

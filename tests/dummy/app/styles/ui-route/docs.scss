@@ -1,10 +1,16 @@
 .ui-route-docs {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+  $w: 250px;
+  > .toc {
+    position: fixed;
+    top: 60px;
+    left: 0;
+    bottom: 0;
+    width: $w;
+    border-right: 1px solid fade-out(#000, 0.95);
+    padding: 35px 20px 20px 25px;
+  }
   > .content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;    
+    border-left: $w solid rgba(0,0,0,0);
+    padding: 15px 40px 40px 40px;
   }
 }

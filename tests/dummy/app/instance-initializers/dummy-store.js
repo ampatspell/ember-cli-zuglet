@@ -4,7 +4,6 @@ import register from 'ember-cli-zuglet/register';
 export default {
   name: 'dummy:store',
   initialize(app) {
-
     register({
       app,
       store: {
@@ -12,6 +11,6 @@ export default {
         factory: Store
       }
     });
-    
+
   }
 };

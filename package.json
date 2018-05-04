@@ -1,6 +1,6 @@
 {
   "name": "ember-cli-zuglet",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Google Cloud Firestore documents for Ember.js",
   "keywords": [
     "ember-addon",
@@ -49,13 +49,14 @@
     "ember-cli-htmlbars-inline-precompile": "^1.0.0",
     "ember-cli-inject-live-reload": "^1.4.1",
     "ember-cli-qunit": "^4.1.1",
-    "ember-cli-remark-templates": "^0.0.2",
+    "ember-cli-remark-static": "^0.0.5",
     "ember-cli-sass": "^7.1.7",
     "ember-cli-shims": "^1.2.0",
     "ember-cli-sri": "^2.1.0",
     "ember-cli-uglify": "^2.0.0",
     "ember-disable-prototype-extensions": "^1.1.2",
     "ember-export-application-global": "^2.0.0",
+    "ember-fetch": "^3.4.5",
     "ember-load-initializers": "^1.1.0",
     "ember-maybe-import-regenerator": "^0.1.6",
     "ember-resolver": "^4.0.0",
