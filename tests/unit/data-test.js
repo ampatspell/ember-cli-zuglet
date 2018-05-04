@@ -1,6 +1,6 @@
 import { module, test, setupStoreTest } from '../helpers/setup';
 import DataObject from 'ember-cli-zuglet/-private/data/object/object';
-import serverTimestamp from 'ember-cli-zuglet/-private/util/server-timestamp';
+import { DateTime } from 'luxon';
 
 module('data', function(hooks) {
   setupStoreTest(hooks);
@@ -716,35 +716,70 @@ module('data', function(hooks) {
     ]);
   });
 
-  test('server timestamp', function(assert) {
-    let ts = serverTimestamp();
+  test('server timestamp from model', function(assert) {
+    let ts = this.store.serverTimestamp();
     let object = this.store.object({
       now: ts
     });
 
     let raw = object.serialize('raw');
-    assert.ok(raw.now === ts);
+    assert.ok(raw.now === ts._internal.content);
 
     assert.deepEqual(object.get('serialized'), {
-      "now": "server-timestamp"
+      "now": "timestamp:server"
     });
   });
 
-  test('save and load date', async function(assert) {
+  test('save and load date (timestamp)', async function(assert) {
     let date = new Date();
     let saved = this.store.doc('ducks/yellow').new({ date });
     await saved.save();
-    assert.equal(saved.get('data.date'), date);
+    assert.equal(saved.get('data.date.date'), date);
+    assert.equal(saved.get('data.date.isTimestamp'), true);
+    assert.equal(saved.get('data.date.isServerTimestamp'), false);
 
     let doc = await this.store.doc('ducks/yellow').load();
-    assert.equal(doc.get('data.date').getTime(), date.getTime());
+    assert.equal(doc.get('data.date.date').getTime(), date.getTime());
+    assert.equal(doc.get('data.date.isTimestamp'), true);
+    assert.equal(doc.get('data.date.isServerTimestamp'), false);
 
     let second = new Date();
     doc.set('data.date', second);
     await doc.save();
 
     doc = await this.store.doc('ducks/yellow').load();
-    assert.equal(doc.get('data.date').getTime(), second.getTime());
+    assert.equal(doc.get('data.date.date').getTime(), second.getTime());
+    assert.equal(doc.get('data.date.isTimestamp'), true);
+    assert.equal(doc.get('data.date.isServerTimestamp'), false);
+  });
+
+  test('server timestamp model', async function(assert) {
+    let model = this.store.serverTimestamp();
+    assert.ok(model);
+    assert.ok(model._internal);
+    assert.equal(model.get('isTimestamp'), true);
+    assert.equal(model.get('isServerTimestamp'), true);
+    assert.equal(model.get('date'), null);
+  });
+
+  test('timestamp model with date', async function(assert) {
+    let date = new Date();
+    let object = this.store.object({ date });
+    let model = object.get('date');
+
+    assert.equal(model.get('isTimestamp'), true);
+    assert.equal(model.get('isServerTimestamp'), false);
+    assert.equal(model.get('date'), date);
+  });
+
+  test('timestamp from datetime', async function(assert) {
+    let datetime = DateTime.local();
+    let object = this.store.object({ date: datetime });
+    let model = object.get('date');
+    assert.equal(model.get('isTimestamp'), true);
+    assert.equal(model.get('isServerTimestamp'), false);
+    assert.equal(model.get('date').getTime(), datetime.toJSDate().getTime());
+    assert.ok(model.get('dateTime').equals(datetime));
   });
 
 });

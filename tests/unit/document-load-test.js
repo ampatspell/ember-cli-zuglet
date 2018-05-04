@@ -1,5 +1,5 @@
 import { module, test, setupStoreTest, setupDucks } from '../helpers/setup';
-import serverTimestamp from 'ember-cli-zuglet/util/server-timestamp';
+import { waitFor } from '../helpers/firebase';
 import { typeOf } from '@ember/utils';
 
 module('document-load', function(hooks) {
@@ -69,9 +69,9 @@ module('document-load', function(hooks) {
     await this.recreate();
     let doc = this.store.doc('ducks/yellow').new();
     doc.set('data.name', 'duck');
-    doc.set('data.created_at', serverTimestamp());
+    doc.set('data.created_at', this.store.serverTimestamp());
     assert.deepEqual(doc.get('data.serialized'), {
-      "created_at": "server-timestamp",
+      "created_at": "timestamp:server",
       "name": "duck"
     });
 
@@ -81,13 +81,13 @@ module('document-load', function(hooks) {
     await doc.save();
 
     assert.deepEqual(doc.get('data.serialized'), {
-      "created_at": "server-timestamp",
+      "created_at": "timestamp:server",
       "name": "duck"
     });
 
     await doc.reload();
 
-    let date = doc.get('data.created_at');
+    let date = doc.get('data.created_at.date');
 
     assert.ok(created !== date);
     assert.ok(typeOf(date) === 'date');
@@ -96,6 +96,31 @@ module('document-load', function(hooks) {
       "created_at": date,
       "name": "duck"
     });
+  });
+
+  test('document with estimate', async function(assert) {
+    await this.recreate();
+
+    let doc = this.store.doc('ducks/yellow').new({
+      name: 'duck',
+      created_at: this.store.serverTimestamp()
+    });
+
+    let cancel = doc.observe();
+
+    assert.deepEqual(doc.get('data.serialized'), {
+      "created_at": "timestamp:server",
+      "name": "duck"
+    });
+
+    doc.save();
+    await waitFor(() => !doc.get('data.created_at.isServerTimestamp'));
+
+    let preview = doc.get('data.serialized');
+    assert.ok(preview.created_at);
+    assert.ok(typeOf(preview.created_at) === 'date');
+
+    cancel();
   });
 
 });

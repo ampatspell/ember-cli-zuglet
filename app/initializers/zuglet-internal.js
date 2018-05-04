@@ -45,11 +45,9 @@ import DataArray from 'ember-cli-zuglet/-private/data/array/array';
 import DataReferenceSerializer from 'ember-cli-zuglet/-private/data/reference/serializer';
 import DataReferenceInternal from 'ember-cli-zuglet/-private/data/reference/internal';
 
-import DataServerTimestampSerializer from 'ember-cli-zuglet/-private/data/server-timestamp/serializer';
-import DataServerTimestampInternal from 'ember-cli-zuglet/-private/data/server-timestamp/internal';
-
 import DataTimestampSerializer from 'ember-cli-zuglet/-private/data/timestamp/serializer';
 import DataTimestampInternal from 'ember-cli-zuglet/-private/data/timestamp/internal';
+import DataTimestamp from 'ember-cli-zuglet/-private/data/timestamp/timestamp';
 
 import AuthInternal from 'ember-cli-zuglet/-private/auth/auth/internal';
 import Auth from 'ember-cli-zuglet/-private/auth/auth/auth';
@@ -150,9 +148,7 @@ export default {
 
     container.register('zuglet:data/timestamp/serializer', DataTimestampSerializer);
     container.register('zuglet:data/timestamp/internal', DataTimestampInternal);
-
-    container.register('zuglet:data/server-timestamp/serializer', DataServerTimestampSerializer);
-    container.register('zuglet:data/server-timestamp/internal', DataServerTimestampInternal);
+    container.register('zuglet:data/timestamp', DataTimestamp);
 
     container.register('zuglet:data/primitive/serializer', DataPrimitiveSerializer);
     container.register('zuglet:data/primitive/internal', DataPrimitiveInternal);

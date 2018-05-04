@@ -152,6 +152,10 @@ export default Internal.extend({
     return this.get('dataManager').createNewInternalArray(...args);
   },
 
+  serverTimestamp() {
+    return this.get('dataManager').createNewInternalServerTimestamp();
+  },
+
   //
 
   auth: computed(function() {
@@ -163,7 +167,7 @@ export default Internal.extend({
   }).readOnly(),
 
   functions: computed(function() {
-    return this.factoryFor('zuglet:functions/internal').create({ store: this });    
+    return this.factoryFor('zuglet:functions/internal').create({ store: this });
   }).readOnly(),
 
   //

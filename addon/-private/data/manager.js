@@ -2,10 +2,10 @@ import Internal from '../internal/internal';
 import { computed } from '@ember/object';
 import { A } from '@ember/array';
 import { toInternal, isInternal } from './internal/util';
+import { serverTimestamp } from '../util/firestore-types';
 
 const serializers = [
   'reference',
-  'server-timestamp',
   'timestamp',
   'array',
   'object',
@@ -71,5 +71,10 @@ export default Internal.extend({
     let serializer = this.serializerForName('array');
     return serializer.createInternal(value, 'model');
   },
+
+  createNewInternalServerTimestamp() {
+    let serializer = this.serializerForName('timestamp');
+    return serializer.createInternal(serverTimestamp, 'model');
+  }
 
 });

@@ -11,33 +11,6 @@
 * batch
 * provide identity for queries. identity should also have `doc('id')` and similar
 
-## Timestamp
-
-``` javascript
-let st = store.serverTimestamp();
-doc.set('data.created_at', st);
-```
-
-``` javascript
-doc.get('data.created_at', new Date());
-doc.get('data.created_at') // Timestamp model
-```
-
-``` javascript
-doc.get('data.created_at', DateTime.local());
-doc.get('data.created_at') // Timestamp model
-```
-
-``` javascript
-let st = doc.get('data.create_at');
-st.get('isServerTimestamp'); // true
-st.get('isEstimate');        // true
-st.get('date');              // null or date
-st.get('dateTime');          // luxon from date or null
-```
-
-* server timestamp values are immutable
-
 ## GeoPoint
 
 ``` javascript
