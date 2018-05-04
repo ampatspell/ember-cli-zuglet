@@ -1,6 +1,7 @@
 import Serializer from '../internal/serializer';
 import { isFirestoreTimestamp, isFirestoreServerTimestamp } from '../../util/firestore-types';
 import { typeOf } from '@ember/utils';
+import { assert } from '@ember/debug';
 import { DateTime } from 'luxon';
 
 const isLuxonDateTime = value => value instanceof DateTime;
