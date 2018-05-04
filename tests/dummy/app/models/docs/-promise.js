@@ -3,10 +3,10 @@ import fetch from 'fetch';
 
 export default Mixin.create({
 
-  rootURL: 'http://localhost:4200/assets/ember-cli-remark-static/docs',
+  url: '/assets/ember-cli-remark-static/docs',
 
   _loadJSON(url) {
-    let root = this.get('rootURL');
+    let root = this.get('url');
     return fetch(`${root}${url}`).then(res => res.json());
   },
 
