@@ -1,6 +1,25 @@
-<div class="header">
-  {{ui-block/content/header title='Experiments' route='experiments'}}
-</div>
-<div class="content">
-  {{yield}}
-</div>
+{{#ui-block/master-detail as |md|}}
+
+  {{#md.master}}
+
+    {{#ui-block/menu as |menu|}}
+      {{menu.title 'Experiments'}}
+
+      {{#each experiments as |experiment|}}
+        {{#menu.item}}
+          {{#link-to experiment.route class='experiment'}}
+            <div class="name">{{experiment.name}}</div>
+            <div class="description">{{experiment.description}}</div>
+          {{/link-to}}
+        {{/menu.item}}
+      {{/each}}
+
+    {{/ui-block/menu}}
+
+  {{/md.master}}
+
+  {{#md.detail}}
+    {{yield}}
+  {{/md.detail}}
+
+{{/ui-block/master-detail}}

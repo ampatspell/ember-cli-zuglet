@@ -1,11 +1,9 @@
 {{#unless node.root}}
-  {{link-to node.title 'docs.page' node.id class='title'}}
+  {{#menu.item}}
+    {{link-to node.title 'docs.page' node.id}}
+  {{/menu.item}}
 {{/unless}}
 
-{{#if node.nodes}}
-  <div class="nodes">
-    {{#each node.nodes as |nested|}}
-      {{ui-block/pages/toc/node node=nested}}
-    {{/each}}
-  </div>
-{{/if}}
+{{#menu.items node.nodes as |nested|}}
+  {{ui-block/pages/toc/node node=nested menu=menu}}
+{{/menu.items}}

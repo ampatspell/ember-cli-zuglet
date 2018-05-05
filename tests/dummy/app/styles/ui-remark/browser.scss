@@ -1,0 +1,11 @@
+.ui-remark-render-browser {
+  > .ui-block-browser {
+    > .content {
+      > .remark {
+        > pre {
+          margin: 0;
+        }
+      }
+    }
+  }
+}

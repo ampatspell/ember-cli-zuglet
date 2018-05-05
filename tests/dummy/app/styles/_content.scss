@@ -1,18 +1,15 @@
 @import "ui-input/file";
 
-@import "ui-block/identity";
 @import "ui-block/json";
-@import "ui-block/links";
 @import "ui-block/rows";
 @import "ui-block/browser";
 @import "ui-block/console";
-@import "ui-block/pages-toc";
-@import "ui-block/content/header";
-@import "ui-block/content/navigation";
-@import "ui-block/content/master-detail";
+@import "ui-block/menu";
+@import "ui-block/master-detail";
+
+@import "ui-remark/browser";
 
 @import "ui-route/index";
-@import "ui-route/docs";
 @import "ui-route/experiments";
 
 @import "ui-route/experiments/document";

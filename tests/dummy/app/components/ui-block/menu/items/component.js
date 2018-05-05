@@ -3,5 +3,10 @@ import layout from './template';
 
 export default Component.extend({
   tagName: '',
-  layout
+  layout,
+
+  items: null,
+
+}).reopenClass({
+  positionalParams: [ 'items' ]
 });

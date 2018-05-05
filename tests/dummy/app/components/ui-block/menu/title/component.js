@@ -7,7 +7,12 @@ const {
 } = environment;
 
 export default Component.extend({
-  classNameBindings: [ ':ui-block-content-header' ],
+  classNameBindings: [ ':title' ],
   layout,
-  version
+
+  version,
+  value: null,
+
+}).reopenClass({
+  positionalParams: [ 'value' ]
 });

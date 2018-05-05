@@ -14,7 +14,7 @@ export default EmberObject.extend(PromiseMixin, {
     return this._loadJSON(`/${id}.json`).then(json => this._deserialize(json)).then(() => this);
   },
 
-  preprocessNode(/* parent, node */) {
+  preprocessNode(/*parent, node */) {
   },
 
   toStringExtension() {
