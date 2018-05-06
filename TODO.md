@@ -1,5 +1,6 @@
 # TODO
 
+* restoreUser is called on restore and then onAuthStateChanged immediately afterwards. Should be only one call there
 * timestamp update equal should not replace internal
 * GeoPoint for data
 * data changed properties
