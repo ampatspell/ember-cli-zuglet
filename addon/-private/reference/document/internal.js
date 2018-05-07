@@ -56,6 +56,12 @@ export default ReferenceInternal.extend({
 
   existing() {
     return this.store.createExistingInternalDocumentWithRef(this);
+  },
+
+  observe() {
+    let doc = this.existing();
+    let cancel = doc.observe();
+    return { doc, cancel };
   }
 
 });
