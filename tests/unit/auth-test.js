@@ -180,4 +180,53 @@ module('auth', function(hooks) {
     assert.ok(auth.get('user'));
   });
 
+  test('sign in and out with restore', async function(assert) {
+    let auth = this.store.get('auth');
+    let anon = auth.get('methods.anonymous');
+
+    await auth.signOut();
+
+    let user;
+    let result;
+    let log = [];
+
+    this.store.restoreUser = async user => {
+      log.push(user && user.get('uid'));
+      let model = null;
+      if(user) {
+        model = { user };
+      }
+      this.store.set('user', model);
+    };
+
+    result = await anon.signIn();
+    user = auth.get('user');
+    assert.ok(result === user);
+    assert.equal(this.store.get('user.user'), user);
+
+    let uid1 = user.get('uid');
+
+    await auth.signOut();
+    user = auth.get('user');
+    assert.equal(this.store.get('user'), null);
+
+    result = await anon.signIn();
+    user = auth.get('user');
+    assert.ok(result === user);
+    assert.equal(this.store.get('user.user'), user);
+
+    let uid2 = user.get('uid');
+
+    await auth.signOut();
+    user = auth.get('user');
+    assert.equal(this.store.get('user'), null);
+
+    assert.deepEqual(log, [
+      uid1,
+      null,
+      uid2,
+      null
+    ]);
+  });
+
 });

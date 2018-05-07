@@ -114,6 +114,11 @@ export default Internal.extend({
     return internal;
   },
 
+  createExistingInternalDocumentWithRef(ref) {
+    let internal = this.createInternalDocumentWithRef(ref);
+    return internal;
+  },
+
   createInternalDocumentForSnapshot(snapshot) {
     let ref = this.createInternalDocumentReferenceForReference(snapshot.ref);
     let internal = this.createInternalDocumentWithRef(ref);
