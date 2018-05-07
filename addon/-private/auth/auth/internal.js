@@ -45,13 +45,39 @@ export default Internal.extend({
     return this.factoryFor('zuglet:auth/user/internal').create({ auth: this, user });
   },
 
+  restoreUserInternal(internal) {
+    let store = this.get('store').model(true);
+    return resolve().then(() => {
+      if(store.isDestroying) {
+        return;
+      }
+
+      let model = null;
+
+      if(internal) {
+        if(internal.isDestroying) {
+          return;
+        }
+        model = internal.model(true);
+      }
+
+      return store.restoreUser(model);
+    });
+  },
+
   scheduleUser(user) {
     this.promise = this.promise.finally(() => {
       if(this.isDestroying) {
         return;
       }
-      let internal = this.createUserInternal(user);
-      return internal.restore().then(() => {
+
+      let internal = null;
+
+      if(user) {
+        internal = this.createUserInternal(user);
+      }
+
+      return this.restoreUserInternal(internal).then(() => {
         if(this.isDestroying) {
           return;
         }
@@ -72,6 +98,7 @@ export default Internal.extend({
       if(!current) {
         return;
       }
+      this.scheduleUser(null);
     }
 
     this.set('user', null);
