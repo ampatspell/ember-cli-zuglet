@@ -1,5 +1,6 @@
 import { module, test, setupStoreTest, setupDucks } from '../helpers/setup';
 import { all } from 'rsvp';
+import { waitForProp } from '../helpers/firebase';
 
 module('document', function(hooks) {
   setupStoreTest(hooks);
@@ -183,6 +184,26 @@ module('document', function(hooks) {
     assert.ok(one === two);
 
     await all([ one, two ]);
+  });
+
+  test('observe document sets isLoading', async function(assert) {
+    await this.store.doc('ducks/yellow').new({ name: 'yellow', feathers: 'cute' }).save();
+
+    let doc = this.store.doc('ducks/yellow').new();
+    assert.equal(doc.get('exists'), undefined);
+    assert.equal(doc.get('isLoading'), false);
+
+    let cancel = doc.observe();
+
+    assert.equal(doc.get('exists'), undefined);
+    assert.equal(doc.get('isLoading'), true);
+
+    await waitForProp(doc, 'data.name', 'yellow');
+
+    assert.equal(doc.get('exists'), true);
+    assert.equal(doc.get('isLoading'), false);
+
+    cancel();
   });
 
 });

@@ -204,6 +204,13 @@ export default Internal.extend({
 
   //
 
+  willObserve() {
+    let { isLoading, isLoaded } = this.getProperties('isLoading', 'isLoaded');
+    if(!isLoaded && !isLoading) {
+      this.set('isLoading', true);
+    }
+  },
+
   _subscribeRefOnSnapshot() {
     let ref = this.get('ref.ref');
     return ref.onSnapshot({ includeMetadataChanges: true }, snapshot => join(() => {
@@ -217,6 +224,7 @@ export default Internal.extend({
   observers: observers({
     parent: 'store',
     start(state) {
+      this.willObserve();
       state._cancel = this._subscribeRefOnSnapshot();
     },
     stop(state) {
