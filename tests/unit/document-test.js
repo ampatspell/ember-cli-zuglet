@@ -1,4 +1,5 @@
 import { module, test, setupStoreTest, setupDucks } from '../helpers/setup';
+import { waitForProp } from '../helpers/firebase';
 import { all } from 'rsvp';
 
 module('document', function(hooks) {
@@ -183,6 +184,115 @@ module('document', function(hooks) {
     assert.ok(one === two);
 
     await all([ one, two ]);
+  });
+
+  test('existing document', async function(assert) {
+    await this.store.doc('ducks/yellow').new({ name: 'yellow', feathers: 'cute' }).save();
+
+    let doc = this.store.doc('ducks/yellow').existing();
+
+    assert.deepEqual(doc.get('serialized'), {
+      "data": {},
+      "error": null,
+      "exists": undefined,
+      "id": "yellow",
+      "isError": false,
+      "isLoaded": false,
+      "isLoading": false,
+      "isNew": false,
+      "isObserving": false,
+      "isSaving": false,
+      "metadata": undefined,
+      "path": "ducks/yellow"
+    });
+
+    let cancel = doc.observe();
+
+    assert.deepEqual(doc.get('serialized'), {
+      "data": {},
+      "error": null,
+      "exists": undefined,
+      "id": "yellow",
+      "isError": false,
+      "isLoaded": false,
+      "isLoading": false,
+      "isNew": false,
+      "isObserving": true,
+      "isSaving": false,
+      "metadata": undefined,
+      "path": "ducks/yellow"
+    });
+
+    await waitForProp(doc, 'data.name', 'yellow');
+
+    assert.deepEqual(doc.get('serialized'), {
+      "data": {
+        "feathers": "cute",
+        "name": "yellow"
+      },
+      "error": null,
+      "exists": true,
+      "id": "yellow",
+      "isError": false,
+      "isLoaded": true,
+      "isLoading": false,
+      "isNew": false,
+      "isObserving": true,
+      "isSaving": false,
+      "metadata": {
+        "fromCache": false,
+        "hasPendingWrites": false
+      },
+      "path": "ducks/yellow"
+    });
+
+    cancel();
+  });
+
+  test('observe document', async function(assert) {
+    await this.store.doc('ducks/yellow').new({ name: 'yellow', feathers: 'cute' }).save();
+
+    let { doc, cancel } = this.store.doc('ducks/yellow').observe();
+
+    assert.deepEqual(doc.get('serialized'), {
+      "data": {},
+      "error": null,
+      "exists": undefined,
+      "id": "yellow",
+      "isError": false,
+      "isLoaded": false,
+      "isLoading": false,
+      "isNew": false,
+      "isObserving": true,
+      "isSaving": false,
+      "metadata": undefined,
+      "path": "ducks/yellow"
+    });
+
+    await waitForProp(doc, 'data.name', 'yellow');
+
+    assert.deepEqual(doc.get('serialized'), {
+      "data": {
+        "feathers": "cute",
+        "name": "yellow"
+      },
+      "error": null,
+      "exists": true,
+      "id": "yellow",
+      "isError": false,
+      "isLoaded": true,
+      "isLoading": false,
+      "isNew": false,
+      "isObserving": true,
+      "isSaving": false,
+      "metadata": {
+        "fromCache": false,
+        "hasPendingWrites": false
+      },
+      "path": "ducks/yellow"
+    });
+
+    cancel();
   });
 
 });

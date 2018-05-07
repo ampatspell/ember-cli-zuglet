@@ -8,3 +8,5 @@ pos: 3
 
 * `store.serverTimestamp()`
 * `data/timestamp` model
+* `store.doc(..).existing()`
+* `store.doc(..).observe()`
