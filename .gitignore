@@ -24,6 +24,5 @@ package.json.ember-try
 
 .DS_Store
 
-functions/node_modules
-
+/functions/node_modules
 /ember-cli-remark-static-debug
