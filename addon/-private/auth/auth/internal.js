@@ -129,10 +129,7 @@ export default Internal.extend({
   //
 
   signOut() {
-    return resolve()
-      .then(() => this.get('auth').signOut())
-      .then(() => this.onUser(null))
-      .then(() => undefined);
+    return this.withAuthReturningUser(auth => auth.signOut().then(() => null));
   },
 
   //

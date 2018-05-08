@@ -65,7 +65,7 @@ module('auth', function(hooks) {
     let promise = this.store.get('auth').signOut();
     assert.ok(promise);
     let result = await promise;
-    assert.ok(result === undefined);
+    assert.ok(result === null);
   });
 
   test('sign in anonymously', async function(assert) {
