@@ -75,6 +75,7 @@ export default Internal.extend({
       exists,
       _metadata
     });
+    this.resolveObservers();
   },
 
   onSnapshot(snapshot) {
@@ -231,6 +232,10 @@ export default Internal.extend({
       state._cancel();
     }
   }),
+
+  resolveObservers() {
+    this.get('observers').resolve(this.model(true));
+  },
 
   observe() {
     return this.get('observers').add();

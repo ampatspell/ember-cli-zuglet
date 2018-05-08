@@ -1,6 +1,7 @@
 import { module, test, setupStoreTest, setupDucks } from '../helpers/setup';
 import { waitForProp } from '../helpers/firebase';
 import { all } from 'rsvp';
+import { run } from '@ember/runloop';
 
 module('document', function(hooks) {
   setupStoreTest(hooks);
@@ -193,7 +194,7 @@ module('document', function(hooks) {
     assert.equal(doc.get('exists'), undefined);
     assert.equal(doc.get('isLoading'), false);
 
-    let cancel = doc.observe();
+    let { cancel } = doc.observe();
 
     assert.equal(doc.get('exists'), undefined);
     assert.equal(doc.get('isLoading'), true);
@@ -204,6 +205,65 @@ module('document', function(hooks) {
     assert.equal(doc.get('isLoading'), false);
 
     cancel();
+  });
+
+  test('observe promise resolves on first snapshot', async function(assert) {
+    await this.store.doc('ducks/yellow').new({ name: 'yellow', feathers: 'cute' }).save();
+
+    let doc = this.store.doc('ducks/yellow').new();
+    assert.equal(doc.get('exists'), undefined);
+    assert.equal(doc.get('isLoading'), false);
+
+    let { cancel, promise } = doc.observe();
+
+    assert.equal(doc.get('exists'), undefined);
+    assert.equal(doc.get('isLoading'), true);
+    assert.equal(doc.get('isLoaded'), false);
+
+    await promise;
+
+    assert.equal(doc.get('exists'), true);
+    assert.equal(doc.get('isLoading'), false);
+    assert.equal(doc.get('isLoaded'), true);
+
+    cancel();
+  });
+
+  test('observe promise rejects on stop observing', async function(assert) {
+    await this.store.doc('ducks/yellow').new({ name: 'yellow', feathers: 'cute' }).save();
+
+    let doc = this.store.doc('ducks/yellow').new();
+    assert.equal(doc.get('exists'), undefined);
+    assert.equal(doc.get('isLoading'), false);
+
+    let { cancel, promise } = doc.observe();
+
+    cancel();
+
+    try {
+      await promise;
+    } catch(err) {
+      assert.equal(err.message, 'Cancelled');
+      assert.equal(err.code, 'zuglet/operation/cancelled');
+    }
+  });
+
+  test('observe promise rejects on destroy', async function(assert) {
+    await this.store.doc('ducks/yellow').new({ name: 'yellow', feathers: 'cute' }).save();
+
+    let doc = this.store.doc('ducks/yellow').new();
+    assert.equal(doc.get('exists'), undefined);
+    assert.equal(doc.get('isLoading'), false);
+
+    let { promise } = doc.observe();
+
+    try {
+      run(() => doc.destroy());
+      await promise;
+    } catch(err) {
+      assert.equal(err.message, 'Cancelled');
+      assert.equal(err.code, 'zuglet/operation/cancelled');
+    }
   });
 
   test('existing document', async function(assert) {
@@ -226,7 +286,7 @@ module('document', function(hooks) {
       "path": "ducks/yellow"
     });
 
-    let cancel = doc.observe();
+    let { cancel } = doc.observe();
 
     assert.deepEqual(doc.get('serialized'), {
       "data": {},
@@ -290,6 +350,52 @@ module('document', function(hooks) {
     });
 
     await waitForProp(doc, 'data.name', 'yellow');
+
+    assert.deepEqual(doc.get('serialized'), {
+      "data": {
+        "feathers": "cute",
+        "name": "yellow"
+      },
+      "error": null,
+      "exists": true,
+      "id": "yellow",
+      "isError": false,
+      "isLoaded": true,
+      "isLoading": false,
+      "isNew": false,
+      "isObserving": true,
+      "isSaving": false,
+      "metadata": {
+        "fromCache": false,
+        "hasPendingWrites": false
+      },
+      "path": "ducks/yellow"
+    });
+
+    cancel();
+  });
+
+  test('observe document and wait for resolve', async function(assert) {
+    await this.store.doc('ducks/yellow').new({ name: 'yellow', feathers: 'cute' }).save();
+
+    let { doc, cancel, promise } = this.store.doc('ducks/yellow').observe();
+
+    assert.deepEqual(doc.get('serialized'), {
+      "data": {},
+      "error": null,
+      "exists": undefined,
+      "id": "yellow",
+      "isError": false,
+      "isLoaded": false,
+      "isLoading": true,
+      "isNew": false,
+      "isObserving": true,
+      "isSaving": false,
+      "metadata": undefined,
+      "path": "ducks/yellow"
+    });
+
+    await promise;
 
     assert.deepEqual(doc.get('serialized'), {
       "data": {
