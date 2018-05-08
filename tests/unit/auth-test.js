@@ -1,9 +1,20 @@
 import { module, test, setupStoreTest } from '../helpers/setup';
 import { wait } from '../helpers/firebase';
 import { run } from '@ember/runloop';
+import getParams from '../helpers/query';
+
+let params = getParams();
+let disabled = params['no-auth'];
 
 module('auth', function(hooks) {
   setupStoreTest(hooks);
+
+  if(disabled) {
+    test('disabled', function(assert) {
+      assert.ok(true);
+    });
+    return;
+  }
 
   test('store has auth', function(assert) {
     let auth = this.store.get('auth');
