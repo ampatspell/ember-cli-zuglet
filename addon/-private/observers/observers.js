@@ -1,11 +1,17 @@
 import EmberObject from '@ember/object';
 import { gt } from '@ember/object/computed';
 import { assert } from '@ember/debug';
+import { defer } from 'rsvp';
 
 export default EmberObject.extend({
 
   isEnabled: gt('count', 0),
   count: 0,
+
+  init() {
+    this._super(...arguments);
+    this.set('deferred', defer());
+  },
 
   _withParent(fn) {
     let parentKey = this.get('opts.parent');
@@ -35,6 +41,7 @@ export default EmberObject.extend({
     let count = this.get('count');
     if(count === 1) {
       this._stopObserving();
+      this.resolve();
     }
     this.set('count', count - 1);
   },
@@ -52,21 +59,28 @@ export default EmberObject.extend({
 
     this.set('count', count + 1);
 
-    let observer = () => {
-      if(observer.invoked) {
+    let cancel = () => {
+      if(cancel.invoked) {
         return;
       }
-      observer.invoked = true;
+      cancel.invoked = true;
       this._remove();
     };
 
-    return observer;
+    let promise = this.get('deferred').promise;
+
+    return { cancel, promise };
+  },
+
+  resolve(arg) {
+    this.get('deferred').resolve(arg);
   },
 
   willDestroy() {
     if(this.get('count') > 0) {
       this._stopObserving();
     }
+    this.resolve();
     this._super(...arguments);
   }
 
