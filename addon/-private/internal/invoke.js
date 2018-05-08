@@ -14,5 +14,10 @@ export const invokePromiseReturningThis = name => invoke(name, (promise, owner) 
 export const invokePromiseReturningUndefined = name => invoke(name, promise => promise.then(() => undefined));
 
 export const invokePromiseReturningModel = name => invoke(name, promise => {
-  return promise.then(internal => internal && internal.model(true));
+  return promise.then(internal => {
+    if(internal && !internal.model) {
+      debugger;
+    }
+    return internal && internal.model(true);
+  });
 });

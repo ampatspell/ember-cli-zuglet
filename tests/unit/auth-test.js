@@ -167,8 +167,12 @@ module('auth', function(hooks) {
     }
 
     let anon = auth.get('methods.anonymous');
+
     let result = await anon.signIn();
+    assert.ok(result);
+
     let user = auth.get('user');
+    assert.ok(user);
 
     assert.ok(user.get('isAnonymous'));
     assert.ok(result === user);
@@ -202,6 +206,7 @@ module('auth', function(hooks) {
     let log = [];
 
     this.store.restoreUser = async user => {
+      console.log('restoreUser', user);
       log.push(user && user.get('uid'));
       let model = null;
       if(user) {

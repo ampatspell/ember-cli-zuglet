@@ -1,9 +1,9 @@
 import Internal from '../../internal/internal';
 import { computed } from '@ember/object';
-import { join } from '@ember/runloop';
-import { resolve } from 'rsvp';
+import { Promise, resolve } from 'rsvp';
 import destroyCached from '../../util/destroy-cached';
 import queue from '../../queue/computed';
+import actions from '../../util/actions';
 
 export default Internal.extend({
 
@@ -46,6 +46,7 @@ export default Internal.extend({
   },
 
   restoreUserInternal(internal) {
+    console.log('restoreUserInternal', internal+'');
     let store = this.get('store').model(true);
     return resolve().then(() => {
       if(store.isDestroying) {
@@ -65,8 +66,13 @@ export default Internal.extend({
     });
   },
 
+  append(fn) {
+    let promise = this.promise;
+    this.promise = promise.catch(() => {}).finally(fn);
+  },
+
   scheduleUser(user) {
-    this.promise = this.promise.finally(() => {
+    this.append(() => {
       if(this.isDestroying) {
         return;
       }
@@ -81,12 +87,14 @@ export default Internal.extend({
         if(this.isDestroying) {
           return;
         }
+        console.log('set user', internal);
         this.set('user', internal);
       });
     });
   },
 
   onUser(user) {
+    console.log('onUser', user);
     let current = this.get('user');
 
     if(user) {
@@ -115,7 +123,7 @@ export default Internal.extend({
   },
 
   startObservingAuthState() {
-    this._authStateObserver = this.get('auth').onAuthStateChanged(user => join(() => this.onAuthStateChanged(user)));
+    this._authStateObserver = this.get('auth').onAuthStateChanged(user => actions(() => this.onAuthStateChanged(user)));
   },
 
   stopObservingAuthState() {
@@ -136,13 +144,16 @@ export default Internal.extend({
 
   withAuth(fn) {
     let auth = this.get('auth');
-    return resolve(fn(auth));
+    return resolve(fn(auth)); //.then(arg => new Promise(resolve => actions(() => resolve(arg))));
   },
 
   withAuthReturningUser(fn) {
     return this.get('queue').schedule({
       name: 'auth',
-      promise: this.withAuth(fn).then(() => this.settle()).then(() => this.get('user'))
+      promise: this.withAuth(fn)
+        .then(user => this.onUser(user))
+        .then(() => this.settle())
+        .then(() => this.get('user'))
     });
   },
 
