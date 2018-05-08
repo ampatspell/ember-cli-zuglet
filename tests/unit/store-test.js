@@ -25,7 +25,7 @@ module('store', function(hooks) {
 
     assert.equal(ops.get('length'), 4);
 
-    await this.store.settle();
+    await run(() => this.store.settle());
 
     assert.equal(ops.get('length'), 0);
 
