@@ -1,12 +1,12 @@
 import Internal from '../internal/internal';
 import { computed } from '@ember/object';
 import { readOnly } from '@ember/object/computed';
-import { join } from '@ember/runloop';
 import { resolve, reject } from 'rsvp';
 import setChangedProperties from '../util/set-changed-properties';
 import { assertDocumentInternalReference } from '../reference/document/internal';
 import observers from '../observers/computed';
 import queue from '../queue/computed';
+import actions from '../util/actions';
 
 export const state = [ 'isNew', 'isLoading', 'isLoaded', 'isSaving', 'isObserving', 'isError', 'error' ];
 export const meta = [ 'exists', 'metadata' ];
@@ -214,7 +214,7 @@ export default Internal.extend({
 
   _subscribeRefOnSnapshot() {
     let ref = this.get('ref.ref');
-    return ref.onSnapshot({ includeMetadataChanges: true }, snapshot => join(() => {
+    return ref.onSnapshot({ includeMetadataChanges: true }, snapshot => actions(() => {
       if(this.isDestroying) {
         return;
       }

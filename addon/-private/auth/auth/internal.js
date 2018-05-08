@@ -1,9 +1,9 @@
 import Internal from '../../internal/internal';
 import { computed } from '@ember/object';
-import { join } from '@ember/runloop';
 import { resolve } from 'rsvp';
 import destroyCached from '../../util/destroy-cached';
 import queue from '../../queue/computed';
+import actions from '../../util/actions';
 
 export default Internal.extend({
 
@@ -65,8 +65,13 @@ export default Internal.extend({
     });
   },
 
+  append(fn) {
+    let promise = this.promise;
+    this.promise = promise.catch(() => {}).finally(fn);
+  },
+
   scheduleUser(user) {
-    this.promise = this.promise.finally(() => {
+    this.append(() => {
       if(this.isDestroying) {
         return;
       }
@@ -99,9 +104,8 @@ export default Internal.extend({
         return;
       }
       this.scheduleUser(null);
+      this.set('user', null);
     }
-
-    this.set('user', null);
 
     if(current) {
       current.destroy();
@@ -115,7 +119,7 @@ export default Internal.extend({
   },
 
   startObservingAuthState() {
-    this._authStateObserver = this.get('auth').onAuthStateChanged(user => join(() => this.onAuthStateChanged(user)));
+    this._authStateObserver = this.get('auth').onAuthStateChanged(user => actions(() => this.onAuthStateChanged(user)));
   },
 
   stopObservingAuthState() {
@@ -125,10 +129,7 @@ export default Internal.extend({
   //
 
   signOut() {
-    return resolve()
-      .then(() => this.get('auth').signOut())
-      .then(() => this.onAuthStateChanged(null))
-      .then(() => undefined);
+    return this.withAuthReturningUser(auth => auth.signOut().then(() => null));
   },
 
   //
@@ -145,7 +146,10 @@ export default Internal.extend({
   withAuthReturningUser(fn) {
     return this.get('queue').schedule({
       name: 'auth',
-      promise: this.withAuth(fn).then(() => this.settle()).then(() => this.get('user'))
+      promise: this.withAuth(fn)
+        .then(user => this.onUser(user))
+        .then(() => this.settle())
+        .then(() => this.get('user'))
     });
   },
 

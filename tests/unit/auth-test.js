@@ -65,7 +65,7 @@ module('auth', function(hooks) {
     let promise = this.store.get('auth').signOut();
     assert.ok(promise);
     let result = await promise;
-    assert.ok(result === undefined);
+    assert.ok(result === null);
   });
 
   test('sign in anonymously', async function(assert) {
@@ -134,11 +134,22 @@ module('auth', function(hooks) {
 
     let method = auth.get('methods.email');
 
+    let user;
+
     let signup = await method.signUp(email, password);
-    let user = auth.get('user');
+    user = auth.get('user');
 
     assert.ok(user);
     assert.ok(signup === user);
+    assert.equal(user.get('email'), email);
+
+    await auth.signOut();
+
+    let signIn = await method.signIn(email, password);
+    user = auth.get('user');
+
+    assert.ok(user);
+    assert.ok(signIn === user);
     assert.equal(user.get('email'), email);
 
     await user.delete();
@@ -167,13 +178,18 @@ module('auth', function(hooks) {
     }
 
     let anon = auth.get('methods.anonymous');
+
     let result = await anon.signIn();
+    assert.ok(result);
+
     let user = auth.get('user');
+    assert.ok(user);
 
     assert.ok(user.get('isAnonymous'));
     assert.ok(result === user);
     assert.ok(user.get('ok'));
     assert.deepEqual(log, [
+      user.get('uid'),
       user.get('uid')
     ]);
   });
@@ -234,7 +250,9 @@ module('auth', function(hooks) {
 
     assert.deepEqual(log, [
       uid1,
+      uid1,
       null,
+      uid2,
       uid2,
       null
     ]);
