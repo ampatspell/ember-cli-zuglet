@@ -2,7 +2,7 @@ import Reference from '../reference';
 import { readOnly } from '@ember/object/computed';
 import { invoke, invokeReturningModel, invokePromiseReturningModel } from '../../internal/invoke';
 
-const observe = () => invoke('observe', ({ doc, cancel }) => ({ doc: doc.model(true), cancel }));
+const observe = () => invoke('observe', ({ doc, cancel, promise }) => ({ doc: doc.model(true), cancel, promise }));
 
 export default Reference.extend({
 

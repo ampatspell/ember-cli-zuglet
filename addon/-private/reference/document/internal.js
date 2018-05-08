@@ -60,8 +60,8 @@ export default ReferenceInternal.extend({
 
   observe() {
     let doc = this.existing();
-    let cancel = doc.observe();
-    return { doc, cancel };
+    let { cancel, promise } = doc.observe();
+    return { doc, cancel, promise };
   }
 
 });

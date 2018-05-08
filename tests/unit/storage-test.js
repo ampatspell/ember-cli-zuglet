@@ -2,9 +2,20 @@ import { module, test, setupStoreTest } from '../helpers/setup';
 import { run } from '@ember/runloop';
 import { resolve } from 'rsvp';
 import { typeOf } from '@ember/utils';
+import getParams from '../helpers/query';
+
+let params = getParams();
+let disabled = params['no-auth'] || params['no-storage'];
 
 module('storage', function(hooks) {
   setupStoreTest(hooks);
+
+  if(disabled) {
+    test('disabled', function(assert) {
+      assert.ok(true);
+    });
+    return;
+  }
 
   hooks.beforeEach(function() {
     this.storage = this.store.get('storage');

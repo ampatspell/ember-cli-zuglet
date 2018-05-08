@@ -3,6 +3,7 @@ import { equal, readOnly } from '@ember/object/computed';
 import ModelMixin from '../internal/model-mixin';
 import createReadOnlyPropertiesMixin from '../internal/read-only-props-mixin';
 import serialized from '../util/serialized';
+import { invokePromiseReturningThis, invoke } from '../internal/invoke';
 import { state, meta } from './internal';
 
 const StateMixin = createReadOnlyPropertiesMixin(state);
@@ -25,13 +26,8 @@ export default EmberObject.extend(ModelMixin, StateMixin, MetaMixin, {
 
   serialized: serialized([ ...state, ...meta ]),
 
-  load() {
-    return this._internal.load().then(() => this);
-  },
-
-  observe() {
-    return this._internal.observe();
-  },
+  load: invokePromiseReturningThis('load'),
+  observe: invoke('observe'),
 
   toStringExtension() {
     let query = this.get('ref.string');
