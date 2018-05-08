@@ -186,6 +186,26 @@ module('document', function(hooks) {
     await all([ one, two ]);
   });
 
+  test('observe document sets isLoading', async function(assert) {
+    await this.store.doc('ducks/yellow').new({ name: 'yellow', feathers: 'cute' }).save();
+
+    let doc = this.store.doc('ducks/yellow').new();
+    assert.equal(doc.get('exists'), undefined);
+    assert.equal(doc.get('isLoading'), false);
+
+    let cancel = doc.observe();
+
+    assert.equal(doc.get('exists'), undefined);
+    assert.equal(doc.get('isLoading'), true);
+
+    await waitForProp(doc, 'data.name', 'yellow');
+
+    assert.equal(doc.get('exists'), true);
+    assert.equal(doc.get('isLoading'), false);
+
+    cancel();
+  });
+
   test('existing document', async function(assert) {
     await this.store.doc('ducks/yellow').new({ name: 'yellow', feathers: 'cute' }).save();
 
@@ -215,7 +235,7 @@ module('document', function(hooks) {
       "id": "yellow",
       "isError": false,
       "isLoaded": false,
-      "isLoading": false,
+      "isLoading": true,
       "isNew": false,
       "isObserving": true,
       "isSaving": false,
@@ -261,7 +281,7 @@ module('document', function(hooks) {
       "id": "yellow",
       "isError": false,
       "isLoaded": false,
-      "isLoading": false,
+      "isLoading": true,
       "isNew": false,
       "isObserving": true,
       "isSaving": false,
