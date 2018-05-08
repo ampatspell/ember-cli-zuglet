@@ -1,6 +1,6 @@
 import Internal from '../../internal/internal';
 import { computed } from '@ember/object';
-import { Promise, resolve } from 'rsvp';
+import { resolve } from 'rsvp';
 import destroyCached from '../../util/destroy-cached';
 import queue from '../../queue/computed';
 import actions from '../../util/actions';
@@ -46,7 +46,6 @@ export default Internal.extend({
   },
 
   restoreUserInternal(internal) {
-    console.log('restoreUserInternal', internal+'');
     let store = this.get('store').model(true);
     return resolve().then(() => {
       if(store.isDestroying) {
@@ -87,14 +86,12 @@ export default Internal.extend({
         if(this.isDestroying) {
           return;
         }
-        console.log('set user', internal);
         this.set('user', internal);
       });
     });
   },
 
   onUser(user) {
-    console.log('onUser', user);
     let current = this.get('user');
 
     if(user) {
@@ -107,9 +104,8 @@ export default Internal.extend({
         return;
       }
       this.scheduleUser(null);
+      this.set('user', null);
     }
-
-    this.set('user', null);
 
     if(current) {
       current.destroy();
@@ -147,7 +143,7 @@ export default Internal.extend({
 
   withAuth(fn) {
     let auth = this.get('auth');
-    return resolve(fn(auth)); //.then(arg => new Promise(resolve => actions(() => resolve(arg))));
+    return resolve(fn(auth));
   },
 
   withAuthReturningUser(fn) {

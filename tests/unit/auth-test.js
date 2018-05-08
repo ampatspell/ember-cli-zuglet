@@ -134,11 +134,22 @@ module('auth', function(hooks) {
 
     let method = auth.get('methods.email');
 
+    let user;
+
     let signup = await method.signUp(email, password);
-    let user = auth.get('user');
+    user = auth.get('user');
 
     assert.ok(user);
     assert.ok(signup === user);
+    assert.equal(user.get('email'), email);
+
+    await auth.signOut();
+
+    let signIn = await method.signIn(email, password);
+    user = auth.get('user');
+
+    assert.ok(user);
+    assert.ok(signIn === user);
     assert.equal(user.get('email'), email);
 
     await user.delete();
@@ -178,6 +189,7 @@ module('auth', function(hooks) {
     assert.ok(result === user);
     assert.ok(user.get('ok'));
     assert.deepEqual(log, [
+      user.get('uid'),
       user.get('uid')
     ]);
   });
@@ -206,7 +218,6 @@ module('auth', function(hooks) {
     let log = [];
 
     this.store.restoreUser = async user => {
-      console.log('restoreUser', user);
       log.push(user && user.get('uid'));
       let model = null;
       if(user) {
@@ -239,7 +250,9 @@ module('auth', function(hooks) {
 
     assert.deepEqual(log, [
       uid1,
+      uid1,
       null,
+      uid2,
       uid2,
       null
     ]);
