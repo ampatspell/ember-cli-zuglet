@@ -70,6 +70,7 @@ export default Internal.extend({
   _didLoad(snapshot) {
     let { size, metadata, empty } = snapshot;
     setChangedProperties(this, { isLoading: false, isLoaded: true, size, empty, _metadata: metadata });
+    this.resolveObservers();
   },
 
   didLoad(snapshot) {
@@ -117,15 +118,27 @@ export default Internal.extend({
     return query.onSnapshot(opts, snapshot => join(() => this.onSnapshot(snapshot)));
   },
 
+  willObserve() {
+    let { isLoading, isLoaded } = this.getProperties('isLoading', 'isLoaded');
+    if(!isLoaded && !isLoading) {
+      this.set('isLoading', true);
+    }
+  },
+
   observers: observers({
     parent: 'store',
     start(state) {
+      this.willObserve();
       state._cancel = this.subscribeQueryOnSnapshot();
     },
     stop(state) {
       state._cancel();
     }
   }),
+
+  resolveObservers() {
+    this.get('observers').resolve(this.model(true));
+  },
 
   observe() {
     return this.get('observers').add();

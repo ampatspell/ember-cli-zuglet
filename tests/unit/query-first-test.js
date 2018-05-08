@@ -112,4 +112,48 @@ module('query-first', function(hooks) {
     run(() => query.destroy());
   });
 
+  test('observe query', async function(assert) {
+    await this.recreate();
+    await this.coll.doc('yellow').set({ name: 'yellow' });
+
+    await waitForCollectionSize(this.coll, 1);
+
+    let query = this.store.collection('ducks').orderBy('name').query({ type: 'first' });
+
+    let { cancel, promise } = query.observe();
+
+    assert.deepEqual(query.get('serialized'), {
+      "type": "first",
+      "empty": undefined,
+      "error": null,
+      "isError": false,
+      "isLoaded": false,
+      "isLoading": true,
+      "isObserving": true,
+      "metadata": undefined,
+      "size": undefined
+    });
+
+    await promise;
+
+    assert.deepEqual(query.get('serialized'), {
+      "type": "first",
+      "empty": false,
+      "error": null,
+      "isError": false,
+      "isLoaded": true,
+      "isLoading": false,
+      "isObserving": true,
+      "metadata": {
+        "fromCache": query.get('metadata.fromCache'),
+        "hasPendingWrites": false,
+      },
+      "size": 1
+    });
+
+    assert.equal(query.get('content.path'), 'ducks/yellow');
+
+    cancel();
+  });
+
 });

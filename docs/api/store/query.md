@@ -14,7 +14,10 @@ await query.load();
 
 ``` javascript
 let query = store.collection('ducks').query({ type: 'array' });
-let cancel = query.observe();
+let { cancel, promise } = query.observe();
+
+// wait for 1st snapshot
+await promise;
 
 // stop observing onSnapshot changes
 cancel();
