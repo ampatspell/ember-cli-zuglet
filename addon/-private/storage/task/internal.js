@@ -3,8 +3,8 @@ import { computed } from '@ember/object';
 import { not } from '@ember/object/computed';
 import setChangedProperties from '../../util/set-changed-properties';
 import firebase from 'firebase';
-import { join } from '@ember/runloop';
 import { resolve } from 'rsvp';
+import actions from '../../util/actions';
 
 const {
   STATE_CHANGED
@@ -63,9 +63,9 @@ export default Internal.extend({
 
   startObservingTask() {
     this._taskObserver = this.task.on(STATE_CHANGED,
-      snapshot => join(() => this.onSnapshot(snapshot)),
-      err => join(() => this.onError(err)),
-      () => join(() => this.onCompleted())
+      snapshot => actions(() => this.onSnapshot(snapshot)),
+      err => actions(() => this.onError(err)),
+      () => actions(() => this.onCompleted())
     );
   },
 

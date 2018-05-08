@@ -1,11 +1,11 @@
 import Internal from '../internal/internal';
 import { computed } from '@ember/object';
 import { readOnly } from '@ember/object/computed';
-import { join } from '@ember/runloop';
 import { resolve, reject } from 'rsvp';
 import setChangedProperties from '../util/set-changed-properties';
 import queue from '../queue/computed';
 import observers from '../observers/computed';
+import actions from '../util/actions';
 
 export const state = [ 'isLoading', 'isLoaded', 'isObserving', 'isError', 'error' ];
 export const meta = [ 'type', 'size', 'empty', 'metadata' ];
@@ -115,7 +115,7 @@ export default Internal.extend({
       includeDocumentMetadataChanges: true,
       includeQueryMetadataChanges: true
     };
-    return query.onSnapshot(opts, snapshot => join(() => this.onSnapshot(snapshot)));
+    return query.onSnapshot(opts, snapshot => actions(() => this.onSnapshot(snapshot)));
   },
 
   willObserve() {
