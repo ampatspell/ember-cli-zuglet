@@ -87,17 +87,27 @@ latest `onSnapshot` size property.
 latest `onSnapshot` metadata
 
 
-## observe() `→ function`
+## observe() `→ QueryObserver`
 
-Starts observing query onSnapshot changes. Returns function which can be used to stop observation.
+Starts observing query onSnapshot changes. Returns query observer.
 
 ``` javascript
 let query = await store.collection('ducks').query({ type: 'array' });
-let cancel = query.observe();
+let observer = query.observe();
+
+// get query which is being observerd by this observer
+let query = observer.query;
+
+// wait for 1st snapshot (may come from local cache)
+await observer.promise;
+
+// returns the same promise
+await observer.load();
 
 // to stop observing
-cancel();
+observer.cancel();
 
-// or just destroy query
+// or just destroy query or observer
 query.destroy();
+observer.destroy();
 ```

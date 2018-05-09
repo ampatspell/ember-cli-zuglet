@@ -99,20 +99,27 @@ Saves document.
 Deletes document.
 
 
-## observe() `→ { cancel, promise }`
+## observe() `→ DocumentObserver`
 
-Starts observing document onSnapshot changes. Returns function which can be used to stop observation.
+Starts observing document onSnapshot changes. Returns document observer.
 
 ``` javascript
 let doc = await store.doc('ducks/yellow').load();
-let { cancel, promise } = doc.observe();
+let observer = doc.observe();
 
-// wait for 1st snapshot
-await promise;
+// get document which is being observerd by this observer
+let doc = observer.doc;
+
+// wait for 1st snapshot (may come from local cache)
+await observer.promise;
+
+// returns the same promise
+await observer.load();
 
 // to stop observing
-cancel();
+observer.cancel();
 
-// or just destroy document
+// or just destroy document or observer
 doc.destroy();
+observer.destroy();
 ```
