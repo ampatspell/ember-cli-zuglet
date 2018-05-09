@@ -187,7 +187,7 @@ module('document', function(hooks) {
     await all([ one, two ]);
   });
 
-  test.only('observe returns observer', async function(assert) {
+  test('observe returns observer', async function(assert) {
     await this.store.doc('ducks/yellow').new({ name: 'yellow', feathers: 'cute' }).save();
     let doc = this.store.doc('ducks/yellow').new();
     let observer = doc.observe();
@@ -204,7 +204,7 @@ module('document', function(hooks) {
 
     result = await observer.load();
     assert.ok(result === observer);
-    
+
     observer.cancel();
 
     assert.equal(observer.get('isCancelled'), true);
