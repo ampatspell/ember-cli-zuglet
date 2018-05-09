@@ -15,19 +15,19 @@ export default Component.extend({
   actions: {
     select(model) {
       if(model.get('isObserving')) {
-        model.cancel && model.cancel();
+        model.observer && model.observer.cancel();
       } else {
-        let cancel = model.observe();
-        model.cancel = cancel;
+        let observer = model.observe();
+        model.observer = observer;
       }
     },
     start() {
-      this.set('cancel', this.get('query').observe());
+      this.set('observer', this.get('query').observe());
     },
     stop() {
-      let cancel = this.get('cancel');
-      cancel();
-      this.set('cancel', null);
+      let observer = this.get('observer');
+      observer.cancel();
+      this.set('observer', null);
     }
   }
 

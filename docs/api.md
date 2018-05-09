@@ -10,3 +10,5 @@ pos: 3
 * `data/timestamp` model
 * `store.doc(..).existing()`
 * `store.doc(..).observe()`
+* `query.observe()`
+* Observer
