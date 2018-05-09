@@ -5,7 +5,7 @@ import { readOnly } from '@ember/object/computed';
 export default EmberObject.extend(ModelMixin, {
 
   isCancelled: readOnly('_internal.isCancelled'),
-  promise: readOnly('_internal.state.promise'),
+  promise: readOnly('_internal.promise'),
 
   load() {
     return this._internal.load();

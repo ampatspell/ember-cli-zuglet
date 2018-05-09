@@ -187,7 +187,7 @@ module('document', function(hooks) {
     await all([ one, two ]);
   });
 
-  test('observe returns observer', async function(assert) {
+  test.only('observe returns observer', async function(assert) {
     await this.store.doc('ducks/yellow').new({ name: 'yellow', feathers: 'cute' }).save();
     let doc = this.store.doc('ducks/yellow').new();
     let observer = doc.observe();
@@ -197,7 +197,16 @@ module('document', function(hooks) {
     assert.equal(typeof observer.load, 'function');
     assert.equal(typeof observer.cancel, 'function');
     assert.equal(observer.get('isCancelled'), false);
+
+    let result;
+    result = await observer.get('promise');
+    assert.ok(result === observer);
+
+    result = await observer.load();
+    assert.ok(result === observer);
+    
     observer.cancel();
+
     assert.equal(observer.get('isCancelled'), true);
   });
 

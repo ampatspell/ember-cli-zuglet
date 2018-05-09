@@ -1,9 +1,15 @@
 import Internal from '../../internal/internal';
+import { computed } from '@ember/object';
 
 export default Internal.extend({
 
   isCancelled: false,
   state: null,
+
+  promise: computed('state.promise', function() {
+    let promise = this.get('state.promise');
+    return promise.then(() => this.model(true));
+  }).readOnly(),
 
   cancel() {
     this.set('isCancelled', true);
@@ -12,7 +18,7 @@ export default Internal.extend({
   },
 
   load() {
-    return this.get('state.promise');
+    return this.get('promise');
   },
 
   willDestroy() {
