@@ -79,6 +79,9 @@ import Functions from 'ember-cli-zuglet/-private/functions/functions/functions';
 import FunctionsCallableInternal from 'ember-cli-zuglet/-private/functions/callable/internal';
 import FunctionsCallable from 'ember-cli-zuglet/-private/functions/callable/callable';
 
+import ObserverDocumentInternal from 'ember-cli-zuglet/-private/observers/document/internal';
+import ObserverDocument from 'ember-cli-zuglet/-private/observers/document/observer';
+
 export default {
   name: 'zuglet:internal',
   initialize(container) {
@@ -192,5 +195,10 @@ export default {
 
     container.register('zuglet:functions/callable/internal', FunctionsCallableInternal);
     container.register('zuglet:functions/callable', FunctionsCallable);
+
+    //
+
+    container.register('zuglet:observer/document', ObserverDocument);
+    container.register('zuglet:observer/document/internal', ObserverDocumentInternal);
   }
 }
