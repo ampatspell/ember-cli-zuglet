@@ -106,7 +106,7 @@ module('document-load', function(hooks) {
       created_at: this.store.serverTimestamp()
     });
 
-    let { cancel } = doc.observe();
+    let observer = doc.observe();
 
     assert.deepEqual(doc.get('data.serialized'), {
       "created_at": "timestamp:server",
@@ -120,7 +120,7 @@ module('document-load', function(hooks) {
     assert.ok(preview.created_at);
     assert.ok(typeOf(preview.created_at) === 'date');
 
-    cancel();
+    observer.cancel();
   });
 
 });

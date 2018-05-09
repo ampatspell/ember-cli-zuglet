@@ -3,7 +3,7 @@ import { readOnly } from '@ember/object/computed';
 import createReadOnlyPropertiesMixin from '../internal/read-only-props-mixin';
 import ModelMixin from '../internal/model-mixin';
 import { state, meta } from './internal';
-import { invokePromiseReturningThis, invoke } from '../internal/invoke';
+import { invokePromiseReturningThis, invoke, invokeReturningModel } from '../internal/invoke';
 
 const StateMixin = createReadOnlyPropertiesMixin(state);
 const MetaMixin = createReadOnlyPropertiesMixin(meta);
@@ -38,7 +38,7 @@ export default EmberObject.extend(ModelMixin, StateMixin, MetaMixin, {
   save:    invokePromiseReturningThis('save'),
   delete:  invokePromiseReturningThis('delete'),
 
-  observe: invoke('observe'),
+  observe: invokeReturningModel('observe'),
 
   reset: invoke('reset'),
 

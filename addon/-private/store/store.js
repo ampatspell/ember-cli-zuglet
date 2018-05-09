@@ -38,4 +38,8 @@ export default EmberObject.extend(ModelMixin, {
 
   restoreUser() {},
 
+  find(...args) {
+    console.warn(`ember-cli-zuglet: store.find([ ${args.join(', ')} ])`);
+  }
+
 });
