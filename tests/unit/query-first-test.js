@@ -120,7 +120,8 @@ module('query-first', function(hooks) {
 
     let query = this.store.collection('ducks').orderBy('name').query({ type: 'first' });
 
-    let { cancel, promise } = query.observe();
+    let observer = query.observe();
+    assert.ok(observer.get('query') === query);
 
     assert.deepEqual(query.get('serialized'), {
       "type": "first",
@@ -134,7 +135,7 @@ module('query-first', function(hooks) {
       "size": undefined
     });
 
-    await promise;
+    await observer.get('promise');
 
     assert.deepEqual(query.get('serialized'), {
       "type": "first",
@@ -153,7 +154,7 @@ module('query-first', function(hooks) {
 
     assert.equal(query.get('content.path'), 'ducks/yellow');
 
-    cancel();
+    observer.cancel();
   });
 
 });
