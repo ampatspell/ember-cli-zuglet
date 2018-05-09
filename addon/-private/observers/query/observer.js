@@ -8,7 +8,7 @@ export default Observer.extend({
   }).readOnly(),
 
   toStringExtension() {
-    return this.get('query.string');
+    return this.get('query.ref.string');
   }
 
 });
