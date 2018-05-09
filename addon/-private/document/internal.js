@@ -239,8 +239,8 @@ export default Internal.extend({
 
   observe() {
     let state = this.get('observers').add();
+    let store = this.get('store');
     let doc = this;
-    let store = this.store;
     return store.factoryFor('zuglet:observer/document/internal').create({ store, doc, state });
   },
 

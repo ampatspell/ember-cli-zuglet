@@ -3,12 +3,12 @@ import { computed } from '@ember/object';
 
 export default Observer.extend({
 
-  doc: computed(function() {
-    return this.get('_internal.doc').model(true);
+  query: computed(function() {
+    return this.get('_internal.query').model(true);
   }).readOnly(),
 
   toStringExtension() {
-    return this.get('doc.path');
+    return this.get('query.string');
   }
 
 });
