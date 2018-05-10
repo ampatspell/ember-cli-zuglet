@@ -1,6 +1,6 @@
 # TODO
 
-* `restoreUser` result should be set as `store.user`
+* `restoreUser` should be called before sign out
 * timestamp update equal should not replace internal
 * GeoPoint for data
 * data changed properties
@@ -23,17 +23,4 @@ doc.set('data.location', geopoint);
 doc.set('data.location', { latitude, longitude });
 let geopoint = doc.get('data.location') // GeoPoint
 geopoint.getProperties('latitude', 'longitude'); // 24.72504500749274, 58.74554729994484
-```
-
-## Restore user
-
-* set `store.user`
-* destroy `store.user`, unset
-
-``` javascript
-restoreUser(user) {
-  return this.models.model('user', { user }).restore();
-}
-
-// store.user === model
 ```
