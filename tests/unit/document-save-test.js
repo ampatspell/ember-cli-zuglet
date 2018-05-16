@@ -1,6 +1,4 @@
 import { module, test, setupStoreTest, setupDucks } from '../helpers/setup';
-import { waitFor } from '../helpers/firebase';
-import { typeOf } from '@ember/utils';
 
 module('document-save', function(hooks) {
   setupStoreTest(hooks);
