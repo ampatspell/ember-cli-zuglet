@@ -1,6 +1,8 @@
 import Internal from '../internal/internal';
 import { computed } from '@ember/object';
 import { readOnly } from '@ember/object/computed';
+import { assign } from '@ember/polyfills';
+import { assert } from '@ember/debug';
 import { resolve, reject } from 'rsvp';
 import setChangedProperties from '../util/set-changed-properties';
 import { assertDocumentInternalReference } from '../reference/document/internal';
@@ -153,14 +155,25 @@ export default Internal.extend({
     return reject(err);
   },
 
-  save() {
+  _save(ref, data, opts) {
+    let { type, merge } = opts;
+    if(type === 'set') {
+      return ref.set(data, { merge });
+    } else if(type === 'update') {
+      return ref.update(data);
+    }
+    assert(`unsupported set type '${type}'`, false);
+  },
+
+  save(opts={}) {
+    opts = assign({ type: 'set', merge: false }, opts);
     return this.get('queue').schedule({
       name: 'document/save',
       invoke: () => {
         let ref = this.get('ref.ref');
         let data = this.get('data').serialize('raw');
         this.willSave();
-        return ref.set(data);
+        return this._save(ref, data, opts);
       },
       didResolve: () => this.didSave(),
       didReject: err => this.saveDidFail(err)
