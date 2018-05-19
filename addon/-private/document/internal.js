@@ -10,7 +10,7 @@ import observers from '../observers/computed';
 import queue from '../queue/computed';
 import actions from '../util/actions';
 
-export const state = [ 'isNew', 'isLoading', 'isLoaded', 'isSaving', 'isObserving', 'isError', 'error' ];
+export const state = [ 'isNew', 'isDirty', 'isLoading', 'isLoaded', 'isSaving', 'isObserving', 'isError', 'error' ];
 export const meta = [ 'exists', 'metadata' ];
 
 export default Internal.extend({
@@ -32,6 +32,7 @@ export default Internal.extend({
   error: null,
 
   isObserving: readOnly('observers.isEnabled'),
+  isDirty: readOnly('data.isDirty'),
 
   exists: undefined,
   _metadata: undefined,
@@ -141,6 +142,7 @@ export default Internal.extend({
   },
 
   didSave() {
+    this.get('data').commit();
     setChangedProperties(this, {
       isNew: false,
       isSaving: false,

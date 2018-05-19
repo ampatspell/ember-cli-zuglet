@@ -1,5 +1,5 @@
 import Internal from '../../internal/internal';
-import { get } from '@ember/object';
+import { get, computed } from '@ember/object';
 import { assert } from '@ember/debug';
 import withPropertyChanges from '../../internal/with-property-changes';
 
@@ -48,6 +48,21 @@ export default Internal.extend({
 
   //
 
+  isDirty: computed(function() {
+    return this._isDirty();
+  }).readOnly(),
+
+  notifyDirtyDidChange() {
+    this.notifyPropertyChange('isDirty');
+    let parent = this.parent;
+    if(!parent) {
+      return;
+    }
+    parent.notifyDirtyDidChange();
+  },
+
+  //
+
   childDidUpdate() {
     this.withPropertyChanges(true, changed => changed('serialized'));
     this.notifyDidUpdate();
@@ -64,6 +79,7 @@ export default Internal.extend({
   didUpdate(changed) {
     changed('serialized');
     this.notifyDidUpdate();
+    this.notifyDirtyDidChange();
   },
 
   withPropertyChanges(notify, fn) {
@@ -82,6 +98,12 @@ export default Internal.extend({
 
   update(value, type) {
     return this.serializer.update(this, value, type);
+  },
+
+  commit() {
+    let object = this.serialize('raw');
+    this.update(object, 'raw');
+    this.fetch();
   }
 
 });

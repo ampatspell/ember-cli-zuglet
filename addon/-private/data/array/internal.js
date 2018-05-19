@@ -56,6 +56,27 @@ export default Internal.extend({
     this.withArrayContentChanges(true, builder => {
       return this.serializer.fetch(this, builder);
     });
+  },
+
+  _isDirty() {
+    let source = this.content.pristine;
+    let target = this.content.values;
+
+    let len = source.get('length');
+
+    if(len !== target.get('length')) {
+      return true;
+    }
+
+    for(let i = 0; i < len; i++) {
+      let sourceValue = source.objectAt(i);
+      let targetValue = target.objectAt(i);
+      if(!targetValue || targetValue._isDirty(sourceValue)) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
 });

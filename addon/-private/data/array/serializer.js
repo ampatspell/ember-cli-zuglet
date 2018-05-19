@@ -82,6 +82,8 @@ export default Serializer.extend({
 
     this.internalReplacePristine(internal, internals);
 
+    internal.notifyDirtyDidChange();
+
     return {
       replace: false,
       internal

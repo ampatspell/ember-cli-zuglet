@@ -35,6 +35,27 @@ export default Internal.extend({
   },
 
   fetch() {
+  },
+
+  _isDirty(internal) {
+    if(internal === this) {
+      return false;
+    }
+    if(!this.constructor.detectInstance(internal)) {
+      return true;
+    }
+    let sourceDate = this.get('date');
+    let targetDate = internal.get('date');
+
+    if(!sourceDate && !targetDate) {
+      return false;
+    }
+
+    if(!sourceDate || !targetDate) {
+      return true;
+    }
+
+    return sourceDate.getTime() !== targetDate.getTime();
   }
 
 });

@@ -19,6 +19,7 @@ module('document-load', function(hooks) {
       "error": null,
       "exists": true,
       "isError": false,
+      "isDirty": false,
       "isLoaded": true,
       "isLoading": false,
       "isSaving": false,
@@ -47,6 +48,7 @@ module('document-load', function(hooks) {
       "isLoading": false,
       "isSaving": false,
       "isObserving": false,
+      "isDirty": false,
       "metadata": {
         "fromCache": false,
         "hasPendingWrites": false

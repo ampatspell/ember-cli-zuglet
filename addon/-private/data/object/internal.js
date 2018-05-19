@@ -31,6 +31,28 @@ export default Internal.extend({
     return this.withPropertyChanges(true, changed => {
       return this.serializer.fetch(this, changed);
     });
+  },
+
+  _isDirty() {
+    let source = this.content.pristine;
+    let target = this.content.values;
+
+    let sourceKeys = Object.keys(source);
+    let targetKeys = Object.keys(target);
+
+    if(sourceKeys.length !== targetKeys.length) {
+      return true;
+    }
+
+    for(let key of sourceKeys) {
+      let sourceValue = source[key];
+      let targetValue = target[key];
+      if(!targetValue || targetValue._isDirty(sourceValue)) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
 });

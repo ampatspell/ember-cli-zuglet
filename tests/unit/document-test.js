@@ -20,6 +20,7 @@ module('document', function(hooks) {
       "error": null,
       "exists": undefined,
       "isNew": true,
+      "isDirty": false,
       "isError": false,
       "isLoaded": false,
       "isLoading": false,
@@ -30,7 +31,9 @@ module('document', function(hooks) {
   });
 
   test('save document', async function(assert) {
-    let doc = this.store.doc('ducks/yellow').new({ name: 'yellow', feathers: 'cute' });
+    let doc = this.store.doc('ducks/yellow').new({ name: 'yellow' });
+
+    doc.set('data.feathers', 'cute');
 
     assert.deepEqual(doc.get('serialized'), {
       "id": "yellow",
@@ -42,6 +45,7 @@ module('document', function(hooks) {
       "error": null,
       "exists": undefined,
       "isNew": true,
+      "isDirty": true,
       "isError": false,
       "isLoaded": false,
       "isLoading": false,
@@ -62,6 +66,7 @@ module('document', function(hooks) {
       "error": null,
       "exists": undefined,
       "isNew": true,
+      "isDirty": true,
       "isError": false,
       "isLoaded": false,
       "isLoading": false,
@@ -83,6 +88,7 @@ module('document', function(hooks) {
       "error": null,
       "exists": true,
       "isNew": false,
+      "isDirty": false,
       "isError": false,
       "isLoaded": true,
       "isLoading": false,
@@ -106,6 +112,7 @@ module('document', function(hooks) {
       "id": "yellow",
       "isError": false,
       "isLoaded": true,
+      "isDirty": false,
       "isLoading": false,
       "isNew": false,
       "isObserving": false,
@@ -114,11 +121,13 @@ module('document', function(hooks) {
       "path": "ducks/yellow"
     });
 
+    doc.set('data.feathers', 'cutest');
+
     let promise = doc.delete();
 
     assert.deepEqual(doc.get('serialized'), {
       "data": {
-        "feathers": "cute",
+        "feathers": "cutest",
         "name": "yellow"
       },
       "error": null,
@@ -128,6 +137,7 @@ module('document', function(hooks) {
       "isLoaded": true,
       "isLoading": false,
       "isNew": false,
+      "isDirty": true,
       "isObserving": false,
       "isSaving": true,
       "metadata": undefined,
@@ -138,7 +148,7 @@ module('document', function(hooks) {
 
     assert.deepEqual(doc.get('serialized'), {
       "data": {
-        "feathers": "cute",
+        "feathers": "cutest",
         "name": "yellow"
       },
       "error": null,
@@ -148,6 +158,7 @@ module('document', function(hooks) {
       "isLoaded": true,
       "isLoading": false,
       "isNew": false,
+      "isDirty": true,
       "isObserving": false,
       "isSaving": false,
       "metadata": undefined,
@@ -303,6 +314,7 @@ module('document', function(hooks) {
       "isLoaded": false,
       "isLoading": false,
       "isNew": false,
+      "isDirty": false,
       "isObserving": false,
       "isSaving": false,
       "metadata": undefined,
@@ -320,6 +332,7 @@ module('document', function(hooks) {
       "isLoaded": false,
       "isLoading": true,
       "isNew": false,
+      "isDirty": false,
       "isObserving": true,
       "isSaving": false,
       "metadata": undefined,
@@ -340,6 +353,7 @@ module('document', function(hooks) {
       "isLoaded": true,
       "isLoading": false,
       "isNew": false,
+      "isDirty": false,
       "isObserving": true,
       "isSaving": false,
       "metadata": {
@@ -368,6 +382,7 @@ module('document', function(hooks) {
       "isLoaded": false,
       "isLoading": true,
       "isNew": false,
+      "isDirty": false,
       "isObserving": true,
       "isSaving": false,
       "metadata": undefined,
@@ -388,6 +403,7 @@ module('document', function(hooks) {
       "isLoaded": true,
       "isLoading": false,
       "isNew": false,
+      "isDirty": false,
       "isObserving": true,
       "isSaving": false,
       "metadata": {
@@ -416,6 +432,7 @@ module('document', function(hooks) {
       "isLoaded": false,
       "isLoading": true,
       "isNew": false,
+      "isDirty": false,
       "isObserving": true,
       "isSaving": false,
       "metadata": undefined,
@@ -436,6 +453,7 @@ module('document', function(hooks) {
       "isLoaded": true,
       "isLoading": false,
       "isNew": false,
+      "isDirty": false,
       "isObserving": true,
       "isSaving": false,
       "metadata": {
