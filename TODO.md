@@ -26,3 +26,16 @@ doc.set('data.location', { latitude, longitude });
 let geopoint = doc.get('data.location') // GeoPoint
 geopoint.getProperties('latitude', 'longitude'); // 24.72504500749274, 58.74554729994484
 ```
+
+## Simplify data api
+
+* `isEditing` proposal goes away
+* `pristine` goes away
+* have `content.values` (internals) and `content.raw` (json)
+* `deserialize` goes to raw
+* `serialize` comes from values
+* `commit()` takes serialized raw and sets it to raw
+* `fetch()` takes raw and creates internals (`rollback` is `fetch`)
+* commit after save
+* `isDirty` compares each internal to the raw value
+* primitives also should have raw
