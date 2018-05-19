@@ -1,6 +1,7 @@
 # TODO
 
 * simplify `doc.data` internal api
+* proper `data.internal.commit()`
 * timestamp update equal should not replace internal
 * doc.isEditing which makes data updates go to pristine is there is changed properties in data
 * GeoPoint for data
