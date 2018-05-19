@@ -1,13 +1,10 @@
 # TODO
 
-* `restoreUser` should be called before sign out
+* simplify `doc.data` internal api
 * timestamp update equal should not replace internal
-* GeoPoint for data
-* `save({ merge: true })` for `set(.., { merge: true })`
-* data changed properties
-* doc.isDirty based on data state
 * doc.isEditing which makes data updates go to pristine is there is changed properties in data
-* extract `data` part in separate addon
+* GeoPoint for data
+* `restoreUser` should be called before sign out
 * primitives for query, load, .. based on destroyable-computed (`{ immediate: true }`)
 * messaging
 * transaction
