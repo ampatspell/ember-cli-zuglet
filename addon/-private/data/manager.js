@@ -1,13 +1,13 @@
 import Internal from '../internal/internal';
 import { computed } from '@ember/object';
 import { A } from '@ember/array';
-// import { toInternal, isInternal } from './internal/util';
+import { toInternal, isInternal } from './internal/util';
 // import { serverTimestamp } from '../util/firestore-types';
 
 const serializers = [
-  'reference',
-  'timestamp',
-  'array',
+  // 'reference',
+  // 'timestamp',
+  // 'array',
   'object',
   'primitive'
 ];
@@ -41,24 +41,24 @@ export default Internal.extend({
     return this.get('serializers').find(cb);
   },
 
-  // serializerForPrimitive(value) {
-  //   return this.findSerializer(serializer => serializer.supports(value));
-  // },
+  serializerForPrimitive(value) {
+    return this.findSerializer(serializer => serializer.supports(value));
+  },
 
   //
 
-  // createInternal(value, type) {
-  //   let internal = toInternal(value);
-  //   if(isInternal(internal)) {
-  //     if(internal.isAttached()) {
-  //       throw new Error('attached internal: not implemented');
-  //     }
-  //   } else {
-  //     let serializer = this.serializerForPrimitive(value);
-  //     internal = serializer.createInternal(value, type);
-  //   }
-  //   return internal;
-  // },
+  createInternal(value) {
+    let internal = toInternal(value);
+    if(isInternal(internal)) {
+      if(internal.isAttached()) {
+        throw new Error('attached internal: not implemented');
+      }
+    } else {
+      let serializer = this.serializerForPrimitive(value);
+      internal = serializer.createInternal(value);
+    }
+    return internal;
+  },
 
   //
 

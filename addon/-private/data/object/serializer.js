@@ -1,24 +1,25 @@
 import Serializer from '../internal/serializer';
-// import { map } from '../internal/util';
-// import { typeOf } from '@ember/utils';
+import { map } from '../internal/util';
+import { toModel } from '../internal/util';
+import { typeOf } from '@ember/utils';
 // import { A } from '@ember/array';
 
 export default Serializer.extend({
 
+  supports(value) {
+    return typeOf(value) === 'object';
+  },
+
   createInternal(props) {
     let internal = this.factoryFor('zuglet:data/object/internal').create({ serializer: this });
-    // TODO: populate
+
     return internal;
   },
 
-  // supports(value) {
-  //   return typeOf(value) === 'object';
-  // },
-
-  // createInternals(props, type) {
-  //   let manager = this.manager;
-  //   return map(props, (key, value) => manager.createInternal(value, type));
-  // },
+  createInternals(props) {
+    let manager = this.manager;
+    return map(props, (key, value) => manager.createInternal(value));
+  },
 
   // internalReplacePristine(internal, values) {
   //   let pristine = internal.content.pristine;
@@ -117,5 +118,34 @@ export default Serializer.extend({
   //     return value.serialize(type);
   //   });
   // }
+
+  getModelValue(internal, key) {
+    let value = internal.content[key];
+    return toModel(value);
+  },
+
+  setModelValue(internal, key, value) {
+    return internal.withPropertyChanges(true, changed => {
+      value = this.manager.createInternal(value);
+
+      let content = internal.content;
+      let current = content[key];
+
+      if(current) {
+        current.detach();
+      }
+
+      if(value) {
+        value.attach(internal);
+        content[key] = value;
+      } else {
+        delete content[key];
+      }
+
+      changed(key);
+
+      return toModel(value);
+    });
+  }
 
 });

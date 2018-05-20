@@ -2,17 +2,17 @@ import Serializer from '../internal/serializer';
 
 export default Serializer.extend({
 
-  // supports() {
-  //   return true;
-  // },
+  supports() {
+    return true;
+  },
 
   // matches(internal, value) {
   //   return typeof internal.content === typeof value;
   // },
 
-  // createInternal(content) {
-  //   return this.factoryFor('zuglet:data/primitive/internal').create({ serializer: this, content });
-  // },
+  createInternal(content) {
+    return this.factoryFor('zuglet:data/primitive/internal').create({ serializer: this, content });
+  },
 
   // deserialize(value) {
   //   return this.createInternal(value);

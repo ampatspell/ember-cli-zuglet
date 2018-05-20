@@ -4,12 +4,12 @@ import DataModelMixin from '../internal/model-mixin';
 
 export default EmberObject.extend(ModelMixin, DataModelMixin, {
 
-  // unknownProperty(key) {
-  //   return this._internal.getModelValue(key);
-  // },
+  unknownProperty(key) {
+    return this._internal.getModelValue(key);
+  },
 
-  // setUnknownProperty(key, value) {
-  //   return this._internal.setModelValue(key, value);
-  // }
+  setUnknownProperty(key, value) {
+    return this._internal.setModelValue(key, value);
+  }
 
 });

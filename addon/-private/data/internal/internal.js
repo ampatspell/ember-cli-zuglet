@@ -1,7 +1,7 @@
 import Internal from '../../internal/internal';
 import { get } from '@ember/object';
 import { assert } from '@ember/debug';
-// import withPropertyChanges from '../../internal/with-property-changes';
+import withPropertyChanges from '../../internal/with-property-changes';
 
 const key = '_isZugletDataInternal';
 
@@ -66,13 +66,13 @@ export default Internal.extend({
   //   this.notifyDidUpdate();
   // },
 
-  // withPropertyChanges(notify, fn) {
-  //   return withPropertyChanges(this, notify, fn, changed => {
-  //     if(changed.any) {
-  //       this.didUpdate(changed);
-  //     }
-  //   });
-  // },
+  withPropertyChanges(notify, fn) {
+    return withPropertyChanges(this, notify, fn, changed => {
+      // if(changed.any) {
+      //   this.didUpdate(changed);
+      // }
+    });
+  },
 
   //
 
