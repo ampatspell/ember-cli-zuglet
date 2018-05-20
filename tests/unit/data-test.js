@@ -5,6 +5,11 @@ import { DateTime } from 'luxon';
 module('data', function(hooks) {
   setupStoreTest(hooks);
 
+  test('create root object', function(assert) {
+    let internal = this.store._internal.get('dataManager').createNewRootInternalObject();
+    assert.ok(internal);
+  });
+
   test('create object', function(assert) {
     let object = this.store.object();
     assert.ok(object);
