@@ -1,7 +1,7 @@
 import Internal from '../../internal/internal';
 import { get } from '@ember/object';
 import { assert } from '@ember/debug';
-import withPropertyChanges from '../../internal/with-property-changes';
+// import withPropertyChanges from '../../internal/with-property-changes';
 
 const key = '_isZugletDataInternal';
 
@@ -27,9 +27,9 @@ export default Internal.extend({
 
   //
 
-  matches(value) {
-    return this.serializer.matches(this, value);
-  },
+  // matches(value) {
+  //   return this.serializer.matches(this, value);
+  // },
 
   //
 
@@ -48,40 +48,40 @@ export default Internal.extend({
 
   //
 
-  childDidUpdate() {
-    this.withPropertyChanges(true, changed => changed('serialized'));
-    this.notifyDidUpdate();
-  },
+  // childDidUpdate() {
+  //   this.withPropertyChanges(true, changed => changed('serialized'));
+  //   this.notifyDidUpdate();
+  // },
 
-  notifyDidUpdate() {
-    let parent = this.parent;
-    if(!parent) {
-      return;
-    }
-    parent.childDidUpdate(this);
-  },
+  // notifyDidUpdate() {
+  //   let parent = this.parent;
+  //   if(!parent) {
+  //     return;
+  //   }
+  //   parent.childDidUpdate(this);
+  // },
 
-  didUpdate(changed) {
-    changed('serialized');
-    this.notifyDidUpdate();
-  },
+  // didUpdate(changed) {
+  //   changed('serialized');
+  //   this.notifyDidUpdate();
+  // },
 
-  withPropertyChanges(notify, fn) {
-    return withPropertyChanges(this, notify, fn, changed => {
-      if(changed.any) {
-        this.didUpdate(changed);
-      }
-    });
-  },
+  // withPropertyChanges(notify, fn) {
+  //   return withPropertyChanges(this, notify, fn, changed => {
+  //     if(changed.any) {
+  //       this.didUpdate(changed);
+  //     }
+  //   });
+  // },
 
   //
 
-  serialize(type) {
-    return this.serializer.serialize(this, type);
-  },
+  // serialize(type) {
+  //   return this.serializer.serialize(this, type);
+  // },
 
-  update(value, type) {
-    return this.serializer.update(this, value, type);
-  }
+  // update(value, type) {
+  //   return this.serializer.update(this, value, type);
+  // }
 
 });

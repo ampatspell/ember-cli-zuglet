@@ -1,8 +1,8 @@
 import Internal from '../internal/internal';
 import { computed } from '@ember/object';
 import { A } from '@ember/array';
-import { toInternal, isInternal } from './internal/util';
-import { serverTimestamp } from '../util/firestore-types';
+// import { toInternal, isInternal } from './internal/util';
+// import { serverTimestamp } from '../util/firestore-types';
 
 const serializers = [
   'reference',
@@ -41,40 +41,40 @@ export default Internal.extend({
     return this.get('serializers').find(cb);
   },
 
-  serializerForPrimitive(value) {
-    return this.findSerializer(serializer => serializer.supports(value));
-  },
+  // serializerForPrimitive(value) {
+  //   return this.findSerializer(serializer => serializer.supports(value));
+  // },
 
   //
 
-  createInternal(value, type) {
-    let internal = toInternal(value);
-    if(isInternal(internal)) {
-      if(internal.isAttached()) {
-        throw new Error('attached internal: not implemented');
-      }
-    } else {
-      let serializer = this.serializerForPrimitive(value);
-      internal = serializer.createInternal(value, type);
-    }
-    return internal;
-  },
+  // createInternal(value, type) {
+  //   let internal = toInternal(value);
+  //   if(isInternal(internal)) {
+  //     if(internal.isAttached()) {
+  //       throw new Error('attached internal: not implemented');
+  //     }
+  //   } else {
+  //     let serializer = this.serializerForPrimitive(value);
+  //     internal = serializer.createInternal(value, type);
+  //   }
+  //   return internal;
+  // },
 
   //
 
-  createNewInternalObject(value) {
-    let serializer = this.serializerForName('object');
-    return serializer.createInternal(value, 'model');
-  },
+  // createNewInternalObject(value) {
+  //   let serializer = this.serializerForName('object');
+  //   return serializer.createInternal(value, 'model');
+  // },
 
-  createNewInternalArray(value) {
-    let serializer = this.serializerForName('array');
-    return serializer.createInternal(value, 'model');
-  },
+  // createNewInternalArray(value) {
+  //   let serializer = this.serializerForName('array');
+  //   return serializer.createInternal(value, 'model');
+  // },
 
-  createNewInternalServerTimestamp() {
-    let serializer = this.serializerForName('timestamp');
-    return serializer.createInternal(serverTimestamp, 'model');
-  }
+  // createNewInternalServerTimestamp() {
+  //   let serializer = this.serializerForName('timestamp');
+  //   return serializer.createInternal(serverTimestamp, 'model');
+  // }
 
 });
