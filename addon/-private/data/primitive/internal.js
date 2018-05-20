@@ -8,11 +8,4 @@ export default Internal.extend({
     return this.content;
   }
 
-  // serialize() {
-  //   return this.content;
-  // },
-
-  // fetch() {
-  // }
-
 });

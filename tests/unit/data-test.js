@@ -11,13 +11,73 @@ module('data', function(hooks) {
     assert.ok(root.get('internal'));
   });
 
+  test('overview with primitives', function(assert) {
+    let root = this.store.get('_internal.dataManager').createRootInternalObject();
+    let internal = root.internal;
+    let object = internal.model(true);
+
+    assert.equal(root.get('isDirty'), false);
+
+    // set props
+
+    assert.deepEqual(object.get('serialized'), {
+    });
+
+    object.set('name', 'zeeba');
+
+    assert.equal(root.get('isDirty'), true);
+
+    assert.equal(object.get('name'), 'zeeba');
+    assert.deepEqual(object.get('serialized'), {
+      name: 'zeeba'
+    });
+
+    object.setProperties({ name: 'Zeeba', email: 'zeeba@gmail.com' });
+
+    assert.deepEqual(object.get('serialized'), {
+      name: 'Zeeba',
+      email: 'zeeba@gmail.com'
+    });
+
+    let raw = root.serialize('raw');
+
+    assert.deepEqual(raw, {
+      name: 'Zeeba',
+      email: 'zeeba@gmail.com'
+    });
+
+    assert.equal(root.get('isDirty'), true);
+
+    root.commit(raw);
+    assert.equal(root.get('isDirty'), false);
+
+    object.set('name', 'Zeeba');
+    assert.equal(root.get('isDirty'), false);
+
+    object.set('name', 'zeeba');
+    assert.equal(root.get('isDirty'), true);
+
+    assert.deepEqual(object.get('serialized'), {
+      name: 'zeeba',
+      email: 'zeeba@gmail.com'
+    });
+
+    root.rollback();
+    assert.equal(root.get('isDirty'), false);
+
+    assert.deepEqual(object.get('serialized'), {
+      name: 'Zeeba',
+      email: 'zeeba@gmail.com'
+    });
+  });
+
   test('create object', function(assert) {
     let object = this.store.object();
     assert.ok(object);
     assert.ok(object._internal);
   });
 
-  test.skip('create primitive', function(assert) {
+  test('create primitive', function(assert) {
     let serializer = this.store._internal.get('dataManager').serializerForName('primitive');
     let internal = serializer.deserialize('hey');
     assert.ok(internal);

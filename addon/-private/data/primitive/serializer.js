@@ -33,4 +33,8 @@ export default Serializer.extend({
   //   };
   // }
 
+  serialize(internal) {
+    return internal.content;
+  }
+
 });

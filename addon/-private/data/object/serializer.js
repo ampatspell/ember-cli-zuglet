@@ -113,12 +113,6 @@ export default Serializer.extend({
   //   return internal;
   // },
 
-  // serialize(internal, type) {
-  //   return map(internal.content.values, (key, value) => {
-  //     return value.serialize(type);
-  //   });
-  // }
-
   getModelValue(internal, key) {
     let value = internal.content[key];
     return toModel(value);
@@ -146,6 +140,10 @@ export default Serializer.extend({
 
       return toModel(value);
     });
+  },
+
+  serialize(internal, type) {
+    return map(internal.content, (key, value) => value.serialize(type));
   }
 
 });

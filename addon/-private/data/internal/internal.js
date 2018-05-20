@@ -61,24 +61,22 @@ export default Internal.extend({
   //   parent.childDidUpdate(this);
   // },
 
-  // didUpdate(changed) {
-  //   changed('serialized');
-  //   this.notifyDidUpdate();
-  // },
+  didUpdate(changed) {
+    changed('serialized');
+    // this.notifyDidUpdate();
+  },
 
   withPropertyChanges(notify, fn) {
     return withPropertyChanges(this, notify, fn, changed => {
-      // if(changed.any) {
-      //   this.didUpdate(changed);
-      // }
+      if(changed.any) {
+        this.didUpdate(changed);
+      }
     });
   },
 
-  //
-
-  // serialize(type) {
-  //   return this.serializer.serialize(this, type);
-  // },
+  serialize(type) {
+    return this.serializer.serialize(this, type);
+  },
 
   // update(value, type) {
   //   return this.serializer.update(this, value, type);
