@@ -77,11 +77,18 @@ export default Internal.extend({
   //   return serializer.createInternal(serverTimestamp, 'model');
   // }
 
-  createNewRootInternalObject() {
-    let root = this.factoryFor('zuglet:data/root').create();
-    // create internal object
-    // associate root with internal object
-    // return internal object
+  createInternalObject(value) {
+    let serializer = this.serializerForName('object');
+    return serializer.createInternal(value);
+  },
+
+  createRootInternal(internal) {
+    return this.factoryFor('zuglet:data/root').create({ internal });
+  },
+
+  createRootInternalObject() {
+    let internal = this.createInternalObject();
+    return this.createRootInternal(internal);
   }
 
 });

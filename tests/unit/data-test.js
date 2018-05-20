@@ -6,8 +6,9 @@ module('data', function(hooks) {
   setupStoreTest(hooks);
 
   test('create root object', function(assert) {
-    let internal = this.store._internal.get('dataManager').createNewRootInternalObject();
-    assert.ok(internal);
+    let root = this.store._internal.get('dataManager').createRootInternalObject();
+    assert.ok(root);
+    assert.ok(root.get('internal'));
   });
 
   test('create object', function(assert) {
@@ -16,7 +17,7 @@ module('data', function(hooks) {
     assert.ok(object._internal);
   });
 
-  test('create primitive', function(assert) {
+  test.skip('create primitive', function(assert) {
     let serializer = this.store._internal.get('dataManager').serializerForName('primitive');
     let internal = serializer.deserialize('hey');
     assert.ok(internal);

@@ -5,6 +5,12 @@ import Serializer from '../internal/serializer';
 
 export default Serializer.extend({
 
+  createInternal(props) {
+    let internal = this.factoryFor('zuglet:data/object/internal').create({ serializer: this });
+    // TODO: populate
+    return internal;
+  },
+
   // supports(value) {
   //   return typeOf(value) === 'object';
   // },
