@@ -12,18 +12,18 @@ export default Component.extend({
       if(this.isDestroying) {
         return;
       }
-      let cancel = doc.observe();
+      let observer = doc.observe();
       this.setProperties({
         doc,
-        cancel
+        observer
       });
     });
   },
 
   willDestroyElement() {
     this._super(...arguments);
-    let cancel = this.get('cancel');
-    cancel && cancel();
+    let observer = this.get('observer');
+    observer && observer.cancel();
   },
 
   actions: {

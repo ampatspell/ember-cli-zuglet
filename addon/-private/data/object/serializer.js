@@ -50,6 +50,8 @@ export default Serializer.extend({
       delete pristine[key];
     });
 
+    internal.notifyDirtyDidChange();
+
     return {
       replace: false,
       internal

@@ -49,4 +49,13 @@ module('document-save', function(hooks) {
     });
   });
 
+  test('save dirty', async function(assert) {
+    let doc = this.store.doc('ducks/yellow').new({ name: 'yellow' });
+    assert.equal(doc.get('isDirty'), false);
+    doc.set('data.name', 'Yellow');
+    assert.equal(doc.get('isDirty'), true);
+    await doc.save();
+    assert.equal(doc.get('isDirty'), false);
+  });
+
 });

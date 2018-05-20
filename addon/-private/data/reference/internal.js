@@ -9,6 +9,16 @@ export default Internal.extend({
   },
 
   fetch() {
+  },
+
+  _isDirty(internal) {
+    if(internal === this) {
+      return false;
+    }
+    if(!this.constructor.detectInstance(internal)) {
+      return true;
+    }
+    return internal.content.get('path') !== this.content.get('path');
   }
 
 });
