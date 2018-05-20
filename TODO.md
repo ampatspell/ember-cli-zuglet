@@ -39,3 +39,16 @@ geopoint.getProperties('latitude', 'longitude'); // 24.72504500749274, 58.745547
 * commit after save
 * `isDirty` compares each internal to the raw value
 * primitives also should have raw
+
+* add root object which keeps track of `raw`
+
+``` javascript
+manager.update(object, data); // takes data and replaces existing objects
+object.set('name', 'foo'); // sets 'model' value, replaces existing
+manager.rollback(object); // rollbacks to current raw
+```
+
+``` javascript
+let json = manager.serialize(object, 'raw');
+manager.update(object, json);
+```
