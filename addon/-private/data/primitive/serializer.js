@@ -6,9 +6,9 @@ export default Serializer.extend({
     return true;
   },
 
-  // matches(internal, value) {
-  //   return typeof internal.content === typeof value;
-  // },
+  matches(internal, value) {
+    return typeof internal.content === typeof value;
+  },
 
   createInternal(content) {
     return this.factoryFor('zuglet:data/primitive/internal').create({ serializer: this, content });
@@ -35,6 +35,17 @@ export default Serializer.extend({
 
   serialize(internal) {
     return internal.content;
+  },
+
+  deserialize(internal, value) {
+    let replace = internal.content !== value;
+    if(replace) {
+      internal.content = value;
+    }
+    return {
+      replace,
+      internal
+    };
   }
 
 });

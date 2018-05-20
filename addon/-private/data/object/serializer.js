@@ -2,12 +2,16 @@ import Serializer from '../internal/serializer';
 import { map } from '../internal/util';
 import { toModel } from '../internal/util';
 import { typeOf } from '@ember/utils';
-// import { A } from '@ember/array';
+import { A } from '@ember/array';
 
 export default Serializer.extend({
 
   supports(value) {
     return typeOf(value) === 'object';
+  },
+
+  matches(internal, value) {
+    return this.supports(value);
   },
 
   createInternal(props) {
@@ -144,6 +148,38 @@ export default Serializer.extend({
 
   serialize(internal, type) {
     return map(internal.content, (key, value) => value.serialize(type));
+  },
+
+  // tries to keep existing objects as much as possible
+  deserialize(internal, values={}) {
+    let content = internal.content;
+    let remove = A(Object.keys(content));
+    let manager = this.manager;
+
+    // TODO: notify changes
+
+    map(values, (key, value) => {
+      remove.removeObject(key);
+      let current = content[key];
+      if(current && current.serializer.matches(value)) {
+        let updated = current.serializer.deserialize(current, value);
+        if(updated.replace) {
+          content[key] = updated.internal;
+        }
+      } else {
+        let internal = manager.createInternal(value);
+        content[key] = internal;
+      }
+    });
+
+    remove.forEach(key => {
+      delete content[key];
+    });
+
+    return {
+      replace: false,
+      internal
+    };
   }
 
 });
