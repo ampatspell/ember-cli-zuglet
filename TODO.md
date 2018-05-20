@@ -41,6 +41,7 @@ geopoint.getProperties('latitude', 'longitude'); // 24.72504500749274, 58.745547
 * primitives also should have raw
 
 * add root object which keeps track of `raw`
+* maybe replace with just root, rename serializers as definitions and have all serialier stuff in instances?
 
 ``` javascript
 manager.update(object, data); // takes data and replaces existing objects
