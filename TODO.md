@@ -1,9 +1,7 @@
 # TODO
 
-* `restoreUser` should be called before sign out
 * timestamp update equal should not replace internal
 * GeoPoint for data
-* `save({ merge: true })` for `set(.., { merge: true })`
 * data changed properties
 * doc.isDirty based on data state
 * doc.isEditing which makes data updates go to pristine is there is changed properties in data
@@ -13,6 +11,8 @@
 * transaction
 * batch
 * provide identity for queries. identity should also have `doc('id')` and similar
+* route mixin from index65 (another addon?)
+* destroyable computed property similar to route mixin model (another addon?)
 
 ## GeoPoint
 
