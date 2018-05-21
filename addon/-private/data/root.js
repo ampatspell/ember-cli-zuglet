@@ -5,6 +5,11 @@ export default EmberObject.extend({
   raw: null,
   internal: null,
 
+  init() {
+    this._super(...arguments);
+    this.internal.root = this;
+  },
+
   isDirty: computed(function() {
     let { raw, internal } = this.getProperties('raw', 'internal');
     return internal.serializer.isDirty(internal, raw);
@@ -35,6 +40,10 @@ export default EmberObject.extend({
   rollback() {
     let raw = this.get('raw');
     this.deserialize(raw);
+  },
+
+  internalDidUpdate() {
+    this.dirtyDidChange();
   }
 
 });

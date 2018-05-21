@@ -52,6 +52,8 @@ export default Internal.extend({
     if(isInternal(internal)) {
       if(internal.isAttached()) {
         throw new Error('attached internal: not implemented');
+      } else if(internal.root) {
+        throw new Error('root internal: not implemented');
       }
     } else {
       let serializer = this.serializerForPrimitive(value);

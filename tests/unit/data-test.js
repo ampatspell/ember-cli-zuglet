@@ -12,14 +12,11 @@ module('data', function(hooks) {
 
     assert.equal(root.get('isDirty'), false, 'isDirty');
 
-    // set props
-
     assert.deepEqual(object.get('serialized'), {
     });
 
     object.set('name', 'zeeba');
 
-    root.dirtyDidChange(); // temporary
     assert.equal(root.get('isDirty'), true, 'isDirty');
 
     assert.equal(object.get('name'), 'zeeba');
@@ -41,22 +38,18 @@ module('data', function(hooks) {
       email: 'zeeba@gmail.com'
     });
 
-    root.dirtyDidChange(); // temporary
     assert.equal(root.get('isDirty'), true, 'isDirty');
 
     root.commit(raw);
 
-    root.dirtyDidChange(); // temporary
     assert.equal(root.get('isDirty'), false, 'isDirty');
 
     object.set('name', 'Zeeba');
 
-    root.dirtyDidChange(); // temporary
     assert.equal(root.get('isDirty'), false, 'isDirty');
 
     object.set('name', 'zeeba');
 
-    root.dirtyDidChange(); // temporary
     assert.equal(root.get('isDirty'), true, 'isDirty');
 
     assert.deepEqual(object.get('serialized'), {
@@ -66,7 +59,6 @@ module('data', function(hooks) {
 
     root.rollback();
 
-    root.dirtyDidChange(); // temporary
     assert.equal(root.get('isDirty'), false, 'isDirty');
 
     assert.deepEqual(object.get('serialized'), {

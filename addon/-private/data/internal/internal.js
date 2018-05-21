@@ -14,6 +14,7 @@ export default Internal.extend({
   serializer: null,
   manager: null,
 
+  root: null,
   parent: null,
 
   init() {
@@ -33,6 +34,7 @@ export default Internal.extend({
   },
 
   detach() {
+    assert(`cannot detach root`, !this.root);
     this.parent = null;
   },
 
@@ -49,10 +51,14 @@ export default Internal.extend({
 
   notifyDidUpdate() {
     let parent = this.parent;
-    if(!parent) {
-      return;
+    if(parent) {
+      parent.childDidUpdate(this);
+    } else {
+      let root = this.root;
+      if(root) {
+        root.internalDidUpdate();
+      }
     }
-    parent.childDidUpdate(this);
   },
 
   didUpdate(changed) {
