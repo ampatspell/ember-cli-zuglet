@@ -24,7 +24,7 @@ export default EmberObject.extend(ModelMixin, StateMixin, MetaMixin, {
   path: ref('path'),
 
   data: computed(function() {
-    return this.get('_internal.data').model(true);
+    return this.get('_internal.data.internal').model(true);
   }).readOnly(),
 
   serialized: computed(...serialized, 'data.serialized', function() {

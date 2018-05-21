@@ -48,6 +48,9 @@ export default Internal.extend({
   //
 
   createInternal(value) {
+    if(value === undefined) {
+      return;
+    }
     let internal = toInternal(value);
     if(isInternal(internal)) {
       if(internal.isAttached()) {

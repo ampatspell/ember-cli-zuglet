@@ -29,11 +29,14 @@ export default EmberObject.extend({
     return internal.serializer.serialize(internal, type);
   },
 
-  commit(raw) {
+  commit(raw, deserialize=true) {
     if(!raw) {
-      raw = this.serialize('raw');
+      return;
     }
     this.set('raw', raw);
+    if(deserialize) {
+      this.deserialize(raw);
+    }
     this.dirtyDidChange();
   },
 

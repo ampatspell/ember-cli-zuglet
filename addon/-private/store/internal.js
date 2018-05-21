@@ -104,7 +104,7 @@ export default Internal.extend({
   },
 
   createInternalDocumentWithRef(ref) {
-    let data = this.get('dataManager').createNewRootInternalObject();
+    let data = this.get('dataManager').createRootInternalObject();
     return this.factoryFor('zuglet:document/internal').create({ store: this, ref, data });
   },
 
