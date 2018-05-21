@@ -2,11 +2,11 @@ import Internal from '../internal/internal';
 import { computed } from '@ember/object';
 import { A } from '@ember/array';
 import { toInternal, isInternal } from './internal/util';
-// import { serverTimestamp } from '../util/firestore-types';
+import { serverTimestamp } from '../util/firestore-types';
 
 const serializers = [
   'reference',
-  // 'timestamp',
+  'timestamp',
   'array',
   'object',
   'primitive'
@@ -47,7 +47,7 @@ export default Internal.extend({
 
   //
 
-  createInternal(value, parent) {
+  createInternal(value) {
     if(value === undefined) {
       return;
     }
@@ -65,24 +65,15 @@ export default Internal.extend({
       internal = serializer.createInternal(value);
     }
 
-    if(parent) {
-      internal.attach(parent);
-    }
-
     return internal;
   },
 
   //
 
-  // createNewInternalObject(value) {
-  //   let serializer = this.serializerForName('object');
-  //   return serializer.createInternal(value, 'model');
-  // },
-
-  // createNewInternalServerTimestamp() {
-  //   let serializer = this.serializerForName('timestamp');
-  //   return serializer.createInternal(serverTimestamp, 'model');
-  // }
+  createInternalServerTimestamp() {
+    let serializer = this.serializerForName('timestamp');
+    return serializer.createInternal(serverTimestamp, 'model');
+  },
 
   createInternalArray(value) {
     let serializer = this.serializerForName('array');

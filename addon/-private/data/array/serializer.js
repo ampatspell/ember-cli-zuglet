@@ -42,7 +42,10 @@ export default Serializer.extend({
         let result = nested.serializer.deserialize(nested, item);
         nested = result.internal;
       } else {
-        nested = manager.createInternal(item, internal);
+        nested = manager.createInternal(item);
+      }
+      if(nested) {
+        nested.attach(internal);
       }
       return nested;
     }));
@@ -77,7 +80,13 @@ export default Serializer.extend({
       let removing = content.slice(idx, amt);
       removing.map(item => item.detach());
 
-      let adding = array.map(item => manager.createInternal(item, internal));
+      let adding = array.map(item => {
+        let created = manager.createInternal(item);
+        if(created) {
+          created.attach(internal);
+        }
+        return created;
+      });
 
       content.replace(idx, amt, adding);
     }));

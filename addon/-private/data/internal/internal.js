@@ -1,5 +1,5 @@
 import Internal from '../../internal/internal';
-import { get, computed } from '@ember/object';
+import { get } from '@ember/object';
 import { assert } from '@ember/debug';
 import withPropertyChanges from '../../internal/with-property-changes';
 
