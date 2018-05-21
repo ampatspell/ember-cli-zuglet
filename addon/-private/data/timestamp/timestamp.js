@@ -8,6 +8,6 @@ export default EmberObject.extend(ModelMixin, DataModelMixin, {
   isTimestamp:       readOnly('_internal.isTimestamp'),
   isServerTimestamp: readOnly('_internal.isServerTimestamp'),
   date:              readOnly('_internal.date'),
-  dateTime:          readOnly('_internal.dateTime'),
+  dateTime:          readOnly('_internal.dateTime')
 
 });

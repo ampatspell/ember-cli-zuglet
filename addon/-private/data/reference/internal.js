@@ -6,9 +6,6 @@ export default Internal.extend({
 
   model() {
     return this.content.model(true);
-  },
-
-  fetch() {
   }
 
 });

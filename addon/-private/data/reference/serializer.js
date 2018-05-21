@@ -1,25 +1,35 @@
 import Serializer from '../internal/serializer';
 import { assert } from '@ember/debug';
+
 import {
   isFirestoreDocumentOrCollectionReference,
   isFirestoreDocumentReference,
   isFirestoreCollectionReference
 } from '../../util/firestore-types';
+
 import {
   toInternalDocumentOrCollectionReference,
   isDocumentOrCollectionReference
 } from '../../reference/types';
 
+const isAnyReference = value => {
+  if(isFirestoreDocumentOrCollectionReference(value)) {
+    return true;
+  }
+  if(isDocumentOrCollectionReference(value)) {
+    return true;
+  }
+  return false;
+};
+
 export default Serializer.extend({
 
   supports(value) {
-    if(isFirestoreDocumentOrCollectionReference(value)) {
-      return true;
-    }
-    if(isDocumentOrCollectionReference(value)) {
-      return true;
-    }
-    return false;
+    return isAnyReference(value);
+  },
+
+  matches(internal, value) {
+    return isAnyReference(value);
   },
 
   toInternalReference(value) {
@@ -57,22 +67,18 @@ export default Serializer.extend({
     }
   },
 
-  deserialize(value) {
-    return this.createInternal(value);
-  },
-
-  update(internal, value) {
+  deserialize(internal, value) {
     let ref = this.toFirestoreReference(value);
+    let replace = true;
+
     if(internal.content.ref.isEqual(ref)) {
-      return {
-        replace: false,
-        internal
-      };
+      replace = false;
+    } else {
+      internal = this.createInternal(ref);
     }
 
-    internal = this.createInternal(value);
     return {
-      replace: true,
+      replace,
       internal
     };
   }

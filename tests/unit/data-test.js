@@ -5,17 +5,72 @@ import { DateTime } from 'luxon';
 module('data', function(hooks) {
   setupStoreTest(hooks);
 
+  test('overview with primitives', function(assert) {
+    let root = this.store.get('_internal.dataManager').createRootInternalObject();
+    let internal = root.internal;
+    let object = internal.model(true);
+
+    assert.equal(root.get('isDirty'), false, 'isDirty');
+
+    assert.deepEqual(object.get('serialized'), {
+    });
+
+    object.set('name', 'zeeba');
+
+    assert.equal(root.get('isDirty'), true, 'isDirty');
+
+    assert.equal(object.get('name'), 'zeeba');
+    assert.deepEqual(object.get('serialized'), {
+      name: 'zeeba'
+    });
+
+    object.setProperties({ name: 'Zeeba', email: 'zeeba@gmail.com' });
+
+    assert.deepEqual(object.get('serialized'), {
+      name: 'Zeeba',
+      email: 'zeeba@gmail.com'
+    });
+
+    let raw = object.serialize('raw');
+
+    assert.deepEqual(raw, {
+      name: 'Zeeba',
+      email: 'zeeba@gmail.com'
+    });
+
+    assert.equal(root.get('isDirty'), true, 'isDirty');
+
+    root.commit(raw);
+
+    assert.equal(root.get('isDirty'), false, 'isDirty');
+
+    object.set('name', 'Zeeba');
+
+    assert.equal(root.get('isDirty'), false, 'isDirty');
+
+    object.set('name', 'zeeba');
+
+    assert.equal(root.get('isDirty'), true, 'isDirty');
+
+    assert.deepEqual(object.get('serialized'), {
+      name: 'zeeba',
+      email: 'zeeba@gmail.com'
+    });
+
+    root.rollback();
+
+    assert.equal(root.get('isDirty'), false, 'isDirty');
+
+    assert.deepEqual(object.get('serialized'), {
+      name: 'Zeeba',
+      email: 'zeeba@gmail.com'
+    });
+  });
+
   test('create object', function(assert) {
     let object = this.store.object();
     assert.ok(object);
     assert.ok(object._internal);
-  });
-
-  test('create primitive', function(assert) {
-    let serializer = this.store._internal.get('dataManager').serializerForName('primitive');
-    let internal = serializer.deserialize('hey');
-    assert.ok(internal);
-    assert.equal(internal.model(true), 'hey');
   });
 
   test('set primitive value for object', function(assert) {
@@ -43,7 +98,11 @@ module('data', function(hooks) {
   });
 
   test('object serialized', function(assert) {
-    let address = this.store.object({ city: 'duckland' });
+    let root = this.store.get('_internal.dataManager').createRootInternalObject();
+    let internal = root.internal;
+    let address = internal.model(true);
+
+    root.commit({ city: 'duckland' }, true);
 
     assert.deepEqual(address.get('serialized'), {
       city: 'duckland'
@@ -73,7 +132,7 @@ module('data', function(hooks) {
     assert.equal(address.get('city'), 'fooland');
     assert.equal(address.get('country'), 'Ducky');
 
-    address._internal.fetch();
+    root.rollback();
 
     assert.equal(address.get('city'), 'duckland');
     assert.equal(address.get('country'), undefined);
@@ -134,7 +193,7 @@ module('data', function(hooks) {
     assert.ok(array._internal);
     assert.equal(array.get('length'), 2);
 
-    let values = array._internal.content.values;
+    let values = array._internal.content;
     assert.deepEqual(array.map(i => i), [ 'one', 'two' ]);
     assert.equal(values.objectAt(0).content, 'one');
     assert.equal(values.objectAt(1).content, 'two');
@@ -228,22 +287,26 @@ module('data', function(hooks) {
   });
 
   test('array checkpoint', function(assert) {
-    let array = this.store.array([ 'one', 'two', 'three' ]);
+    let root = this.store.get('_internal.dataManager').createRootInternalObject();
+    let internal = root.internal;
+    let object = internal.model(true);
 
-    assert.deepEqual(array.map(i => i), [
+    root.commit({ array: [ 'one', 'two', 'three' ] }, true);
+
+    assert.deepEqual(object.get('array').map(i => i), [
       "one",
       "two",
       "three"
     ]);
 
-    array.clear();
+    object.get('array').clear();
 
-    assert.deepEqual(array.map(i => i), [
+    assert.deepEqual(object.get('array').map(i => i), [
     ]);
 
-    array._internal.fetch();
+    root.rollback();
 
-    assert.deepEqual(array.map(i => i), [
+    assert.deepEqual(object.get('array').map(i => i), [
       "one",
       "two",
       "three"
@@ -251,7 +314,11 @@ module('data', function(hooks) {
   });
 
   test('nested checkpoint and rollback', function(assert) {
-    let data = this.store.object({
+    let root = this.store.get('_internal.dataManager').createRootInternalObject();
+    let internal = root.internal;
+    let data = internal.model(true);
+
+    root.commit({
       name: 'duck',
       address: {
         lines: [
@@ -263,7 +330,7 @@ module('data', function(hooks) {
           array: [ 'a', 'b', 'c' ]
         }
       }
-    });
+    }, true);
 
     assert.deepEqual(data.get('serialized'), {
       "address": {
@@ -314,7 +381,7 @@ module('data', function(hooks) {
       "name": "duck"
     });
 
-    data._internal.fetch();
+    root.rollback();
 
     assert.deepEqual(data.get('serialized'), {
       "address": {
@@ -417,7 +484,11 @@ module('data', function(hooks) {
   });
 
   test('update object with primitives', function(assert) {
-    let data = this.store.object({
+    let root = this.store.get('_internal.dataManager').createRootInternalObject();
+    let internal = root.internal;
+    let data = internal.model(true);
+
+    root.commit({
       address: {
         city: 'Yeelo',
         box: 101,
@@ -425,11 +496,11 @@ module('data', function(hooks) {
       name: 'duck',
       email: 'foo@bar.com',
       ok: true,
-    });
+    }, true);
 
     let fetch = () => {
-      let values = data._internal.content.values;
-      let address = values.address.content.values;
+      let values = data._internal.content;
+      let address = values.address.content;
       return {
         address: values.address,
         city: address.city,
@@ -452,7 +523,7 @@ module('data', function(hooks) {
       "ok": true
     });
 
-    data._internal.update({
+    root.commit({
       address: {
         city: 'Yello',
         country: 'Yellowish',
@@ -460,9 +531,7 @@ module('data', function(hooks) {
       },
       name: 'Duck',
       ok: 'yes'
-    }, 'raw');
-
-    data._internal.fetch();
+    }, true);
 
     assert.deepEqual(data.get('serialized'), {
       "address": {
@@ -477,15 +546,19 @@ module('data', function(hooks) {
     let end = fetch();
 
     assert.ok(start.address === end.address);
-    assert.ok(start.city !== end.city);
+    assert.ok(start.city === end.city);
     assert.ok(start.box === end.box);
-    assert.ok(start.name !== end.name);
+    assert.ok(start.name === end.name);
     assert.ok(!end.email);
     assert.ok(start.ok !== end.ok);
   });
 
   test('update reference', function(assert) {
-    let data = this.store.object({
+    let root = this.store.get('_internal.dataManager').createRootInternalObject();
+    let internal = root.internal;
+    let data = internal.model(true);
+
+    root.commit({
       identical: {
         coll: this.store.collection('ducks'),
         doc: this.store.doc('ducks/yellow')
@@ -494,12 +567,12 @@ module('data', function(hooks) {
         coll: this.store.collection('hamsters'),
         doc: this.store.doc('hamster/yellow')
       }
-    });
+    }, true);
 
     let fetch = () => {
-      let values = data._internal.content.values;
-      let identical = values.identical.content.values;
-      let changed = values.changed.content.values;
+      let values = data._internal.content;
+      let identical = values.identical.content;
+      let changed = values.changed.content;
       return {
         identical: {
           coll: identical.coll,
@@ -525,18 +598,16 @@ module('data', function(hooks) {
       }
     });
 
-    data._internal.update({
+    root.commit({
       identical: {
-        coll: data.get('identical')._internal.content.values.coll.content.ref,
-        doc: data.get('identical')._internal.content.values.doc.content.ref,
+        coll: data.get('identical')._internal.content.coll.content.ref,
+        doc: data.get('identical')._internal.content.doc.content.ref,
       },
       changed: {
         coll: this.store.collection('zeebas')._internal.ref,
         doc: this.store.doc('zeebas/yellow')._internal.ref,
       }
-    });
-
-    data._internal.fetch();
+    }, true);
 
     assert.deepEqual(data.get('serialized'), {
       "changed": {
@@ -558,14 +629,18 @@ module('data', function(hooks) {
   });
 
   test('update array', function(assert) {
-    let data = this.store.object({
+    let root = this.store.get('_internal.dataManager').createRootInternalObject();
+    let internal = root.internal;
+    let data = internal.model(true);
+
+    root.commit({
       array: [
         { name: 'one' },
         { name: 'two' },
         { name: 'three' },
         'four'
       ]
-    });
+    }, true);
 
     assert.deepEqual(data.get('serialized'), {
       "array": [
@@ -576,7 +651,7 @@ module('data', function(hooks) {
       ]
     });
 
-    data._internal.update({
+    root.commit({
       "array": [
         { "name": "three" },
         { "name": "one" },
@@ -585,9 +660,7 @@ module('data', function(hooks) {
         { "name": "six" }
       ],
       "second": [ 'ok' ]
-    });
-
-    data._internal.fetch();
+    }, true);
 
     assert.deepEqual(data.get('serialized'), {
       "array": [
@@ -602,14 +675,18 @@ module('data', function(hooks) {
   });
 
   test('update array primitives append', function(assert) {
-    let data = this.store.object({
+    let root = this.store.get('_internal.dataManager').createRootInternalObject();
+    let internal = root.internal;
+    let data = internal.model(true);
+
+    root.commit({
       array: [
         'one',
         'two'
       ]
-    });
+    }, true);
 
-    let fetch = () => data._internal.content.values.array.content.values.map(i => i);
+    let fetch = () => data._internal.content.array.content.map(i => i);
 
     let start = fetch();
 
@@ -620,15 +697,13 @@ module('data', function(hooks) {
       ]
     });
 
-    data._internal.update({
+    root.commit({
       "array": [
         "one",
         "two",
         "three"
       ]
-    });
-
-    data._internal.fetch();
+    }, true);
 
     let end = fetch();
 
@@ -642,43 +717,6 @@ module('data', function(hooks) {
 
     assert.ok(start[0] === end[0]);
     assert.ok(start[1] === end[1]);
-  });
-
-  test('deserialize to pristine', function(assert) {
-    let data = this.store.object({
-      ok: true
-    });
-
-    let fetch = () => {
-      let values = data._internal.content.values;
-      return {
-        ok: values.ok,
-        name: values.name
-      };
-    }
-
-    let start = fetch();
-
-    assert.deepEqual(data.get('serialized'), {
-      "ok": true
-    });
-
-    data._internal.update({
-      ok: true,
-      name: 'firestore'
-    }, 'raw');
-
-    data._internal.fetch();
-
-    assert.deepEqual(data.get('serialized'), {
-      "ok": true,
-      "name": "firestore"
-    });
-
-    let end = fetch();
-
-    assert.ok(start.ok === end.ok);
-    assert.ok(end.name);
   });
 
   test('deserialize to pristine set object value', function(assert) {

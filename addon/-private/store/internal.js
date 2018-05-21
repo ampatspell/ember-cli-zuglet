@@ -104,7 +104,7 @@ export default Internal.extend({
   },
 
   createInternalDocumentWithRef(ref) {
-    let data = this.get('dataManager').createNewInternalObject();
+    let data = this.get('dataManager').createRootInternalObject();
     return this.factoryFor('zuglet:document/internal').create({ store: this, ref, data });
   },
 
@@ -150,15 +150,15 @@ export default Internal.extend({
   }),
 
   object(...args) {
-    return this.get('dataManager').createNewInternalObject(...args);
+    return this.get('dataManager').createInternalObject(...args);
   },
 
   array(...args) {
-    return this.get('dataManager').createNewInternalArray(...args);
+    return this.get('dataManager').createInternalArray(...args);
   },
 
   serverTimestamp() {
-    return this.get('dataManager').createNewInternalServerTimestamp();
+    return this.get('dataManager').createInternalServerTimestamp();
   },
 
   //

@@ -1,4 +1,5 @@
 import Serializer from '../internal/serializer';
+import { typeOf } from '@ember/utils';
 
 export default Serializer.extend({
 
@@ -7,30 +8,32 @@ export default Serializer.extend({
   },
 
   matches(internal, value) {
-    return typeof internal.content === typeof value;
+    return typeOf(internal.content) === typeOf(value);
   },
 
   createInternal(content) {
     return this.factoryFor('zuglet:data/primitive/internal').create({ serializer: this, content });
   },
 
-  deserialize(value) {
-    return this.createInternal(value);
+  serialize(internal) {
+    return internal.content;
   },
 
-  update(internal, value) {
-    if(internal.content === value) {
-      return {
-        replace: false,
-        internal
-      };
+  deserialize(internal, value) {
+    if(internal.content !== value) {
+      internal.content = value;
     }
 
-    internal = this.createInternal(value);
+    internal.notifyDidUpdate();
+
     return {
-      replace: true,
+      replace: false,
       internal
     };
+  },
+
+  isDirty(internal, raw) {
+    return internal.content !== raw;
   }
 
 });

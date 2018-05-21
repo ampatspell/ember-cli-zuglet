@@ -6,13 +6,6 @@ export default Internal.extend({
 
   model() {
     return this.content;
-  },
-
-  serialize() {
-    return this.content;
-  },
-
-  fetch() {
   }
 
 });

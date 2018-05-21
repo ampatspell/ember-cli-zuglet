@@ -14,6 +14,7 @@ export default Internal.extend({
   serializer: null,
   manager: null,
 
+  root: null,
   parent: null,
 
   init() {
@@ -27,18 +28,13 @@ export default Internal.extend({
 
   //
 
-  matches(value) {
-    return this.serializer.matches(this, value);
-  },
-
-  //
-
   attach(parent) {
     assert(`parent must be data internal`, isInternal(parent));
     this.parent = parent;
   },
 
   detach() {
+    assert(`cannot detach root`, !this.root);
     this.parent = null;
   },
 
@@ -55,10 +51,14 @@ export default Internal.extend({
 
   notifyDidUpdate() {
     let parent = this.parent;
-    if(!parent) {
-      return;
+    if(parent) {
+      parent.childDidUpdate(this);
+    } else {
+      let root = this.root;
+      if(root) {
+        root.internalDidUpdate();
+      }
     }
-    parent.childDidUpdate(this);
   },
 
   didUpdate(changed) {
@@ -78,10 +78,6 @@ export default Internal.extend({
 
   serialize(type) {
     return this.serializer.serialize(this, type);
-  },
-
-  update(value, type) {
-    return this.serializer.update(this, value, type);
   }
 
 });

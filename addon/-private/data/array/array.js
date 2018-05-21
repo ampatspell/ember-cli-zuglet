@@ -7,7 +7,7 @@ import normalizeArray from '../../util/normalize-array';
 
 export default EmberObject.extend(MutableArray, ModelMixin, DataModelMixin, {
 
-  length: readOnly('_internal.content.values.length'),
+  length: readOnly('_internal.content.length'),
 
   objectAt(idx) {
     return this._internal.getModelValue(idx);

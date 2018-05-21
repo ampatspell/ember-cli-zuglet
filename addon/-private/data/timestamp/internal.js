@@ -32,9 +32,6 @@ export default Internal.extend({
 
   createModel() {
     return this.factoryFor('zuglet:data/timestamp').create({ _internal: this });
-  },
-
-  fetch() {
   }
 
 });

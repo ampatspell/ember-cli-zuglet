@@ -1,86 +1,64 @@
 import Serializer from '../internal/serializer';
 import { typeOf } from '@ember/utils';
 import { A } from '@ember/array';
+import { toModel } from '../internal/util';
+
+const isArray = value => typeOf(value) === 'array';
 
 export default Serializer.extend({
 
   supports(value) {
-    return typeOf(value) === 'array';
+    return isArray(value);
   },
 
-  internalReplacePristine(internal, values) {
-    let pristine = internal.content.pristine;
-    let oldLen = pristine.get('length');
-    pristine.replace(0, oldLen, values);
+  matches(internal, value) {
+    return isArray(value);
   },
 
-  fetch(internal, builder) {
-    let { pristine, values } = internal.content;
-    let oldLen = values.get('length');
-    let newLen = pristine.get('length');
-    return builder(0, oldLen, newLen, () => {
-      values.forEach(item => item.detach());
-      values.replace(0, oldLen, pristine);
-      values.forEach(item => {
-        item.attach(internal);
-        item.fetch();
-      });
-    });
-  },
-
-  createInternals(array, type) {
-    let manager = this.manager;
-    return A(array).map(item => manager.createInternal(item, type));
-  },
-
-  createInternal(array, type) {
+  createInternal(props) {
     let internal = this.factoryFor('zuglet:data/array/internal').create({ serializer: this });
-    let values = this.createInternals(array, type);
-    return internal.withArrayContentChanges(true, build => {
-      this.internalReplacePristine(internal, values);
-      this.fetch(internal, build);
-      return internal;
-    });
+    this.deserialize(internal, props);
+    return internal;
   },
 
-  replaceModelValues(internal, idx, amt, array, type, builder) {
-    let values = internal.content.values;
-    let len = A(array).get('length');
-    builder(idx, amt, len, () => {
-      let removing = values.slice(idx, amt);
-      removing.map(item => item.detach());
+  deserialize(internal, array) {
+    array = A(array);
 
-      let adding = this.createInternals(array, type);
-      adding.map(item => item.attach(internal));
+    let manager = this.manager;
+    let content = internal.content;
+    let remaining = A(content.copy());
 
-      values.replace(idx, amt, adding);
-    });
-  },
-
-  update(internal, array, type) {
-    let pristine = internal.content.pristine;
-
-    let remaining = A(pristine.copy());
     const reusable = item => {
-      let found = remaining.find(value => value.matches(item));
+      let found = remaining.find(value => value.serializer.matches(value, item));
       if(found) {
         remaining.removeObject(found);
       }
       return found;
-    };
+    }
 
     let internals = A(array.map(item => {
-      let internal = reusable(item);
-      if(internal) {
-        let result = internal.update(item, type);
-        internal = result.internal;
+      let nested = reusable(item);
+      if(nested) {
+        let result = nested.serializer.deserialize(nested, item);
+        nested = result.internal;
       } else {
-        internal = this.manager.createInternal(item, type);
+        nested = manager.createInternal(item);
       }
-      return internal;
+      if(nested) {
+        nested.attach(internal);
+      }
+      return nested;
     }));
 
-    this.internalReplacePristine(internal, internals);
+    let adding = internals.get('length');
+    let removing = remaining.get('length');
+
+    remaining.map(item => item.detach());
+
+    internal.withArrayContentChanges(true, builder => builder(0, adding, removing, () => {
+      let len = content.get('length');
+      content.replace(0, len, internals);
+    }));
 
     return {
       replace: false,
@@ -88,8 +66,34 @@ export default Serializer.extend({
     };
   },
 
+  getModelValue(internal, idx) {
+    internal = internal.content.objectAt(idx);
+    return toModel(internal);
+  },
+
+  replaceModelValues(internal, idx, amt, array) {
+    let manager = this.manager;
+    let content = internal.content;
+    let len = A(array).get('length');
+
+    internal.withArrayContentChanges(true, builder => builder(idx, amt, len, () => {
+      let removing = content.slice(idx, amt);
+      removing.map(item => item.detach());
+
+      let adding = array.map(item => {
+        let created = manager.createInternal(item);
+        if(created) {
+          created.attach(internal);
+        }
+        return created;
+      });
+
+      content.replace(idx, amt, adding);
+    }));
+  },
+
   serialize(internal, type) {
-    return internal.content.values.map(value => value.serialize(type));
+    return internal.content.map(value => value.serialize(type));
   }
 
 });

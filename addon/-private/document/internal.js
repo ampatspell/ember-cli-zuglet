@@ -10,7 +10,7 @@ import observers from '../observers/computed';
 import queue from '../queue/computed';
 import actions from '../util/actions';
 
-export const state = [ 'isNew', 'isLoading', 'isLoaded', 'isSaving', 'isObserving', 'isError', 'error' ];
+export const state = [ 'isNew', 'isDirty', 'isLoading', 'isLoaded', 'isSaving', 'isObserving', 'isError', 'error' ];
 export const meta = [ 'exists', 'metadata' ];
 
 export default Internal.extend({
@@ -33,6 +33,8 @@ export default Internal.extend({
 
   isObserving: readOnly('observers.isEnabled'),
 
+  isDirty: readOnly('data.isDirty'),
+
   exists: undefined,
   _metadata: undefined,
 
@@ -53,16 +55,12 @@ export default Internal.extend({
     return this.store.factoryFor('zuglet:document').create({ _internal: this });
   },
 
-  onData(props, type, fetch) {
-    let data = this.data;
-    data.update(props, 'model');
-    if(fetch) {
-      data.fetch();
-    }
+  onData(props, deserialize) {
+    this.data.commit(props, deserialize);
   },
 
   onNew(props) {
-    this.onData(props, 'model', true);
+    this.onData(props);
     setChangedProperties(this, { isNew: true });
   },
 
@@ -83,7 +81,7 @@ export default Internal.extend({
   onSnapshot(snapshot) {
     if(snapshot.exists) {
       let json = snapshot.data({ serverTimestamps: 'estimate' });
-      this.onData(json, 'raw', true);
+      this.onData(json);
     }
     this._didLoad(snapshot);
   },
@@ -140,7 +138,8 @@ export default Internal.extend({
     });
   },
 
-  didSave() {
+  didSave(raw) {
+    this.onData(raw, false);
     setChangedProperties(this, {
       isNew: false,
       isSaving: false,
@@ -158,9 +157,9 @@ export default Internal.extend({
   _save(ref, data, opts) {
     let { type, merge } = opts;
     if(type === 'set') {
-      return ref.set(data, { merge });
+      return ref.set(data, { merge }).then(() => data);
     } else if(type === 'update') {
-      return ref.update(data);
+      return ref.update(data).then(() => data);
     }
     assert(`unsupported set type '${type}'`, false);
   },
@@ -175,7 +174,7 @@ export default Internal.extend({
         this.willSave();
         return this._save(ref, data, opts);
       },
-      didResolve: () => this.didSave(),
+      didResolve: raw => this.didSave(raw),
       didReject: err => this.saveDidFail(err)
     });
   },
@@ -259,7 +258,7 @@ export default Internal.extend({
 
   reset() {
     let data = this.data;
-    data.fetch();
+    data.rollback();
   },
 
 });

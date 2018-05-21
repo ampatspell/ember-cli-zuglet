@@ -1,15 +1,11 @@
 import Internal from '../internal/internal';
 import { A } from '@ember/array';
-import { toModel } from '../internal/util';
 
 export default Internal.extend({
 
   init() {
     this._super(...arguments);
-    this.content = {
-      pristine: A(),
-      values: A()
-    };
+    this.content = A();
   },
 
   createModel() {
@@ -17,14 +13,11 @@ export default Internal.extend({
   },
 
   getModelValue(idx) {
-    let internal = this.content.values.objectAt(idx);
-    return toModel(internal);
+    return this.serializer.getModelValue(this, idx);
   },
 
   replaceModelValues(idx, amt, values) {
-    this.withArrayContentChanges(true, builder => {
-      this.serializer.replaceModelValues(this, idx, amt, values, 'model', builder);
-    });
+    return this.serializer.replaceModelValues(this, idx, amt, values);
   },
 
   withArrayContentChanges(notify, cb) {
@@ -49,12 +42,6 @@ export default Internal.extend({
         return result;
       }
       return cb(builder);
-    });
-  },
-
-  fetch() {
-    this.withArrayContentChanges(true, builder => {
-      return this.serializer.fetch(this, builder);
     });
   }
 

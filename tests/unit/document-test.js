@@ -20,12 +20,52 @@ module('document', function(hooks) {
       "error": null,
       "exists": undefined,
       "isNew": true,
+      "isDirty": false,
       "isError": false,
       "isLoaded": false,
       "isLoading": false,
       "isSaving": false,
       "isObserving": false,
       "metadata": undefined,
+    });
+  });
+
+  test('new document becomes dirty, save makes it pristine', async function(assert) {
+    let doc = this.store.doc('ducks/yellow').new({ name: 'yellow', feathers: 'cute' });
+    assert.equal(doc.get('isDirty'), false);
+
+    doc.set('data.name', 'yellow');
+    assert.equal(doc.get('isDirty'), false);
+
+    doc.set('data.foo', 'bar');
+    assert.equal(doc.get('isDirty'), true);
+
+    doc.set('data.foo');
+    assert.equal(doc.get('isDirty'), false);
+
+    doc.set('data.name', 'Yellow');
+    assert.equal(doc.get('isDirty'), true);
+
+    await doc.save();
+
+    assert.equal(doc.get('isDirty'), false);
+  });
+
+  test('mutate while saving', async function(assert) {
+    let doc = this.store.doc('ducks/yellow').new({ name: 'yellow', feathers: 'cute' });
+
+    let promise = doc.save();
+
+    assert.equal(doc.get('isDirty'), false);
+    doc.set('data.name', 'green');
+    assert.equal(doc.get('isDirty'), true);
+
+    await promise;
+
+    assert.equal(doc.get('isDirty'), true);
+    assert.deepEqual(doc.get('data.serialized'), {
+      "feathers": "cute",
+      "name": "green"
     });
   });
 
@@ -42,6 +82,7 @@ module('document', function(hooks) {
       "error": null,
       "exists": undefined,
       "isNew": true,
+      "isDirty": false,
       "isError": false,
       "isLoaded": false,
       "isLoading": false,
@@ -62,6 +103,7 @@ module('document', function(hooks) {
       "error": null,
       "exists": undefined,
       "isNew": true,
+      "isDirty": false,
       "isError": false,
       "isLoaded": false,
       "isLoading": false,
@@ -83,6 +125,7 @@ module('document', function(hooks) {
       "error": null,
       "exists": true,
       "isNew": false,
+      "isDirty": false,
       "isError": false,
       "isLoaded": true,
       "isLoading": false,
@@ -104,6 +147,7 @@ module('document', function(hooks) {
       "error": null,
       "exists": true,
       "id": "yellow",
+      "isDirty": false,
       "isError": false,
       "isLoaded": true,
       "isLoading": false,
@@ -124,6 +168,7 @@ module('document', function(hooks) {
       "error": null,
       "exists": true,
       "id": "yellow",
+      "isDirty": false,
       "isError": false,
       "isLoaded": true,
       "isLoading": false,
@@ -144,6 +189,7 @@ module('document', function(hooks) {
       "error": null,
       "exists": false,
       "id": "yellow",
+      "isDirty": false,
       "isError": false,
       "isLoaded": true,
       "isLoading": false,
@@ -299,6 +345,7 @@ module('document', function(hooks) {
       "error": null,
       "exists": undefined,
       "id": "yellow",
+      "isDirty": false,
       "isError": false,
       "isLoaded": false,
       "isLoading": false,
@@ -316,6 +363,7 @@ module('document', function(hooks) {
       "error": null,
       "exists": undefined,
       "id": "yellow",
+      "isDirty": false,
       "isError": false,
       "isLoaded": false,
       "isLoading": true,
@@ -336,6 +384,7 @@ module('document', function(hooks) {
       "error": null,
       "exists": true,
       "id": "yellow",
+      "isDirty": false,
       "isError": false,
       "isLoaded": true,
       "isLoading": false,
@@ -364,6 +413,7 @@ module('document', function(hooks) {
       "error": null,
       "exists": undefined,
       "id": "yellow",
+      "isDirty": false,
       "isError": false,
       "isLoaded": false,
       "isLoading": true,
@@ -384,6 +434,7 @@ module('document', function(hooks) {
       "error": null,
       "exists": true,
       "id": "yellow",
+      "isDirty": false,
       "isError": false,
       "isLoaded": true,
       "isLoading": false,
@@ -412,6 +463,7 @@ module('document', function(hooks) {
       "error": null,
       "exists": undefined,
       "id": "yellow",
+      "isDirty": false,
       "isError": false,
       "isLoaded": false,
       "isLoading": true,
@@ -432,6 +484,7 @@ module('document', function(hooks) {
       "error": null,
       "exists": true,
       "id": "yellow",
+      "isDirty": false,
       "isError": false,
       "isLoaded": true,
       "isLoading": false,

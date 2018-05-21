@@ -1,14 +1,10 @@
 import Internal from '../internal/internal';
-import { toModel } from '../internal/util';
 
 export default Internal.extend({
 
   init() {
     this._super(...arguments);
-    this.content = {
-      pristine: Object.create(null),
-      values:   Object.create(null)
-    };
+    this.content = Object.create(null);
   },
 
   createModel() {
@@ -16,21 +12,11 @@ export default Internal.extend({
   },
 
   getModelValue(key) {
-    let value = this.content.values[key];
-    return toModel(value);
+    return this.serializer.getModelValue(this, key);
   },
 
   setModelValue(key, value) {
-    return this.withPropertyChanges(true, changed => {
-      let internal = this.serializer.setModelValueForKey(this, key, value, 'model', changed);
-      return toModel(internal);
-    });
-  },
-
-  fetch() {
-    return this.withPropertyChanges(true, changed => {
-      return this.serializer.fetch(this, changed);
-    });
+    return this.serializer.setModelValue(this, key, value);
   }
 
 });
