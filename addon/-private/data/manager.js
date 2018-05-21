@@ -47,7 +47,7 @@ export default Internal.extend({
 
   //
 
-  createInternal(value) {
+  createInternal(value, current, commit=false) {
     let internal = toInternal(value);
     if(isInternal(internal)) {
       if(internal.isAttached()) {
@@ -55,7 +55,13 @@ export default Internal.extend({
       }
     } else {
       let serializer = this.serializerForPrimitive(value);
-      internal = serializer.createInternal(value);
+      let raw = undefined;
+      if(commit) {
+        raw = value;
+      } else if (current && current.serializer === serializer) {
+        raw = current.get('raw');
+      }
+      internal = serializer.createInternal(value, raw);
     }
     return internal;
   },

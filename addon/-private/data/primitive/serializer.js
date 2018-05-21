@@ -10,27 +10,34 @@ export default Serializer.extend({
     return typeof internal.content === typeof value;
   },
 
-  createInternal(content) {
-    return this.factoryFor('zuglet:data/primitive/internal').create({ serializer: this, content });
+  createInternal(content, raw) {
+    return this.factoryFor('zuglet:data/primitive/internal').create({ serializer: this, content, raw });
   },
 
   serialize(internal) {
     return internal.content;
   },
 
-  deserialize(internal, value) {
-    let replace = internal.content !== value;
-    if(replace) {
+  deserialize(internal, value, commit) {
+    if(internal.content !== value) {
       internal.content = value;
     }
+
+    if(commit) {
+      internal.set('raw', value);
+    }
+
+    internal.notifyDidUpdate();
+
     return {
-      replace,
+      replace: false,
       internal
     };
   },
 
-  isDirty() {
-    return false;
+  isDirty(internal) {
+    let { raw, content } = internal.getProperties('raw', 'content');
+    return raw !== content;
   }
 
 });

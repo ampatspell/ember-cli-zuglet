@@ -9,8 +9,7 @@ export default Internal.extend({
   },
 
   commit(internal, data={}) {
-    internal.set('raw', data);
-    this.deserialize(internal, data);
+    this.deserialize(internal, data, true);
   },
 
   rollback(internal) {
@@ -18,7 +17,7 @@ export default Internal.extend({
     if(!data) {
       return;
     }
-    this.deserialize(internal, data);
+    this.deserialize(internal, data, false);
   },
 
 });
