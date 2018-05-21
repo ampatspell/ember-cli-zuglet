@@ -25,16 +25,6 @@ export default Serializer.extend({
     return map(props, (key, value) => manager.createInternal(value));
   },
 
-  // createInternal(props, type) {
-  //   let internal = this.factoryFor('zuglet:data/object/internal').create({ serializer: this });
-  //   let values = this.createInternals(props, type);
-  //   internal.withPropertyChanges(false, changed => {
-  //     this.internalReplacePristine(internal, values);
-  //     this.fetch(internal, changed);
-  //   });
-  //   return internal;
-  // },
-
   getModelValue(internal, key) {
     let value = internal.content[key];
     return toModel(value);
@@ -102,19 +92,6 @@ export default Serializer.extend({
     };
   },
 
-  commit(internal, data={}) {
-    this.set('raw', data);
-    this.deserialize(internal, data);
-  },
-
-  rollback(internal) {
-    let data = this.get('raw');
-    if(!data) {
-      return;
-    }
-    this.deserialize(internal, data);
-  },
-
   isDirty(internal) {
     let { raw, content } = internal.getProperties('raw', 'content');
 
@@ -134,8 +111,8 @@ export default Serializer.extend({
     for(let key of contentKeys) {
       let internal = content[key];
       let value = raw[key];
-      if(!internal.isEqual(value)) {
-        return false;
+      if(internal.serializer.isDirty(internal)) {
+        return true;
       }
     }
 

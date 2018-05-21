@@ -4,12 +4,21 @@ export default Internal.extend({
 
   manager: null,
 
-  // matches(internal, value) {
-  //   return this.supports(value);
-  // },
-
   factoryFor(name) {
     return this.manager.factoryFor(name);
-  }
+  },
+
+  commit(internal, data={}) {
+    internal.set('raw', data);
+    this.deserialize(internal, data);
+  },
+
+  rollback(internal) {
+    let data = internal.get('raw');
+    if(!data) {
+      return;
+    }
+    this.deserialize(internal, data);
+  },
 
 });

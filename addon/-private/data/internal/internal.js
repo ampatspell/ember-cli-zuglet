@@ -25,15 +25,11 @@ export default Internal.extend({
     return this.serializer.factoryFor(name);
   },
 
-  isDirty: computed(function() {
-    return this.serializer.isDirty(this);
-  }).readOnly(),
-
   //
 
-  // matches(value) {
-  //   return this.serializer.matches(this, value);
-  // },
+  isDirty: computed('raw', function() {
+    return this.serializer.isDirty(this);
+  }).readOnly(),
 
   //
 
@@ -78,6 +74,8 @@ export default Internal.extend({
       }
     });
   },
+
+  //
 
   serialize(type) {
     return this.serializer.serialize(this, type);

@@ -14,25 +14,6 @@ export default Serializer.extend({
     return this.factoryFor('zuglet:data/primitive/internal').create({ serializer: this, content });
   },
 
-  // deserialize(value) {
-  //   return this.createInternal(value);
-  // },
-
-  // update(internal, value) {
-  //   if(internal.content === value) {
-  //     return {
-  //       replace: false,
-  //       internal
-  //     };
-  //   }
-
-  //   internal = this.createInternal(value);
-  //   return {
-  //     replace: true,
-  //     internal
-  //   };
-  // }
-
   serialize(internal) {
     return internal.content;
   },
@@ -46,6 +27,10 @@ export default Serializer.extend({
       replace,
       internal
     };
+  },
+
+  isDirty() {
+    return false;
   }
 
 });
