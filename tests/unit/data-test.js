@@ -5,7 +5,7 @@ import { DateTime } from 'luxon';
 module('data', function(hooks) {
   setupStoreTest(hooks);
 
-  test.only('overview with primitives', function(assert) {
+  test('overview with primitives', function(assert) {
     let root = this.store.get('_internal.dataManager').createRootInternalObject();
     let internal = root.internal;
     let object = internal.model(true);
