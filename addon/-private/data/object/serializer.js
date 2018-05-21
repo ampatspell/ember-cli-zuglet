@@ -16,7 +16,7 @@ export default Serializer.extend({
 
   createInternal(props, raw) {
     let internal = this.factoryFor('zuglet:data/object/internal').create({ serializer: this, raw });
-
+    this.deserialize(internal, props, false);
     return internal;
   },
 

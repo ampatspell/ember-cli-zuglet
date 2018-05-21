@@ -97,6 +97,8 @@ module('data', function(hooks) {
   test('object serialized', function(assert) {
     let address = this.store.object({ city: 'duckland' });
 
+    address._internal.commit({ city: 'duckland' });
+
     assert.deepEqual(address.get('serialized'), {
       city: 'duckland'
     });
@@ -125,7 +127,7 @@ module('data', function(hooks) {
     assert.equal(address.get('city'), 'fooland');
     assert.equal(address.get('country'), 'Ducky');
 
-    address._internal.fetch();
+    address._internal.rollback();
 
     assert.equal(address.get('city'), 'duckland');
     assert.equal(address.get('country'), undefined);
