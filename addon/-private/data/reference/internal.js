@@ -2,13 +2,10 @@ import Internal from '../internal/internal';
 
 export default Internal.extend({
 
-  // content: null,
+  content: null,
 
-  // model() {
-  //   return this.content.model(true);
-  // },
-
-  // fetch() {
-  // }
+  model() {
+    return this.content.model(true);
+  }
 
 });

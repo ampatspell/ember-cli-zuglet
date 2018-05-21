@@ -554,7 +554,11 @@ module('data', function(hooks) {
   });
 
   test('update reference', function(assert) {
-    let data = this.store.object({
+    let root = this.store.get('_internal.dataManager').createRootInternalObject();
+    let internal = root.internal;
+    let data = internal.model(true);
+
+    root.commit({
       identical: {
         coll: this.store.collection('ducks'),
         doc: this.store.doc('ducks/yellow')
@@ -563,12 +567,12 @@ module('data', function(hooks) {
         coll: this.store.collection('hamsters'),
         doc: this.store.doc('hamster/yellow')
       }
-    });
+    }, true);
 
     let fetch = () => {
-      let values = data._internal.content.values;
-      let identical = values.identical.content.values;
-      let changed = values.changed.content.values;
+      let values = data._internal.content;
+      let identical = values.identical.content;
+      let changed = values.changed.content;
       return {
         identical: {
           coll: identical.coll,
@@ -594,18 +598,16 @@ module('data', function(hooks) {
       }
     });
 
-    data._internal.update({
+    root.commit({
       identical: {
-        coll: data.get('identical')._internal.content.values.coll.content.ref,
-        doc: data.get('identical')._internal.content.values.doc.content.ref,
+        coll: data.get('identical')._internal.content.coll.content.ref,
+        doc: data.get('identical')._internal.content.doc.content.ref,
       },
       changed: {
         coll: this.store.collection('zeebas')._internal.ref,
         doc: this.store.doc('zeebas/yellow')._internal.ref,
       }
-    });
-
-    data._internal.fetch();
+    }, true);
 
     assert.deepEqual(data.get('serialized'), {
       "changed": {

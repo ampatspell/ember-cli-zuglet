@@ -5,7 +5,7 @@ import { toInternal, isInternal } from './internal/util';
 // import { serverTimestamp } from '../util/firestore-types';
 
 const serializers = [
-  // 'reference',
+  'reference',
   // 'timestamp',
   'array',
   'object',
