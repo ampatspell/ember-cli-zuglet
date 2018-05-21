@@ -70,13 +70,6 @@ module('data', function(hooks) {
     assert.ok(object._internal);
   });
 
-  test('create primitive', function(assert) {
-    let serializer = this.store._internal.get('dataManager').serializerForName('primitive');
-    let internal = serializer.deserialize('hey');
-    assert.ok(internal);
-    assert.equal(internal.model(true), 'hey');
-  });
-
   test('set primitive value for object', function(assert) {
     let obj = this.store.object();
     obj.set('name', 'duck');
