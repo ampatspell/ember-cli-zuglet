@@ -69,13 +69,15 @@ export default Serializer.extend({
             changed(key);
           }
         } else {
-          let internal = manager.createInternal(value);
-          content[key] = internal;
+          let created = manager.createInternal(value);
+          created.attach(internal);
+          content[key] = created;
           changed(key);
         }
       });
 
       remove.forEach(key => {
+        content[key].detach();
         delete content[key];
         changed(key);
       });
