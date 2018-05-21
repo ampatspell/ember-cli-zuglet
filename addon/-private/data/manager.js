@@ -47,11 +47,13 @@ export default Internal.extend({
 
   //
 
-  createInternal(value) {
+  createInternal(value, parent) {
     if(value === undefined) {
       return;
     }
+
     let internal = toInternal(value);
+
     if(isInternal(internal)) {
       if(internal.isAttached()) {
         throw new Error('attached internal: not implemented');
@@ -62,6 +64,11 @@ export default Internal.extend({
       let serializer = this.serializerForPrimitive(value);
       internal = serializer.createInternal(value);
     }
+
+    if(parent) {
+      internal.attach(parent);
+    }
+
     return internal;
   },
 

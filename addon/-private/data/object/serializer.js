@@ -32,14 +32,13 @@ export default Serializer.extend({
       let content = internal.content;
       let current = content[key];
 
-      value = this.manager.createInternal(value);
+      value = this.manager.createInternal(value, internal);
 
       if(current) {
         current.detach();
       }
 
       if(value) {
-        value.attach(internal);
         content[key] = value;
       } else {
         delete content[key];
@@ -71,8 +70,7 @@ export default Serializer.extend({
             changed(key);
           }
         } else {
-          let created = manager.createInternal(value);
-          created.attach(internal);
+          let created = manager.createInternal(value, internal);
           content[key] = created;
           changed(key);
         }
