@@ -92,6 +92,6 @@ export default Internal.extend({
   createRootInternalObject(value) {
     let internal = this.createInternalObject(value);
     return this.createInternalRoot(internal);
-  },
+  }
 
 });

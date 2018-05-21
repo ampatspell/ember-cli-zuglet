@@ -18,6 +18,6 @@ export default Internal.extend({
       return;
     }
     this.deserialize(internal, data, false);
-  },
+  }
 
 });
