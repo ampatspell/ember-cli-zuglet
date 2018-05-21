@@ -4,14 +4,16 @@ import { toModel } from '../internal/util';
 import { typeOf } from '@ember/utils';
 import { A } from '@ember/array';
 
+const isObject = value => typeOf(value) === 'object';
+
 export default Serializer.extend({
 
   supports(value) {
-    return typeOf(value) === 'object';
+    return isObject(value);
   },
 
   matches(internal, value) {
-    return this.supports(value);
+    return isObject(value);
   },
 
   createInternal(props) {

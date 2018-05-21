@@ -1,4 +1,5 @@
 import Serializer from '../internal/serializer';
+import { typeOf } from '@ember/utils';
 
 export default Serializer.extend({
 
@@ -7,7 +8,7 @@ export default Serializer.extend({
   },
 
   matches(internal, value) {
-    return typeof internal.content === typeof value;
+    return typeOf(internal.content) === typeOf(value);
   },
 
   createInternal(content) {

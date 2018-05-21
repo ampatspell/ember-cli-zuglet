@@ -3,10 +3,16 @@ import { typeOf } from '@ember/utils';
 import { A } from '@ember/array';
 import { toModel } from '../internal/util';
 
+const isArray = value => typeOf(value) === 'array';
+
 export default Serializer.extend({
 
   supports(value) {
-    return typeOf(value) === 'array';
+    return isArray(value);
+  },
+
+  matches(internal, value) {
+    return isArray(value);
   },
 
   createInternal(props) {
