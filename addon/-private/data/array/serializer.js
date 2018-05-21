@@ -1,95 +1,89 @@
 import Serializer from '../internal/serializer';
-// import { typeOf } from '@ember/utils';
-// import { A } from '@ember/array';
+import { typeOf } from '@ember/utils';
+import { A } from '@ember/array';
+import { toModel } from '../internal/util';
 
 export default Serializer.extend({
 
-  // supports(value) {
-  //   return typeOf(value) === 'array';
-  // },
+  supports(value) {
+    return typeOf(value) === 'array';
+  },
 
-  // internalReplacePristine(internal, values) {
-  //   let pristine = internal.content.pristine;
-  //   let oldLen = pristine.get('length');
-  //   pristine.replace(0, oldLen, values);
-  // },
+  createInternal(props) {
+    let internal = this.factoryFor('zuglet:data/array/internal').create({ serializer: this });
+    this.deserialize(internal, props);
+    return internal;
+  },
 
-  // fetch(internal, builder) {
-  //   let { pristine, values } = internal.content;
-  //   let oldLen = values.get('length');
-  //   let newLen = pristine.get('length');
-  //   return builder(0, oldLen, newLen, () => {
-  //     values.forEach(item => item.detach());
-  //     values.replace(0, oldLen, pristine);
-  //     values.forEach(item => {
-  //       item.attach(internal);
-  //       item.fetch();
-  //     });
-  //   });
-  // },
+  deserialize(internal, array) {
+    array = A(array);
 
-  // createInternals(array, type) {
-  //   let manager = this.manager;
-  //   return A(array).map(item => manager.createInternal(item, type));
-  // },
+    let manager = this.manager;
+    let content = internal.content;
+    let remaining = A(content.copy());
 
-  // createInternal(array, type) {
-  //   let internal = this.factoryFor('zuglet:data/array/internal').create({ serializer: this });
-  //   let values = this.createInternals(array, type);
-  //   return internal.withArrayContentChanges(true, build => {
-  //     this.internalReplacePristine(internal, values);
-  //     this.fetch(internal, build);
-  //     return internal;
-  //   });
-  // },
+    const reusable = item => {
+      let found = remaining.find(value => value.serializer.matches(value, item));
+      if(found) {
+        remaining.removeObject(found);
+      }
+      return found;
+    }
 
-  // replaceModelValues(internal, idx, amt, array, type, builder) {
-  //   let values = internal.content.values;
-  //   let len = A(array).get('length');
-  //   builder(idx, amt, len, () => {
-  //     let removing = values.slice(idx, amt);
-  //     removing.map(item => item.detach());
+    let internals = A(array.map(item => {
+      let nested = reusable(item);
+      if(nested) {
+        let result = nested.serializer.deserialize(nested, item);
+        nested = result.internal;
+      } else {
+        nested = manager.createInternal(item);
+        nested.attach(internal);
+      }
+      return nested;
+    }));
 
-  //     let adding = this.createInternals(array, type);
-  //     adding.map(item => item.attach(internal));
+    let adding = internals.get('length');
+    let removing = remaining.get('length');
 
-  //     values.replace(idx, amt, adding);
-  //   });
-  // },
+    remaining.map(item => item.detach());
 
-  // update(internal, array, type) {
-  //   let pristine = internal.content.pristine;
+    internal.withArrayContentChanges(true, builder => builder(0, adding, removing, () => {
+      let len = content.get('length');
+      content.replace(0, len, internals);
+    }));
 
-  //   let remaining = A(pristine.copy());
-  //   const reusable = item => {
-  //     let found = remaining.find(value => value.matches(item));
-  //     if(found) {
-  //       remaining.removeObject(found);
-  //     }
-  //     return found;
-  //   };
+    return {
+      replace: false,
+      internal
+    };
+  },
 
-  //   let internals = A(array.map(item => {
-  //     let internal = reusable(item);
-  //     if(internal) {
-  //       let result = internal.update(item, type);
-  //       internal = result.internal;
-  //     } else {
-  //       internal = this.manager.createInternal(item, type);
-  //     }
-  //     return internal;
-  //   }));
+  getModelValue(internal, idx) {
+    internal = internal.content.objectAt(idx);
+    return toModel(internal);
+  },
 
-  //   this.internalReplacePristine(internal, internals);
+  replaceModelValues(internal, idx, amt, array) {
+    let manager = this.manager;
+    let content = internal.content;
+    let len = A(array).get('length');
 
-  //   return {
-  //     replace: false,
-  //     internal
-  //   };
-  // },
+    internal.withArrayContentChanges(true, builder => builder(idx, amt, len, () => {
+      let removing = content.slice(idx, amt);
+      removing.map(item => item.detach());
 
-  // serialize(internal, type) {
-  //   return internal.content.values.map(value => value.serialize(type));
-  // }
+      let adding = array.map(item => {
+        let nested = manager.createInternal(item);
+        nested.attach(internal);
+        return nested;
+      });
+
+      content.replace(idx, amt, adding);
+    }));
+  },
+
+  serialize(internal, type) {
+    return internal.content.map(value => value.serialize(type));
+  }
 
 });

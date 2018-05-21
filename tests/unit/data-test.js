@@ -98,9 +98,11 @@ module('data', function(hooks) {
   });
 
   test('object serialized', function(assert) {
-    let address = this.store.object({ city: 'duckland' });
+    let root = this.store.get('_internal.dataManager').createRootInternalObject();
+    let internal = root.internal;
+    let address = internal.model(true);
 
-    address._internal.commit({ city: 'duckland' });
+    root.commit({ city: 'duckland' }, true);
 
     assert.deepEqual(address.get('serialized'), {
       city: 'duckland'
@@ -130,7 +132,7 @@ module('data', function(hooks) {
     assert.equal(address.get('city'), 'fooland');
     assert.equal(address.get('country'), 'Ducky');
 
-    address._internal.rollback();
+    root.rollback();
 
     assert.equal(address.get('city'), 'duckland');
     assert.equal(address.get('country'), undefined);
@@ -191,7 +193,7 @@ module('data', function(hooks) {
     assert.ok(array._internal);
     assert.equal(array.get('length'), 2);
 
-    let values = array._internal.content.values;
+    let values = array._internal.content;
     assert.deepEqual(array.map(i => i), [ 'one', 'two' ]);
     assert.equal(values.objectAt(0).content, 'one');
     assert.equal(values.objectAt(1).content, 'two');
@@ -699,43 +701,6 @@ module('data', function(hooks) {
 
     assert.ok(start[0] === end[0]);
     assert.ok(start[1] === end[1]);
-  });
-
-  test('deserialize to pristine', function(assert) {
-    let data = this.store.object({
-      ok: true
-    });
-
-    let fetch = () => {
-      let values = data._internal.content.values;
-      return {
-        ok: values.ok,
-        name: values.name
-      };
-    }
-
-    let start = fetch();
-
-    assert.deepEqual(data.get('serialized'), {
-      "ok": true
-    });
-
-    data._internal.update({
-      ok: true,
-      name: 'firestore'
-    }, 'raw');
-
-    data._internal.fetch();
-
-    assert.deepEqual(data.get('serialized'), {
-      "ok": true,
-      "name": "firestore"
-    });
-
-    let end = fetch();
-
-    assert.ok(start.ok === end.ok);
-    assert.ok(end.name);
   });
 
   test('deserialize to pristine set object value', function(assert) {

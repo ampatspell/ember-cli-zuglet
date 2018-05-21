@@ -20,11 +20,6 @@ export default Serializer.extend({
     return internal;
   },
 
-  createInternals(props) {
-    let manager = this.manager;
-    return map(props, (key, value) => manager.createInternal(value));
-  },
-
   getModelValue(internal, key) {
     let value = internal.content[key];
     return toModel(value);
@@ -67,7 +62,7 @@ export default Serializer.extend({
       map(values, (key, value) => {
         remove.removeObject(key);
         let current = content[key];
-        if(current && current.serializer.matches(value)) {
+        if(current && current.serializer.matches(current, value)) {
           let updated = current.serializer.deserialize(current, value);
           if(updated.replace) {
             content[key] = updated.internal;

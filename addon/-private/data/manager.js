@@ -7,7 +7,7 @@ import { toInternal, isInternal } from './internal/util';
 const serializers = [
   // 'reference',
   // 'timestamp',
-  // 'array',
+  'array',
   'object',
   'primitive'
 ];
@@ -72,23 +72,23 @@ export default Internal.extend({
   //   return serializer.createInternal(value, 'model');
   // },
 
-  // createNewInternalArray(value) {
-  //   let serializer = this.serializerForName('array');
-  //   return serializer.createInternal(value, 'model');
-  // },
-
   // createNewInternalServerTimestamp() {
   //   let serializer = this.serializerForName('timestamp');
   //   return serializer.createInternal(serverTimestamp, 'model');
   // }
 
-  createInternalRoot(internal) {
-    return this.factoryFor('zuglet:data/root').create({ internal });
+  createInternalArray(value) {
+    let serializer = this.serializerForName('array');
+    return serializer.createInternal(value);
   },
 
   createInternalObject(value) {
     let serializer = this.serializerForName('object');
     return serializer.createInternal(value);
+  },
+
+  createInternalRoot(internal) {
+    return this.factoryFor('zuglet:data/root').create({ internal });
   },
 
   createRootInternalObject(value) {
