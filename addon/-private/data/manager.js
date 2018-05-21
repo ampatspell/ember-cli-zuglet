@@ -80,15 +80,6 @@ export default Internal.extend({
   createInternalObject(value) {
     let serializer = this.serializerForName('object');
     return serializer.createInternal(value);
-  },
-
-  createRootInternal(internal) {
-    return this.factoryFor('zuglet:data/root').create({ internal });
-  },
-
-  createRootInternalObject() {
-    let internal = this.createInternalObject();
-    return this.createRootInternal(internal);
   }
 
 });

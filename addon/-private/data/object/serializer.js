@@ -25,88 +25,6 @@ export default Serializer.extend({
     return map(props, (key, value) => manager.createInternal(value));
   },
 
-  // internalReplacePristine(internal, values) {
-  //   let pristine = internal.content.pristine;
-  //   let remove = A(Object.keys(values));
-
-  //   map(values, (key, value) => {
-  //     remove.removeObject(key);
-  //     pristine[key] = value;
-  //   });
-
-  //   remove.map(key => {
-  //     delete pristine[key];
-  //   });
-  // },
-
-  // update(internal, values, type) {
-  //   let pristine = internal.content.pristine;
-  //   let remove = A(Object.keys(pristine));
-
-  //   map(values, (key, value) => {
-  //     remove.removeObject(key);
-  //     let current = pristine[key];
-  //     if(current && current.matches(value)) {
-  //       let updated = current.update(value, type);
-  //       if(updated.replace) {
-  //         pristine[key] = updated.internal;
-  //       }
-  //     } else {
-  //       let internal = this.manager.createInternal(value, type);
-  //       pristine[key] = internal;
-  //     }
-  //   });
-
-  //   remove.forEach(key => {
-  //     delete pristine[key];
-  //   });
-
-  //   return {
-  //     replace: false,
-  //     internal
-  //   };
-  // },
-
-  // setModelValueForKey(internal, key, value, type, changed) {
-  //   value = this.manager.createInternal(value, type);
-
-  //   let values = internal.content.values;
-  //   let current = values[key];
-
-  //   if(current) {
-  //     current.detach();
-  //   }
-
-  //   if(value) {
-  //     value.attach(internal);
-  //     values[key] = value;
-  //   } else {
-  //     delete values[key];
-  //   }
-
-  //   changed(key);
-  // },
-
-  // fetch(internal, changed) {
-  //   let { pristine, values } = internal.content;
-  //   let remove = A(Object.keys(values));
-
-  //   map(pristine, (key, value) => {
-  //     remove.removeObject(key);
-  //     value.attach(internal);
-  //     value.fetch();
-  //     values[key] = value;
-  //     changed(key);
-  //   });
-
-  //   remove.map(key => {
-  //     let value = values[key];
-  //     value.detach();
-  //     delete values[key];
-  //     changed(key);
-  //   });
-  // },
-
   // createInternal(props, type) {
   //   let internal = this.factoryFor('zuglet:data/object/internal').create({ serializer: this });
   //   let values = this.createInternals(props, type);
@@ -150,36 +68,78 @@ export default Serializer.extend({
     return map(internal.content, (key, value) => value.serialize(type));
   },
 
-  // tries to keep existing objects as much as possible
   deserialize(internal, values={}) {
     let content = internal.content;
     let remove = A(Object.keys(content));
     let manager = this.manager;
 
-    // TODO: notify changes
-
-    map(values, (key, value) => {
-      remove.removeObject(key);
-      let current = content[key];
-      if(current && current.serializer.matches(value)) {
-        let updated = current.serializer.deserialize(current, value);
-        if(updated.replace) {
-          content[key] = updated.internal;
+    internal.withPropertyChanges(true, changed => {
+      map(values, (key, value) => {
+        remove.removeObject(key);
+        let current = content[key];
+        if(current && current.serializer.matches(value)) {
+          let updated = current.serializer.deserialize(current, value);
+          if(updated.replace) {
+            content[key] = updated.internal;
+            changed(key);
+          }
+        } else {
+          let internal = manager.createInternal(value);
+          content[key] = internal;
+          changed(key);
         }
-      } else {
-        let internal = manager.createInternal(value);
-        content[key] = internal;
-      }
-    });
+      });
 
-    remove.forEach(key => {
-      delete content[key];
+      remove.forEach(key => {
+        delete content[key];
+        changed(key);
+      });
     });
 
     return {
       replace: false,
       internal
     };
+  },
+
+  commit(internal, data={}) {
+    this.set('raw', data);
+    this.deserialize(internal, data);
+  },
+
+  rollback(internal) {
+    let data = this.get('raw');
+    if(!data) {
+      return;
+    }
+    this.deserialize(internal, data);
+  },
+
+  isDirty(internal) {
+    let { raw, content } = internal.getProperties('raw', 'content');
+
+    raw = raw || {};
+
+    let rawKeys = Object.keys(raw);
+    let contentKeys = Object.keys(content);
+
+    if(rawKeys.length !== contentKeys.length) {
+      return true;
+    }
+
+    if(rawKeys.length === 0) {
+      return false;
+    }
+
+    for(let key of contentKeys) {
+      let internal = content[key];
+      let value = raw[key];
+      if(!internal.isEqual(value)) {
+        return false;
+      }
+    }
+
+    return false;
   }
 
 });

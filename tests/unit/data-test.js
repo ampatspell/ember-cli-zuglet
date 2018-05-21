@@ -5,18 +5,11 @@ import { DateTime } from 'luxon';
 module('data', function(hooks) {
   setupStoreTest(hooks);
 
-  test('create root object', function(assert) {
-    let root = this.store._internal.get('dataManager').createRootInternalObject();
-    assert.ok(root);
-    assert.ok(root.get('internal'));
-  });
-
   test('overview with primitives', function(assert) {
-    let root = this.store.get('_internal.dataManager').createRootInternalObject();
-    let internal = root.internal;
-    let object = internal.model(true);
+    let object = this.store.object();
+    let internal = object._internal;
 
-    assert.equal(root.get('isDirty'), false);
+    assert.equal(object.get('isDirty'), false);
 
     // set props
 
@@ -25,7 +18,7 @@ module('data', function(hooks) {
 
     object.set('name', 'zeeba');
 
-    assert.equal(root.get('isDirty'), true);
+    assert.equal(object.get('isDirty'), true);
 
     assert.equal(object.get('name'), 'zeeba');
     assert.deepEqual(object.get('serialized'), {
@@ -39,31 +32,31 @@ module('data', function(hooks) {
       email: 'zeeba@gmail.com'
     });
 
-    let raw = root.serialize('raw');
+    let raw = object.serialize('raw');
 
     assert.deepEqual(raw, {
       name: 'Zeeba',
       email: 'zeeba@gmail.com'
     });
 
-    assert.equal(root.get('isDirty'), true);
+    assert.equal(object.get('isDirty'), true);
 
-    root.commit(raw);
-    assert.equal(root.get('isDirty'), false);
+    internal.commit(raw);
+    assert.equal(object.get('isDirty'), false);
 
     object.set('name', 'Zeeba');
-    assert.equal(root.get('isDirty'), false);
+    assert.equal(object.get('isDirty'), false);
 
     object.set('name', 'zeeba');
-    assert.equal(root.get('isDirty'), true);
+    assert.equal(object.get('isDirty'), true);
 
     assert.deepEqual(object.get('serialized'), {
       name: 'zeeba',
       email: 'zeeba@gmail.com'
     });
 
-    root.rollback();
-    assert.equal(root.get('isDirty'), false);
+    internal.rollback();
+    assert.equal(object.get('isDirty'), false);
 
     assert.deepEqual(object.get('serialized'), {
       name: 'Zeeba',

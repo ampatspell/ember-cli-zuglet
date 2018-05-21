@@ -1,5 +1,5 @@
 import Internal from '../../internal/internal';
-import { get } from '@ember/object';
+import { get, computed } from '@ember/object';
 import { assert } from '@ember/debug';
 import withPropertyChanges from '../../internal/with-property-changes';
 
@@ -25,6 +25,10 @@ export default Internal.extend({
     return this.serializer.factoryFor(name);
   },
 
+  isDirty: computed(function() {
+    return this.serializer.isDirty(this);
+  }).readOnly(),
+
   //
 
   // matches(value) {
@@ -48,22 +52,23 @@ export default Internal.extend({
 
   //
 
-  // childDidUpdate() {
-  //   this.withPropertyChanges(true, changed => changed('serialized'));
-  //   this.notifyDidUpdate();
-  // },
+  childDidUpdate() {
+    this.withPropertyChanges(true, changed => changed('serialized'));
+    this.notifyDidUpdate();
+  },
 
-  // notifyDidUpdate() {
-  //   let parent = this.parent;
-  //   if(!parent) {
-  //     return;
-  //   }
-  //   parent.childDidUpdate(this);
-  // },
+  notifyDidUpdate() {
+    this.notifyPropertyChange('isDirty');
+    let parent = this.parent;
+    if(!parent) {
+      return;
+    }
+    parent.childDidUpdate(this);
+  },
 
   didUpdate(changed) {
     changed('serialized');
-    // this.notifyDidUpdate();
+    this.notifyDidUpdate();
   },
 
   withPropertyChanges(notify, fn) {
@@ -78,8 +83,12 @@ export default Internal.extend({
     return this.serializer.serialize(this, type);
   },
 
-  // update(value, type) {
-  //   return this.serializer.update(this, value, type);
-  // }
+  commit(data) {
+    return this.serializer.commit(this, data);
+  },
+
+  rollback() {
+    return this.serializer.rollback(this);
+  }
 
 });

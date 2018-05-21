@@ -30,7 +30,6 @@ import Observers from 'ember-cli-zuglet/-private/observers/observers';
 import ModelArrayProxy from 'ember-cli-zuglet/-private/util/array-proxy';
 
 import DataManagerInternal from 'ember-cli-zuglet/-private/data/manager';
-import DataRootInternal from 'ember-cli-zuglet/-private/data/root';
 
 import DataObjectSerializer from 'ember-cli-zuglet/-private/data/object/serializer';
 import DataObjectInternal from 'ember-cli-zuglet/-private/data/object/internal';
@@ -140,7 +139,6 @@ export default {
     //
 
     container.register('zuglet:data/manager', DataManagerInternal);
-    container.register('zuglet:data/root', DataRootInternal);
 
     container.register('zuglet:data/object/serializer', DataObjectSerializer);
     container.register('zuglet:data/object/internal', DataObjectInternal);

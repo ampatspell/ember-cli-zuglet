@@ -17,12 +17,6 @@ export default Internal.extend({
 
   setModelValue(key, value) {
     return this.serializer.setModelValue(this, key, value);
-  },
-
-  // fetch() {
-  //   return this.withPropertyChanges(true, changed => {
-  //     return this.serializer.fetch(this, changed);
-  //   });
-  // }
+  }
 
 });
