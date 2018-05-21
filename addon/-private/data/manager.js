@@ -47,7 +47,7 @@ export default Internal.extend({
 
   //
 
-  createInternal(value, current, commit=false) {
+  createInternal(value) {
     let internal = toInternal(value);
     if(isInternal(internal)) {
       if(internal.isAttached()) {
@@ -55,13 +55,7 @@ export default Internal.extend({
       }
     } else {
       let serializer = this.serializerForPrimitive(value);
-      let raw = undefined;
-      if(commit) {
-        raw = value;
-      } else if (current && current.serializer === serializer) {
-        raw = current.get('raw');
-      }
-      internal = serializer.createInternal(value, raw);
+      internal = serializer.createInternal(value);
     }
     return internal;
   },
@@ -83,9 +77,18 @@ export default Internal.extend({
   //   return serializer.createInternal(serverTimestamp, 'model');
   // }
 
+  createInternalRoot(internal) {
+    return this.factoryFor('zuglet:data/root').create({ internal });
+  },
+
   createInternalObject(value) {
     let serializer = this.serializerForName('object');
     return serializer.createInternal(value);
-  }
+  },
+
+  createRootInternalObject(value) {
+    let internal = this.createInternalObject(value);
+    return this.createInternalRoot(internal);
+  },
 
 });

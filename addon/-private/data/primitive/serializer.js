@@ -10,21 +10,17 @@ export default Serializer.extend({
     return typeof internal.content === typeof value;
   },
 
-  createInternal(content, raw) {
-    return this.factoryFor('zuglet:data/primitive/internal').create({ serializer: this, content, raw });
+  createInternal(content) {
+    return this.factoryFor('zuglet:data/primitive/internal').create({ serializer: this, content });
   },
 
   serialize(internal) {
     return internal.content;
   },
 
-  deserialize(internal, value, commit) {
+  deserialize(internal, value) {
     if(internal.content !== value) {
       internal.content = value;
-    }
-
-    if(commit) {
-      internal.set('raw', value);
     }
 
     internal.notifyDidUpdate();
@@ -35,9 +31,8 @@ export default Serializer.extend({
     };
   },
 
-  isDirty(internal) {
-    let { raw, content } = internal.getProperties('raw', 'content');
-    return raw !== content;
+  isDirty(internal, raw) {
+    return internal.content !== raw;
   }
 
 });

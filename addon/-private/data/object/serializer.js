@@ -14,9 +14,9 @@ export default Serializer.extend({
     return this.supports(value);
   },
 
-  createInternal(props, raw) {
-    let internal = this.factoryFor('zuglet:data/object/internal').create({ serializer: this, raw });
-    this.deserialize(internal, props, false);
+  createInternal(props) {
+    let internal = this.factoryFor('zuglet:data/object/internal').create({ serializer: this });
+    this.deserialize(internal, props);
     return internal;
   },
 
@@ -35,7 +35,7 @@ export default Serializer.extend({
       let content = internal.content;
       let current = content[key];
 
-      value = this.manager.createInternal(value, current, false);
+      value = this.manager.createInternal(value);
 
       if(current) {
         current.detach();
@@ -58,7 +58,7 @@ export default Serializer.extend({
     return map(internal.content, (key, value) => value.serialize(type));
   },
 
-  deserialize(internal, values={}, commit=false) {
+  deserialize(internal, values={}) {
     let content = internal.content;
     let remove = A(Object.keys(content));
     let manager = this.manager;
@@ -68,13 +68,13 @@ export default Serializer.extend({
         remove.removeObject(key);
         let current = content[key];
         if(current && current.serializer.matches(value)) {
-          let updated = current.serializer.deserialize(current, value, commit);
+          let updated = current.serializer.deserialize(current, value);
           if(updated.replace) {
             content[key] = updated.internal;
             changed(key);
           }
         } else {
-          let internal = manager.createInternal(value, current, commit);
+          let internal = manager.createInternal(value);
           content[key] = internal;
           changed(key);
         }
@@ -84,10 +84,6 @@ export default Serializer.extend({
         delete content[key];
         changed(key);
       });
-
-      if(commit) {
-        internal.set('raw', values);
-      }
     });
 
     return {
@@ -96,8 +92,8 @@ export default Serializer.extend({
     };
   },
 
-  isDirty(internal) {
-    let { raw, content } = internal.getProperties('raw', 'content');
+  isDirty(internal, raw) {
+    let content = internal.content;
 
     raw = raw || {};
 
@@ -114,7 +110,8 @@ export default Serializer.extend({
 
     for(let key of contentKeys) {
       let internal = content[key];
-      if(internal.get('isDirty')) {
+      let value = raw[key];
+      if(internal.serializer.isDirty(internal, value)) {
         return true;
       }
     }

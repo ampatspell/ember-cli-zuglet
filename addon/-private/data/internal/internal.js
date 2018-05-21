@@ -27,12 +27,6 @@ export default Internal.extend({
 
   //
 
-  isDirty: computed('raw', function() {
-    return this.serializer.isDirty(this);
-  }).readOnly(),
-
-  //
-
   attach(parent) {
     assert(`parent must be data internal`, isInternal(parent));
     this.parent = parent;
@@ -54,7 +48,6 @@ export default Internal.extend({
   },
 
   notifyDidUpdate() {
-    this.notifyPropertyChange('isDirty');
     let parent = this.parent;
     if(!parent) {
       return;
@@ -79,14 +72,6 @@ export default Internal.extend({
 
   serialize(type) {
     return this.serializer.serialize(this, type);
-  },
-
-  commit(data) {
-    return this.serializer.commit(this, data);
-  },
-
-  rollback() {
-    return this.serializer.rollback(this);
   }
 
 });
