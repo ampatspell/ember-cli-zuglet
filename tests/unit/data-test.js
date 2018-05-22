@@ -838,4 +838,19 @@ module('data', function(hooks) {
     assert.ok(instance === object.get('date'));
   });
 
+  test('rollback', async function(assert) {
+    let root = this.store.get('_internal.dataManager').createRootInternalObject();
+    let internal = root.internal;
+    let object = internal.model(true);
+
+    root.commit({ name: 'Duck' });
+
+    object.set('name', 'Hamster');
+    assert.equal(object.get('name'), 'Hamster');
+
+    root.rollback();
+
+    assert.equal(object.get('name'), 'Duck');
+  });
+
 });

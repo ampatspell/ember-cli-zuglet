@@ -24,10 +24,8 @@ export default Serializer.extend({
       internal.content = value;
     }
 
-    internal.notifyDidUpdate();
-
     return {
-      replace: false,
+      replace: true,
       internal
     };
   },
