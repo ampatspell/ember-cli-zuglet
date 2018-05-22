@@ -820,4 +820,22 @@ module('data', function(hooks) {
     assert.ok(model.get('dateTime').equals(datetime));
   });
 
+  test('timestamp is not replaced', async function(assert) {
+    let date = new Date();
+
+    let root = this.store.get('_internal.dataManager').createRootInternalObject();
+    let internal = root.internal;
+    let object = internal.model(true);
+
+    root.commit({ date }, true);
+
+    let instance = object.get('date');
+    assert.equal(object.get('date.date'), date);
+
+    root.commit({ date }, true);
+
+    assert.equal(object.get('date.date'), date);
+    assert.ok(instance === object.get('date'));
+  });
+
 });
