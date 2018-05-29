@@ -63,7 +63,12 @@ export default ModelRoute.extend({
 
   }),
 
-  model: model('route/sources/source'), // gets the same `prepare`
+  model: model('route/sources/source'), // gets the same `prepare` in model
+
+  model: model('route/sources/source', function(route, params) { // overrides prepare
+    this.sources = route.modelFor('sources');
+    this._super(...arguments);
+  })
 
 });
 ```
@@ -73,8 +78,20 @@ export default ModelRoute.extend({
 * is destroyed when owner is (overrides owner's `willDestroy`)
 * is recreated when *hard* dependencies change (also possible to pass just owner)
 
+Inline
+
+* deps
+* prepare
+
+Model
+
+* model name or function
+* deps
+* prepare
+
 ``` javascript
-import { model, inline } from 'ember-cli-zuglet/model/destroyable';
+import { observed } from 'ember-cli-zuglet/model'; // ?
+import { inline, model } from 'ember-cli-zuglet/model/destroyable';
 
 export default Component.extend({
 
@@ -95,15 +112,8 @@ export default Component.extend({
 
   }),
 
-  // differs from all the other api
-  // needs separation between owner and model
-  source: model('id', function(owner) {
-    return {
-      name: 'presentation/source',
-      prepare(model, owner) {
-        model.id = owner.id;
-      }
-    }
+  source: model('presentation/source', 'id', function(owner) {
+    this.doc = this.store.doc(`sources/${owner.id}`).existing();
   }),
 
 });
