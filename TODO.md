@@ -73,7 +73,7 @@ export default ModelRoute.extend({
 });
 ```
 
-### Destroyable
+### Destroyable
 
 * is destroyed when owner is (overrides owner's `willDestroy`)
 * is recreated when *hard* dependencies change (also possible to pass just owner)
