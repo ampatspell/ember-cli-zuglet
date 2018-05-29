@@ -114,7 +114,13 @@ export default Component.extend({
 
   source: model('presentation/source', 'id', function(owner) {
     this.doc = this.store.doc(`sources/${owner.id}`).existing();
-  }),
+  })
 
 });
 ```
+
+### Observed
+
+* read-write computed property which starts observing received doc/query
+* stops observing on owner destroy
+* can be used anywhere, does not depend on destroyable model
