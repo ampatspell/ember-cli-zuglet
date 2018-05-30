@@ -27,6 +27,21 @@ Router.map(function() {
     this.route('image');
     this.route('auth');
     this.route('browser');
+
+    this.route('blogs', function() {
+      this.route('new');
+      this.route('blog', { path: ':blog_id' }, function() {
+        this.route('edit');
+        this.route('delete');
+        this.route('posts', function() {
+          this.route('new');
+          this.route('post', { path: ':post_id' }, function() {
+            this.route('edit');
+            this.route('delete');
+          });
+        });
+      });
+    });
   });
 
 });
