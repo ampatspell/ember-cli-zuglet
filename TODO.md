@@ -1,5 +1,6 @@
 # TODO
 
+* get rid of set-global madness
 * timestamp update equal should not replace internal
 * GeoPoint for data
 * primitives for query, load, .. based on destroyable-computed (`{ immediate: true }`)
