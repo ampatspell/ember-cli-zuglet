@@ -1,6 +1,5 @@
 # TODO
 
-* get rid of set-global madness
 * timestamp update equal should not replace internal
 * GeoPoint for data
 * primitives for query, load, .. based on destroyable-computed (`{ immediate: true }`)
@@ -39,6 +38,7 @@ Based on index65: https://github.com/ampatspell/index65/blob/master/lib/models/a
 * models get `routeName` property and based on that models are destroyed on deactivate
 
 ``` javascript
+import { observed } from 'ember-cli-zuglet/experimental/computed';
 import { ModelRoute, model, inline } from 'ember-cli-zuglet/model/route';
 
 export default ModelRoute.extend({
@@ -91,7 +91,7 @@ Model
 * prepare
 
 ``` javascript
-import { observed } from 'ember-cli-zuglet/model'; // ?
+import { observed } from 'ember-cli-zuglet/experimental/computed';
 import { inline, model } from 'ember-cli-zuglet/model/destroyable';
 
 export default Component.extend({
@@ -119,9 +119,3 @@ export default Component.extend({
 
 });
 ```
-
-### Observed
-
-* read-write computed property which starts observing received doc/query
-* stops observing on owner destroy
-* can be used anywhere, does not depend on destroyable model
