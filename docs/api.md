@@ -12,3 +12,4 @@ pos: 3
 * `store.doc(..).observe()`
 * `query.observe()`
 * Observer
+* `observed` from `experimental/computed`
