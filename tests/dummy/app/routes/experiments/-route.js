@@ -22,7 +22,7 @@ export default Route.extend({
     this._super(...arguments);
   },
 
-  resetController(controller, isExiting, transition) {
+  resetController(controller, isExiting/*, transition*/) {
     let model = controller.get('model');
     console.log(this.routeName, 'resetController', isExiting, model);
     this._super(...arguments);
