@@ -1,0 +1,42 @@
+{{#ui-block/rows as |rows|}}
+
+  {{rows.header value="Blogs"}}
+
+  {{#rows.row}}
+    <div>{{link-to 'blogs' 'experiments.blogs'}}</div>
+    <div>{{link-to 'blogs/new' 'experiments.blogs.new'}}</div>
+  {{/rows.row}}
+
+  {{#rows.row}}
+    <div>{{link-to 'blogs/missing' 'experiments.blogs.blog' 'missing'}}</div>
+    <div>{{link-to 'blogs/missing/edit' 'experiments.blogs.blog.edit' 'missing'}}</div>
+    <div>{{link-to 'blogs/missing/posts' 'experiments.blogs.blog.posts' 'missing'}}</div>
+  {{/rows.row}}
+
+  {{#rows.row}}
+    <div>{{link-to 'blogs/amateurinmotion' 'experiments.blogs.blog' 'amateurinmotion'}}</div>
+    <div>{{link-to 'blogs/amateurinmotion/edit' 'experiments.blogs.blog.edit' 'amateurinmotion'}}</div>
+    <div>{{link-to 'blogs/amateurinmotion/posts' 'experiments.blogs.blog.posts' 'amateurinmotion'}}</div>
+    <div>{{link-to 'blogs/amateurinmotion/posts/new' 'experiments.blogs.blog.posts.new' 'amateurinmotion'}}</div>
+    <div>{{link-to 'blogs/amateurinmotion/posts/one' 'experiments.blogs.blog.posts.post' 'amateurinmotion' 'one'}}</div>
+    <div>{{link-to 'blogs/amateurinmotion/posts/one/edit' 'experiments.blogs.blog.posts.post.edit' 'amateurinmotion' 'one'}}</div>
+    <div>{{link-to 'blogs/amateurinmotion/posts/two' 'experiments.blogs.blog.posts.post' 'amateurinmotion' 'two'}}</div>
+    <div>{{link-to 'blogs/amateurinmotion/posts/two/edit' 'experiments.blogs.blog.posts.post.edit' 'amateurinmotion' 'two'}}</div>
+    <div>{{link-to 'blogs/amateurinmotion/posts/missing' 'experiments.blogs.blog.posts.post' 'amateurinmotion' 'missing'}}</div>
+    <div>{{link-to 'blogs/amateurinmotion/posts/missing/edit' 'experiments.blogs.blog.posts.post.edit' 'amateurinmotion' 'missing'}}</div>
+  {{/rows.row}}
+
+  {{#rows.row}}
+    <div>{{link-to 'blogs/zeeba' 'experiments.blogs.blog' 'zeeba'}}</div>
+    <div>{{link-to 'blogs/zeeba/edit' 'experiments.blogs.blog.edit' 'zeeba'}}</div>
+    <div>{{link-to 'blogs/zeeba/posts' 'experiments.blogs.blog.posts' 'zeeba'}}</div>
+    <div>{{link-to 'blogs/zeeba/posts/new' 'experiments.blogs.blog.posts.new' 'zeeba'}}</div>
+    <div>{{link-to 'blogs/zeeba/posts/one' 'experiments.blogs.blog.posts.post' 'zeeba' 'one'}}</div>
+    <div>{{link-to 'blogs/zeeba/posts/one/edit' 'experiments.blogs.blog.posts.post.edit' 'zeeba' 'one'}}</div>
+    <div>{{link-to 'blogs/zeeba/posts/two' 'experiments.blogs.blog.posts.post' 'zeeba' 'two'}}</div>
+    <div>{{link-to 'blogs/zeeba/posts/two/edit' 'experiments.blogs.blog.posts.post.edit' 'zeeba' 'two'}}</div>
+    <div>{{link-to 'blogs/zeeba/posts/missing' 'experiments.blogs.blog.posts.post' 'zeeba' 'missing'}}</div>
+    <div>{{link-to 'blogs/zeeba/posts/missing/edit' 'experiments.blogs.blog.posts.post.edit' 'zeeba' 'missing'}}</div>
+  {{/rows.row}}
+
+{{/ui-block/rows}}
