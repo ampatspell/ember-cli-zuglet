@@ -1,4 +1,3 @@
-import { get } from '@ember/object';
 import { cacheFor } from '../../util/destroyable';
 
 export const observerFor = (owner, key) => {
