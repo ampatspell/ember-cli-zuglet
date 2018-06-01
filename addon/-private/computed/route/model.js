@@ -1,27 +1,42 @@
-import { createModel, loadModel, isModelForRouteName } from './util';
+import { createModel, loadModel, resetController } from './util';
 import { onResetController } from './hooks';
+import { assert } from '@ember/debug';
 
-const resetController = function() {
-  let model = this.currentModel;
-  if(!model) {
-    return;
+const normalize = args => {
+  let factory;
+  let prepare;
+
+  if(args.length === 1) {
+    prepare = args[0];
+  } else if(args.length === 2) {
+    factory = args[0];
+    prepare = args[1];
+  } else {
+    assert(`model takes one or two arguments`, false);
   }
-  if(!isModelForRouteName(model, this.routeName)) {
-    return;
-  }
-  model.destroy();
+
+  assert(`model 'prepare' argument must be function`, typeof prepare === 'function');
+
+  return { factory, prepare };
 }
 
-const createOptionsForPrepare = (route, params, prepare) => {
-  if(typeof prepare === 'function') {
-    return prepare.call(null, route, params);
-  }
-  return { route, params };
-}
+// model((route, params) => {
+//   return {
+//     blogs: route.modelFor('blogs'),
+//     id: params.foo_id
+//   };
+// })
 
-export default (arg, prepare) => function(params) {
-  onResetController(this, resetController);
-  let model = createModel(this, params, arg);
-  let opts = createOptionsForPrepare(this, params, prepare);
-  return loadModel(model, opts);
+// model('route/foobar', (route, params) => { })
+
+// model(Model, (route, params) => { })
+
+export default (...args) => {
+  let { factory, prepare } = normalize(args);
+  return function(params) {
+    onResetController(this, resetController);
+    let model = createModel(this, params, factory);
+    let opts = prepare(this, params);
+    return loadModel(model, [ opts ]);
+  }
 }

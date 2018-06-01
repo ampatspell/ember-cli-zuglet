@@ -14,10 +14,21 @@ export const createModel = (route, params, arg) => {
   });
 }
 
-export const loadModel = (model, opts) => {
-  return resolve(model.prepare && model.prepare(opts)).then(() => model);
+export const loadModel = (model, args) => {
+  return resolve(model.prepare && model.prepare(...args)).then(() => model);
 }
 
 export const isModelForRouteName = (model, routeName) => {
   return model && get(model, '_internal.routeName') === routeName;
+}
+
+export const resetController = function() {
+  let model = this.currentModel;
+  if(!model) {
+    return;
+  }
+  if(!isModelForRouteName(model, this.routeName)) {
+    return;
+  }
+  model.destroy();
 }
