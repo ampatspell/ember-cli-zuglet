@@ -5,24 +5,15 @@ import { defer, reject } from 'rsvp';
 import { assign } from '@ember/polyfills';
 import { A } from '@ember/array';
 import { computed } from '@ember/object';
+import { readOnly } from '@ember/object/computed';
 import { noObserversError } from '../util/errors';
 
 export default Internal.extend({
 
   owner: null,
 
-  isEnabled: gt('count', 0),
-  count: 0,
-
   observers: null,
-
-  promise: computed('observers.lastObject.promise', function() {
-    let promise = this.get('observers.lastObject.promise');
-    if(promise) {
-      return promise;
-    }
-    return reject(noObserversError());
-  }).readOnly(),
+  isEnabled: gt('observers.length', 0),
 
   init() {
     this._super(...arguments);
@@ -31,6 +22,16 @@ export default Internal.extend({
       observers: A()
     });
   },
+
+  observer: readOnly('observers.lastObject'),
+
+  promise: computed('observer.promise', function() {
+    let promise = this.get('observer.promise');
+    if(promise) {
+      return promise;
+    }
+    return reject(noObserversError());
+  }).readOnly(),
 
   factoryFor(name) {
     return this.get('owner').factoryFor(name);
@@ -61,17 +62,17 @@ export default Internal.extend({
     this._withParent((parent, owner) => parent.unregisterObservedInternal(owner));
   },
 
-  _remove() {
-    if(this.isDestroying) {
-      return;
-    }
-    let count = this.get('count');
-    if(count === 1) {
-      this._stopObserving();
-      this.resolve();
-    }
-    this.set('count', count - 1);
-  },
+  // _remove() {
+  //   if(this.isDestroying) {
+  //     return;
+  //   }
+  //   let count = this.get('count');
+  //   if(count === 1) {
+  //     this._stopObserving();
+  //     this.resolve();
+  //   }
+  //   this.set('count', count - 1);
+  // },
 
   _withObservers(cb) {
     let observers = this.get('observers');
@@ -99,9 +100,7 @@ export default Internal.extend({
     this._withObservers((observers, builder) => {
       let idx = observers.get('length');
       let change = builder(idx, 0, 1);
-      change(() => {
-        observers.pushObject(internal);
-      });
+      change(() => observers.pushObject(internal));
     });
   },
 
@@ -109,9 +108,7 @@ export default Internal.extend({
     this._withObservers((observers, builder) => {
       let idx = observers.indexOf(internal);
       let change = builder(idx, 1, 0);
-      change(() => {
-        observers.removeObject(internal);
-      });
+      change(() => observers.removeObject(internal));
     })
   },
 
@@ -120,29 +117,32 @@ export default Internal.extend({
       return;
     }
 
-    let count = this.get('count');
-
-    if(count === 0) {
+    if(this.get('observers.length') === 0) {
       this._startObserving();
     }
 
-    this.set('count', count + 1);
+    let promise = this.get('deferred.promise');
+    let cancel = internal => this.cancelObserver(internal);
+    let state = { promise, cancel };
 
-    let cancel = internal => {
-      if(cancel.invoked) {
-        return;
-      }
-      this._removeObserver(internal);
-      cancel.invoked = true;
-      this._remove();
-    };
-
-    let promise = this.get('deferred').promise;
-    let state = { cancel, promise };
-
-    let internal = this.factoryFor(factoryName).create(assign({ state }, props));
+    let internal = this.factoryFor(factoryName).create(assign({ observers: this, state }, props));
     this._addObserver(internal);
     return internal;
+  },
+
+  cancelObserver(internal) {
+    if(internal.get('isCancelled')) {
+      return;
+    }
+
+    internal.set('isCancelled', true);
+
+    if(this.get('observers.length') === 1) {
+      this._stopObserving();
+      this.resolve();
+    }
+
+    this._removeObserver(internal);
   },
 
   resolve(arg) {
@@ -150,9 +150,7 @@ export default Internal.extend({
   },
 
   willDestroy() {
-    if(this.get('count') > 0) {
-      this._stopObserving();
-    }
+    this.get('observers').map(observer => this.cancelObserver(observer));
     this.resolve();
     this._super(...arguments);
   }
