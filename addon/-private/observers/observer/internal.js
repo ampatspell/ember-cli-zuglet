@@ -14,7 +14,7 @@ export default Internal.extend({
   cancel() {
     this.set('isCancelled', true);
     let cancel = this.get('state.cancel');
-    cancel();
+    cancel(this);
   },
 
   load() {

@@ -55,6 +55,10 @@ export default Internal.extend({
     return this.store.factoryFor('zuglet:document').create({ _internal: this });
   },
 
+  factoryFor(name) {
+    return this.get('store').factoryFor(name);
+  },
+
   onData(props, deserialize) {
     this.data.commit(props, deserialize);
   },
@@ -250,10 +254,9 @@ export default Internal.extend({
   },
 
   observe() {
-    let state = this.get('observers').add();
     let store = this.get('store');
     let doc = this;
-    return store.factoryFor('zuglet:observer/document/internal').create({ store, doc, state });
+    return this.get('observers').add('zuglet:observer/document/internal', { store, doc });
   },
 
   reset() {
