@@ -28,6 +28,11 @@ module('query-array', function(hooks) {
     });
   });
 
+  test('defaults to array', function(assert) {
+    let query = this.store.collection('ducks').query();
+    assert.equal(query.get('type'), 'array');
+  });
+
   test('load query', async function(assert) {
     await this.recreate();
     await all([

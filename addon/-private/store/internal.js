@@ -2,6 +2,7 @@ import Internal from '../internal/internal';
 import { computed } from '@ember/object';
 import { readOnly } from '@ember/object/computed';
 import { assert } from '@ember/debug';
+import { assign } from '@ember/polyfills';
 import { A } from '@ember/array';
 import { defer, resolve } from 'rsvp';
 import queue from '../queue/computed';
@@ -91,15 +92,18 @@ export default Internal.extend({
     return this.factoryFor('zuglet:reference/query/internal').create({ store: this, ref, _parent, info });
   },
 
-  createInternalQueryWithReference(query, opts={}) {
-    let type = opts.type;
-    assert(`query opts.type must be 'array' or 'first'`, [ 'array', 'first' ].includes(type));
-    let factoryName;
+  internalQueryFactoryNameForType(type, sender) {
     if(type === 'array') {
-      factoryName = 'zuglet:query/array/internal';
+      return 'zuglet:query/array/internal';
     } else if(type === 'first') {
-      factoryName = 'zuglet:query/first/internal';
+      return 'zuglet:query/first/internal';
     }
+    assert(`query ${sender} must be 'array' or 'first'`, false);
+  },
+
+  createInternalQueryWithReference(query, opts={}) {
+    opts = assign({ type: 'array' }, opts);
+    let factoryName = this.internalQueryFactoryNameForType(opts.type, 'opts.type');
     return this.factoryFor(factoryName).create({ store: this, query });
   },
 
