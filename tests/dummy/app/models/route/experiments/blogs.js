@@ -1,5 +1,5 @@
 import EmberObject from '@ember/object';
-import { observed } from 'ember-cli-zuglet/experimental/computed';
+import { observed, observerPromiseFor } from 'ember-cli-zuglet/experimental/computed';
 import { all } from 'rsvp';
 
 export default EmberObject.extend({
@@ -30,8 +30,7 @@ export default EmberObject.extend({
     console.log('prepare', this+'');
     // return this.insert();
     this.set('blogs', this.get('store').collection('blogs').query({ type: 'array' }));
-    // TODO: observer.promise vs query w/o promise, only load
-    return this.get('blogs').load();
+    return observerPromiseFor(this, 'blogs');
   },
 
   willDestroy() {
