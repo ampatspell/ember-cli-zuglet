@@ -3,7 +3,11 @@
   {{rows.header value="Blogs"}}
 
   {{#rows.row}}
-    {{model}}
+    {{#each store.observed as |model|}}
+      <div>{{model}}</div>
+    {{else}}
+      No observed docs / queries
+    {{/each}}
   {{/rows.row}}
 
   {{#rows.row}}
