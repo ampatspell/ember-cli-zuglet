@@ -1,5 +1,6 @@
 # TODO
 
+* `observers/internal` remove count, base observation on observers array length
 * timestamp update equal should not replace internal
 * GeoPoint for data
 * primitives for query, load, .. based on destroyable-computed (`{ immediate: true }`)
