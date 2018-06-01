@@ -29,7 +29,13 @@ export default EmberObject.extend({
   prepare() {
     console.log('prepare', this+'');
     // return this.insert();
-    this.set('blogs', this.get('store').collection('blogs').query({ type: 'array' }));
+
+    let blogs = this.get('store').collection('blogs').query({ type: 'array' });
+
+    this.setProperties({
+      blogs
+    });
+
     // return observerPromiseFor(this, 'blogs');
     return this.get('blogs').load();
   },
