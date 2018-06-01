@@ -62,18 +62,6 @@ export default Internal.extend({
     this._withParent((parent, owner) => parent.unregisterObservedInternal(owner));
   },
 
-  // _remove() {
-  //   if(this.isDestroying) {
-  //     return;
-  //   }
-  //   let count = this.get('count');
-  //   if(count === 1) {
-  //     this._stopObserving();
-  //     this.resolve();
-  //   }
-  //   this.set('count', count - 1);
-  // },
-
   _withObservers(cb) {
     let observers = this.get('observers');
     let builder = (idx, remove, add) => invocation => {
