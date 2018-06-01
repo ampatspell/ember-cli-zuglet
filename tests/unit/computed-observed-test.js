@@ -1,6 +1,6 @@
 import EmberObject from '@ember/object';
 import { module, test, setupStoreTest } from '../helpers/setup';
-import { observed, observerFor, observerPromiseFor } from 'ember-cli-zuglet/experimental/computed';
+import { observed, observerFor } from 'ember-cli-zuglet/experimental/computed';
 import { getOwner } from '@ember/application';
 import { assign } from '@ember/polyfills';
 import { run } from '@ember/runloop';
@@ -86,12 +86,6 @@ module('computed-observed', function(hooks) {
     let subject = this.subject();
     let model = this.model({ doc: observed() }, { doc: subject });
     assert.equal(observerFor(model, 'doc').isObserver, true);
-  });
-
-  test('observer promise for returns promise', async function(assert) {
-    let subject = this.subject();
-    let model = this.model({ doc: observed() }, { doc: subject });
-    assert.equal(observerPromiseFor(model, 'doc').isPromise, true);
   });
 
 });
