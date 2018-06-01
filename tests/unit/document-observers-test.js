@@ -4,7 +4,7 @@ import { run } from '@ember/runloop';
 module('document-observers', function(hooks) {
   setupStoreTest(hooks);
 
-  hooks.beforeEach(() => {
+  hooks.beforeEach(function() {
     this.recreate = () => this.store.doc('ducks/yellow').new({ name: 'yellow', feathers: 'cute' }).save();
   });
 
