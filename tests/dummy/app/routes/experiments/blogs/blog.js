@@ -1,16 +1,16 @@
 import Route from '@ember/routing/route';
-import { model } from 'ember-cli-zuglet/experimental/route';
+import { inline } from 'ember-cli-zuglet/experimental/route';
 import { observed } from 'ember-cli-zuglet/experimental/computed';
 import { reject } from 'rsvp';
 
 export default Route.extend({
 
-  model: model({
+  model: inline({
 
     blog: null,
     posts: observed(),
 
-    prepare({ route, params }) {
+    prepare(route, params) {
       let blogs = route.modelFor('experiments.blogs');
       let id = params.blog_id;
 

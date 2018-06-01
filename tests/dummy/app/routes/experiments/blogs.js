@@ -1,11 +1,13 @@
 import Route from '@ember/routing/route';
-import { model } from 'ember-cli-zuglet/experimental/route';
+import { inline } from 'ember-cli-zuglet/experimental/route';
 import { observed } from 'ember-cli-zuglet/experimental/computed';
 import { all } from 'rsvp';
 
+let inserted = false;
+
 export default Route.extend({
 
-  model: model({
+  model: inline({
 
     blogs: observed(),
 
@@ -25,12 +27,16 @@ export default Route.extend({
     },
 
     prepare() {
-      // return this.insert();
       let blogs = this.get('store').collection('blogs').query({ type: 'array' });
 
       this.setProperties({
         blogs
       });
+
+      if(!inserted) {
+        this.insert(); // no await, observer will pickup all added docs
+        inserted = true;
+      }
 
       return blogs.get('observers.promise');
     }
