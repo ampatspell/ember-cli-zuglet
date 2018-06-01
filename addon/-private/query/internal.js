@@ -57,6 +57,10 @@ export default Internal.extend({
     return this.get('store').updateInternalDocumentForSnapshot(internal, snapshot);
   },
 
+  factoryFor(name) {
+    return this.get('store').factoryFor(name);
+  },
+
   //
 
   willLoad() {
@@ -141,10 +145,9 @@ export default Internal.extend({
   },
 
   observe() {
-    let state = this.get('observers').add();
     let store = this.get('store');
     let query = this;
-    return store.factoryFor('zuglet:observer/query/internal').create({ store, query, state });
+    return this.get('observers').add('zuglet:observer/query/internal', { store, query });
   }
 
 });

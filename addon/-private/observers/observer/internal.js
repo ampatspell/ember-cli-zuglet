@@ -3,7 +3,9 @@ import { computed } from '@ember/object';
 
 export default Internal.extend({
 
+  observers: null,
   isCancelled: false,
+
   state: null,
 
   promise: computed('state.promise', function() {
@@ -12,9 +14,8 @@ export default Internal.extend({
   }).readOnly(),
 
   cancel() {
-    this.set('isCancelled', true);
     let cancel = this.get('state.cancel');
-    cancel();
+    cancel(this);
   },
 
   load() {
