@@ -3,6 +3,10 @@
   {{rows.header value="Blogs"}}
 
   {{#rows.row}}
+    {{model}}
+  {{/rows.row}}
+
+  {{#rows.row}}
     <div>{{link-to 'blogs' 'experiments.blogs'}}</div>
     <div>{{link-to 'blogs/new' 'experiments.blogs.new'}}</div>
   {{/rows.row}}

@@ -1,47 +1,26 @@
-import EmberObject from '@ember/object';
-import { getOwner } from '@ember/application'
+import { get } from '@ember/object';
 import { resolve } from 'rsvp';
+import { findOrCreateModelFactory } from './factory';
 
-const modelFactoryNameForRouteName = routeName => `model:route/${routeName.replace(/\./g, '/')}`;
-
-const createModelFactory = (arg, routeName) => {
-  let factory;
-
-  if(typeof arg === 'function') {
-    factory = EmberObject.extend({
-      prepare() {
-        return arg.call(this, ...arguments);
-      }
-    });
-  } else {
-    factory = EmberObject.extend(arg);
-  }
-
-  return factory.reopenClass({
-    isRouteModel: true,
-    routeName
+export const createModel = (route, params, arg) => {
+  let factory = findOrCreateModelFactory(route, arg)
+  let routeName = route.routeName;
+  return factory.create({
+    _internal: {
+      routeName
+    }
   });
 }
 
-const findOrCreateModelFactory = (route, arg) => {
-  let owner = getOwner(route);
-  let routeName = route.routeName;
-  let fullName = modelFactoryNameForRouteName(routeName);
-  let factory = owner.factoryFor(fullName);
-  if(!factory) {
-    owner.register(fullName, createModelFactory(arg, routeName));
-    factory = owner.factoryFor(fullName);
-  }
-  return factory;
-}
-
-export const createModel = (route, params, arg) => {
-  let factory = findOrCreateModelFactory(route, arg);
-  let model = factory.create();
-  return model;
+export const loadModel = (model, route, params) => {
+  return resolve(model.prepare && model.prepare(route, params)).then(() => model);
 }
 
 export const createLoadedModel = (route, params, arg) => {
   let model = createModel(route, params, arg);
-  return resolve(model.prepare && model.prepare()).then(() => model);
+  return loadModel(model, route, params);
+}
+
+export const isModelForRouteName = (model, routeName) => {
+  return model && get(model, '_internal.routeName') === routeName;
 }
