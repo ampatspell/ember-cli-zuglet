@@ -1,7 +1,7 @@
-import { createLoadedModel, isModelForRouteName } from './util';
+import { createModel, loadModel, isModelForRouteName } from './util';
 import { onResetController } from './hooks';
 
-const resetController = function(/*controller, isExiting, transition */) {
+const resetController = function() {
   let model = this.currentModel;
   if(!model) {
     return;
@@ -12,7 +12,16 @@ const resetController = function(/*controller, isExiting, transition */) {
   model.destroy();
 }
 
-export default arg => function(params) {
+const createOptionsForPrepare = (route, params, prepare) => {
+  if(typeof prepare === 'function') {
+    return prepare.call(null, route, params);
+  }
+  return { route, params };
+}
+
+export default (arg, prepare) => function(params) {
   onResetController(this, resetController);
-  return createLoadedModel(this, params, arg);
+  let model = createModel(this, params, arg);
+  let opts = createOptionsForPrepare(this, params, prepare);
+  return loadModel(model, opts);
 }

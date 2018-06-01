@@ -31,7 +31,7 @@ export const findOrCreateModelFactory = (owner, routeName, arg) => {
   let type = typeOf(arg);
   if(type === 'string') {
     return lookupFactory(owner, arg);
-  } else if(type === 'undefined') {
+  } else if(type === 'null' || type === 'undefined') {
     let normalizedName = normalizeRouteName(routeName);
     return lookupFactory(owner, normalizedName);
   } else {

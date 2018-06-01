@@ -14,13 +14,8 @@ export const createModel = (route, params, arg) => {
   });
 }
 
-export const loadModel = (model, route, params) => {
-  return resolve(model.prepare && model.prepare(route, params)).then(() => model);
-}
-
-export const createLoadedModel = (route, params, arg) => {
-  let model = createModel(route, params, arg);
-  return loadModel(model, route, params);
+export const loadModel = (model, opts) => {
+  return resolve(model.prepare && model.prepare(opts)).then(() => model);
 }
 
 export const isModelForRouteName = (model, routeName) => {
