@@ -115,7 +115,6 @@ module('query-first', function(hooks) {
   test('observe query', async function(assert) {
     await this.recreate();
     await this.coll.doc('yellow').set({ name: 'yellow' });
-
     await waitForCollectionSize(this.coll, 1);
 
     let query = this.store.collection('ducks').orderBy('name').query({ type: 'first' });

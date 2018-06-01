@@ -25,6 +25,7 @@ import ConcurrentQueue from 'ember-cli-zuglet/-private/queue/concurrent-queue';
 import QueueOperationInvocable from 'ember-cli-zuglet/-private/queue/operation/invocable';
 import QueueOperationPromise from 'ember-cli-zuglet/-private/queue/operation/promise';
 
+import ObserversInternal from 'ember-cli-zuglet/-private/observers/internal';
 import Observers from 'ember-cli-zuglet/-private/observers/observers';
 
 import ModelArrayProxy from 'ember-cli-zuglet/-private/util/array-proxy';
@@ -130,6 +131,7 @@ export default {
 
     //
 
+    container.register('zuglet:observers/internal', ObserversInternal);
     container.register('zuglet:observers', Observers);
 
     //
