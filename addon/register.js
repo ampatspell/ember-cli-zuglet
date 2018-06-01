@@ -11,7 +11,7 @@ import { A } from '@ember/array';
 //   service: {
 //     enabled: true,
 //     name: 'store',
-//     inject: [ 'route', 'controller', 'component' ],
+//     inject: [ 'route', 'controller', 'component', 'model' ],
 //   },
 //   development: {
 //     enabled: true,
@@ -39,7 +39,7 @@ export default opts => {
   let store = stores.createStore(opts.store.identifier, opts.store.factory);
 
   if(opts.service.enabled) {
-    opts.service = assign({ name: opts.store.identifier, inject: [ 'route', 'controller', 'component' ] }, opts.service);
+    opts.service = assign({ name: opts.store.identifier, inject: [ 'route', 'controller', 'component', 'model' ] }, opts.service);
     let fullName = `service:${opts.service.name}`;
     app.register(fullName, store, { instantiate: false });
     A(opts.service.inject).forEach(key => {

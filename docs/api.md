@@ -13,3 +13,5 @@ pos: 3
 * `query.observe()`
 * Observer
 * `observed` from `experimental/computed`
+* `model` and `inline` from `experimental/route`
+* `doc.observers` and `query.observers` (including `promise`)

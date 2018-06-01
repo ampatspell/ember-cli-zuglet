@@ -27,6 +27,14 @@ Router.map(function() {
     this.route('image');
     this.route('auth');
     this.route('browser');
+    this.route('blogs', function() {
+      this.route('blog', { path: ':blog_id' }, function() {
+        this.route('posts', function() {
+          this.route('post', { path: ':post_id' }, function() {
+          });
+        });
+      });
+    });
   });
 
 });

@@ -7,7 +7,8 @@ const experiments = [
   make('auth', 'sign-in and out anonymous and with email'),
   make('query', 'query load, observation, document observation'),
   make('document', 'two independent instances of the same doc'),
-  make('image', 'image upload task, status')
+  make('image', 'image upload task, status'),
+  make('blogs', 'route models')
 ]
 
 export default Component.extend({
@@ -15,5 +16,5 @@ export default Component.extend({
   layout,
 
   experiments
-  
+
 });
