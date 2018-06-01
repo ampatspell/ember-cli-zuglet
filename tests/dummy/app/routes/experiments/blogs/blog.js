@@ -10,14 +10,7 @@ export default Route.extend({
     blog: null,
     posts: observed(),
 
-    init() {
-      this._super(...arguments);
-      console.log('init', this+'');
-    },
-
     prepare({ route, params }) {
-      console.log('prepare', this+'');
-
       let blogs = route.modelFor('experiments.blogs');
       let id = params.blog_id;
 
@@ -34,11 +27,6 @@ export default Route.extend({
       });
 
       return posts.get('observers.promise');
-    },
-
-    willDestroy() {
-      this._super(...arguments);
-      console.log('willDestroy', this+'');
     }
 
   })

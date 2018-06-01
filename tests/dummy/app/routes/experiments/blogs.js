@@ -9,11 +9,6 @@ export default Route.extend({
 
     blogs: observed(),
 
-    init() {
-      this._super(...arguments);
-      console.log('init', this+'');
-    },
-
     insert() {
       let store = this.get('store');
       let doc = (path, data) => store.doc(path).new(data).save();
@@ -30,9 +25,7 @@ export default Route.extend({
     },
 
     prepare() {
-      console.log('prepare', this+'');
       // return this.insert();
-
       let blogs = this.get('store').collection('blogs').query({ type: 'array' });
 
       this.setProperties({
@@ -40,11 +33,6 @@ export default Route.extend({
       });
 
       return blogs.get('observers.promise');
-    },
-
-    willDestroy() {
-      this._super(...arguments);
-      console.log('willDestroy', this+'');
     }
 
   })

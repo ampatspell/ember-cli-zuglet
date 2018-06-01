@@ -1,0 +1,15 @@
+{{#ui-block/rows as |rows|}}
+
+  {{rows.header value="blogs.blog"}}
+
+  {{#rows.row}}
+    {{model}}
+  {{/rows.row}}
+
+  {{#rows.row}}
+    {{model.blog}}
+  {{/rows.row}}
+
+{{/ui-block/rows}}
+
+{{outlet}}
