@@ -1,6 +1,5 @@
 import EmberObject from '@ember/object';
 import { assert } from '@ember/debug';
-import { getOwner } from '@ember/application'
 import { typeOf } from '@ember/utils';
 
 const createModelFactory = arg => {
@@ -26,22 +25,17 @@ const lookupFactory = (owner, name) => {
   return factory;
 }
 
-const modelNameForRoute = route => {
-  let routeName = route.routeName;
-  return `route/${routeName.replace(/\./g, '/')}`;
-}
+const normalizeRouteName = routeName => `route/${routeName.replace(/\./g, '/')}`;
 
-export const findOrCreateModelFactory = (route, arg) => {
-  let owner = getOwner(route);
+export const findOrCreateModelFactory = (owner, routeName, arg) => {
   let type = typeOf(arg);
-
   if(type === 'string') {
     return lookupFactory(owner, arg);
   } else if(type === 'undefined') {
-    let normalizedName = modelNameForRoute(route);
+    let normalizedName = normalizeRouteName(routeName);
     return lookupFactory(owner, normalizedName);
   } else {
-    let normalizedName = modelNameForRoute(route);
+    let normalizedName = normalizeRouteName(route);
     let fullName = modelFactoryName(normalizedName);
     let factory = owner.factoryFor(fullName);
     if(!factory) {

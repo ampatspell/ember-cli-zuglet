@@ -1,10 +1,12 @@
+import { getOwner } from '@ember/application';
 import { get } from '@ember/object';
 import { resolve } from 'rsvp';
 import { findOrCreateModelFactory } from './factory';
 
 export const createModel = (route, params, arg) => {
-  let factory = findOrCreateModelFactory(route, arg)
+  let owner = getOwner(route);
   let routeName = route.routeName;
+  let factory = findOrCreateModelFactory(owner, routeName, arg)
   return factory.create({
     _internal: {
       routeName
