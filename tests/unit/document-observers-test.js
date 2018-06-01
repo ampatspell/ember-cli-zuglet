@@ -1,9 +1,8 @@
-import { module, test, setupStoreTest, setupDucks } from '../helpers/setup';
+import { module, test, setupStoreTest } from '../helpers/setup';
 import { run } from '@ember/runloop';
 
 module('document-observers', function(hooks) {
   setupStoreTest(hooks);
-  setupDucks(hooks);
 
   hooks.beforeEach(() => {
     this.recreate = () => this.store.doc('ducks/yellow').new({ name: 'yellow', feathers: 'cute' }).save();
@@ -47,7 +46,7 @@ module('document-observers', function(hooks) {
   });
 
   test('observers promise', async function(assert) {
-    this.recreate();
+    await this.recreate();
     let doc = this.store.doc('ducks/yellow').existing();
     let observers = doc.get('observers');
     let observer = doc.observe();
