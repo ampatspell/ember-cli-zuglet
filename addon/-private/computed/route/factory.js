@@ -35,7 +35,7 @@ export const findOrCreateModelFactory = (owner, routeName, arg) => {
     let normalizedName = normalizeRouteName(routeName);
     return lookupFactory(owner, normalizedName);
   } else {
-    let normalizedName = normalizeRouteName(route);
+    let normalizedName = normalizeRouteName(routeName);
     let fullName = modelFactoryName(normalizedName);
     let factory = owner.factoryFor(fullName);
     if(!factory) {
