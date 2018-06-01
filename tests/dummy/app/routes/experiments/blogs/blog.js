@@ -1,6 +1,6 @@
 import Route from '@ember/routing/route';
 import { model } from 'ember-cli-zuglet/experimental/route';
-import { observed, observerPromiseFor } from 'ember-cli-zuglet/experimental/computed';
+import { observed } from 'ember-cli-zuglet/experimental/computed';
 import { reject } from 'rsvp';
 
 export default Route.extend({
@@ -33,9 +33,7 @@ export default Route.extend({
         posts
       });
 
-      return posts.load();
-      // return oserverPromiseFor(this, 'posts');
-
+      return posts.get('observers.promise');
     },
 
     willDestroy() {
