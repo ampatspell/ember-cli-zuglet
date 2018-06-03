@@ -19,19 +19,16 @@ module.exports = {
     this._super.apply(this, arguments);
 
     if(isFirebaseEnabled) {
-      this.app.import('vendor/firebase.amd.js');
-      this.app.import('vendor/firebase.amd.js.map');
+      this.app.import('vendor/ember-cli-zuglet/firebase.amd.js');
+      this.app.import('vendor/ember-cli-zuglet/firebase.amd.js.map');
     }
 
     if(isLuxonEnabled) {
-      app.import('vendor/ember-cli-zuglet/luxon.js', {
-        using: [
-          { transformation: 'amd', as: 'luxon' }
-        ]
-      });
+      this.app.import('vendor/ember-cli-zuglet/luxon.js', { using: [ { transformation: 'amd', as: 'luxon' } ] });
+      this.app.import('vendor/ember-cli-zuglet/luxon.js.map');
     }
 
-    app.import('vendor/ember-cli-zuglet/versions.js');
+    this.app.import('vendor/ember-cli-zuglet/versions.js');
   },
   treeForVendor(vendorTree) {
     let trees = [];
@@ -46,14 +43,14 @@ module.exports = {
 
     if(isFirebaseEnabled) {
       trees.push(new Webpack([
-        path.join(__dirname, 'vendor/ember-cli-zuglet/firebase-webpack')
+        path.join(__dirname, 'lib/firebase')
       ], {
         entry: './index.js',
         devtool: 'source-map',
         output: {
           library: 'firebase',
           libraryTarget: 'amd',
-          filename: 'firebase.amd.js'
+          filename: 'ember-cli-zuglet/firebase.amd.js'
         }
       }));
 
