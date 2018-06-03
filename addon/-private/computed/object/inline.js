@@ -3,11 +3,11 @@ import { getOwner } from '@ember/application';
 import { assert } from '@ember/debug';
 import { typeOf } from '@ember/utils';
 import destroyable from '../../util/destroyable';
+import containerKey from '../../util/container-key';
 
 const normalize = (owner, id, opts) => {
   let type = typeOf(opts);
   if(type === 'object') {
-    console.log(id);
     let fullName = `model:generated/${id}`;
     let factory = owner.factoryFor(fullName);
     if(!factory) {
@@ -27,7 +27,7 @@ const reusable = () => false;
 const get = internal => internal.content(true);
 
 const modelId = (owner, key) => {
-  owner = owner._debugContainerKey.replace(':', '/');
+  owner = containerKey(owner).replace(':', '/');
   return `${owner}/property/${key}`;
 }
 
