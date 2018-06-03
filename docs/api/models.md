@@ -1,4 +1,4 @@
-# Experimental models
+# Models
 
 * Route
 * Destoryable
@@ -88,7 +88,7 @@ export default Route.extend({
 * inline
 * provided name
 
-## Inline
+### Inline
 
 ``` javascript
 export default Component.extend({
@@ -103,7 +103,7 @@ export default Component.extend({
 });
 ```
 
-## Inline with mapping
+### Inline with mapping
 
 ``` javascript
 export default Component.extend({
@@ -122,7 +122,7 @@ export default Component.extend({
 
 * if mapping returns falsey value, model is not created
 
-## Provided name
+### Provided name
 
 ``` javascript
 export default Component.extend({
@@ -136,7 +136,7 @@ export default Component.extend({
 
 * mapping is required
 
-## Reusable (inline and provided)
+### Reusable (inline and provided)
 
 ``` javascript
 export default Component.extend({
