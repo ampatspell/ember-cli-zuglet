@@ -45,25 +45,20 @@ import { inline, model } from 'ember-cli-zuglet/model/destroyable';
 
 export default Component.extend({
 
-  source: inline('id', function(owner) {
-    // this.owner = owner;
-    this.doc = this.store.doc(`sources/${owner.id}`).existing();
-    this.observe(this.doc);
-  }),
-
   source: inline('id', {
 
     doc: observed(), // set stops observing previous doc
 
     prepare(owner) {
-      // this.owner = owner;
       this.doc = this.store.doc(`sources/${owner.id}`).existing();
     }
 
   }),
 
   source: model('presentation/source', 'id', function(owner) {
-    this.doc = this.store.doc(`sources/${owner.id}`).existing();
+    return {
+      id: owner.get('id')
+    };
   })
 
 });

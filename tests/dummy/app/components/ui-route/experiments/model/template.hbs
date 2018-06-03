@@ -2,4 +2,26 @@
 
   {{rows.header value='Model'}}
 
+  {{#rows.row}}
+    {{model}}
+  {{/rows.row}}
+
+  {{#rows.row}}
+    {{model.doc}}
+  {{/rows.row}}
+
+  {{#rows.row}}
+    {{ui-block/json model.doc.serialized}}
+  {{/rows.row}}
+
+  {{#rows.row}}
+    {{input value=path placeholder='path'}}
+  {{/rows.row}}
+
+  {{#rows.row}}
+    {{#each store.observed as |model|}}
+      <div>{{model}}</div>
+    {{/each}}
+  {{/rows.row}}
+
 {{/ui-block/rows}}
