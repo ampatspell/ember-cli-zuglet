@@ -8,7 +8,12 @@ export default EmberObject.extend({
   createContentInstance(factory) {
     let instance = factory.create();
     let owner = this.get('owner');
-    instance.prepare && instance.prepare(owner);
+    let prepare = this.get('opts.prepare');
+    let arg = owner;
+    if(prepare) {
+      arg = prepare.call(owner, owner);
+    }
+    instance.prepare && instance.prepare(arg);
     return instance;
   },
 
