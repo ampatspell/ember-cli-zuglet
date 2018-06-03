@@ -15,7 +15,7 @@ module.exports = {
   isDevelopingAddon() {
     return false;
   },
-  included(app) {
+  included() {
     this._super.apply(this, arguments);
 
     if(isFirebaseEnabled) {
