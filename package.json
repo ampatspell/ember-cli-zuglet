@@ -38,11 +38,11 @@
     "broccoli-merge-trees": "^3.0.0",
     "ember-cli-babel": "^6.6.0",
     "firebase": "^4.13.1",
-    "luxon": "^1.2.0"
+    "luxon": "^1.2.0",
+    "broccoli-webpack": "^1.0.0"
   },
   "devDependencies": {
     "broccoli-asset-rev": "^2.4.5",
-    "broccoli-webpack": "^1.0.0",
     "ember-cli": "~3.1.4",
     "ember-cli-dependency-checker": "^2.0.0",
     "ember-cli-eslint": "^4.2.1",
