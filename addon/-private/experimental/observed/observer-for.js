@@ -1,6 +1,6 @@
 import { cacheFor } from '../../util/destroyable';
 
-export const observerFor = (owner, key) => {
+export default (owner, key) => {
   let internal = cacheFor(owner, key);
   return internal && internal.observer;
 }

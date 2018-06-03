@@ -4,8 +4,18 @@
 * Destoryable
 
 ``` javascript
-// import { observed, model, route } from 'ember-cli-zuglet/model';
-import { observed, model, route } from 'ember-cli-zuglet/experimental/model';
+// import observed, { observerFor } from 'ember-cli-zuglet/observed';
+import observed, { observerFor } from 'ember-cli-zuglet/experimental/observed';
+```
+
+``` javascript
+// import model from 'ember-cli-zuglet/model/route';
+import model from 'ember-cli-zuglet/experimental/model/route';
+```
+
+``` javascript
+// import model from 'ember-cli-zuglet/model/route';
+import model from 'ember-cli-zuglet/experimental/model';
 ```
 
 ## Route
@@ -13,11 +23,6 @@ import { observed, model, route } from 'ember-cli-zuglet/experimental/model';
 * inline
 * looked up from route name
 * provided name
-
-``` javascript
-// import { observed, route as model } from 'ember-cli-zuglet/model';
-import { observed, route as model } from 'ember-cli-zuglet/experimental/model';
-```
 
 ### Inline without mapping
 
@@ -82,11 +87,6 @@ export default Route.extend({
 
 * inline
 * provided name
-
-``` javascript
-// import { observed, model } from 'ember-cli-zuglet/model';
-import { observed, model } from 'ember-cli-zuglet/experimental/model';
-```
 
 ## Inline
 

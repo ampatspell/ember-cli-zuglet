@@ -1,6 +1,6 @@
 import Route from '@ember/routing/route';
 import { inline } from 'ember-cli-zuglet/experimental/route';
-import { observed } from 'ember-cli-zuglet/experimental/computed';
+import observed from 'ember-cli-zuglet/experimental/observed';
 import { reject } from 'rsvp';
 
 export default Route.extend({

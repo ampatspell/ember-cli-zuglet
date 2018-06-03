@@ -86,7 +86,7 @@ import ObserverDocument from 'ember-cli-zuglet/-private/observers/document/obser
 import ObserverQueryInternal from 'ember-cli-zuglet/-private/observers/query/internal';
 import ObserverQuery from 'ember-cli-zuglet/-private/observers/query/observer';
 
-import ComputedObservedInternal from 'ember-cli-zuglet/-private/computed/observed/internal';
+import ComputedObservedInternal from 'ember-cli-zuglet/-private/experimental/observed/internal';
 import ComputedObjectInternal from 'ember-cli-zuglet/-private/computed/object/internal';
 
 export default {
