@@ -93,7 +93,7 @@ export default Route.extend({
 ``` javascript
 export default Component.extend({
 
-  model: model('path').inline({
+  model: model('path', {
 
     prepare(owner) {
     }
