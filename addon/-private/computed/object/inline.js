@@ -28,7 +28,7 @@ const get = internal => internal.content(true);
 
 const modelId = (owner, key) => {
   owner = containerKey(owner).replace(':', '/');
-  return `${owner}/property/${key}`;
+  return `${owner}/inline/${key}`;
 }
 
 const create = arg => function(key) {
