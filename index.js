@@ -24,7 +24,9 @@ module.exports = {
       app.import('vendor/ember-cli-zuglet/firebase-firestore.js.map');
       app.import('vendor/ember-cli-zuglet/firebase-functions.js');
       app.import('vendor/ember-cli-zuglet/firebase-functions.js.map');
+      app.import('vendor/ember-cli-zuglet/object_hash.js');
       app.import('vendor/ember-cli-zuglet/firebase-shim.js');
+      app.import('vendor/ember-cli-zuglet/object-hash-shim.js');
     }
 
     if(isLuxonEnabled) {
@@ -78,6 +80,13 @@ module.exports = {
       let pkg = require(path.join(luxon, 'package.json'));
       versions.push(`Ember.libraries.register('Luxon', '${pkg.version}');`)
     }
+
+    trees.push(new Funnel(path.join(path.dirname(require.resolve('object-hash')), 'dist'), {
+      files: [
+        'object_hash.js'
+      ],
+      destDir: '/ember-cli-zuglet'
+    }));
 
     trees.push(create('ember-cli-zuglet/versions.js', versions.join('\n')));
 
