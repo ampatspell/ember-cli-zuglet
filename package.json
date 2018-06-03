@@ -50,7 +50,7 @@
     "ember-cli-inject-live-reload": "^1.4.1",
     "ember-cli-qunit": "^4.1.1",
     "ember-cli-remark-static": "^0.0.5",
-    "ember-cli-sass": "^7.1.7",
+    "ember-cli-sass": "^7.2.0",
     "ember-cli-shims": "^1.2.0",
     "ember-cli-sri": "^2.1.0",
     "ember-cli-uglify": "^2.0.0",
@@ -62,7 +62,7 @@
     "ember-resolver": "^4.0.0",
     "ember-source": "~3.1.1",
     "ember-source-channel-url": "^1.1.0",
-    "ember-try": "1.0.0-beta.1",
+    "ember-try": "1.0.0-beta.3",
     "eslint-plugin-ember": "^5.0.0",
     "eslint-plugin-node": "^6.0.1",
     "loader.js": "^4.2.3"

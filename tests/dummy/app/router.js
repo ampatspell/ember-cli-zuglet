@@ -26,6 +26,7 @@ Router.map(function() {
     this.route('data');
     this.route('image');
     this.route('auth');
+    this.route('model');
     this.route('browser');
     this.route('blogs', function() {
       this.route('blog', { path: ':blog_id' }, function() {

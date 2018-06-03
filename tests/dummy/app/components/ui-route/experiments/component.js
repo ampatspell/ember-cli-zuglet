@@ -8,6 +8,7 @@ const experiments = [
   make('query', 'query load, observation, document observation'),
   make('document', 'two independent instances of the same doc'),
   make('image', 'image upload task, status'),
+  make('model', 'destroyable models'),
   make('blogs', 'route models')
 ]
 
