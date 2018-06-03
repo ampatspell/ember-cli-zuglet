@@ -1,26 +1,31 @@
 {{#ui-block/rows as |rows|}}
 
-  {{rows.header value='Model'}}
-
-  {{#rows.row}}
-    {{model}}
-  {{/rows.row}}
-
-  {{#rows.row}}
-    {{model.doc}}
-  {{/rows.row}}
-
-  {{#rows.row}}
-    {{ui-block/json model.doc.serialized}}
-  {{/rows.row}}
+  {{rows.header value='Models'}}
 
   {{#rows.row}}
     {{input value=path placeholder='path'}}
   {{/rows.row}}
 
+{{/ui-block/rows}}
+
+<div class="split">
+  <div class="item">
+    {{ui-route/experiments/model/inline path=path}}
+  </div>
+  <div class="item">
+    {{ui-route/experiments/model/model path=path}}
+  </div>
+</div>
+
+{{#ui-block/rows as |rows|}}
+
+  {{rows.header value='Observed documents'}}
+
   {{#rows.row}}
     {{#each store.observed as |model|}}
       <div>{{model}}</div>
+    {{else}}
+      No observed documents
     {{/each}}
   {{/rows.row}}
 

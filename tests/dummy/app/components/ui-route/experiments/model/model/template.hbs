@@ -1,0 +1,14 @@
+{{#ui-block/rows as |rows|}}
+
+  {{rows.header value='Model'}}
+
+  {{#rows.row}}
+    <div class="small">{{model}}</div>
+    <div class="small">{{model.doc}}</div>
+  {{/rows.row}}
+
+  {{#rows.row}}
+    {{ui-block/json model.doc.serialized}}
+  {{/rows.row}}
+
+{{/ui-block/rows}}
