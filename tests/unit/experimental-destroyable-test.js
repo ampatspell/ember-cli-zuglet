@@ -31,7 +31,7 @@ module('experimental-destroyable', function(hooks) {
         prepare(owner) {
           this.id = owner.get('id');
         }
-      }).mapping(() => {}).reusable()
+      })
 
     });
 
@@ -41,7 +41,8 @@ module('experimental-destroyable', function(hooks) {
 
     subject.set('id', 'foo');
 
-    let next = subject.get('model');
+    let next = run(() => subject.get('model'));
+
     assert.ok(next);
     assert.equal(next.get('id'), 'foo');
 

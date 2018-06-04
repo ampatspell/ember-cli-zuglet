@@ -1,27 +1,23 @@
 import { getOwner } from '@ember/application';
 import { A } from '@ember/array';
+import { assert } from '@ember/debug';
 import destroyable from '../../util/destroyable';
-import containerKey from '../../util/container-key';
+import { resolveFactory } from './factory';
 
-const modelName = (owner, key) => {
-  owner = containerKey(owner).replace(':', '/');
-  return `generated/${owner}/property/${key}`;
-}
-
-const get = internal => internal.content(true);
+const get = internal => internal.model(true);
 
 const normalize = (parent, owner, opts, key) => {
-  console.log('normalize', opts);
-  let name = modelName(parent, key);
-  console.log(name);
-  return { };
+  let { arg, mapping } = opts;
+  let { factory, requiresMapping } = resolveFactory(parent, owner, key, arg);
+  assert(`model requires mapping`, !requiresMapping || typeof mapping === 'function');
+  return { factory, mapping };
 }
 
 const create = opts => {
   return function(key) {
     let owner = getOwner(this);
-    let { factory, prepare } = normalize(this, owner, opts, key);
-    return owner.factoryFor('zuglet:model/internal').create({ owner: this, factory, prepare });
+    let { factory, mapping } = normalize(this, owner, opts, key);
+    return owner.factoryFor('zuglet:model/internal').create({ owner: this, factory, mapping });
   }
 }
 
