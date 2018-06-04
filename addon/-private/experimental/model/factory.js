@@ -28,10 +28,24 @@ const resolveObject = (parent, owner, key, arg) => {
   };
 }
 
+const resolveString = (parent, owner, key, arg) => {
+  let fullName = modelFullName(arg);
+
+  let factory = owner.factoryFor(fullName);
+  assert(`model '${arg}' is not registered`, !!factory);
+
+  return {
+    factory,
+    requiresMapping: true
+  };
+}
+
 export const resolveFactory = (parent, owner, key, arg) => {
   let type = typeOf(arg);
   if(type === 'object') {
     return resolveObject(parent, owner, key, arg);
+  } else if(type === 'string') {
+    return resolveString(parent, owner, key, arg);
   }
-  assert(`model last argument must be object`, false);
+  assert(`model last argument must be object or string`, false);
 }
