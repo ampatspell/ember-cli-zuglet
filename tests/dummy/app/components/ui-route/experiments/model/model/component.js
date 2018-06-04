@@ -1,6 +1,5 @@
 import Component from '@ember/component';
 import layout from './template';
-import observed from 'ember-cli-zuglet/experimental/observed';
 import model from 'ember-cli-zuglet/experimental/model';
 
 export default Component.extend({
