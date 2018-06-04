@@ -6,10 +6,8 @@ export default Internal.extend({
   factory: null,
   mapping: null,
 
-  createModel() {
-    let { owner, factory, mapping } = this;
-
-    let instance = factory.create();
+  prepare(instance) {
+    let { owner, mapping } = this;
 
     let arg;
     if(mapping) {
@@ -17,10 +15,21 @@ export default Internal.extend({
     } else {
       arg = owner;
     }
-
     if(instance.prepare) {
       instance.prepare(arg);
     }
+  },
+
+  reuse() {
+    let model = this.model(true);
+    this.prepare(model);
+  },
+
+  createModel() {
+    let { factory } = this;
+
+    let instance = factory.create();
+    this.prepare(instance);
 
     return instance;
   }

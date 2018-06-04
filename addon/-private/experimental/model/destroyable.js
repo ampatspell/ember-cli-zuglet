@@ -5,6 +5,7 @@ import destroyable from '../../util/destroyable';
 import { resolveFactory } from './factory';
 
 const get = internal => internal.model(true);
+const reuse = internal => internal.reuse();
 
 const normalize = (parent, owner, opts, key) => {
   let { arg, mapping } = opts;
@@ -27,6 +28,7 @@ export default opts => {
   return destroyable(...deps, {
     create: create(opts),
     reusable,
+    reuse,
     get,
   });
 }

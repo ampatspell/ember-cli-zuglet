@@ -51,4 +51,62 @@ module('experimental-destroyable', function(hooks) {
     assert.ok(!next.isDestroyed);
   });
 
+  test('inline with mapping, non reusable', async function(assert) {
+    let subject = this.create('subject', {
+
+      id: null,
+
+      model: model('id', {
+        prepare({ value }) {
+          this.value = value;
+        }
+      }).mapping(owner => ({ value: owner.get('id') }))
+
+    });
+
+    let first = subject.get('model');
+    assert.ok(first);
+    assert.equal(first.get('value'), null);
+
+    subject.set('id', 'foo');
+
+    let next = run(() => subject.get('model'));
+
+    assert.ok(next);
+    assert.equal(next.get('value'), 'foo');
+
+    assert.ok(next !== first);
+    assert.ok(first.isDestroyed);
+    assert.ok(!next.isDestroyed);
+  });
+
+  test('inline with mapping, reusable', async function(assert) {
+    let subject = this.create('subject', {
+
+      id: null,
+
+      model: model('id', {
+        prepare({ value }) {
+          this.value = value;
+        }
+      }).mapping(owner => ({ value: owner.get('id') })).reusable()
+
+    });
+
+    let first = subject.get('model');
+    assert.ok(first);
+    assert.equal(first.get('value'), null);
+
+    subject.set('id', 'foo');
+
+    let next = subject.get('model');
+
+    assert.ok(next);
+    assert.ok(next === first);
+
+    assert.equal(first.get('value'), 'foo');
+
+    assert.ok(!first.isDestroyed);
+  });
+
 });
