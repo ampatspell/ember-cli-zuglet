@@ -7,7 +7,6 @@
 * transaction
 * batch
 * provide identity for queries. identity should also have `doc('id')` and similar
-* destroyable computed property similar to route mixin model
 
 ## GeoPoint
 
