@@ -1,11 +1,11 @@
 import EmberObject from '@ember/object';
 import { module, test, setupStoreTest } from '../helpers/setup';
-import { observed, observerFor } from 'ember-cli-zuglet/experimental/computed';
+import observed, { observerFor } from 'ember-cli-zuglet/experimental/observed';
 import { getOwner } from '@ember/application';
 import { assign } from '@ember/polyfills';
 import { run } from '@ember/runloop';
 
-module('computed-observed', function(hooks) {
+module('experimental-observed', function(hooks) {
   setupStoreTest(hooks);
 
   hooks.beforeEach(async function() {

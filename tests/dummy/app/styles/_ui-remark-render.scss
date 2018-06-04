@@ -18,6 +18,12 @@
     margin: 40px 0 0px 0;
     @include header-code();
   }
+  h3 {
+    font-weight: 400;
+    font-size: 17px;
+    margin: 40px 0 0px 0;
+    @include header-code();
+  }
   blockquote {
     margin: 0;
     border-left: 2px solid #ddd;

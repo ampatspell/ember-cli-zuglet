@@ -64,6 +64,8 @@ const _get = (owner, key, opts) => {
     if(value) {
       _store(owner, key, value, opts.destroy);
     }
+  } else {
+    opts.reuse.call(owner, value, key);
   }
 
   return value;
@@ -71,6 +73,7 @@ const _get = (owner, key, opts) => {
 
 export const cacheFor = (owner, key) => _retrieve(owner, key).value;
 
+const defaultReuse = () => {};
 const defaultGet = internal => internal;
 const defaultDestroy = internal => internal.destroy();
 
@@ -81,6 +84,7 @@ export default (...args) => {
 
   opts.get = opts.get || defaultGet;
   opts.destroy = opts.destroy || defaultDestroy;
+  opts.reuse = opts.reuse || defaultReuse;
 
   let get = function(key) {
     let internal = _get(this, key, opts);
