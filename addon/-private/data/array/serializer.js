@@ -26,7 +26,7 @@ export default Serializer.extend({
 
     let manager = this.manager;
     let content = internal.content;
-    let remaining = A(content.copy());
+    let remaining = A(content.slice());
 
     const reusable = item => {
       let found = remaining.find(value => value.serializer.matches(value, item));

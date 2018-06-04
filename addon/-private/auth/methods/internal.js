@@ -16,7 +16,7 @@ export default Internal.extend({
   },
 
   types: computed(function() {
-    return A(types).copy();
+    return A(types.slice());
   }).readOnly(),
 
   methods: computed(function() {
