@@ -30,7 +30,12 @@ export default Internal.extend({
   }).readOnly(),
 
   serializers: computed(function() {
-    return A(Object.values(this.get('serializersByName')));
+    let serializers = this.get('serializersByName');
+    let values = A();
+    for(let key in serializers) {
+      values.push(serializers[key]);
+    }
+    return values;
   }).readOnly(),
 
   serializerForName(name) {
