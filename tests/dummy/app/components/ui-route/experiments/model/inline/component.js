@@ -1,7 +1,7 @@
 import Component from '@ember/component';
 import layout from './template';
-import { observed } from 'ember-cli-zuglet/experimental/computed';
-import { inline } from 'ember-cli-zuglet/experimental/object';
+import observed from 'ember-cli-zuglet/experimental/observed';
+import model from 'ember-cli-zuglet/experimental/model';
 
 const isKindaValidPath = path => {
   if(!path) {
@@ -20,7 +20,7 @@ const isKindaValidPath = path => {
 export default Component.extend({
   layout,
 
-  model: inline('path', {
+  model: model('path', {
 
     doc: observed(),
 
