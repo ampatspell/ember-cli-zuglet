@@ -14,7 +14,7 @@ import model from 'ember-cli-zuglet/experimental/model/route';
 ```
 
 ``` javascript
-// import model from 'ember-cli-zuglet/model/route';
+// import model from 'ember-cli-zuglet/model';
 import model from 'ember-cli-zuglet/experimental/model';
 ```
 
