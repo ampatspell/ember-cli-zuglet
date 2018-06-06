@@ -189,6 +189,11 @@ export default Internal.extend({
     });
   },
 
+  batch() {
+    let batch = this.factoryFor('zuglet:batch/internal').create({ store: this });
+    return batch;
+  },
+
   //
 
   registerObservedInternal(internal) {

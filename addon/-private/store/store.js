@@ -33,6 +33,7 @@ export default EmberObject.extend(ModelMixin, {
   serverTimestamp: invokeReturningModel('serverTimestamp'),
 
   transaction: invokePromiseReturningThis('transaction'),
+  batch: invokeReturningModel('batch'),
 
   settle: invokePromiseReturningModel('settle'),
 
