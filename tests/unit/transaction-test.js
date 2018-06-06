@@ -8,13 +8,14 @@ module('transaction', function(hooks) {
   setupDucks(hooks);
 
   test('load ref and save document', async function(assert) {
-    let duck = this.store.doc(`ducks/yellow'`);
+    let duck = this.store.doc(`ducks/yellow`);
     await duck.new({ value: 0 }).save();
 
     await this.store.runTransaction(async tx => {
-      let doc = await tx.load(duck);
+      // tx.inherit(ref)
+      let doc = await tx.doc(`ducks/yellow`);
       doc.incrementProperty('data.value');
-      tx.save(doc);
+      doc.save();
     });
 
     let doc = await duck.existing().load();
@@ -24,5 +25,9 @@ module('transaction', function(hooks) {
   });
 
   // settle
+
+  // have a context: StoreContext, TransactionContext
+  // doc has internal reference to transaction
+  // doc.save() inherits it from ref
 
 });
