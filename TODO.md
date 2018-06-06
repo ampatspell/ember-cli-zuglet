@@ -20,3 +20,64 @@ doc.set('data.location', { latitude, longitude });
 let geopoint = doc.get('data.location') // GeoPoint
 geopoint.getProperties('latitude', 'longitude'); // 24.72504500749274, 58.74554729994484
 ```
+
+## Transactions & Batch
+
+### Tranaction
+
+* load
+* save (set / update)
+* delete
+
+``` javascript
+let doc = await store.doc('foo/bar').existing();
+store.transaction(async tx => {
+  await tx.load(doc);
+  doc.incrementProperty('data.count');
+  tx.save(doc);
+});
+```
+
+``` javascript
+let doc = await store.doc('foo/bar').existing();
+await doc.transaction(doc => doc.incrementProperty('data.count'));
+```
+
+``` javascript
+// transaciton internal
+{
+
+  instance: null, // firestore Transaction
+
+  load(internal, opts) {
+    return internal.loadInTransaction(this, opts);
+    // intenal.mode(true);
+  },
+
+  save(internal, opts) {
+    internal.saveInTransaction(this, opts);
+    // no promise
+  }
+
+});
+```
+
+### Batch
+
+* save (set / update)
+* delete
+* commit (only if not invoked with cb)
+
+``` javascript
+let doc = store.doc('foo/bar').new({ name: 'foo' });
+let batch = store.batch();
+batch.save(doc);
+await batch.commit();
+```
+
+``` javascript
+await store.batch(async batch => {
+  let doc = store.doc('foo/bar').new({ name: 'foo' });
+  batch.save(doc);
+});
+```

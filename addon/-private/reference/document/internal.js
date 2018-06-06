@@ -42,8 +42,18 @@ export default ReferenceInternal.extend({
   load(opts={}) {
     return this.get('store.queue').schedule({
       name: 'reference/document/load',
+      invoke: () => this.ref.get(),
+      didResolve: snapshot => this.didLoad(snapshot, opts),
+      didReject: err => reject(err)
+    });
+  },
+
+  loadInTransaction(transaction, opts) {
+    return this.get('store.queue').schedule({
+      name: 'reference/document/load/transaction',
       invoke: () => {
-        return this.ref.get();
+        let ref = this.ref;
+        return transaction.instance.get(ref);
       },
       didResolve: snapshot => this.didLoad(snapshot, opts),
       didReject: err => reject(err)

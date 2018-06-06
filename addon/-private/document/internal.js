@@ -168,8 +168,12 @@ export default Internal.extend({
     assert(`unsupported set type '${type}'`, false);
   },
 
-  save(opts={}) {
-    opts = assign({ type: 'set', merge: false }, opts);
+  _normalizeSaveOptions(opts={}) {
+    return assign({ type: 'set', merge: false }, opts);
+  },
+
+  save(opts) {
+    opts = this._normalizeSaveOptions(opts);
     return this.get('queue').schedule({
       name: 'document/save',
       invoke: () => {
@@ -263,5 +267,37 @@ export default Internal.extend({
     let data = this.data;
     data.rollback();
   },
+
+  //
+
+  loadInTransaction(transaction) {
+    return this.get('queue').schedule({
+      name: 'document/load/transaction',
+      invoke: () => {
+        this.willLoad();
+        let ref = this.get('ref.ref');
+        return transaction.instance.get(ref);
+      },
+      didResolve: snapshot => this.didLoad(snapshot),
+      didReject: err => this.loadDidFail(err)
+    });
+  },
+
+  saveInTransaction(transaction, opts) {
+    opts = this._normalizeSaveOptions(opts);
+    let { type, merge } = opts;
+
+    let ref = this.get('ref.ref');
+    let data = this.get('data').serialize('raw');
+    let instance = transaction.instance;
+
+    if(type === 'set') {
+      return instance.set(ref, data, { merge });
+    } else if(type === 'update') {
+      return instance.update(ref, data);
+    }
+
+    assert(`unsupported set type '${type}'`, false);
+  }
 
 });

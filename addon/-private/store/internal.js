@@ -181,6 +181,16 @@ export default Internal.extend({
 
   //
 
+  transaction(fn) {
+    let transaction = this.factoryFor('zuglet:transaction/internal').create({ store: this, fn });
+    return this.get('queue').schedule({
+      name: 'transaction',
+      promise: transaction.run()
+    });
+  },
+
+  //
+
   registerObservedInternal(internal) {
     let observed = this.get('observed');
     assert(`observed already has ${internal} registered`, !observed.includes(internal));
