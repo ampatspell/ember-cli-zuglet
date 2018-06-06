@@ -38,6 +38,11 @@ store.transaction(async tx => {
 });
 ```
 
+``` javascript
+let doc = await store.doc('foo/bar').existing();
+await doc.transaction(doc => doc.incrementProperty('data.count'));
+```
+
 ### Batch
 
 * save (set / update)
