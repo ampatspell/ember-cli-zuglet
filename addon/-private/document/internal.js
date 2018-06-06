@@ -270,7 +270,7 @@ export default Internal.extend({
 
   //
 
-  loadInTransaction(transaction, opts) {
+  loadInTransaction(transaction) {
     return this.get('queue').schedule({
       name: 'document/load/transaction',
       invoke: () => {
