@@ -5,6 +5,7 @@ export default Internal.extend({
 
   store: null,
   fn: null,
+  transaction: null,
 
   createModel() {
     return this.store.factoryFor('zuglet:transaction').create({ _internal: this });
@@ -12,27 +13,27 @@ export default Internal.extend({
 
   run() {
     let firestore = this.store.app.firestore();
-    return resolve().then(() => firestore.runTransaction(tx => {
+    return resolve().then(() => firestore.runTransaction(transaction => {
       if(this.isDestroying) {
         return resolve();
       }
 
-      this.tx = tx;
+      this.transaction = transaction;
 
       let fn = this.fn;
       let model = this.model(true);
       return resolve(fn(model));
-    }));
+    })).then(() => undefined);
   },
 
   //
 
-  load(internal, ...rest) {
-    return internal.loadInTransaction(this, ...rest);
+  load(internal, opts) {
+    return internal.loadInTransaction(this, opts);
   },
 
-  save(internal, ...rest) {
-    return internal.saveInTransaction(this, ...rest);
-  },
+  save(internal, opts) {
+    internal.saveInTransaction(this, opts);
+  }
 
 });

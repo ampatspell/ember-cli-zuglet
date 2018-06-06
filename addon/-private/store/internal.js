@@ -181,7 +181,7 @@ export default Internal.extend({
 
   //
 
-  runTransaction(fn) {
+  transaction(fn) {
     let transaction = this.factoryFor('zuglet:transaction/internal').create({ store: this, fn });
     return transaction.run();
   },

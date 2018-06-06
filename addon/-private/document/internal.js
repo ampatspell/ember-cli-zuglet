@@ -264,4 +264,15 @@ export default Internal.extend({
     data.rollback();
   },
 
+  //
+
+  loadInTransaction(transaction, opts) {
+
+  },
+
+
+  saveInTransaction(transaction, opts) {
+
+  }
+
 });

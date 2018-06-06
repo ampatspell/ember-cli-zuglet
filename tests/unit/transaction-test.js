@@ -7,27 +7,21 @@ module('transaction', function(hooks) {
   setupStoreTest(hooks);
   setupDucks(hooks);
 
-  test('load ref and save document', async function(assert) {
-    let duck = this.store.doc(`ducks/yellow`);
-    await duck.new({ value: 0 }).save();
+  test('load and save document', async function(assert) {
+    let doc = await this.store.doc(`ducks/yellow`).new({ value: 0 }).save();
 
-    await this.store.runTransaction(async tx => {
-      // tx.inherit(ref)
-      let doc = await tx.doc(`ducks/yellow`);
+    await this.store.transaction(async tx => {
+      await tx.load(doc);
       doc.incrementProperty('data.value');
-      doc.save();
+      tx.save(doc);
     });
 
-    let doc = await duck.existing().load();
+    doc = await doc.reload();
     assert.deepEqual(doc.get('data.serialized'), {
       value: 1
     });
   });
 
   // settle
-
-  // have a context: StoreContext, TransactionContext
-  // doc has internal reference to transaction
-  // doc.save() inherits it from ref
 
 });
