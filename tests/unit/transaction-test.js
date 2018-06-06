@@ -7,7 +7,7 @@ module('transaction', function(hooks) {
   setupStoreTest(hooks);
   setupDucks(hooks);
 
-  test('load and save document', async function(assert) {
+  test('load ref and save document', async function(assert) {
     let duck = this.store.doc(`ducks/yellow'`);
     await duck.new({ value: 0 }).save();
 
@@ -22,5 +22,7 @@ module('transaction', function(hooks) {
       value: 1
     });
   });
+
+  // settle
 
 });

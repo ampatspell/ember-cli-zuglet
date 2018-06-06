@@ -39,15 +39,21 @@ export default ReferenceInternal.extend({
     return this.store.createInternalDocumentForSnapshot(snapshot);
   },
 
-  load(opts={}) {
+  _loadWithInvoke(invoke, opts) {
     return this.get('store.queue').schedule({
       name: 'reference/document/load',
-      invoke: () => {
-        return this.ref.get();
-      },
+      invoke,
       didResolve: snapshot => this.didLoad(snapshot, opts),
       didReject: err => reject(err)
     });
+  },
+
+  load(opts={}) {
+    return this._loadWithInvoke(() => this.ref.get(), opts);
+  },
+
+  loadInTransaction(transaction, opts={}) {
+    return this._loadWithInvoke(() => transaction.tx.get(this.ref),  opts);
   },
 
   new(props) {
