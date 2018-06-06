@@ -23,6 +23,12 @@ geopoint.getProperties('latitude', 'longitude'); // 24.72504500749274, 58.745547
 
 ## Transactions & Batch
 
+### Tranaction
+
+* load
+* save (set / update)
+* delete
+
 ``` javascript
 let doc = await store.doc('foo/bar').existing();
 store.transaction(async tx => {
@@ -31,6 +37,12 @@ store.transaction(async tx => {
   tx.save(doc);
 });
 ```
+
+### Batch
+
+* save (set / update)
+* delete
+* commit (only if not invoked with cb)
 
 ``` javascript
 let doc = store.doc('foo/bar').new({ name: 'foo' });
