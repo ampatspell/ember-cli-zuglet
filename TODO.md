@@ -20,3 +20,28 @@ doc.set('data.location', { latitude, longitude });
 let geopoint = doc.get('data.location') // GeoPoint
 geopoint.getProperties('latitude', 'longitude'); // 24.72504500749274, 58.74554729994484
 ```
+
+## Transactions & Batch
+
+``` javascript
+let doc = await store.doc('foo/bar').existing();
+store.transaction(async tx => {
+  await tx.load(doc);
+  doc.incrementProperty('data.count');
+  tx.save(doc);
+});
+```
+
+``` javascript
+let doc = store.doc('foo/bar').new({ name: 'foo' });
+let batch = store.batch();
+batch.save(doc);
+await batch.commit();
+```
+
+``` javascript
+await store.batch(async batch => {
+  let doc = store.doc('foo/bar').new({ name: 'foo' });
+  batch.save(doc);
+});
+```
