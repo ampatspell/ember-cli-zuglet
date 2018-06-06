@@ -5,7 +5,7 @@ export default Internal.extend({
 
   store: null,
   fn: null,
-  transaction: null,
+  instance: null,
 
   createModel() {
     return this.store.factoryFor('zuglet:transaction').create({ _internal: this });
@@ -13,12 +13,12 @@ export default Internal.extend({
 
   run() {
     let firestore = this.store.app.firestore();
-    return resolve().then(() => firestore.runTransaction(transaction => {
+    return resolve().then(() => firestore.runTransaction(instance => {
       if(this.isDestroying) {
         return resolve();
       }
 
-      this.transaction = transaction;
+      this.instance = instance;
 
       let fn = this.fn;
       let model = this.model(true);

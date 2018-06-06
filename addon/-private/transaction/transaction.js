@@ -4,7 +4,7 @@ import ModelMixin from '../internal/model-mixin';
 export default EmberObject.extend(ModelMixin, {
 
   load(doc, opts) {
-    return this._internal.load(doc._internal, opts);
+    return this._internal.load(doc._internal, opts).then(internal => internal.model(true));
   },
 
   save(doc, opts) {
