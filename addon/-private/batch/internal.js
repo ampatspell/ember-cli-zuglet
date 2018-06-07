@@ -7,6 +7,11 @@ export default Internal.extend({
   instance: null,
   fn: null,
 
+  init() {
+    this._super(...arguments);
+    this.instance = this.store.app.firestore().batch();
+  },
+
   createModel() {
     return this.store.factoryFor('zuglet:batch').create({ _internal: this });
   },
