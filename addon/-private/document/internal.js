@@ -283,13 +283,12 @@ export default Internal.extend({
     });
   },
 
-  saveInTransaction(transaction, opts) {
+  saveInContext(instance, opts) {
     opts = this._normalizeSaveOptions(opts);
     let { type, merge } = opts;
 
     let ref = this.get('ref.ref');
     let data = this.get('data').serialize('raw');
-    let instance = transaction.instance;
 
     if(type === 'set') {
       return instance.set(ref, data, { merge });
@@ -298,6 +297,23 @@ export default Internal.extend({
     }
 
     assert(`unsupported set type '${type}'`, false);
+  },
+
+  saveInTransaction(transaction, opts) {
+    this.saveInContext(transaction.instance, opts);
+  },
+
+  saveInBatch(batch, opts) {
+    this.saveInContext(batch.instance, opts);
+  },
+
+  deleteInContext(instance) {
+    let ref = this.get('ref.ref');
+    instance.delete(ref);
+  },
+
+  deleteInBatch(batch) {
+    this.deleteInContext(batch.instance);
   }
 
 });

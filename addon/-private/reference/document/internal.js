@@ -60,6 +60,14 @@ export default ReferenceInternal.extend({
     });
   },
 
+  deleteInContext(instance) {
+    instance.delete(this.ref);
+  },
+
+  deleteInBatch(batch) {
+    this.deleteInContext(batch.instance);
+  },
+
   new(props) {
     return this.store.createNewInternalDocumentWithRef(this, props);
   },

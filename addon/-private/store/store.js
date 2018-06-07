@@ -1,7 +1,7 @@
 import EmberObject, { computed } from '@ember/object';
 import { readOnly } from '@ember/object/computed';
 import ModelMixin from '../internal/model-mixin';
-import { invokeReturningModel, invokePromiseReturningModel, invokePromiseReturningThis } from '../internal/invoke';
+import { invoke, invokeReturningModel, invokePromiseReturningModel, invokePromiseReturningThis } from '../internal/invoke';
 
 export default EmberObject.extend(ModelMixin, {
 
@@ -33,7 +33,7 @@ export default EmberObject.extend(ModelMixin, {
   serverTimestamp: invokeReturningModel('serverTimestamp'),
 
   transaction: invokePromiseReturningThis('transaction'),
-  batch: invokeReturningModel('batch'),
+  batch: invoke('batch'),
 
   settle: invokePromiseReturningModel('settle'),
 
