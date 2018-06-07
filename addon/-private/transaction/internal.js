@@ -11,9 +11,8 @@ export default Internal.extend({
     return this.store.factoryFor('zuglet:transaction').create({ _internal: this });
   },
 
-  run() {
-    let firestore = this.store.app.firestore();
-    return resolve().then(() => firestore.runTransaction(instance => {
+  runTransaction() {
+    return this.store.app.firestore().runTransaction(instance => {
       if(this.isDestroying) {
         return resolve();
       }
@@ -23,7 +22,14 @@ export default Internal.extend({
       let fn = this.fn;
       let model = this.model(true);
       return resolve(fn(model));
-    })).then(() => undefined);
+    });
+  },
+
+  run() {
+    return this.get('store.queue').schedule({
+      name: 'transaction',
+      promise: this.runTransaction()
+    }).then(() => undefined);
   },
 
   //

@@ -182,11 +182,7 @@ export default Internal.extend({
   //
 
   transaction(fn) {
-    let transaction = this.factoryFor('zuglet:transaction/internal').create({ store: this, fn });
-    return this.get('queue').schedule({
-      name: 'transaction',
-      promise: transaction.run()
-    });
+    return this.factoryFor('zuglet:transaction/internal').create({ store: this, fn }).run();
   },
 
   batch(fn) {
