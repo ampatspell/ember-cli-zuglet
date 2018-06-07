@@ -6,6 +6,9 @@ import StoreInternal from 'ember-cli-zuglet/-private/store/internal';
 import TransactionInternal from 'ember-cli-zuglet/-private/transaction/internal';
 import Transaction from 'ember-cli-zuglet/-private/transaction/transaction';
 
+import BatchInternal from 'ember-cli-zuglet/-private/batch/internal';
+import Batch from 'ember-cli-zuglet/-private/batch/batch';
+
 import QueryArrayInternal from 'ember-cli-zuglet/-private/query/array/internal';
 import QueryArrayModel from 'ember-cli-zuglet/-private/query/array/query';
 import QueryFirstInternal from 'ember-cli-zuglet/-private/query/first/internal';
@@ -110,6 +113,11 @@ export default {
 
     container.register('zuglet:transaction/internal', TransactionInternal);
     container.register('zuglet:transaction', Transaction);
+
+    //
+
+    container.register('zuglet:batch/internal', BatchInternal);
+    container.register('zuglet:batch', Batch);
 
     //
 
