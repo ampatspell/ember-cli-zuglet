@@ -34,6 +34,10 @@ export default Internal.extend({
 
   save(internal, opts) {
     internal.saveInTransaction(this, opts);
+  },
+
+  delete(internal) {
+    internal.deleteInTransaction(this);
   }
 
 });
