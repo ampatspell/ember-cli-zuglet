@@ -32,7 +32,7 @@ module('transaction', function(hooks) {
     let doc = await this.store.doc(`ducks/yellow`).new({ value: 0 }).save();
 
     let promises = [];
-    for(let i = 0; i < 15; i++) {
+    for(let i = 0; i < 5; i++) {
       promises.push(this.increment(doc));
     }
 
@@ -40,7 +40,7 @@ module('transaction', function(hooks) {
 
     doc = await doc.reload();
     assert.deepEqual(doc.get('data.serialized'), {
-      value: 15
+      value: 5
     });
   });
 
