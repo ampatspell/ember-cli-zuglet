@@ -64,6 +64,10 @@ export default ReferenceInternal.extend({
     instance.delete(this.ref);
   },
 
+  deleteInTransaction(transaction) {
+    this.deleteInContext(transaction.instance);
+  },
+
   deleteInBatch(batch) {
     this.deleteInContext(batch.instance);
   },

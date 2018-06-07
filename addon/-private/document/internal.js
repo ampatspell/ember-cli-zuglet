@@ -312,6 +312,10 @@ export default Internal.extend({
     instance.delete(ref);
   },
 
+  deleteInTransaction(transaction) {
+    this.deleteInContext(transaction.instance);
+  },
+
   deleteInBatch(batch) {
     this.deleteInContext(batch.instance);
   }

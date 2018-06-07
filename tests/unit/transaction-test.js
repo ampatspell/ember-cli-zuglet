@@ -72,4 +72,28 @@ module('transaction', function(hooks) {
     });
   });
 
+  test('delete doc', async function(assert) {
+    let ref = this.store.doc(`ducks/yellow`);
+    let doc = await ref.new({}).save();
+
+    await this.store.transaction(async tx => {
+      tx.delete(doc);
+    });
+
+    doc = await ref.load({ optional: true });
+    assert.equal(doc.get('exists'), false);
+  });
+
+  test('delete ref', async function(assert) {
+    let ref = this.store.doc(`ducks/yellow`);
+    await ref.new({}).save();
+
+    await this.store.transaction(async tx => {
+      tx.delete(ref);
+    });
+
+    let doc = await ref.load({ optional: true });
+    assert.equal(doc.get('exists'), false);
+  });
+
 });

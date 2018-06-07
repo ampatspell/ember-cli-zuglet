@@ -9,6 +9,10 @@ export default EmberObject.extend(ModelMixin, {
 
   save(doc, opts) {
     this._internal.save(doc._internal, opts);
+  },
+
+  delete(doc) {
+    this._internal.delete(doc._internal);
   }
 
 });
