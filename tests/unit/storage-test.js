@@ -507,8 +507,7 @@ module('storage', function(hooks) {
       "isError": false,
       "isExisting": undefined,
       "isLoaded": false,
-      "isLoading": false,
-      "value": null
+      "isLoading": false
     });
 
     let promise = ref.load({ url: true });
@@ -518,8 +517,7 @@ module('storage', function(hooks) {
       "isError": false,
       "isExisting": undefined,
       "isLoaded": false,
-      "isLoading": true,
-      "value": null
+      "isLoading": true
     });
 
     let result = await promise;

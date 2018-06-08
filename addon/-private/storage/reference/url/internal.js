@@ -18,13 +18,11 @@ export default Internal.extend({
   },
 
   didLoad(value) {
-    setChangedProperties(this, { isLoading: false, isLoaded: true, isExisting: true, value });
+    this.onLoad({ value });
   },
 
   _load(opts={}) {
-    let { isLoaded, isLoading } = this.getProperties('isLoaded', 'isLoading');
-
-    if(isLoaded && !isLoading) {
+    if(!this.shouldLoad()) {
       return resolve();
     }
 

@@ -14,7 +14,7 @@ export default Internal.extend({
   },
 
   onMetadata(_metadata) {
-    setChangedProperties(this, { isLoading: false, isLoaded: true, isExisting: true, _metadata });
+    this.onLoad({ _metadata });
   },
 
   didLoad(metadata) {
@@ -26,9 +26,7 @@ export default Internal.extend({
   },
 
   _load(opts={}) {
-    let { isLoaded, isLoading } = this.getProperties('isLoaded', 'isLoading');
-
-    if(isLoaded && !isLoading) {
+    if(!this.shouldLoad()) {
       return resolve();
     }
 

@@ -2,6 +2,7 @@ import Internal from '../../../internal/internal';
 import queue from '../../../queue/computed';
 import setChangedProperties from '../../../util/set-changed-properties';
 import { reject } from 'rsvp';
+import { assign } from '@ember/polyfills';
 
 export const state = [ 'isExisting', 'isLoading', 'isLoaded', 'isError', 'error' ];
 
@@ -19,8 +20,22 @@ export default Internal.extend({
     return this.ref.factoryFor(name);
   },
 
+  shouldLoad() {
+    let { isLoaded, isLoading } = this.getProperties('isLoaded', 'isLoading');
+
+    if(isLoaded && !isLoading) {
+      return false;
+    }
+
+    return true;
+  },
+
   willLoad() {
     setChangedProperties(this, { isLoading: true, isError: false, error: null });
+  },
+
+  onLoad(props) {
+    setChangedProperties(this, assign({ isLoading: false, isLoaded: true, isExisting: true }, props));
   },
 
   onError(error, optional) {
