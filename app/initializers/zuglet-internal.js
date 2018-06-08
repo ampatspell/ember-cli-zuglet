@@ -79,6 +79,9 @@ import StorageReference from 'ember-cli-zuglet/-private/storage/reference/refere
 import StorageReferenceMetadataInternal from 'ember-cli-zuglet/-private/storage/reference/metadata/internal';
 import StorageReferenceMetadata from 'ember-cli-zuglet/-private/storage/reference/metadata/metadata';
 
+import StorageReferenceURLInternal from 'ember-cli-zuglet/-private/storage/reference/url/internal';
+import StorageReferenceURL from 'ember-cli-zuglet/-private/storage/reference/url/url';
+
 import StorageTaskInternal from 'ember-cli-zuglet/-private/storage/task/internal';
 import StorageTask from 'ember-cli-zuglet/-private/storage/task/task';
 
@@ -209,6 +212,9 @@ export default {
 
     container.register('zuglet:storage/reference/metadata/internal', StorageReferenceMetadataInternal);
     container.register('zuglet:storage/reference/metadata', StorageReferenceMetadata);
+
+    container.register('zuglet:storage/reference/url/internal', StorageReferenceURLInternal);
+    container.register('zuglet:storage/reference/url', StorageReferenceURL);
 
     container.register('zuglet:storage/task/internal', StorageTaskInternal);
     container.register('zuglet:storage/task', StorageTask);

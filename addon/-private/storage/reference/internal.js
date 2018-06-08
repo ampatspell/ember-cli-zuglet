@@ -35,8 +35,12 @@ export default Internal.extend({
     return this.factoryFor('zuglet:storage/reference/metadata/internal').create({ ref: this });
   }).readOnly(),
 
+  url: computed(function() {
+    return this.factoryFor('zuglet:storage/reference/url/internal').create({ ref: this });
+  }).readOnly(),
+
   load(opts) {
-    return this.get('metadata').load(opts);
+    // return this.get('metadata').load(opts);
   },
 
   createStorageTask(opts) {
