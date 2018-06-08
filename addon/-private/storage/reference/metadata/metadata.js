@@ -42,7 +42,6 @@ export default Model.extend(StatePropertiesMixin, {
   size: raw(),
   contentType: raw(),
   customMetadata: raw(),
-  // downloadURLs: raw(),
 
   cacheControl: raw(),
   contentDisposition: raw(),

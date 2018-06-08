@@ -1,5 +1,4 @@
 import Internal from '../base/internal';
-import queue from '../../../queue/computed';
 import setChangedProperties from '../../../util/set-changed-properties';
 import { resolve, reject } from 'rsvp';
 import { assign } from '@ember/polyfills';
@@ -15,8 +14,6 @@ export default Internal.extend({
   isLoaded:   false,
   isError:    false,
   error:      null,
-
-  queue: queue('serialized', 'ref.storage.queue'),
 
   _metadata: null,
 
@@ -59,27 +56,27 @@ export default Internal.extend({
   },
 
   load(opts={}) {
-    return this.ref.load(assign({ metadata: true }, opts));
+    return this.ref.load(assign({ url: false, metadata: true }, opts));
   },
 
-  // load(opts={}) {
-  //   let { isLoaded, isLoading } = this.getProperties('isLoaded', 'isLoading');
+  _load(opts={}) {
+    let { isLoaded, isLoading } = this.getProperties('isLoaded', 'isLoading');
 
-  //   if(isLoaded && !isLoading) {
-  //     return resolve();
-  //   }
+    if(isLoaded && !isLoading) {
+      return resolve();
+    }
 
-  //   return this.get('queue').schedule({
-  //     name: 'storage/reference/metadata/load',
-  //     reuse: operations => operations.findBy('name', 'storage/reference/metadata/load'),
-  //     invoke: () => {
-  //       this.willLoad();
-  //       return this.get('ref.ref').getMetadata();
-  //     },
-  //     didResolve: metadata => this.didLoad(metadata),
-  //     didReject: err => this.loadDidFail(err, opts)
-  //   });
-  // },
+    return this.get('queue').schedule({
+      name: 'storage/reference/metadata/load',
+      reuse: operations => operations.findBy('name', 'storage/reference/metadata/load'),
+      invoke: () => {
+        this.willLoad();
+        return this.get('ref.ref').getMetadata();
+      },
+      didResolve: metadata => this.didLoad(metadata),
+      didReject: err => this.loadDidFail(err, opts)
+    });
+  },
 
   //
 
