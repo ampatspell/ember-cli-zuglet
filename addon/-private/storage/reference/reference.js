@@ -1,5 +1,4 @@
 import EmberObject, { computed } from '@ember/object';
-import { readOnly } from '@ember/object/computed';
 import ModelMixin from '../../internal/model-mixin';
 import Mixin from '@ember/object/mixin';
 import serialized from '../../util/serialized';

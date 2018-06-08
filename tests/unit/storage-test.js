@@ -499,13 +499,27 @@ module('storage', function(hooks) {
     assert.equal(images.get('fullPath'), 'images');
   });
 
-  test.skip('load reference contains download url', async function(assert) {
+  test('load url', async function(assert) {
     await this.signIn();
     await this._put();
 
     let ref = this.storage.ref({ path: 'hello' });
-    let result = await ref.load({ url: true });
-    assert.ok(result.get('url').startsWith('https://firebasestorage.googleapis.com/'));
+    await ref.load({ url: true });
+    assert.ok(true);
+    // assert.ok(result.get('url').startsWith('https://firebasestorage.googleapis.com/'));
+  });
+
+  test.only('url load reject', async function(assert) {
+    await this.signIn();
+
+    let ref = this.storage.ref({ path: 'missing' });
+    try {
+      await ref.load({ url: true, metadata: false });
+      assert.ok(false, 'should throw');
+    } catch(err) {
+      assert.ok(true);
+      assert.equal(err.code, 'storage/object-not-found');
+    }
   });
 
 });

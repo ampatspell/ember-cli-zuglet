@@ -1,25 +1,13 @@
 import Internal from '../base/internal';
 import setChangedProperties from '../../../util/set-changed-properties';
-import { resolve, reject } from 'rsvp';
+import { resolve } from 'rsvp';
 import { assign } from '@ember/polyfills';
-
-export const state = [ 'isExisting', 'isLoading', 'isLoaded', 'isError', 'error' ];
 
 export default Internal.extend({
 
   ref: null,
 
-  isExisting: undefined,
-  isLoading:  false,
-  isLoaded:   false,
-  isError:    false,
-  error:      null,
-
   _metadata: null,
-
-  factoryFor(name) {
-    return this.ref.factoryFor(name);
-  },
 
   createModel() {
     return this.factoryFor('zuglet:storage/reference/metadata').create({ _internal: this });
@@ -29,34 +17,12 @@ export default Internal.extend({
     setChangedProperties(this, { isLoading: false, isLoaded: true, isExisting: true, _metadata });
   },
 
-  onError(error, optional) {
-    if(error.code === 'storage/object-not-found') {
-      if(optional) {
-        setChangedProperties(this, { isLoading: false, isLoaded: true, isExisting: false });
-        return;
-      } else {
-        setChangedProperties(this, { isLoading: false, isExisting: false, isLoaded: true, isError: true, error });
-      }
-    } else {
-      setChangedProperties(this, { isLoading: false, isError: true, error });
-    }
-    return reject(error);
-  },
-
-  willLoad() {
-    setChangedProperties(this, { isLoading: true, isError: false, error: null });
-  },
-
   didLoad(metadata) {
     this.onMetadata(metadata);
   },
 
-  loadDidFail(error, opts) {
-    return this.onError(error, opts.optional);
-  },
-
   load(opts={}) {
-    return this.ref.load(assign({ url: false, metadata: true }, opts));
+    return this.ref.load(assign({ metadata: true }, opts));
   },
 
   _load(opts={}) {

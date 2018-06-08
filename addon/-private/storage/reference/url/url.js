@@ -1,11 +1,12 @@
-import Model, { makeStatePropertiesMixin } from '../base/model';
-import { state } from './internal';
+import Model from '../base/model';
 import { readOnly } from '@ember/object/computed';
+import { state } from '../base/internal';
+import serialized from '../../../util/serialized';
 
-const StatePropertiesMixin = makeStatePropertiesMixin(state);
+export default Model.extend({
 
-export default Model.extend(StatePropertiesMixin, {
+  value: readOnly('_internal.value'),
 
-  value: readOnly('_internal.value')
+  serialized: serialized([ ...state, 'value' ], [ 'isExisting' ])
 
 });

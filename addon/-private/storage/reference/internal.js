@@ -42,7 +42,12 @@ export default Internal.extend({
   }).readOnly(),
 
   load(opts={}) {
-    opts = assign({ url: true, metadata: true }, opts);
+    opts = assign({ url: false, metadata: false }, opts);
+
+    if(!opts.url && !opts.metadata) {
+      opts.url = true;
+      opts.metadata = true;
+    }
 
     let tasks = [];
 

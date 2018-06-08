@@ -1,11 +1,9 @@
-import Model, { makeStatePropertiesMixin } from '../base/model';
+import Model from '../base/model';
+import { state } from '../base/internal';
+import serialized from '../../../util/serialized';
 import { computed } from '@ember/object';
 import { readOnly } from '@ember/object/computed';
-import serialized from '../../../util/serialized';
-import { state } from './internal';
 import { invokePromiseReturningThis } from '../../../internal/invoke';
-
-const StatePropertiesMixin = makeStatePropertiesMixin(state);
 
 const raw = () => computed('raw', function(key) {
   let raw = this.get('raw');
@@ -23,12 +21,7 @@ const rawDate = key => computed('raw', function() {
   return new Date(value);
 }).readOnly();
 
-const lastInArray = key => computed(key, function() {
-  let array = this.get(key);
-  return array && array[array.length - 1];
-}).readOnly();
-
-export default Model.extend(StatePropertiesMixin, {
+export default Model.extend({
 
   reference: computed(function() {
     return this._internal.ref.model(true);
@@ -57,8 +50,6 @@ export default Model.extend(StatePropertiesMixin, {
 
   createdAt: rawDate('timeCreated'),
   updatedAt: rawDate('updated'),
-
-  // downloadURL: lastInArray('downloadURLs'),
 
   // { optional }
   load: invokePromiseReturningThis('load'),
