@@ -7,7 +7,7 @@ export default Internal.extend({
 
   ref: null,
 
-  value: null,
+  value: undefined,
 
   createModel() {
     return this.factoryFor('zuglet:storage/reference/url').create({ _internal: this });

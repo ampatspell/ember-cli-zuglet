@@ -5,7 +5,6 @@ import ModelMixin from '../../internal/model-mixin';
 import serialized from '../../util/serialized';
 
 const snapshot = [
-  // 'downloadURL',
   'bytesTransferred',
   'totalBytes'
 ];
@@ -37,7 +36,7 @@ const SnapshotPropertiesMixin = Mixin.create(snapshot.reduce((hash, key) => {
 
 export default EmberObject.extend(ModelMixin, TaskPropertiesMixin, SnapshotPropertiesMixin, {
 
-  reference: computed(function() {
+  ref: computed(function() {
     return this._internal.ref.model(true);
   }).readOnly(),
 

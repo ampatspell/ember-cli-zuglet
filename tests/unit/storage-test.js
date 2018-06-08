@@ -173,7 +173,7 @@ module('storage', function(hooks) {
   test('task has ref', async function(assert) {
     await this.signIn();
     let task = this.put();
-    assert.ok(task.get('reference') === this.ref);
+    assert.ok(task.get('ref') === this.ref);
   });
 
   test('task properties', async function(assert) {
@@ -182,7 +182,6 @@ module('storage', function(hooks) {
 
     assert.deepEqual(task.get('serialized'), {
       "bytesTransferred": 0,
-      "downloadURL": null,
       "error": null,
       "isCompleted": false,
       "isError": false,
@@ -194,11 +193,8 @@ module('storage', function(hooks) {
 
     await task.get('promise');
 
-    let downloadURL = task.get('downloadURL');
-    assert.ok(downloadURL.includes('https://firebasestorage.googleapis.com'));
     assert.deepEqual(task.get('serialized'), {
       "bytesTransferred": 27,
-      "downloadURL": downloadURL,
       "error": null,
       "isCompleted": true,
       "isError": false,
@@ -207,6 +203,9 @@ module('storage', function(hooks) {
       "totalBytes": 27,
       "type": "string"
     });
+
+    let ref = await task.get('ref').load({ url: true });
+    assert.ok(ref.get('url.value'));
   });
 
   test('task upload error', async function(assert) {
@@ -228,7 +227,6 @@ module('storage', function(hooks) {
 
     assert.deepEqual(task.get('serialized'), {
       "bytesTransferred": 0,
-      "downloadURL": null,
       "error": error,
       "isCompleted": true,
       "isError": true,
@@ -430,11 +428,11 @@ module('storage', function(hooks) {
 
     let ref = this.storage.ref({ path: 'hello' });
 
-    assert.equal(ref.get('url'), undefined);
+    assert.equal(ref.get('url.value'), undefined);
 
-    await ref.load();
+    await ref.load({ url: true });
 
-    assert.ok(ref.get('url').includes('/o/hello'));
+    assert.ok(ref.get('url.value').includes('/o/hello'));
   });
 
   test('metadata update', async function(assert) {
@@ -502,14 +500,45 @@ module('storage', function(hooks) {
   test('load url', async function(assert) {
     await this.signIn();
     await this._put();
-
     let ref = this.storage.ref({ path: 'hello' });
-    await ref.load({ url: true });
-    assert.ok(true);
-    // assert.ok(result.get('url').startsWith('https://firebasestorage.googleapis.com/'));
+
+    assert.deepEqual(ref.get('url.serialized'), {
+      "error": null,
+      "isError": false,
+      "isExisting": undefined,
+      "isLoaded": false,
+      "isLoading": false,
+      "value": null
+    });
+
+    let promise = ref.load({ url: true });
+
+    assert.deepEqual(ref.get('url.serialized'), {
+      "error": null,
+      "isError": false,
+      "isExisting": undefined,
+      "isLoaded": false,
+      "isLoading": true,
+      "value": null
+    });
+
+    let result = await promise;
+
+    assert.ok(result === ref);
+
+    assert.ok(ref.get('url.value').startsWith('https://firebasestorage.googleapis.com/'));
+
+    assert.deepEqual(ref.get('url.serialized'), {
+      "error": null,
+      "isError": false,
+      "isExisting": true,
+      "isLoaded": true,
+      "isLoading": false,
+      "value": result.get('url.value')
+    });
   });
 
-  test.only('url load reject', async function(assert) {
+  test('url load reject', async function(assert) {
     await this.signIn();
 
     let ref = this.storage.ref({ path: 'missing' });
