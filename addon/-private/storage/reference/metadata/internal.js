@@ -1,5 +1,4 @@
 import Internal from '../base/internal';
-import setChangedProperties from '../../../util/set-changed-properties';
 import { resolve } from 'rsvp';
 import { assign } from '@ember/polyfills';
 

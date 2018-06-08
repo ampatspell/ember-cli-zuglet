@@ -1,6 +1,5 @@
 import Internal from '../base/internal';
 import { assign } from '@ember/polyfills';
-import setChangedProperties from '../../../util/set-changed-properties';
 import { resolve } from 'rsvp';
 
 export default Internal.extend({
