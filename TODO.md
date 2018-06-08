@@ -22,14 +22,46 @@ geopoint.getProperties('latitude', 'longitude'); // 24.72504500749274, 58.745547
 
 ## Storage
 
-`FullMetadata.downloadURLs` is deprecated
-
-* move metadata load to ref
-* mark metadata loaded only if it is actually loaded
-* keep url in ref
-* also update task snapshot FullMetadata
+* Consider moving load state to reference so that there are no separate states for metadata and url
 
 ``` javascript
 await ref.metadata.load({ optional: true }) // loads metatada
+await ref.url.load({ optional: true }) // gets download url
 await ref.load({ url: true, metadata: true, optional: true }); // does 2 identical requests
+```
+
+```
+reference
+
+  isLoading
+  isLoaded
+  ...
+
+  metadata
+    type
+    name
+    size
+    contentType
+    customMetadata
+    ...
+  url
+    value
+
+  parent
+  load()
+  put()
+  child()
+task
+  ref
+  promise
+
+  type (data, string)
+  bytesTransferred
+  totalBytes
+  percent
+
+  isRunning
+  isCompleted
+  isError
+  error
 ```
