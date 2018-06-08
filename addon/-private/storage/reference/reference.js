@@ -30,7 +30,7 @@ export default EmberObject.extend(ModelMixin, RefPropertiesMixin, {
     return internal && internal.model(true);
   }).readOnly(),
 
-  url: readOnly('metadata.downloadURL'),
+  // url: readOnly('_internal.downloadURL'),
 
   serialized: serialized(ref),
 

@@ -19,3 +19,17 @@ doc.set('data.location', { latitude, longitude });
 let geopoint = doc.get('data.location') // GeoPoint
 geopoint.getProperties('latitude', 'longitude'); // 24.72504500749274, 58.74554729994484
 ```
+
+## Storage
+
+`FullMetadata.downloadURLs` is deprecated
+
+* move metadata load to ref
+* mark metadata loaded only if it is actually loaded
+* keep url in ref
+* also update task snapshot FullMetadata
+
+``` javascript
+await ref.metadata.load({ optional: true }) // loads metatada
+await ref.load({ url: true, metadata: true, optional: true }); // does 2 identical requests
+```

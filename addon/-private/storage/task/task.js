@@ -5,7 +5,7 @@ import ModelMixin from '../../internal/model-mixin';
 import serialized from '../../util/serialized';
 
 const snapshot = [
-  'downloadURL',
+  // 'downloadURL',
   'bytesTransferred',
   'totalBytes'
 ];

@@ -46,7 +46,7 @@ export default EmberObject.extend(ModelMixin, StatePropertiesMixin, {
   size: raw(),
   contentType: raw(),
   customMetadata: raw(),
-  downloadURLs: raw(),
+  // downloadURLs: raw(),
 
   cacheControl: raw(),
   contentDisposition: raw(),
@@ -63,7 +63,7 @@ export default EmberObject.extend(ModelMixin, StatePropertiesMixin, {
   createdAt: rawDate('timeCreated'),
   updatedAt: rawDate('updated'),
 
-  downloadURL: lastInArray('downloadURLs'),
+  // downloadURL: lastInArray('downloadURLs'),
 
   // { optional }
   load: invokePromiseReturningThis('load'),
