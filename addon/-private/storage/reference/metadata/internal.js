@@ -1,66 +1,31 @@
-import Internal from '../../../internal/internal';
-import queue from '../../../queue/computed';
-import setChangedProperties from '../../../util/set-changed-properties';
-import { resolve, reject } from 'rsvp';
-
-export const state = [ 'isExisting', 'isLoading', 'isLoaded', 'isError', 'error' ];
+import Internal from '../base/internal';
+import { resolve } from 'rsvp';
+import { assign } from '@ember/polyfills';
 
 export default Internal.extend({
 
   ref: null,
 
-  isExisting: undefined,
-  isLoading:  false,
-  isLoaded:   false,
-  isError:    false,
-  error:      null,
-
-  queue: queue('serialized', 'ref.storage.queue'),
-
   _metadata: null,
-
-  factoryFor(name) {
-    return this.ref.factoryFor(name);
-  },
 
   createModel() {
     return this.factoryFor('zuglet:storage/reference/metadata').create({ _internal: this });
   },
 
   onMetadata(_metadata) {
-    setChangedProperties(this, { isLoading: false, isLoaded: true, isExisting: true, _metadata });
-  },
-
-  onError(error, optional) {
-    if(error.code === 'storage/object-not-found') {
-      if(optional) {
-        setChangedProperties(this, { isLoading: false, isLoaded: true, isExisting: false });
-        return;
-      } else {
-        setChangedProperties(this, { isLoading: false, isExisting: false, isLoaded: true, isError: true, error });
-      }
-    } else {
-      setChangedProperties(this, { isLoading: false, isError: true, error });
-    }
-    return reject(error);
-  },
-
-  willLoad() {
-    setChangedProperties(this, { isLoading: true, isError: false, error: null });
+    this.onLoad({ _metadata });
   },
 
   didLoad(metadata) {
     this.onMetadata(metadata);
   },
 
-  loadDidFail(error, opts) {
-    return this.onError(error, opts.optional);
+  load(opts={}) {
+    return this.ref.load(assign({ metadata: true }, opts));
   },
 
-  load(opts={}) {
-    let { isLoaded, isLoading } = this.getProperties('isLoaded', 'isLoading');
-
-    if(isLoaded && !isLoading) {
+  _load(opts={}) {
+    if(!this.shouldLoad()) {
       return resolve();
     }
 

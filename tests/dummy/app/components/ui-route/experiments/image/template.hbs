@@ -15,12 +15,16 @@
     {{/rows.row}}
 
     {{#rows.row}}
+      {{ui-block/json ref.url.serialized}}
+    {{/rows.row}}
+
+    {{#rows.row}}
       {{ui-block/json task.serialized}}
     {{/rows.row}}
 
-    {{#if ref.url}}
+    {{#if ref.url.value}}
       {{#rows.row}}
-        <img src={{ref.url}}>
+        <img src={{ref.url.value}}>
       {{/rows.row}}
     {{/if}}
 

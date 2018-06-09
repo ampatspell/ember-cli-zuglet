@@ -3,7 +3,9 @@ import { computed } from '@ember/object';
 import destroyCached from '../../util/destroy-cached';
 import firebase from 'firebase';
 import { assert } from '@ember/debug';
+import { assign } from '@ember/polyfills';
 import queue from '../../queue/computed';
+import { all } from 'rsvp';
 
 const {
   StringFormat
@@ -35,8 +37,29 @@ export default Internal.extend({
     return this.factoryFor('zuglet:storage/reference/metadata/internal').create({ ref: this });
   }).readOnly(),
 
-  load(opts) {
-    return this.get('metadata').load(opts);
+  url: computed(function() {
+    return this.factoryFor('zuglet:storage/reference/url/internal').create({ ref: this });
+  }).readOnly(),
+
+  load(opts={}) {
+    opts = assign({ url: false, metadata: false }, opts);
+
+    if(!opts.url && !opts.metadata) {
+      opts.url = true;
+      opts.metadata = true;
+    }
+
+    let tasks = [];
+
+    if(opts.metadata) {
+      tasks.push(this.get('metadata'));
+    }
+
+    if(opts.url) {
+      tasks.push(this.get('url'));
+    }
+
+    return all(tasks.map(task => task._load(opts)));
   },
 
   createStorageTask(opts) {

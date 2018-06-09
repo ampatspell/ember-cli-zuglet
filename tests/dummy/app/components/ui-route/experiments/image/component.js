@@ -22,6 +22,8 @@ export default Component.extend({
         }
       });
 
+      task.get('promise').then(task => task.get('ref').load({ url: true }));
+
       this.setProperties({
         ref,
         task

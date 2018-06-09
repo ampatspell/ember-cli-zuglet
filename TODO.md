@@ -1,6 +1,5 @@
 # TODO
 
-* storage: `Use Reference.getDownloadURL instead`
 * timestamp update equal should not replace internal
 * GeoPoint for data
 * primitives for query, load, .. based on destroyable-computed (`{ immediate: true }`)
