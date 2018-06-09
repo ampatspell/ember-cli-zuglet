@@ -1,3 +1,7 @@
+---
+pos: 3
+---
+
 # Document
 
 Represents single local-only or loaded document.

@@ -1,5 +1,5 @@
 ---
-pos: 2
+pos: 1
 ---
 
 # Quick Start
@@ -110,9 +110,9 @@ Let's start with creating and saving a new document in the console:
 
 ``` javascript
 ref = store.doc('zuglet/welcome');
-doc = ref.new();                  
+doc = ref.new();
 doc.set('data.message', 'hey there');
-await doc.save();                    
+await doc.save();
 ```
 
 Let's break it down:

@@ -1,3 +1,7 @@
+---
+pos: 3
+---
+
 # Store
 
 ## Create store

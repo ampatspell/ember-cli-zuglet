@@ -1,3 +1,7 @@
+---
+pos: 4
+---
+
 # Query
 
 Creates a long lived query instance which can be loaded, reloaded and observed.

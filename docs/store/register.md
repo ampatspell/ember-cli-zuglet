@@ -1,3 +1,7 @@
+---
+pos: 1
+---
+
 # Register
 
 ``` javascript

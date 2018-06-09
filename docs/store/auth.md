@@ -1,3 +1,7 @@
+---
+pos: 6
+---
+
 # Auth
 
 ``` javascript
