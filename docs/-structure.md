@@ -15,14 +15,15 @@ guides
   models
 store
   register
-  document
-    data
-  query
   references
     document reference
     collection reference
     query reference
     queryable reference
+  document
+    data
+  query
+  observer
   auth
     user
     methods

@@ -1,9 +1,11 @@
-{{#unless node.root}}
-  {{#menu.item}}
-    {{link-to node.title 'docs.page' node.id}}
-  {{/menu.item}}
-{{/unless}}
+{{#unless node.hidden}}
+  {{#unless node.root}}
+    {{#menu.item}}
+      {{link-to node.title 'docs.page' node.id}}
+    {{/menu.item}}
+  {{/unless}}
 
-{{#menu.items node.nodes as |nested|}}
-  {{ui-block/pages/toc/node node=nested menu=menu}}
-{{/menu.items}}
+  {{#menu.items node.nodes as |nested|}}
+    {{ui-block/pages/toc/node node=nested menu=menu}}
+  {{/menu.items}}
+{{/unless}}

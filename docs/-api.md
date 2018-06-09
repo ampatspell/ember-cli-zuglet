@@ -1,5 +1,5 @@
 ---
-pos: 3
+hidden: true
 ---
 
 # API
