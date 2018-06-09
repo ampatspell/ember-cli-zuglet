@@ -11,12 +11,7 @@ Provide your firebase config in `app/store.js`:
 ``` javascript
 const options = {
   firebase: {
-    apiKey: "...",
-    authDomain: "...",
-    databaseURL: "...",
-    projectId: "...",
-    storageBucket: "...",
-    messagingSenderId: "..."
+    ...
   },
   firestore: {
     persistenceEnabled: true
@@ -40,5 +35,5 @@ doc.get('data').setProperties({
 await doc.save();
 
 // check out the doc
-doc.get('serialized');
+doc.serialized
 ```
