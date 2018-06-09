@@ -2,8 +2,8 @@
 
 * timestamp update equal should not replace internal
 * GeoPoint for data
+* messaging, service worker
 * primitives for query, load, .. based on destroyable-computed (`{ immediate: true }`)
-* messaging
 * provide identity for queries. identity should also have `doc('id')` and similar
 
 ## GeoPoint
