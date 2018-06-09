@@ -1,5 +1,7 @@
 # TODO
 
+* auth: https://firebase.google.com/support/release-notes/js
+* user `getIdToken` and `getIdTokenResult`
 * make sure `snapshot.docChanges({ includeMetadataChanges: true })` metadata changes are needed here
 * timestamp update equal should not replace internal
 * GeoPoint for data
