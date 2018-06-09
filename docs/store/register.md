@@ -2,6 +2,10 @@
 pos: 1
 ---
 
+``` javascript
+import register from 'ember-cli-zuglet/register';
+```
+
 # Register
 
 ``` javascript
@@ -21,7 +25,7 @@ export default {
       service: {
         enabled: true, // default
         name: 'store', // defaults to store.identifier
-        inject: [ 'route', 'controller', 'component' ], // default
+        inject: [ 'route', 'controller', 'component', 'model' ], // default
       },
       development: {
         enabled: true,  // default
