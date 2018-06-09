@@ -69,6 +69,12 @@
     "eslint-plugin-node": "^6.0.1",
     "loader.js": "^4.2.3"
   },
+  "fastbootDependencies": [
+    "firebase",
+    "firebase/storage",
+    "firebase/firestore",
+    "firebase/functions"
+  ],
   "engines": {
     "node": "6.* || >= 7.*"
   },
