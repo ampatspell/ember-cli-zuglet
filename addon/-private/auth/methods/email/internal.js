@@ -4,13 +4,13 @@ export default Internal.extend({
 
   signIn(email, password) {
     return this.withAuthReturningUser(auth => {
-      return auth.signInAndRetrieveDataWithEmailAndPassword(email, password).then(({ user }) => user);
+      return auth.signInWithEmailAndPassword(email, password).then(({ user }) => user);
     });
   },
 
   signUp(email, password) {
     return this.withAuthReturningUser(auth => {
-      return auth.createUserAndRetrieveDataWithEmailAndPassword(email, password).then(({ user }) => user);
+      return auth.createUserWithEmailAndPassword(email, password).then(({ user }) => user);
     });
   }
 

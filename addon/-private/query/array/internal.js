@@ -50,7 +50,7 @@ export default QueryInternal.extend({
   },
 
   onChanges(snapshot) {
-    snapshot.docChanges.map(change => this.onChange(change));
+    snapshot.docChanges().map(change => this.onChange(change));
   },
 
   onReplace(snapshot) {
