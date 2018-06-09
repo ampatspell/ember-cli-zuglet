@@ -1,5 +1,6 @@
 # TODO
 
+* query pagination (up & down)
 * timestamp update equal should not replace internal
 * GeoPoint for data
 * messaging, service worker
