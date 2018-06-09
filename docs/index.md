@@ -33,6 +33,8 @@ doc.serialized // => { id: 'first', isSaved: true, ..., data: { author ...
 let doc = store.doc('message/first').existing();
 let observer = doc.observe();
 
+doc.data // Ember objects for easy observation
+
 // later
 observer.cancel();
 ```
