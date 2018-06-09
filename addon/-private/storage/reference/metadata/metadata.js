@@ -51,9 +51,6 @@ export default Model.extend({
   createdAt: rawDate('timeCreated'),
   updatedAt: rawDate('updated'),
 
-  // { optional }
-  load: invokePromiseReturningThis('load'),
-
   // { ... }
   update: invokePromiseReturningThis('update'),
 
