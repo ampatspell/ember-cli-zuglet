@@ -17,3 +17,4 @@ pos: 3
 * `doc.observers` and `query.observers` (including `promise`)
 * `store.transaction`
 * `store.batch`
+* storage `ref.url`
