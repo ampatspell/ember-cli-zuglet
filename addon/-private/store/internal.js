@@ -9,13 +9,14 @@ import queue from '../queue/computed';
 import settle from '../util/settle';
 import destroyCached from '../util/destroy-cached';
 import firebase from 'firebase';
+import isFastBoot from '../util/is-fastboot';
 
-const initializeFirebase = (identifier, opts) => {
+const initializeFirebase = (sender, identifier, opts) => {
   let config = opts.firebase;
   let app = firebase.initializeApp(config, identifier);
   let firestore = app.firestore();
   firestore.settings({ timestampsInSnapshots: true });
-  if(opts.firestore && opts.firestore.persistenceEnabled) {
+  if(opts.firestore && opts.firestore.persistenceEnabled && !isFastBoot(sender)) {
     return resolve(firestore.enablePersistence()).catch(() => {}).then(() => app);
   }
   return resolve(app);
@@ -55,7 +56,7 @@ export default Internal.extend({
     let options = model.get('options');
     assert(`identifier is required`, !!identifier);
     assert(`options must be object`, typeof options === 'object');
-    return initializeFirebase(identifier, options).then(app => {
+    return initializeFirebase(this, identifier, options).then(app => {
       this.app = app;
     });
   },
