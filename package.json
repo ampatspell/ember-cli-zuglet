@@ -70,8 +70,9 @@
     "loader.js": "^4.2.3"
   },
   "fastbootDependencies": [
-    "firebase",
+    "firebase/app",
     "firebase/storage",
+    "firebase/auth",
     "firebase/firestore",
     "firebase/functions"
   ],
