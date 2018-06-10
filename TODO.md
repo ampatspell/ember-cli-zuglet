@@ -1,5 +1,6 @@
 # TODO
 
+* user `getIdToken` and `getIdTokenResult`
 * timestamp update equal should not replace internal
 * GeoPoint for data
 * messaging, service worker

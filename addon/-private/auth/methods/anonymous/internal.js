@@ -4,7 +4,7 @@ export default Internal.extend({
 
   signIn() {
     return this.withAuthReturningUser(auth => {
-      return auth.signInAnonymouslyAndRetrieveData().then(({ user }) => user);
+      return auth.signInAnonymously().then(({ user }) => user);
     });
   }
 
