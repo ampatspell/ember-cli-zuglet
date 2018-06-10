@@ -13,7 +13,10 @@ module.exports = function(environment) {
     },
     APP: {
     },
-    version: require('../../../package.json').version
+    version: require('../../../package.json').version,
+    docs: {
+      url: 'https://ember-cli-zuglet.appspot.com'
+    }
   };
 
   let config;
@@ -51,6 +54,7 @@ module.exports = function(environment) {
   ENV.firebase = config;
 
   if(environment === 'development') {
+    ENV.docs.url = 'http://127.0.0.1:4200';
     // ENV.APP.LOG_RESOLVER = true;
     // ENV.APP.LOG_ACTIVE_GENERATION = true;
     // ENV.APP.LOG_TRANSITIONS = true;

@@ -1,10 +1,18 @@
 import Mixin from '@ember/object/mixin';
 import fetch from 'fetch';
+import environment from '../../config/environment';
+import { computed } from '@ember/object';
+import isFastBoot from 'ember-cli-zuglet/-private/util/is-fastboot';
 
 export default Mixin.create({
 
-  // url: 'http://127.0.0.1:4200/assets/ember-cli-remark-static/docs',
-  url: '/assets/ember-cli-remark-static/docs',
+  url: computed(function() {
+    let path = '/assets/ember-cli-remark-static/docs';
+    if(isFastBoot(this)) {
+      return `${environment.docs.url}${path}`;
+    }
+    return path;
+  }).readOnly(),
 
   _loadJSON(url) {
     let root = this.get('url');
