@@ -3,6 +3,7 @@ import fetch from 'fetch';
 
 export default Mixin.create({
 
+  // url: 'http://127.0.0.1:4200/assets/ember-cli-remark-static/docs',
   url: '/assets/ember-cli-remark-static/docs',
 
   _loadJSON(url) {
