@@ -11,9 +11,11 @@ import destroyCached from '../util/destroy-cached';
 import firebase from 'firebase';
 import isFastBoot from '../util/is-fastboot';
 
+let id = 0;
+
 const initializeFirebase = (sender, identifier, opts) => {
   let config = opts.firebase;
-  let app = firebase.initializeApp(config, identifier);
+  let app = firebase.initializeApp(config, `${identifier}-${++id}`);
   let firestore = app.firestore();
   firestore.settings({ timestampsInSnapshots: true });
   if(opts.firestore && opts.firestore.persistenceEnabled && !isFastBoot(sender)) {
