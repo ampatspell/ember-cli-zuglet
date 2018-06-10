@@ -1,14 +1,17 @@
 import EmberRouter from '@ember/routing/router';
 import config from './config/environment';
+import isFastBoot from 'ember-cli-zuglet/-private/util/is-fastboot';
 
 const Router = EmberRouter.extend({
   location: config.locationType,
   rootURL: config.rootURL,
 
   didTransition() {
-  window.scrollTo(0, 0);
-  this._super(...arguments);
-}
+    if(!isFastBoot(this)) {
+      window.scrollTo(0, 0);
+    }
+    this._super(...arguments);
+  }
 
 });
 
