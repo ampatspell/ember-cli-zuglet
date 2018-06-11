@@ -8,7 +8,10 @@ module.exports = function(defaults) {
       paths: {
         'docs': 'docs'
       }
-    }
+    },
+    // addons: {
+    //   blacklist: [ 'ember-cli-fastboot' ]
+    // }
   });
 
   return app.toTree();
