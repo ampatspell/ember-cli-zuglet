@@ -8,21 +8,7 @@ import { defer, resolve } from 'rsvp';
 import queue from '../queue/computed';
 import settle from '../util/settle';
 import destroyCached from '../util/destroy-cached';
-import firebase from 'firebase';
-import isFastBoot from '../util/is-fastboot';
-
-let id = 0;
-
-const initializeFirebase = (sender, identifier, opts) => {
-  let config = opts.firebase;
-  let app = firebase.initializeApp(config, `${identifier}-${++id}`);
-  let firestore = app.firestore();
-  firestore.settings({ timestampsInSnapshots: true });
-  if(opts.firestore && opts.firestore.persistenceEnabled && !isFastBoot(sender)) {
-    return resolve(firestore.enablePersistence()).catch(() => {}).then(() => app);
-  }
-  return resolve(app);
-}
+import allocateFirebaseInstance from '../firebase/allocate-instance';
 
 export default Internal.extend({
 
@@ -58,8 +44,11 @@ export default Internal.extend({
     let options = model.get('options');
     assert(`identifier is required`, !!identifier);
     assert(`options must be object`, typeof options === 'object');
-    return initializeFirebase(this, identifier, options).then(app => {
+    options.firestore = assign({ persistenceEnabled: false }, options.firestore);
+    options.pool = assign({ size: 10 }, options.pool);
+    return allocateFirebaseInstance(this, identifier, options).then(({ app, release }) => {
       this.app = app;
+      this.release = release;
     });
   },
 
@@ -219,7 +208,7 @@ export default Internal.extend({
     destroyCached(this, 'auth');
     destroyCached(this, 'storage');
     this.get('observed').map(internal => internal.destroy());
-    this.app && this.app.delete();
+    this.release && this.release();
     this._super(...arguments);
   }
 

@@ -1,9 +1,9 @@
-import FirebasePool from 'ember-cli-zuglet/-private/firebase/pool';
+import FirebasePools from 'ember-cli-zuglet/-private/firebase/pools';
 
 export default {
   name: 'zuglet:pool',
   initialize(container) {
-    let instance = FirebasePool.create();
-    container.register('zuglet:firebase/pool', instance, { instantiate: false });
+    let instance = FirebasePools.create();
+    container.register('zuglet:firebase/pools', instance, { instantiate: false });
   }
 }
