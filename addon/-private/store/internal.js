@@ -8,7 +8,7 @@ import { defer, resolve } from 'rsvp';
 import queue from '../queue/computed';
 import settle from '../util/settle';
 import destroyCached from '../util/destroy-cached';
-import allocateInstance from '../firebase/allocate-instance';
+import instantiateFirebase from '../firebase/instantiate';
 
 export default Internal.extend({
 
@@ -49,7 +49,7 @@ export default Internal.extend({
     options.firestore = assign({ persistenceEnabled: false }, options.firestore);
     options.pool = assign({ size: 0 }, options.pool);
 
-    this.allocator = allocateInstance(this, identifier, options);
+    this.allocator = instantiateFirebase(this, identifier, options);
     return this.allocator.promise.then(app => this.app = app);
   },
 
@@ -209,7 +209,7 @@ export default Internal.extend({
     destroyCached(this, 'auth');
     destroyCached(this, 'storage');
     this.get('observed').map(internal => internal.destroy());
-    this.allocator && this.allocator.release();
+    this.allocator && this.allocator.destroy();
     this._super(...arguments);
   }
 

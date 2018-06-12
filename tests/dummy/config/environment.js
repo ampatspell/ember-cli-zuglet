@@ -47,9 +47,6 @@ module.exports = function(environment) {
       },
       firestore: {
         persistenceEnabled: true
-      },
-      pool: {
-        size: 25
       }
     };
   }
