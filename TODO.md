@@ -22,6 +22,13 @@ geopoint.getProperties('latitude', 'longitude'); // 24.72504500749274, 58.745547
 
 ## Fastboot
 
+* move all firebase stuff to /firebase
+* `URL=https://ember-cli-zuglet.appspot.com build -prod --output-path firebase/dist`
+* manually add all fastboot whitelisted deps to functions package.json
+* add fastboot https function
+* add rewrite for assets to cdn
+* add rewrite for ** => app
+
 ``` javascript
 const express = require('express');
 const fastbootMiddleware = require('fastboot-express-middleware');
