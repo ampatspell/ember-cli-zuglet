@@ -8,7 +8,7 @@ import { defer, resolve } from 'rsvp';
 import queue from '../queue/computed';
 import settle from '../util/settle';
 import destroyCached from '../util/destroy-cached';
-import allocateFirebaseInstance from '../firebase/allocate-instance';
+import allocateInstance from '../firebase/allocate-instance';
 
 export default Internal.extend({
 
@@ -41,15 +41,16 @@ export default Internal.extend({
 
   prepareFirebase(model) {
     let identifier = this.get('identifier');
-    let options = model.get('options');
     assert(`identifier is required`, !!identifier);
+
+    let options = model.get('options');
     assert(`options must be object`, typeof options === 'object');
+
     options.firestore = assign({ persistenceEnabled: false }, options.firestore);
-    options.pool = assign({ size: 10 }, options.pool);
-    return allocateFirebaseInstance(this, identifier, options).then(({ app, release }) => {
-      this.app = app;
-      this.release = release;
-    });
+    options.pool = assign({ size: 0 }, options.pool);
+
+    this.allocator = allocateInstance(this, identifier, options);
+    return this.allocator.promise.then(app => this.app = app);
   },
 
   prepareAuth() {
@@ -208,7 +209,7 @@ export default Internal.extend({
     destroyCached(this, 'auth');
     destroyCached(this, 'storage');
     this.get('observed').map(internal => internal.destroy());
-    this.release && this.release();
+    this.allocator && this.allocator.release();
     this._super(...arguments);
   }
 

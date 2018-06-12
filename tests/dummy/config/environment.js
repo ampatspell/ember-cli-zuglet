@@ -49,7 +49,7 @@ module.exports = function(environment) {
         persistenceEnabled: true
       },
       pool: {
-        size: 5
+        size: 25
       }
     };
   }
