@@ -44,16 +44,6 @@ export default EmberObject.extend(ModelMixin, {
   find(...args) {
     let string = args.map(arg => typeof arg === 'string' ? `"${arg}"` : arg).join(', ');
     console.warn(`ember-cli-zuglet: store.find(${string})`);
-  },
-
-  init() {
-    this._super(...arguments);
-    console.log('init', this+'');
-  },
-
-  willDestroy() {
-    console.log('willDestroy', this+'');
-    this._super(...arguments);
   }
 
 });

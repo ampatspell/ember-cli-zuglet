@@ -8,7 +8,6 @@ export default EmberObject.extend(ModelMixin, {
   init() {
     this._super(...arguments);
     this._internal = getOwner(this).factoryFor('zuglet:stores/internal').create({ _model: this });
-    console.log('init', this+'');
   },
 
   ready: computed('_internal.stores.[]', function() {
@@ -17,11 +16,6 @@ export default EmberObject.extend(ModelMixin, {
 
   createStore: invokeReturningModel('createStore'),
 
-  settle: invokePromiseReturningThis('settle'),
-
-  willDestroy() {
-    console.log('willDestroy', this+'');
-    this._super(...arguments);
-  }
+  settle: invokePromiseReturningThis('settle')
 
 });
