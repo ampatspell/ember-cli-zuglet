@@ -41,14 +41,9 @@ export default Internal.extend({
 
   prepareFirebase(model) {
     let identifier = this.get('identifier');
-    assert(`identifier is required`, !!identifier);
-
     let options = model.get('options');
+    assert(`identifier is required`, !!identifier);
     assert(`options must be object`, typeof options === 'object');
-
-    options.firestore = assign({ persistenceEnabled: false }, options.firestore);
-    options.pool = assign({ size: 0 }, options.pool);
-
     this.allocator = instantiateFirebase(this, identifier, options);
     return this.allocator.promise.then(app => this.app = app);
   },
