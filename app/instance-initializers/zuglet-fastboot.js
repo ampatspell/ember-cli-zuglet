@@ -1,7 +1,9 @@
+import { _lookupFastboot } from 'ember-cli-zuglet/-private/util/fastboot';
+
 export default {
   name: 'zuglet:fastboot',
   initialize(app) {
-    let fastboot = app.lookup('service:fastboot');
+    let { fastboot, isFastBoot } = _lookupFastboot(app);
 
     if(!fastboot) {
       return;
@@ -9,7 +11,7 @@ export default {
 
     let stores = app.lookup('zuglet:stores');
 
-    if(fastboot.get('isFastBoot')) {
+    if(isFastBoot) {
       fastboot.deferRendering(stores.settle());
     }
   }
