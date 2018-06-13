@@ -1,6 +1,6 @@
 import firebase from 'firebase';
 import { resolve } from 'rsvp';
-import isFastBoot from '../util/is-fastboot';
+import { isFastBoot } from '../util/fastboot';
 
 let _id = 0;
 

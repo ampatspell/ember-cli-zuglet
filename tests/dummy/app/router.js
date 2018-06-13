@@ -1,6 +1,6 @@
 import EmberRouter from '@ember/routing/router';
 import config from './config/environment';
-import isFastBoot from 'ember-cli-zuglet/-private/util/is-fastboot';
+import { isFastBoot } from 'ember-cli-zuglet/-private/util/fastboot';
 
 const Router = EmberRouter.extend({
   location: config.locationType,

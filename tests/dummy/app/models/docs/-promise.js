@@ -2,7 +2,7 @@ import Mixin from '@ember/object/mixin';
 import fetch from 'fetch';
 import environment from '../../config/environment';
 import { computed } from '@ember/object';
-import isFastBoot from 'ember-cli-zuglet/-private/util/is-fastboot';
+import { isFastBoot } from 'ember-cli-zuglet/-private/util/fastboot';
 
 export default Mixin.create({
 
