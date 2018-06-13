@@ -1,6 +1,6 @@
 import { getOwner } from '@ember/application';
 
-export const lookupFastboot = owner => {
+export const lookupFastBoot = owner => {
   let fastboot = owner.lookup('service:fastboot');
   let isFastBoot = fastboot && fastboot.get('isFastBoot');
   return {
@@ -9,9 +9,9 @@ export const lookupFastboot = owner => {
   }
 }
 
-export const getFastboot = sender => lookupFastboot(getOwner(sender));
+export const getFastBoot = sender => lookupFastBoot(getOwner(sender));
 
 export const isFastBoot = sender => {
-  let { isFastBoot } = getFastboot(sender);
+  let { isFastBoot } = getFastBoot(sender);
   return isFastBoot;
 };
