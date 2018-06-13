@@ -1,9 +1,9 @@
-import { _lookupFastboot } from 'ember-cli-zuglet/-private/util/fastboot';
+import { lookupFastboot } from 'ember-cli-zuglet/-private/util/fastboot';
 
 export default {
   name: 'zuglet:fastboot',
   initialize(app) {
-    let { fastboot, isFastBoot } = _lookupFastboot(app);
+    let { fastboot, isFastBoot } = lookupFastboot(app);
 
     if(!fastboot) {
       return;
