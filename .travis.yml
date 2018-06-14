@@ -1,7 +1,7 @@
 ---
 language: node_js
 node_js:
-  - "8"
+  - "6"
 
 sudo: false
 dist: trusty
@@ -31,7 +31,7 @@ matrix:
 
 before_install:
   - npm config set spin false
-  - npm install -g npm@5
+  - npm install -g npm@4
   - npm --version
 
 script:
