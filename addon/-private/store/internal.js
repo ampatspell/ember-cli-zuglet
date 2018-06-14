@@ -8,18 +8,7 @@ import { defer, resolve } from 'rsvp';
 import queue from '../queue/computed';
 import settle from '../util/settle';
 import destroyCached from '../util/destroy-cached';
-import firebase from 'firebase';
-
-const initializeFirebase = (identifier, opts) => {
-  let config = opts.firebase;
-  let app = firebase.initializeApp(config, identifier);
-  let firestore = app.firestore();
-  firestore.settings({ timestampsInSnapshots: true });
-  if(opts.firestore && opts.firestore.persistenceEnabled) {
-    return resolve(firestore.enablePersistence()).catch(() => {}).then(() => app);
-  }
-  return resolve(app);
-}
+import instantiateFirebase from '../firebase/instantiate';
 
 export default Internal.extend({
 
@@ -55,9 +44,8 @@ export default Internal.extend({
     let options = model.get('options');
     assert(`identifier is required`, !!identifier);
     assert(`options must be object`, typeof options === 'object');
-    return initializeFirebase(identifier, options).then(app => {
-      this.app = app;
-    });
+    this.allocator = instantiateFirebase(this, identifier, options);
+    return this.allocator.promise.then(app => this.app = app);
   },
 
   prepareAuth() {
@@ -216,7 +204,7 @@ export default Internal.extend({
     destroyCached(this, 'auth');
     destroyCached(this, 'storage');
     this.get('observed').map(internal => internal.destroy());
-    this.app && this.app.delete();
+    this.allocator && this.allocator.destroy();
     this._super(...arguments);
   }
 
