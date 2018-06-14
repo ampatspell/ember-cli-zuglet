@@ -1,7 +1,7 @@
 import EmberObject, { computed } from '@ember/object';
 import { getOwner } from '@ember/application';
 import ModelMixin from '../internal/model-mixin';
-import { invokeReturningModel } from '../internal/invoke';
+import { invokeReturningModel, invokePromiseReturningThis } from '../internal/invoke';
 
 export default EmberObject.extend(ModelMixin, {
 
@@ -14,6 +14,8 @@ export default EmberObject.extend(ModelMixin, {
     return this._internal.ready();
   }).readOnly(),
 
-  createStore: invokeReturningModel('createStore')
+  createStore: invokeReturningModel('createStore'),
+
+  settle: invokePromiseReturningThis('settle')
 
 });

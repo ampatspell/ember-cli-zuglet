@@ -40,6 +40,10 @@ export default Internal.extend({
     return all(this.get('stores').map(store => store.get('ready')));
   },
 
+  settle() {
+    return all(this.get('stores').map(store => store.settle()));
+  },
+
   registerWillDestroyListener(fn) {
     let array = this.get('willDestroyListeners');
     array.pushObject(fn);

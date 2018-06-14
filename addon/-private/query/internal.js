@@ -115,10 +115,7 @@ export default Internal.extend({
 
   subscribeQueryOnSnapshot() {
     let query = this.get('unwrappedQuery');
-    let opts = {
-      includeDocumentMetadataChanges: true,
-      includeQueryMetadataChanges: true
-    };
+    let opts = { includeMetadataChanges: true };
     return query.onSnapshot(opts, snapshot => actions(() => this.onSnapshot(snapshot)));
   },
 

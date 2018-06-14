@@ -1,6 +1,7 @@
 # TODO
 
 * query pagination (up & down)
+* user `getIdToken` and `getIdTokenResult`
 * timestamp update equal should not replace internal
 * GeoPoint for data
 * messaging, service worker
@@ -18,4 +19,28 @@ doc.set('data.location', geopoint);
 doc.set('data.location', { latitude, longitude });
 let geopoint = doc.get('data.location') // GeoPoint
 geopoint.getProperties('latitude', 'longitude'); // 24.72504500749274, 58.74554729994484
+```
+
+## Fastboot
+
+* move all firebase stuff to /firebase
+* `URL=https://ember-cli-zuglet.appspot.com build -prod --output-path firebase/dist`
+* manually add all fastboot whitelisted deps to functions package.json
+* add fastboot https function
+* add rewrite for assets to cdn
+* add rewrite for ** => app
+
+``` javascript
+const express = require('express');
+const fastbootMiddleware = require('fastboot-express-middleware');
+
+let app = express();
+
+app.use(express.static('../dist', { index: false }));
+
+app.get('/*', fastbootMiddleware('../dist'));
+
+app.listen(3000, () => {
+  console.log('FastBoot app listening on port 3000!');
+});
 ```
