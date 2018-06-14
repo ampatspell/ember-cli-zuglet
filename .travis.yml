@@ -9,9 +9,8 @@ dist: trusty
 addons:
   chrome: stable
 
-# cache:
-#   directories:
-#     - $HOME/.npm
+cache:
+  yarn: true
 
 env:
   global:
@@ -30,12 +29,14 @@ matrix:
     - env: EMBER_TRY_SCENARIO=ember-canary
 
 before_install:
-  - npm config set spin false
-  - npm install -g npm@4
-  - npm --version
+  - curl -o- -L https://yarnpkg.com/install.sh | bash
+  - export PATH=$HOME/.yarn/bin:$PATH
+
+install:
+  - yarn install --no-lockfile --non-interactive
 
 script:
-  - npm run lint:js
+  - yarn lint:js
   - node_modules/.bin/ember try:one $EMBER_TRY_SCENARIO --skip-cleanup
 
 notifications:
