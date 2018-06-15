@@ -14,16 +14,12 @@ const asTree = json => {
   json.map(item => {
     let { id, headings, frontmatter: { hidden, title, pos } } = item;
 
-    if(hidden) {
-      return;
-    }
-
     let segments = id.split('/');
     let parent = tree;
     segments.forEach(segment => {
       let node = parent.nodes.findBy('segment', segment);
       if(!node) {
-        node = { segment, id, nodes: A() };
+        node = { segment, id, hidden, nodes: A() };
         parent.nodes.push(node);
       }
       parent = node;

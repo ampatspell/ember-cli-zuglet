@@ -1,3 +1,7 @@
+---
+pos: 8
+---
+
 # Functions
 
 ``` javascript
@@ -13,4 +17,5 @@ let result = await hello.call({ name: 'zeeba' });
 }
 ```
 
-> TODO
+* Functions
+* Callable

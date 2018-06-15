@@ -1,10 +1,8 @@
 ---
-pos: 3
+hidden: true
 ---
 
-# API
-
-## TODO
+# TODO
 
 * `store.serverTimestamp()`
 * `data/timestamp` model

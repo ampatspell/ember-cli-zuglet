@@ -1,3 +1,7 @@
+---
+pos: 7
+---
+
 # Storage
 
 ``` javascript
@@ -21,5 +25,3 @@ await ref.metadata.load({ optional: true }) // loads metatada
 await ref.url.load({ optional: true }) // gets download url
 await ref.load({ url: true, metadata: true, optional: true }); // does 2 identical requests
 ```
-
-> TODO

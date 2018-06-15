@@ -1,3 +1,11 @@
+---
+pos: 3
+---
+
+``` javascript
+import Store from 'ember-cli-zuglet/store';
+```
+
 # Store
 
 ## Create store

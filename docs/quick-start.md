@@ -1,5 +1,5 @@
 ---
-pos: 2
+pos: 1
 ---
 
 # Quick Start
@@ -110,16 +110,19 @@ Let's start with creating and saving a new document in the console:
 
 ``` javascript
 ref = store.doc('zuglet/welcome');
-doc = ref.new();                  
-doc.set('data.message', 'hey there');
-await doc.save();                    
+doc = ref.new();
+doc.data.setProperties({
+  message: 'hey there'
+});
+
+await doc.save();
 ```
 
 Let's break it down:
 
 * `store.doc` creates a document reference (like a glorified id)
 * `ref.new()` creates a new document model with provided reference
-* `doc.set('data....', '...')` sets a property for document
+* `doc.data.setProperty({ ... })` updates document properties
 * `doc.save()` saves document in firestore
 
 Check out Database → zuglet → welcome document in Firebase Console.
@@ -134,15 +137,15 @@ doc = await ref.load();
 And let's update some properties:
 
 ``` javascript
-doc.get('data.serialized')
+doc.data.serialized
 // { message: "hey there" }
 
-doc.get('data').setProperties({
+doc.data.setProperties({
   message: 'Hey, Firestore, how are you today?',
   author: 'zuglet'
 });
 
-doc.get('data.serialized');
+doc.data.serialized
 // { message: "Hey, Firestore, how are you today?", author: "zuglet" }
 ```
 
