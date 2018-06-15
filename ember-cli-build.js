@@ -11,8 +11,8 @@ module.exports = function(defaults) {
       }
     },
     prember: {
-      urls: async function({ visit }) {
-        return await crawl({
+      urls({ visit }) {
+        return crawl({
           visit,
           startingFrom: [ '/' ]
         });
