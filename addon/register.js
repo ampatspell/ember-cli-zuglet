@@ -1,6 +1,7 @@
 import { assign } from '@ember/polyfills';
 import { assert } from '@ember/debug';
 import { A } from '@ember/array';
+import { isFastBoot } from './-private/util/fastboot';
 
 // register({
 //   app,
@@ -49,7 +50,7 @@ export default opts => {
 
   if(opts.development.enabled && environment(app) === 'development') {
     opts.development = assign({ export: opts.store.identifier }, opts.development);
-    if(typeof window !== 'undefined') {
+    if(typeof window !== 'undefined' && !isFastBoot(store)) {
       let key = opts.store.identifier;
       window[key] = store;
       console.log(`window.${key} = ${store}`);
