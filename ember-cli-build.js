@@ -9,6 +9,12 @@ module.exports = function(defaults) {
         'docs': 'docs'
       }
     },
+    prember: {
+      urls: [
+        '/',
+        '/docs'
+      ]
+    }
     // addons: {
     //   blacklist: [ 'ember-cli-fastboot' ]
     // }
