@@ -1,0 +1,17 @@
+{{#ui-block/message as |message|}}
+
+  {{message.title value='Oops, something went wrong'}}
+
+  {{#message.content}}
+    {{#if model.message}}
+      {{model.message}}
+    {{else}}
+      {{model}}
+    {{/if}}
+  {{/message.content}}
+
+  {{#message.content}}
+    {{link-to '← back to index' 'index'}}
+  {{/message.content}}
+
+{{/ui-block/message}}
