@@ -35,9 +35,7 @@ before_install:
   - npm --version
 
 install:
-  - cat package.json
-  - npm install
-  - npm ls
+  - npm install --no-package-lock
 
 script:
   - npm run lint:js
