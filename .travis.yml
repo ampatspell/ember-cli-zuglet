@@ -34,6 +34,9 @@ before_install:
   - npm install -g npm@latest
   - npm --version
 
+install:
+  - npm install
+
 script:
   - npm run lint:js
   - node_modules/.bin/ember try:one $EMBER_TRY_SCENARIO --skip-cleanup
