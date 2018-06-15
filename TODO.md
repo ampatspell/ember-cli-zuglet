@@ -44,3 +44,8 @@ app.listen(3000, () => {
   console.log('FastBoot app listening on port 3000!');
 });
 ```
+
+```
+$ PREMBER=true ember s
+$ FASTBOOT_DISABLED=true ember s
+```
