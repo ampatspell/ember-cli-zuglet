@@ -1,6 +1,7 @@
 'use strict';
 
 const EmberAddon = require('ember-cli/lib/broccoli/ember-addon');
+const crawl = require('prember-crawler');
 
 module.exports = function(defaults) {
   let app = new EmberAddon(defaults, {
@@ -10,10 +11,12 @@ module.exports = function(defaults) {
       }
     },
     prember: {
-      urls: [
-        '/',
-        '/docs'
-      ]
+      urls: async function({ visit }) {
+        return await crawl({
+          visit,
+          startingFrom: [ '/' ]
+        });
+      }
     }
     // addons: {
     //   blacklist: [ 'ember-cli-fastboot' ]

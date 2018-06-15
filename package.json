@@ -70,6 +70,7 @@
     "eslint-plugin-node": "^6.0.1",
     "loader.js": "^4.2.3",
     "prember": "^0.4.0",
+    "prember-crawler": "^0.1.0",
     "prember-middleware": "^0.1.0"
   },
   "engines": {
