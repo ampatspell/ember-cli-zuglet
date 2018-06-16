@@ -1,10 +1,10 @@
 {
   "firestore": {
-    "rules": "firestore.rules",
-    "indexes": "firestore.indexes.json"
+    "rules": "rules/firestore.rules",
+    "indexes": "rules/firestore.indexes.json"
   },
   "hosting": {
-    "public": "dist",
+    "public": "public",
     "ignore": [
       "firebase.json",
       "**/.*",
@@ -18,7 +18,7 @@
     ]
   },
   "storage": {
-    "rules": "storage.rules"
+    "rules": "rules/storage.rules"
   },
   "functions": {
     "predeploy": [
