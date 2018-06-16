@@ -20,4 +20,4 @@ testem.js
 bower.json.ember-try
 package.json.ember-try
 
-/functions/node_modules/
+/firebase
