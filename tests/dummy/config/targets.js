@@ -9,6 +9,7 @@ const isProduction = process.env.EMBER_ENV === 'production';
 
 if (isCI || isProduction) {
   browsers.push('ie 11');
+  browsers.push('Chrome 41');
 }
 
 module.exports = {

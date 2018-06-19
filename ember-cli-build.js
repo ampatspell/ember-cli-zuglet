@@ -17,9 +17,9 @@ module.exports = function(defaults) {
           startingFrom: [ '/' ]
         });
       }
-    }
+    },
     // addons: {
-    //   blacklist: [ 'ember-cli-fastboot' ]
+    //   blacklist: [ 'ember-cli-fastboot', 'prember' ]
     // }
   });
 
