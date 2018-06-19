@@ -1,9 +1,10 @@
 # TODO
 
-* query pagination (up & down)
 * user `getIdToken` and `getIdTokenResult`
+* query pagination (up & down)
 * timestamp update equal should not replace internal
 * GeoPoint for data
+* fastboot shoebox (?)
 * messaging, service worker
 * primitives for query, load, .. based on destroyable-computed (`{ immediate: true }`)
 * provide identity for queries. identity should also have `doc('id')` and similar
