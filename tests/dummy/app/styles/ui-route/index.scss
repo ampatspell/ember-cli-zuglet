@@ -10,6 +10,27 @@
       font-weight: 200;
     }
     > .subtitle {
+      a {
+        text-decoration: none;
+        display: inline-block;
+        position: relative;
+        &:after {
+          content: '';
+          position: absolute;
+          left: 0;
+          right: 0;
+          bottom: 2px;
+          height: 1px;
+          background: #ccc;
+          z-index: -1;
+          transition: background-color 0.2s ease-in-out;
+        }
+        &:hover {
+          &:after {
+            background: #666;
+          }
+        }
+      }
     }
   }
   > .ui-route-index-navigation {
