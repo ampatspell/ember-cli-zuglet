@@ -12,6 +12,11 @@
         }
       }
     }
+    > .value {
+      > a {
+        text-decoration: none;
+      }
+    }
   }
   .item {
     line-height: 15px * 1.5;

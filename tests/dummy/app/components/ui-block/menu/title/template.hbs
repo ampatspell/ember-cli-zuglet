@@ -1,4 +1,10 @@
 {{#link-to 'index' class='index'}}
   ember-cli-zuglet<span class="version">{{version}}</span>
 {{/link-to}}
-<div class="value">{{value}}</div>
+<div class="value">
+  {{#if route}}
+    {{link-to value route}}
+  {{else}}
+    {{value}}
+  {{/if}}
+</div>
