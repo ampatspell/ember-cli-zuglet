@@ -1,25 +1,15 @@
-import EmberObject from '@ember/object';
-import PromiseMixin from './-promise';
+import Page from 'ember-cli-remark-static/static/page';
+import { computed } from '@ember/object';
+import { readOnly } from '@ember/object/computed';
 
-export default EmberObject.extend(PromiseMixin, {
+export default Page.extend({
 
-  id: null,
+  title: computed('headings', 'frontmatter', function() {
+    let { name, headings, frontmatter } = this.getProperties('name', 'headings', 'frontmatter');
+    return frontmatter.title || headings[0].value || name;
+  }).readOnly(),
 
-  _deserialize(json) {
-    this.set('node', json);
-  },
-
-  _load() {
-    let id = this.get('id');
-    return this._loadJSON(`/${id}.json`).then(json => this._deserialize(json)).then(() => this);
-  },
-
-  preprocessNode(/*parent, node */) {
-  },
-
-  toStringExtension() {
-    let id = this.get('id');
-    return `${id}`;
-  }
+  pos: readOnly('frontmatter.pos'),
+  hidden: readOnly('frontmatter.hidden')
 
 });
