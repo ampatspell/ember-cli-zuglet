@@ -1,4 +1,4 @@
 {{#ui-block/menu as |menu|}}
-  {{menu.title 'Documentation'}}
-  {{ui-block/pages/toc/node node=tree menu=menu}}
+  {{menu.title 'Documentation' route='docs'}}
+  {{ui-block/pages/toc/node page=docs.content menu=menu}}
 {{/ui-block/menu}}
