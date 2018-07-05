@@ -54,8 +54,8 @@ module.exports = {
         }
       }));
 
-      let firebase = require('firebase');
-      versions.push(`Ember.libraries.register('Firebase SDK', '${firebase.SDK_VERSION}');`)
+      let firebase = require('firebase/package.json');
+      versions.push(`Ember.libraries.register('Firebase SDK', '${firebase.version}');`)
     }
 
     if(isLuxonEnabled) {

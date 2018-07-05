@@ -37,13 +37,13 @@
     "broccoli-merge-trees": "^3.0.0",
     "ember-cli-babel": "^6.14.1",
     "xmlhttprequest": "^1.8.0",
-    "firebase": "^5.1.0",
-    "luxon": "^1.3.0",
+    "firebase": "^5.2.0",
+    "luxon": "^1.3.1",
     "broccoli-webpack": "^1.0.0"
   },
   "devDependencies": {
     "broccoli-asset-rev": "^2.7.0",
-    "ember-cli": "~3.1.4",
+    "ember-cli": "~3.2.0",
     "ember-cli-dependency-checker": "^2.1.1",
     "ember-cli-eslint": "^4.2.3",
     "ember-cli-fastboot": "^1.1.4-beta.1",
