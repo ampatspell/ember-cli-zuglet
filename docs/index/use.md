@@ -1,3 +1,11 @@
+## Cloud Firestore
+
+* Query, load, save and delete documents
+* Document and query change observation
+* Supports and encourages to use Firestore local persistence
+* Exposes distingtion between document change observation and explicit loading
+* Stateful documents
+
 ## Save Firestore document
 
 ``` javascript
@@ -68,6 +76,12 @@ query.content // => [ doc, ... ]
 observer.cancel();
 ```
 
+## Cloud Storage
+
+* Upload files
+* Manage file metadata
+* Retrieve file download URLs
+
 ## Upload a file to Cloud Storage
 
 ``` javascript
@@ -90,6 +104,11 @@ task.isCompleted // => true
 
 ## Firebase Authentication
 
+* Sign-up users
+* Sign-in users
+* Retrieve current user
+* Load related data on authentication events
+
 ``` javascript
 let auth = this.store.auth;
 await auth.signOut();
@@ -108,3 +127,15 @@ let email = auth.methods.email;
 
 let user = await email.signIn(props.email, props.password);
 ```
+
+## Cloud Functions
+
+Lets you call Firebase Cloud Functions.
+
+## Models
+
+Use models in routes and components to encapsulate documents and queries with lifecycle management for change observation.
+
+## FastBoot
+
+Supports server-side rendering with FastBoot
