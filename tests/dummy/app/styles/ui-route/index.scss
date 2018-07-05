@@ -46,8 +46,30 @@
 
   &.header {
     > .content {
+      > .fire {
+        font-size: 32px;
+        line-height: 1em;
+        margin-bottom: 5px;
+        &:after {
+          content: '🔥';
+        }
+        @include breakpoint(non-desktop) {
+          font-size: 24px;
+        }
+      }
       > .header {
         font-size: 26px;
+        > .prefix {
+          font-weight: 300;
+        }
+        > .value {
+          font-weight: 500;
+        }
+        @include breakpoint(mobile) {
+          > .prefix {
+            display: none;
+          }
+        }
       }
     }
   }

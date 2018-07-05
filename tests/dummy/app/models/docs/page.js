@@ -10,6 +10,12 @@ export default Page.extend({
   }).readOnly(),
 
   pos: readOnly('frontmatter.pos'),
-  hidden: readOnly('frontmatter.hidden')
+  hidden: readOnly('frontmatter.hidden'),
+
+  preprocessNode(parent, node) {
+    if(node.tagName === 'a') {
+      node.properties.target = 'top';
+    }
+  }
 
 });
