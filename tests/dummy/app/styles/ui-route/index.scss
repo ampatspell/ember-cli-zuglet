@@ -28,10 +28,18 @@
   > .content {
     flex: 1;
     overflow-x: hidden;
+    code {
+      font-size: 16px;
+    }
   }
 
   @include breakpoint(tablet) {
     font-size: 15px;
+    > .content {
+      code {
+        font-size: 14px;
+      }
+    }
   }
 
   @include breakpoint(mobile) {
