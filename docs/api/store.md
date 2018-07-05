@@ -80,7 +80,12 @@ Override this property and provide firebase and firestore options.
 
 ## store.storage `→ Storage`
 
-> TODO
+Returns `Storage` object which allows you to upload files to Firebase Cloud Storage.
+
+
+## store.functions `→ Functions`
+
+Returns `Functions` object you can use to call Firebase Cloud Functions.
 
 
 ## store.ready `→ Promise`

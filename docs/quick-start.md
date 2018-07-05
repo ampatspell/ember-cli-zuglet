@@ -13,7 +13,7 @@ node: 8.9.1
 os: darwin x64
 ```
 
-You need at least Ember.js v2.18 (LTS).
+You need at least Ember.js v2.18 (LTS) but latest Ember.js is recommended.
 
 If you don't have ember installed, run:
 

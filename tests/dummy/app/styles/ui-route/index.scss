@@ -1,53 +1,91 @@
 .ui-route-index {
-  > .ui-route-index-header {
-    padding: 100px 0 0 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    > .title {
-      font-size: 28px;
-      font-weight: 200;
+  margin: 80px 50px;
+  font-size: 18px;
+  max-width: 800px;
+  @include breakpoint(tablet) {
+    margin: 50px 40px;
+  }
+  @include breakpoint(mobile) {
+    margin: 25px 20px;
+  }
+}
+
+.ui-route-index-section {
+  margin-bottom: 50px;
+
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+
+  > .aside {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    width: 70px;
+    opacity: 0.3;
+  }
+
+  > .content {
+    flex: 1;
+    overflow-x: hidden;
+  }
+
+  @include breakpoint(tablet) {
+    font-size: 15px;
+  }
+
+  @include breakpoint(mobile) {
+    display: block;
+    font-size: 15px;
+    > .content {
+      code {
+        font-size: 13px;
+      }
     }
-    > .subtitle {
-      a {
-        text-decoration: none;
-        display: inline-block;
-        position: relative;
+  }
+
+  &.header {
+    > .content {
+      > .fire {
+        font-size: 32px;
+        line-height: 1em;
+        margin-bottom: 5px;
         &:after {
-          content: '';
-          position: absolute;
-          left: 0;
-          right: 0;
-          bottom: 2px;
-          height: 1px;
-          background: #ccc;
-          z-index: -1;
-          transition: background-color 0.2s ease-in-out;
+          content: '🔥';
         }
-        &:hover {
-          &:after {
-            background: #666;
+        @include breakpoint(non-desktop) {
+          font-size: 24px;
+        }
+      }
+      > .header {
+        font-size: 26px;
+        > .prefix {
+          font-weight: 300;
+        }
+        > .value {
+          font-weight: 500;
+        }
+        @include breakpoint(mobile) {
+          > .prefix {
+            display: none;
           }
         }
       }
     }
   }
-  > .ui-route-index-navigation {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    padding: 50px 0 40px 0;
-    > a {
-      padding: 0 5px;
-      text-decoration: none;
-      &:hover {
-        text-decoration: underline;
+
+  &.links {
+    > .content {
+      display: flex;
+      flex-direction: row;
+      font-weight: 500;
+      > a {
+        margin-right: 10px;
+        text-decoration: none;
+        &:hover {
+          text-decoration: underline;
+        }
       }
     }
-  }
-  > .ui-route-index-content {
-    max-width: 600px;
-    margin: 0 auto 100px auto;
   }
 }
