@@ -19,4 +19,15 @@
       @content;
     }
   }
+
+  @else if $point == non-desktop {
+		@media only screen and (max-width: 949px) {
+      @content;
+    }
+  }
+  @else if $point == post-tablet {
+		@media only screen and (min-width: 950px) {
+      @content;
+    }
+	}
 }
