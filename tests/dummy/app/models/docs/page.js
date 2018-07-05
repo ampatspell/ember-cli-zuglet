@@ -6,7 +6,7 @@ export default Page.extend({
 
   title: computed('headings', 'frontmatter', function() {
     let { name, headings, frontmatter } = this.getProperties('name', 'headings', 'frontmatter');
-    return frontmatter.title || headings[0].value || name;
+    return (frontmatter && frontmatter.title) || (headings && headings[0] && headings[0].value) || name;
   }).readOnly(),
 
   pos: readOnly('frontmatter.pos'),

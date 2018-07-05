@@ -1,3 +1,26 @@
-{{ui-route/index/header}}
-{{ui-route/index/navigation}}
-{{ui-block/pages/page page=page class='ui-route-index-content'}}
+{{#ui-route/index/section type='header'}}
+  <div class="header">ember-cli-zuglet</div>
+  <div class="description">Ember.js addon for effortless Firebase integration.</div>
+{{/ui-route/index/section}}
+
+{{#ui-route/index/section type='links'}}
+  {{link-to 'Documentation' 'docs'}}
+  {{link-to 'Experiments' 'experiments'}}
+  <a href="https://github.com/ampatspell/ember-cli-zuglet" target="top">GitHub</a>
+{{/ui-route/index/section}}
+
+{{#ui-route/index/section type='markdown' aside='about'}}
+  {{ui-block/pages/page page=pages.about}}
+{{/ui-route/index/section}}
+
+{{#ui-route/index/section type='markdown' aside='why'}}
+  {{ui-block/pages/page page=pages.why}}
+{{/ui-route/index/section}}
+
+{{#ui-route/index/section type='markdown' aside='install'}}
+  {{ui-block/pages/page page=pages.install}}
+{{/ui-route/index/section}}
+
+{{#ui-route/index/section type='markdown' aside='use'}}
+  {{ui-block/pages/page page=pages.use}}
+{{/ui-route/index/section}}
