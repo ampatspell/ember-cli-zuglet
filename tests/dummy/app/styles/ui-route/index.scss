@@ -88,4 +88,12 @@
       }
     }
   }
+
+  &.author {
+    > .content {
+      > p {
+        margin-bottom: 0;
+      }
+    }
+  }
 }

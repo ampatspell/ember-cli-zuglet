@@ -1,4 +1,4 @@
-## Save document in Firestore
+## Save Firestore document
 
 ``` javascript
 // create new document
@@ -17,13 +17,13 @@ await doc.save();
 doc.serialized // => { id: 'first', isSaved: true, ..., data: { author ...
 ```
 
-## Load document
+## Load Firestore document
 
 ``` javascript
 let doc = await store.doc('message/first').load();
 ```
 
-## Query documents
+## Query Firestore documents
 
 ``` javascript
 let messages = store.collection('message');
@@ -35,7 +35,7 @@ query.content // [ doc, ... ]
 query.isLoaded // => true
 ```
 
-## Query single document
+## Query single Firestore document
 
 ``` javascript
 let messages = store.collection('message');
@@ -46,7 +46,7 @@ await query.load();
 query.content // doc
 ```
 
-## Observe document or query
+## Observe Firestore document or query
 
 ``` javascript
 let doc = store.doc('message/first').existing();
@@ -68,7 +68,7 @@ query.content // => [ doc, ... ]
 observer.cancel();
 ```
 
-## Upload a file
+## Upload a file to Cloud Storage
 
 ``` javascript
 let task = store.storage.ref('images/first').put({
@@ -88,7 +88,7 @@ task.percent // => 100
 task.isCompleted // => true
 ```
 
-## Authentication
+## Firebase Authentication
 
 ``` javascript
 let auth = this.store.auth;
