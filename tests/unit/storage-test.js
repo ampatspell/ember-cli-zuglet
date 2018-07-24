@@ -491,6 +491,12 @@ module('storage', function(hooks) {
     assert.equal(image.get('fullPath'), 'images/image');
   });
 
+  test('ref ref', async function(assert) {
+    let images = this.storage.ref('images');
+    let image = images.ref('image');
+    assert.equal(image.get('fullPath'), 'images/image');
+  });
+
   test('ref parent', async function(assert) {
     let image = this.storage.ref('images/image');
     let images = image.get('parent');
