@@ -46,4 +46,8 @@ export default EmberObject.extend(ModelMixin, TaskPropertiesMixin, SnapshotPrope
     return this.get('_internal.promise').then(() => this);
   }).readOnly(),
 
+  toStringExtension() {
+    return this.get('ref.fullPath');
+  }
+
 });

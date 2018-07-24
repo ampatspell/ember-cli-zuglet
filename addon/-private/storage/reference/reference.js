@@ -50,4 +50,8 @@ export default EmberObject.extend(ModelMixin, RefPropertiesMixin, {
 
   ref: invokeReturningModel('child'),
 
+  toStringExtension() {
+    return this.get('fullPath');
+  }
+
 });
