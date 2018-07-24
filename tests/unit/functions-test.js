@@ -4,18 +4,34 @@ module('functions', function(hooks) {
   setupStoreTest(hooks);
 
   test('functions exist', async function(assert) {
-    let functions = this.store.get( 'functions');
+    let functions = this.store.functions();
     assert.ok(functions);
     assert.ok(functions._internal);
   });
 
+  test('functions has default region', async function(assert) {
+    let functions = this.store.functions();
+    assert.equal(functions.get('region'), null);
+  });
+
+  test('functions has custom region', async function(assert) {
+    let functions = this.store.functions('europe-west1');
+    assert.equal(functions.get('region'), 'europe-west1');
+  });
+
+  test('functions are per region', async function(assert) {
+    assert.ok(this.store.functions() === this.store.functions());
+    assert.ok(this.store.functions('europe-west1') === this.store.functions('europe-west1'));
+    assert.ok(this.store.functions() !== this.store.functions('europe-west1'));
+  });
+
   test('callable', async function(assert) {
-    let callable = await this.store.get('functions').callable('callable_success');
+    let callable = await this.store.functions().callable('callable_success');
     assert.ok(callable);
   });
 
   test('call', async function(assert) {
-    let callable = await this.store.get('functions').callable('callable_success');
+    let callable = await this.store.functions().callable('callable_success');
     let result = await callable.call({ ok: true });
     assert.deepEqual(result, {
       "data": {
@@ -28,7 +44,7 @@ module('functions', function(hooks) {
 
   test('store settle', async function(assert) {
     let operations = this.store.get('_internal.queue.operations');
-    let callable = await this.store.get('functions').callable('callable_success');
+    let callable = await this.store.functions().callable('callable_success');
 
     assert.equal(operations.get('length'), 0);
     callable.call({ ok: true });
@@ -39,7 +55,7 @@ module('functions', function(hooks) {
   });
 
   test('call reject', async function(assert) {
-    let callable = await this.store.get('functions').callable('callable_error');
+    let callable = await this.store.functions().callable('callable_error');
     try {
       await callable.call({ ok: true });
       assert.ok(false, 'should throw');

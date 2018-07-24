@@ -19,9 +19,9 @@ export default EmberObject.extend(ModelMixin, {
     return this.get('_internal.storage').model(true);
   }).readOnly(),
 
-  functions: computed(function() {
-    return this.get('_internal.functions').model(true);
-  }).readOnly(),
+  functions(region) {
+    return this._internal.functions(region).model(true);
+  },
 
   observed: readOnly('_internal.observedProxy'),
 
