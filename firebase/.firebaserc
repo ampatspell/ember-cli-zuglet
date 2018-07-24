@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "ember-cli-zuglet"
+    "default": "ember-cli-zuglet",
+    "travis": "ember-cli-zuglet-travis"
   }
 }

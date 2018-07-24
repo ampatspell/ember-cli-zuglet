@@ -25,7 +25,7 @@ service firebase.storage {
 }
 
 function isLessThanMB(m) {
-  return request.resource.size < m * 1024 * 1024;
+  return request.resource == null || request.resource.size < m * 1024 * 1024;
 }
 
 function isLoggedIn() {
