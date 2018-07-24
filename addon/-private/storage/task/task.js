@@ -3,6 +3,7 @@ import { readOnly } from '@ember/object/computed';
 import Mixin from '@ember/object/mixin';
 import ModelMixin from '../../internal/model-mixin';
 import serialized from '../../util/serialized';
+import createThenable from '../../util/thenable';
 
 const snapshot = [
   'bytesTransferred',
@@ -34,7 +35,9 @@ const SnapshotPropertiesMixin = Mixin.create(snapshot.reduce((hash, key) => {
   return hash;
 }, {}));
 
-export default EmberObject.extend(ModelMixin, TaskPropertiesMixin, SnapshotPropertiesMixin, {
+const ThenableMixin = createThenable('promise');
+
+export default EmberObject.extend(ModelMixin, TaskPropertiesMixin, SnapshotPropertiesMixin, ThenableMixin, {
 
   ref: computed(function() {
     return this._internal.ref.model(true);
@@ -43,7 +46,7 @@ export default EmberObject.extend(ModelMixin, TaskPropertiesMixin, SnapshotPrope
   serialized: serialized([ ...task, ...snapshot ]),
 
   promise: computed('_internal.promise', function() {
-    return this.get('_internal.promise').then(() => this);
+    return this.get('_internal.promise').then(() => undefined);
   }).readOnly(),
 
   toStringExtension() {
