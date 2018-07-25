@@ -31,6 +31,10 @@ export default Internal.extend({
     return defer();
   }).readOnly(),
 
+  _functions: computed(function() {
+    return Object.create(null);
+  }).readOnly(),
+
   ready: readOnly('_deferred.promise'),
 
   queue: queue('concurrent'),
@@ -163,9 +167,16 @@ export default Internal.extend({
     return this.factoryFor('zuglet:storage/internal').create({ store: this });
   }).readOnly(),
 
-  functions: computed(function() {
-    return this.factoryFor('zuglet:functions/internal').create({ store: this });
-  }).readOnly(),
+  functions(region) {
+    region = region || undefined;
+    let internals = this.get('_functions');
+    let internal = internals[region];
+    if(!internal) {
+      internal = this.factoryFor('zuglet:functions/internal').create({ store: this, region });
+      internals[region] = internal;
+    }
+    return internal;
+  },
 
   //
 

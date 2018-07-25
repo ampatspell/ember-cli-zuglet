@@ -5,7 +5,7 @@ pos: 8
 # Functions
 
 ``` javascript
-let hello = store.functions.callable('hello');
+let hello = store.functions(region).callable('hello');
 let result = await hello.call({ name: 'zeeba' });
 ```
 

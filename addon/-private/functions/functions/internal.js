@@ -14,13 +14,15 @@ const hack = functions => {
 export default Internal.extend({
 
   store: null,
+  region: null,
 
   factoryFor(name) {
     return this.store.factoryFor(name);
   },
 
-  functions: computed(function() {
-    return hack(this.store.app.functions());
+  functions: computed('region', function() {
+    let region = this.get('region');
+    return hack(this.store.app.functions(region));
   }).readOnly(),
 
   createModel() {
