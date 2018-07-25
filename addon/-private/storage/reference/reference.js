@@ -47,6 +47,13 @@ export default EmberObject.extend(ModelMixin, RefPropertiesMixin, {
     return this._internal.put(opts).model(true);
   },
 
-  child: invokeReturningModel('child')
+  // will be deprecated in favor of `ref`
+  child: invokeReturningModel('child'),
+
+  ref: invokeReturningModel('child'),
+
+  toStringExtension() {
+    return this.get('fullPath');
+  }
 
 });

@@ -131,6 +131,38 @@ module('storage', function(hooks) {
     await promise;
   });
 
+  test('put blob with thenable', async function(assert) {
+    await this.signIn();
+
+    let ref = this.storage.ref({ path: 'hello' });
+
+    let task = ref.put({
+      type: 'data',
+      data: new Blob([ 'hello world as a blob' ]),
+      metadata: {
+        contentType: 'text/plain',
+        customMetadata: { ok: true }
+      }
+    });
+
+    assert.ok(typeof task.then === 'function');
+    assert.ok(typeof task.catch === 'function');
+    assert.ok(typeof task.finally === 'function');
+
+    await task;
+
+    assert.deepEqual(task.get('serialized'), {
+      "bytesTransferred": 21,
+      "error": null,
+      "isCompleted": true,
+      "isError": false,
+      "isRunning": false,
+      "percent": 100,
+      "totalBytes": 21,
+      "type": "data"
+    });
+  });
+
   test('settle', async function(assert) {
     await this.signIn();
     let task = this.put();
@@ -162,7 +194,7 @@ module('storage', function(hooks) {
     assert.ok(tasks.includes(task));
 
     let r = await task.get('promise');
-    assert.ok(r === task);
+    assert.ok(r === undefined);
 
     assert.ok(tasks.get('length') === 0);
 
@@ -488,6 +520,12 @@ module('storage', function(hooks) {
   test('ref child', async function(assert) {
     let images = this.storage.ref('images');
     let image = images.child('image');
+    assert.equal(image.get('fullPath'), 'images/image');
+  });
+
+  test('ref ref', async function(assert) {
+    let images = this.storage.ref('images');
+    let image = images.ref('image');
     assert.equal(image.get('fullPath'), 'images/image');
   });
 
