@@ -5,7 +5,7 @@ export default arg => {
   let lookup;
 
   if(typeof arg === 'string') {
-    lookup = owner => owner[arg];
+    lookup = owner => owner.get(arg);
   } else {
     lookup = arg;
   }
