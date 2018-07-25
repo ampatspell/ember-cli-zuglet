@@ -549,4 +549,51 @@ module('storage', function(hooks) {
     }
   });
 
+  test('delete existing', async function(assert) {
+    await this.signIn();
+
+    let ref = this.storage.ref('hello');
+    await ref.put({
+      type: 'string',
+      data: 'hello world as a raw string',
+      format: 'raw',
+      metadata: {
+        contentType: 'text/plain'
+      }
+    });
+
+    await ref.delete();
+
+    try {
+      await ref.load();
+      assert.ok(false, 'should throw');
+    } catch(err) {
+      assert.equal(err.code, 'storage/object-not-found');
+    }
+  });
+
+  test('delete missing rejects', async function(assert) {
+    await this.signIn();
+
+    let ref = this.storage.ref('hello');
+    await ref.delete({ optional: true });
+
+    try {
+      await ref.delete();
+      assert.ok(false, 'should throw');
+    } catch(err) {
+      assert.equal(err.code, 'storage/object-not-found');
+    }
+  });
+
+  test('delete missing optional resolves', async function(assert) {
+    await this.signIn();
+
+    let ref = this.storage.ref('hello');
+    await ref.delete({ optional: true });
+    await ref.delete({ optional: true });
+
+    assert.ok(true);
+  });
+
 });

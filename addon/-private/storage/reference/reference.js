@@ -39,6 +39,8 @@ export default EmberObject.extend(ModelMixin, RefPropertiesMixin, {
   // { url, metatada, optional }
   load: invokePromiseReturningThis('load'),
 
+  delete: invokePromiseReturningThis('delete'),
+
   // { type: 'data', data: ..., metadata: { } }
   // { type: 'string', data: ..., format: 'raw' / 'base64' / 'base64-url' / 'data-url', metadata: {} }
   put(opts) {

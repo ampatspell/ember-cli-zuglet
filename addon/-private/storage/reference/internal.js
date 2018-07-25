@@ -5,7 +5,7 @@ import firebase from 'firebase';
 import { assert } from '@ember/debug';
 import { assign } from '@ember/polyfills';
 import queue from '../../queue/computed';
-import { all } from 'rsvp';
+import { all, reject } from 'rsvp';
 
 const {
   StringFormat
@@ -60,6 +60,20 @@ export default Internal.extend({
     }
 
     return all(tasks.map(task => task._load(opts)));
+  },
+
+  delete(opts={}) {
+    opts = assign({ optional: false }, opts);
+    return this.get('queue').schedule({
+      name: 'storage/ref/delete',
+      invoke: () => this.ref.delete(),
+      didReject: err => {
+        if(opts.optional && err.code === 'storage/object-not-found') {
+          return;
+        }
+        return reject(err);
+      }
+    });
   },
 
   createStorageTask(opts) {
