@@ -28,7 +28,8 @@
     "start": "ember serve",
     "test": "ember try:each",
     "coverage": "COVERAGE=true ember test",
-    "bump": "npm version patch; git push --follow-tags",
+    "tags": "git push --follow-tags",
+    "bump": "npm version patch; npm run tags",
     "deploy": "ember build -prod --output-path firebase/public && (cd firebase && firebase deploy)",
     "deploy:travis": "(cd firebase && firebase deploy --except hosting --project ember-cli-zuglet-travis)"
   },
