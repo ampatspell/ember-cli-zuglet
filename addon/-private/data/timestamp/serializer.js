@@ -81,6 +81,24 @@ export default Serializer.extend({
       replace: true,
       internal
     };
+  },
+
+  isDirty(internal, value) {
+    let contentServerTimestamp = isFirestoreServerTimestamp(internal.content);
+    let valueServerTimeStamp = isFirestoreServerTimestamp(value);
+
+    if(contentServerTimestamp && valueServerTimeStamp) {
+      return false;
+    }
+
+    if(contentServerTimestamp || valueServerTimeStamp) {
+      return true;
+    }
+
+    let contentDate = toDate(internal.content);
+    let valueDate = toDate(value);
+
+    return contentDate.getTime() === valueDate.getTime();
   }
 
 });
