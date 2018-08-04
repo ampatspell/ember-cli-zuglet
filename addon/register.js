@@ -16,7 +16,8 @@ import { isFastBoot } from './-private/util/fastboot';
 //   },
 //   development: {
 //     enabled: true,
-//     export: 'store'
+//     export: 'store',
+//     logging: true
 //   }
 // });
 
@@ -49,11 +50,13 @@ export default opts => {
   }
 
   if(opts.development.enabled && environment(app) === 'development') {
-    opts.development = assign({ export: opts.store.identifier }, opts.development);
+    opts.development = assign({ export: opts.store.identifier, logging: true }, opts.development);
     if(typeof window !== 'undefined' && !isFastBoot(store)) {
       let key = opts.store.identifier;
       window[key] = store;
-      console.log(`window.${key} = ${store}`);
+      if(opts.development.logging) {
+        console.log(`window.${key} = ${store}`);
+      }
       stores._internal.registerWillDestroyListener(() => {
         delete window[key];
       });
