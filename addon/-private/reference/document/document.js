@@ -10,8 +10,11 @@ export default Reference.extend({
   collection: invokeReturningModel('collection'),
 
   load: invokePromiseReturningModel('load'),
+  delete: invokePromiseReturningModel('delete'),
+
   new: invokeReturningModel('new'),
   existing: invokeReturningModel('existing'),
+
   observe: invokeReturningModel('observe'),
 
 });
