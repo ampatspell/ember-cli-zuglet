@@ -18,10 +18,12 @@ export default Internal.extend({
 
   save(doc, opts) {
     doc.saveInBatch(this, opts);
+    return doc.model(true);
   },
 
   delete(doc) {
     doc.deleteInBatch(this);
+    return doc.model(true);
   },
 
   commit() {
@@ -37,8 +39,7 @@ export default Internal.extend({
     if(fn) {
       return resolve()
         .then(() => fn.call(model, model))
-        .then(() => this.commit())
-        .then(() => undefined);
+        .then(result => this.commit().then(() => result));
     } else {
       return model;
     }
