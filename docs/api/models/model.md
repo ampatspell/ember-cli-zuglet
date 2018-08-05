@@ -59,6 +59,29 @@ export default Component.extend({
 
 * mapping is required
 
+## Resolved name
+
+``` javascript
+export default Component.extend({
+
+  type: 'book',
+
+  model: model('type', 'path', owner => {
+    let type = owner.type;
+    if(!type) {
+      return;
+    }
+    return `document/${type}`;
+  }).mapping(owner => ({
+    path: owner.path
+  }))
+
+});
+```
+
+* mapping is required
+* doesn't support `reusable()`
+
 ## Reusable (inline and provided)
 
 ``` javascript

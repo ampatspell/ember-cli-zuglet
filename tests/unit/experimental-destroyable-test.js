@@ -197,4 +197,60 @@ module('experimental-destroyable', function(hooks) {
     assert.ok(!first.isDestroyed);
   });
 
+  test('model with resolved model name is null if model name is not set', async function(assert) {
+    let subject = this.create('subject', {
+      model: model('id', () => undefined).mapping(owner => ({ value: owner.get('id') }))
+    });
+    let first = subject.get('model');
+    assert.ok(!first);
+  });
+
+  test('model with resolved model name is created and replaced', async function(assert) {
+    let Thing = EmberObject.extend({
+      prepare({ value }) {
+        this.value = value;
+      }
+    });
+
+    let One = Thing.extend({ name: 'one' });
+    this.getOwner().register('model:one', One);
+
+    let Two = Thing.extend({ name: 'two' });
+    this.getOwner().register('model:two', Two);
+
+    let subject = this.create('subject', {
+      id: 'one',
+      model: model('id', owner => owner.get('id')).mapping(owner => ({ value: owner.get('id') }))
+    });
+
+    let first = subject.get('model');
+    assert.equal(first.get('name'), 'one');
+
+    subject.set('id', 'two');
+
+    let second = run(() => subject.get('model'));
+    assert.equal(second.get('name'), 'two');
+    assert.ok(first !== second);
+    assert.ok(first.isDestroyed);
+
+    subject.set('id', 'two');
+
+    let third = run(() => subject.get('model'));
+    assert.equal(third.get('name'), 'two');
+    assert.ok(second === third);
+    assert.ok(!second.isDestroyed);
+
+    subject.set('id', null);
+
+    let fourth = run(() => subject.get('model'));
+    assert.equal(fourth, undefined);
+    assert.ok(third.isDestroyed);
+
+    subject.set('id', 'one');
+
+    let fifth = run(() => subject.get('model'));
+    assert.equal(fifth.get('name'), 'one');
+    assert.ok(!fifth.isDestroyed);
+  });
+
 });
