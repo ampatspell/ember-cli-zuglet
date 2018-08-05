@@ -1,67 +1,27 @@
-import { assign } from '@ember/polyfills';
-import { assert } from '@ember/debug';
-import { A } from '@ember/array';
-import { isFastBoot } from './-private/util/fastboot';
+import { deprecate } from '@ember/application/deprecations';
+import { register } from './initialize';
 
-// register({
-//   app,
-//   store: {
-//     identifier: 'store',
-//     factory: Store,
-//   },
-//   service: {
-//     enabled: true,
-//     name: 'store',
-//     inject: [ 'route', 'controller', 'component', 'model' ],
-//   },
-//   development: {
-//     enabled: true,
-//     export: 'store',
-//     logging: true
-//   }
-// });
+deprecate(`'ember-cli-zuglet/register' is deprecated.
 
-const environment = app => app.factoryFor('config:environment').class.environment;
+Please use:
+import { register } from 'ember-cli-zuglet/initialize' for the same behavior
 
-export default opts => {
-  assert(`opts must be object`, typeof opts === 'object');
+or
 
-  opts = assign({ service: { enabled: true }, development: { enabled: true } }, opts);
+import Store from '../store';
+import { initialize } from 'ember-cli-zuglet/initialize';
 
-  let app = opts.app;
-  assert(`opts.app must be present`, !!app);
-
-  assert(`opts.store must be object`, typeof opts.store === 'object');
-  assert(`opts.store.identifier is required`, !!opts.store.identifier);
-  assert(`opts.store.factory is required`, !!opts.store.factory);
-
-  assert(`opts.development must be object`, typeof opts.development === 'object');
-
-  let stores = app.lookup('zuglet:stores');
-  let store = stores.createStore(opts.store.identifier, opts.store.factory);
-
-  if(opts.service.enabled) {
-    opts.service = assign({ name: opts.store.identifier, inject: [ 'route', 'controller', 'component', 'model' ] }, opts.service);
-    let fullName = `service:${opts.service.name}`;
-    app.register(fullName, store, { instantiate: false });
-    A(opts.service.inject).forEach(key => {
-      app.inject(key, opts.service.name, fullName);
-    });
-  }
-
-  if(opts.development.enabled && environment(app) === 'development') {
-    opts.development = assign({ export: opts.store.identifier, logging: true }, opts.development);
-    if(typeof window !== 'undefined' && !isFastBoot(store)) {
-      let key = opts.store.identifier;
-      window[key] = store;
-      if(opts.development.logging) {
-        console.log(`window.${key} = ${store}`);
-      }
-      stores._internal.registerWillDestroyListener(() => {
-        delete window[key];
-      });
+export default {
+  name: 'app:store',
+  initialize: initialize({
+    store: {
+      identifier: 'store',
+      factory: Store
     }
-  }
+  })
+};`, false, {
+  id: 'ember-cli-zuglet-register',
+  until: '0.3.0'
+});
 
-  return store;
-}
+export default register;
