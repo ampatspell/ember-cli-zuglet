@@ -853,4 +853,28 @@ module('data', function(hooks) {
     assert.equal(object.get('name'), 'Duck');
   });
 
+  test('timestamp isDirty', async function(assert) {
+    let doc = this.store.doc('duck/yellow').new();
+
+    doc.set('data.date', this.store.serverTimestamp());
+    assert.equal(doc.get('isDirty'), true);
+
+    await doc.save();
+    assert.equal(doc.get('isDirty'), false);
+
+    await doc.reload();
+    assert.equal(doc.get('isDirty'), false);
+
+    let date = doc.get('data.date.date');
+
+    doc.set('data.date', date);
+    assert.equal(doc.get('isDirty'), false);
+
+    doc.set('data.date', new Date());
+    assert.equal(doc.get('isDirty'), true);
+
+    doc.set('data.date', date);
+    assert.equal(doc.get('isDirty'), false);
+  });
+
 });

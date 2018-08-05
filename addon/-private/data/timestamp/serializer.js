@@ -98,7 +98,7 @@ export default Serializer.extend({
     let contentDate = toDate(internal.content);
     let valueDate = toDate(value);
 
-    return contentDate.getTime() === valueDate.getTime();
+    return contentDate.getTime() !== valueDate.getTime();
   }
 
 });
