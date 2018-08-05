@@ -16,3 +16,4 @@ hidden: true
 * `store.transaction`
 * `store.batch`
 * storage `ref.url`
+* auth `user.token()`
