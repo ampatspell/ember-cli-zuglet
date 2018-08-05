@@ -1,6 +1,5 @@
 # TODO
 
-* user `getIdToken` and `getIdTokenResult`
 * query pagination (up & down)
 * GeoPoint for data
 * fastboot shoebox (?)
