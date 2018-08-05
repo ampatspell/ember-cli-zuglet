@@ -15,6 +15,7 @@ export default Internal.extend({
     } else {
       arg = owner;
     }
+
     if(instance.prepare) {
       instance.prepare(arg);
     }

@@ -8,8 +8,11 @@ export default Route.extend({
 
     id: 'book',
 
-    inner: model().named('id', owner => {
-      let { id } = owner;
+    inner: model('id', owner => {
+      let id = owner.id;
+      if(!id) {
+        return;
+      }
       return `experiments/wip/${id}`;
     }).mapping(owner => {
       let { id } = owner;
@@ -19,6 +22,7 @@ export default Route.extend({
     }),
 
     prepare() {
+      window.route = this;
     }
 
   })
