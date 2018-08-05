@@ -29,6 +29,7 @@ Router.map(function() {
 
   // development nonsense
   this.route('experiments', function() {
+    this.route('wip');
     this.route('query');
     this.route('document');
     this.route('data');
