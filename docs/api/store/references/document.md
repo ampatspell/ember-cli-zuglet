@@ -13,22 +13,22 @@ let doc = store.collection('ducks').doc('yellow');
 
 ## id `→ String`
 
-document id
+Document id
 
 
 ## parent `→ CollectionReference`
 
-document parent collection
+Document parent collection
 
 
 ## path `→ String`
 
-absolute document path
+Absolute document path
 
 
 ## collection(name) `→ CollectionReference`
 
-creates nested collection reference
+Creates nested collection reference
 
 ``` javascript
 let doc = store.doc('ducks/yellow');
@@ -38,7 +38,7 @@ let coll = doc.collection('feathers');
 
 ## load({ optional }) `→ Promise<Document>`
 
-Loads a document.
+Loads a document
 
 If document does not exist:
 
@@ -50,11 +50,30 @@ let document = await store.doc('ducks/yellow').load();
 ```
 
 
+## delete() `→ Promise<DocumentReference>`
+
+Deletes a document
+
+``` javascript
+let ref = await store.doc('ducks/yellow').delete();
+```
+
+
 ## new() `→ Document`
 
-Builds a new document.
+Builds a new document
 
 ``` javascript
 let doc = store.doc('ducks/yellow').new({ name: 'Yellow' });
 await doc.save();
+```
+
+
+## existing() `→ Document`
+
+Builds a document which is expected to exist
+
+``` javascript
+let doc = store.doc('ducks/yellow').existing();
+await doc.load();
 ```
