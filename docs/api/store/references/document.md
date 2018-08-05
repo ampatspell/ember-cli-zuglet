@@ -36,6 +36,24 @@ let coll = doc.collection('feathers');
 ```
 
 
+## doc(path) `→ DocumentReference`
+
+Creates a nested document reference.
+
+``` javascript
+store.doc('ducks/yellow').doc('images/profile'); // => ducks/yellow/images/profile
+store.doc('ducks/yellow').doc('assets'); // => ducks/yellow/assets/{uuid}
+```
+
+> Note: this method assets that there is no trailing slash to prevent unexpected generated document ids:
+
+``` javascript
+let duck = store.doc(`ducks/yellow`);
+let name = '';
+duck.doc(`images/${name}`); // this will throw assertion
+```
+
+
 ## load({ optional }) `→ Promise<Document>`
 
 Loads a document

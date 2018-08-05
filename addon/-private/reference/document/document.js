@@ -8,6 +8,7 @@ export default Reference.extend({
   path: readOnly('_internal.path'),
 
   collection: invokeReturningModel('collection'),
+  doc: invokeReturningModel('doc'),
 
   load: invokePromiseReturningModel('load'),
   delete: invokePromiseReturningModel('delete'),

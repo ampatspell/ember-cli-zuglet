@@ -1,16 +1,15 @@
 import Store from '../store';
-import register from 'ember-cli-zuglet/register';
+import { initialize } from 'ember-cli-zuglet/initialize';
 
 export default {
   name: 'dummy:store',
-  initialize(app) {
-    register({
-      app,
-      store: {
-        identifier: 'store',
-        factory: Store
-      }
-    });
-
-  }
+  initialize: initialize({
+    store: {
+      identifier: 'store',
+      factory: Store
+    },
+    development: {
+      logging: false
+    }
+  })
 };

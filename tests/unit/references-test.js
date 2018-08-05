@@ -148,4 +148,45 @@ module('references', function(hooks) {
     assert.equal(doc.get('exists'), false);
   });
 
+  test('doc to doc reference', function(assert) {
+    let doc = this.store.doc('ducks/yellow');
+    let profile = doc.doc('images/profile');
+    assert.equal(profile.get('path'), 'ducks/yellow/images/profile');
+    assert.equal(profile.get('parent.parent'), doc);
+  });
+
+  test('doc to doc reference with generated id', function(assert) {
+    let doc = this.store.doc('ducks/yellow');
+    let profile = doc.doc('images');
+    assert.ok(profile.get('id'));
+    assert.equal(profile.get('path'), `ducks/yellow/images/${profile.get('id')}`);
+  });
+
+  test('doc to doc reference throws on invalid component count', function(assert) {
+    let doc = this.store.doc('ducks/yellow');
+    try {
+      doc.doc('images/profile/weird');
+    } catch(err) {
+      assert.equal(err.code, 'invalid-argument');
+    }
+  });
+
+  test('doc to doc reference blows up if trailing slash is provided', function(assert) {
+    let doc = this.store.doc('ducks/yellow');
+    try {
+      doc.doc('images/');
+    } catch(err) {
+      assert.equal(err.message, 'Assertion Failed: nested document path cannot contain empty path components');
+    }
+  });
+
+  test('doc to doc reference blows up if trailing slash is provided', function(assert) {
+    let doc = this.store.doc('ducks/yellow');
+    try {
+      doc.doc('images/profile//original');
+    } catch(err) {
+      assert.equal(err.message, 'Assertion Failed: nested document path cannot contain empty path components');
+    }
+  });
+
 });

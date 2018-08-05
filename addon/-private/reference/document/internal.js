@@ -1,6 +1,7 @@
 import ReferenceInternal from '../internal';
 import { readOnly } from '@ember/object/computed';
 import { assert } from '@ember/debug';
+import { typeOf } from '@ember/utils';
 import { reject } from 'rsvp';
 import { documentMissingError } from '../../util/errors';
 
@@ -30,6 +31,14 @@ export default ReferenceInternal.extend({
   collection(path) {
     let ref = this.ref.collection(path);
     return this.store.createInternalCollectionReferenceForReference(ref, this);
+  },
+
+  doc(path) {
+    assert(`path must be string`, typeOf(path) === 'string');
+    assert(`path is required`, !!path);
+    let [ first, ...remaining ] = path.split('/');
+    assert(`nested document path cannot contain empty path components`, remaining.find(string => string === '') !== '');
+    return this.collection(first).doc(remaining.join('/'));
   },
 
   didLoad(snapshot, opts) {
