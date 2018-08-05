@@ -1,6 +1,7 @@
 import { module, test, setupStoreTest } from '../helpers/setup';
 import { wait } from '../helpers/firebase';
 import { run } from '@ember/runloop';
+import { typeOf } from '@ember/utils';
 import getParams from '../helpers/query';
 
 let params = getParams();
@@ -256,6 +257,22 @@ module('auth', function(hooks) {
       uid2,
       null
     ]);
+  });
+
+  test('user get id token', async function(assert) {
+    let auth = this.store.get('auth');
+    let anon = auth.get('methods.anonymous');
+    let user = await anon.signIn();
+    let token = await user.token();
+    assert.ok(typeof token === 'string');
+  });
+
+  test('user get id token result', async function(assert) {
+    let auth = this.store.get('auth');
+    let anon = auth.get('methods.anonymous');
+    let user = await anon.signIn();
+    let token = await user.token({ type: 'json' });
+    assert.ok(typeOf(token) === 'object');
   });
 
 });
