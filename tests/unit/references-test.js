@@ -133,7 +133,7 @@ module('references', function(hooks) {
     assert.ok(result === yellow);
 
     let doc = await yellow.load({ optional: true });
-    assert.equal(doc.exists, false);
+    assert.equal(doc.get('exists'), false);
   });
 
   test('doc delete missing', async function(assert) {
@@ -145,7 +145,7 @@ module('references', function(hooks) {
     await yellow.delete();
 
     let doc = await yellow.load({ optional: true });
-    assert.equal(doc.exists, false);
+    assert.equal(doc.get('exists'), false);
   });
 
 });
