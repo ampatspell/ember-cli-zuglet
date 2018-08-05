@@ -72,4 +72,27 @@ module('batch', function(hooks) {
     assert.equal((await ref.load({ optional: true })).get('exists'), false);
   });
 
+  test('batch operations returns documents', async function(assert) {
+    await this.store.doc(`ducks/green`).existing().delete();
+
+    let yellow = await this.store.doc(`ducks/yellow`).new({ name: 'yellow' }).save();
+    let green = this.store.doc(`ducks/green`).new({ name: 'green' });
+
+    let batch = this.store.batch();
+    assert.ok(batch.save(green) === green);
+    assert.ok(batch.delete(yellow) === yellow);
+    batch.commit();
+  });
+
+  test('batch callback result', async function(assert) {
+    let ref = this.store.doc(`ducks/yellow`);
+    await ref.new({ name: 'yellow' }).save();
+
+    let result = await this.store.batch(b => {
+      return b.delete(ref);
+    });
+
+    assert.ok(ref === result);
+  });
+
 });
