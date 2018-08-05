@@ -123,4 +123,29 @@ module('references', function(hooks) {
     ]);
   });
 
+  test('doc delete', async function(assert) {
+    await this.recreate();
+
+    let yellow = this.store.doc('ducks/yellow');
+
+    await yellow.new({ name: 'yellow' }).save();
+    let result = await yellow.delete();
+    assert.ok(result === yellow);
+
+    let doc = await yellow.load({ optional: true });
+    assert.equal(doc.exists, false);
+  });
+
+  test('doc delete missing', async function(assert) {
+    await this.recreate();
+
+    let yellow = this.store.doc('ducks/yellow');
+
+    await yellow.delete();
+    await yellow.delete();
+
+    let doc = await yellow.load({ optional: true });
+    assert.equal(doc.exists, false);
+  });
+
 });
