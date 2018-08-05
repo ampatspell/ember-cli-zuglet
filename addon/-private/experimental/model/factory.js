@@ -41,6 +41,7 @@ const resolveString = (parent, owner, key, arg) => {
 }
 
 export const resolveFactory = (parent, owner, key, arg) => {
+  console.log(parent, owner, key, arg);
   let type = typeOf(arg);
   if(type === 'object') {
     return resolveObject(parent, owner, key, arg);
