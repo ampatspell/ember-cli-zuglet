@@ -2,6 +2,7 @@ import { assign } from '@ember/polyfills';
 import { assert } from '@ember/debug';
 import { A } from '@ember/array';
 import { isFastBoot } from './-private/util/fastboot';
+import { typeOf } from '@ember/utils';
 
 // register({
 //   app,
@@ -35,6 +36,7 @@ const normalizeService = (service, store) => {
     inject: [ 'route', 'controller', 'component', 'model' ]
   }, service);
   assert(`opts.service.name is required`, typeof service.name === 'string');
+  assert(`opts.service.inject must be array`, typeOf(service.inject) === 'array');
   return service;
 }
 
@@ -48,12 +50,28 @@ const normalizeDevelopment = (development, store) => {
   return development;
 }
 
-const normalize = opts => {
-  assert(`opts must be object`, typeof opts === 'object');
+const normalizeArgs = (...args) => {
+  let opts;
+  let app;
+  if(args.length > 1) {
+    app = args[0];
+    opts = args[1];
+    assert(`opts must be object`, typeOf(opts) === 'object');
+    assert(`app is required`, !!app);
+  } else {
+    opts = args[0];
+    assert(`opts must be object`, typeOf(opts) === 'object');
+    app = opts.app;
+    delete opts.app;
+    assert(`opts.app is required`, !!app);
+  }
+  return { app, opts };
+}
 
-  let { app, store, service, development } = opts;
+const normalize = (...args) => {
+  let { app, opts } = normalizeArgs(...args);
 
-  assert(`opts.app must be present`, !!app);
+  let { store, service, development } = opts;
 
   store       = normalizeStore(store);
   service     = normalizeService(service, store);
@@ -94,4 +112,4 @@ export const register = (...args) => {
   return store;
 }
 
-export const initialize = opts => app => register(assign({ app }, opts));
+export const initialize = opts => app => register(app, opts);
