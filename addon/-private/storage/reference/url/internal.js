@@ -37,5 +37,8 @@ export default Internal.extend({
     });
   },
 
+  onDeleted() {
+    this._super({ value: undefined });
+  }
 
 });

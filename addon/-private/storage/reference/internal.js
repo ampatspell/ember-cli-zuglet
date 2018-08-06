@@ -144,6 +144,7 @@ export default Internal.extend({
 
   willDestroy() {
     destroyCached(this, 'metadata');
+    destroyCached(this, 'url');
     this._super(...arguments);
   }
 

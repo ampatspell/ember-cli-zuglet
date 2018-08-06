@@ -661,6 +661,17 @@ module('storage', function(hooks) {
       "isLoading": false
     });
 
+    assert.deepEqual(ref.get('url.serialized'), {
+      "error": null,
+      "exists": true,
+      "isError": false,
+      "isLoaded": true,
+      "isLoading": false,
+      "value": ref.get('url.value')
+    });
+
+    assert.ok(ref.get('url.value'));
+
     await ref.delete();
 
     assert.deepEqual(ref.get('metadata.serialized'), {
@@ -670,6 +681,17 @@ module('storage', function(hooks) {
       "isLoaded": false,
       "isLoading": false
     });
+
+    assert.deepEqual(ref.get('url.serialized'), {
+      "error": null,
+      "exists": undefined,
+      "isError": false,
+      "isLoaded": false,
+      "isLoading": false,
+      "value": ref.get('url.value')
+    });
+
+    assert.equal(ref.get('url.value'), undefined);
   });
 
   test('metadata after delete missing is unset', async function(assert) {

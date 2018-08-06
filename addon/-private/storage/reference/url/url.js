@@ -7,6 +7,6 @@ export default Model.extend({
 
   value: readOnly('_internal.value'),
 
-  serialized: serialized([ ...state, 'value' ], [ 'exists' ])
+  serialized: serialized([ ...state, 'value' ], [ 'exists', 'value' ])
 
 });
