@@ -904,4 +904,27 @@ module('data', function(hooks) {
     assert.equal(doc.get('isDirty'), false);
   });
 
+  test('array isDirty', async function(assert) {
+    let doc = this.store.doc('duck/yellow').new();
+    assert.equal(doc.get('isDirty'), false);
+
+    doc.set('data.array', [ 'a', 'b', 'c' ]);
+    assert.equal(doc.get('isDirty'), true);
+
+    await doc.save();
+    assert.equal(doc.get('isDirty'), false);
+
+    await doc.reload();
+    assert.equal(doc.get('isDirty'), false);
+
+    doc.set('data.array', [ 'foo' ]);
+    assert.equal(doc.get('isDirty'), true);
+
+    doc.set('data.array', null);
+    assert.equal(doc.get('isDirty'), true);
+
+    doc.set('data.array', [ 'a', 'b', 'c' ]);
+    assert.equal(doc.get('isDirty'), false);
+  });
+
 });

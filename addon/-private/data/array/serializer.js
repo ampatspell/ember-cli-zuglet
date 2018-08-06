@@ -94,6 +94,18 @@ export default Serializer.extend({
 
   serialize(internal, type) {
     return internal.content.map(value => value.serialize(type));
+  },
+
+  isDirty(internal, value) {
+    let values = internal.content;
+
+    value = A(value);
+
+    if(values.get('length') !== value.get('length')) {
+      return true;
+    }
+
+    return values.find((internal, idx) => internal.serializer.isDirty(internal, value.objectAt(idx)));
   }
 
 });
