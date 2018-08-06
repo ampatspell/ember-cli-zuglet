@@ -4,16 +4,16 @@ import setChangedProperties from '../../../util/set-changed-properties';
 import { reject } from 'rsvp';
 import { assign } from '@ember/polyfills';
 
-export const state = [ 'isExisting', 'isLoading', 'isLoaded', 'isError', 'error' ];
+export const state = [ 'isLoading', 'isLoaded', 'isError', 'exists', 'error' ];
 
 export default Internal.extend({
 
   queue: queue('serialized', 'ref.storage.queue'),
 
-  isExisting: undefined,
   isLoading:  false,
   isLoaded:   false,
   isError:    false,
+  exists:     undefined,
   error:      null,
 
   factoryFor(name) {
@@ -35,16 +35,16 @@ export default Internal.extend({
   },
 
   onLoad(props) {
-    setChangedProperties(this, assign({ isLoading: false, isLoaded: true, isExisting: true }, props));
+    setChangedProperties(this, assign({ isLoading: false, isLoaded: true, exists: true }, props));
   },
 
   onError(error, optional) {
     if(error.code === 'storage/object-not-found') {
       if(optional) {
-        setChangedProperties(this, { isLoading: false, isLoaded: true, isExisting: false });
+        setChangedProperties(this, { isLoading: false, isLoaded: true, exists: false });
         return;
       } else {
-        setChangedProperties(this, { isLoading: false, isExisting: false, isLoaded: true, isError: true, error });
+        setChangedProperties(this, { isLoading: false, exists: false, isLoaded: true, isError: true, error });
       }
     } else {
       setChangedProperties(this, { isLoading: false, isError: true, error });

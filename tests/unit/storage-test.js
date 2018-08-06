@@ -302,7 +302,7 @@ module('storage', function(hooks) {
     assert.deepEqual(ref.get('metadata.serialized'), {
       "error": null,
       "isError": false,
-      "isExisting": undefined,
+      "exists": undefined,
       "isLoaded": false,
       "isLoading": false
     });
@@ -313,7 +313,7 @@ module('storage', function(hooks) {
     assert.deepEqual(ref.get('metadata.serialized'), {
       "error": null,
       "isError": false,
-      "isExisting": false,
+      "exists": false,
       "isLoaded": true,
       "isLoading": false
     });
@@ -329,7 +329,7 @@ module('storage', function(hooks) {
     assert.deepEqual(metadata.get('serialized'), {
       "error": null,
       "isError": false,
-      "isExisting": undefined,
+      "exists": undefined,
       "isLoading": false,
       "isLoaded": false
     });
@@ -352,7 +352,7 @@ module('storage', function(hooks) {
     assert.deepEqual(metadata.get('serialized'), {
       "error": null,
       "isError": false,
-      "isExisting": undefined,
+      "exists": undefined,
       "isLoaded": false,
       "isLoading": false
     });
@@ -363,7 +363,7 @@ module('storage', function(hooks) {
       "contentType": "text/plain",
       "error": null,
       "isError": false,
-      "isExisting": true,
+      "exists": true,
       "isLoaded": true,
       "isLoading": false,
       "name": "hello",
@@ -380,7 +380,7 @@ module('storage', function(hooks) {
     assert.deepEqual(metadata.get('serialized'), {
       "error": null,
       "isError": false,
-      "isExisting": undefined,
+      "exists": undefined,
       "isLoaded": false,
       "isLoading": false
     });
@@ -390,7 +390,7 @@ module('storage', function(hooks) {
     assert.deepEqual(metadata.get('serialized'), {
       "error": null,
       "isError": false,
-      "isExisting": false,
+      "exists": false,
       "isLoaded": true,
       "isLoading": false
     });
@@ -405,7 +405,7 @@ module('storage', function(hooks) {
     assert.deepEqual(metadata.get('serialized'), {
       "error": null,
       "isError": false,
-      "isExisting": undefined,
+      "exists": undefined,
       "isLoaded": false,
       "isLoading": false
     });
@@ -423,7 +423,7 @@ module('storage', function(hooks) {
     assert.deepEqual(metadata.get('serialized'), {
       "error": error,
       "isError": true,
-      "isExisting": false,
+      "exists": false,
       "isLoaded": true,
       "isLoading": false
     });
@@ -443,7 +443,7 @@ module('storage', function(hooks) {
     assert.deepEqual(metadata.get('serialized'), {
       "isLoading": false,
       "isLoaded": true,
-      "isExisting": true,
+      "exists": true,
       "isError": false,
       "error": null,
       "name": "hello",
@@ -481,7 +481,7 @@ module('storage', function(hooks) {
       "contentType": "text/plainest",
       "error": null,
       "isError": false,
-      "isExisting": true,
+      "exists": true,
       "isLoaded": true,
       "name": "hello",
       "size": 11,
@@ -503,7 +503,7 @@ module('storage', function(hooks) {
     } catch(err) {
       assert.equal(err.code, 'storage/object-not-found');
       assert.deepEqual(metadata.get('serialized'), {
-        "isExisting": false,
+        "exists": false,
         "isLoaded": true,
         "isLoading": false,
         "isError": true,
@@ -543,7 +543,7 @@ module('storage', function(hooks) {
     assert.deepEqual(ref.get('url.serialized'), {
       "error": null,
       "isError": false,
-      "isExisting": undefined,
+      "exists": undefined,
       "isLoaded": false,
       "isLoading": false
     });
@@ -553,7 +553,7 @@ module('storage', function(hooks) {
     assert.deepEqual(ref.get('url.serialized'), {
       "error": null,
       "isError": false,
-      "isExisting": undefined,
+      "exists": undefined,
       "isLoaded": false,
       "isLoading": true
     });
@@ -567,7 +567,7 @@ module('storage', function(hooks) {
     assert.deepEqual(ref.get('url.serialized'), {
       "error": null,
       "isError": false,
-      "isExisting": true,
+      "exists": true,
       "isLoaded": true,
       "isLoading": false,
       "value": result.get('url.value')
@@ -632,6 +632,41 @@ module('storage', function(hooks) {
     await ref.delete({ optional: true });
 
     assert.ok(true);
+  });
+
+  test('metadata after delete is unset', async function(assert) {
+    await this.signIn();
+
+    let ref = this.storage.ref('hello');
+
+    await ref.put({
+      type: 'string',
+      data: 'hello world as a raw string',
+      format: 'raw',
+      metadata: {
+        contentType: 'text/plain'
+      }
+    });
+
+    await ref.load({ optional: true });
+
+    assert.deepEqual(ref.get('metadata.serialized'), {
+      "error": null,
+      "isError": false,
+      "exists": true,
+      "isLoaded": true,
+      "isLoading": false
+    });
+
+    await ref.delete();
+
+    assert.deepEqual(ref.get('metadata.serialized'), {
+      "error": null,
+      "isError": false,
+      "exists": undefined,
+      "isLoaded": false,
+      "isLoading": false
+    });
   });
 
 });

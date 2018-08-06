@@ -54,6 +54,6 @@ export default Model.extend({
   // { ... }
   update: invokePromiseReturningThis('update'),
 
-  serialized: serialized([ ...state, 'name', 'size', 'contentType', 'customMetadata' ], [ 'isExisting' ]),
+  serialized: serialized([ ...state, 'name', 'size', 'contentType', 'customMetadata' ], [ 'exists' ]),
 
 });
