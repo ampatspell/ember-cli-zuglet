@@ -651,6 +651,9 @@ module('storage', function(hooks) {
     await ref.load({ optional: true });
 
     assert.deepEqual(ref.get('metadata.serialized'), {
+      "contentType": "text/plain",
+      "name": "hello",
+      "size": 27,
       "error": null,
       "isError": false,
       "exists": true,
@@ -659,6 +662,45 @@ module('storage', function(hooks) {
     });
 
     await ref.delete();
+
+    assert.deepEqual(ref.get('metadata.serialized'), {
+      "error": null,
+      "isError": false,
+      "exists": undefined,
+      "isLoaded": false,
+      "isLoading": false
+    });
+  });
+
+  test('metadata after delete missing is unset', async function(assert) {
+    await this.signIn();
+
+    let ref = this.storage.ref('hello');
+
+    await ref.put({
+      type: 'string',
+      data: 'hello world as a raw string',
+      format: 'raw',
+      metadata: {
+        contentType: 'text/plain'
+      }
+    });
+
+    await ref.load({ optional: true });
+
+    assert.deepEqual(ref.get('metadata.serialized'), {
+      "contentType": "text/plain",
+      "name": "hello",
+      "size": 27,
+      "error": null,
+      "isError": false,
+      "exists": true,
+      "isLoaded": true,
+      "isLoading": false
+    });
+
+    await this.storage.ref('hello').delete();
+    await ref.delete({ optional: true });
 
     assert.deepEqual(ref.get('metadata.serialized'), {
       "error": null,

@@ -62,17 +62,29 @@ export default Internal.extend({
     return all(tasks.map(task => task._load(opts)));
   },
 
+  onDeleted() {
+    let { metadata, url } = this.getProperties('metadata', 'url');
+    metadata.onDeleted();
+    url.onDeleted();
+  },
+
+  onDeleteDidFail(opts, err) {
+    if(err.code === 'storage/object-not-found') {
+      this.onDeleted();
+      if(opts.optional) {
+        return;
+      }
+    }
+    return reject(err);
+  },
+
   delete(opts={}) {
     opts = assign({ optional: false }, opts);
     return this.get('queue').schedule({
       name: 'storage/ref/delete',
       invoke: () => this.ref.delete(),
-      didReject: err => {
-        if(opts.optional && err.code === 'storage/object-not-found') {
-          return;
-        }
-        return reject(err);
-      }
+      didResolve: () => this.onDeleted(),
+      didReject: err => this.onDeleteDidFail(opts, err)
     });
   },
 

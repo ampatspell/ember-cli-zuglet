@@ -54,6 +54,16 @@ export default Internal.extend({
 
   loadDidFail(error, opts) {
     return this.onError(error, opts.optional);
+  },
+
+  onDeleted(props) {
+    setChangedProperties(this, assign({
+      isLoading:  false,
+      isLoaded:   false,
+      isError:    false,
+      exists:     undefined,
+      error:      null
+    }, props));
   }
 
 });
