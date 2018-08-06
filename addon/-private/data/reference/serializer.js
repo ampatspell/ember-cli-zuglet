@@ -81,6 +81,12 @@ export default Serializer.extend({
       replace,
       internal
     };
+  },
+
+  isDirty(internal, value) {
+    let contentRef = internal.content.ref;
+    let valueRef = this.toFirestoreReference(value);
+    return contentRef.path !== valueRef.path;
   }
 
 });

@@ -877,4 +877,31 @@ module('data', function(hooks) {
     assert.equal(doc.get('isDirty'), false);
   });
 
+  test('reference isDirty', async function(assert) {
+    let doc = this.store.doc('duck/yellow').new();
+
+    let ref = this.store.doc('duck/green');
+
+    doc.set('data.ref', ref);
+    assert.equal(doc.get('isDirty'), true);
+
+    await doc.save();
+    assert.equal(doc.get('isDirty'), false);
+
+    await doc.reload();
+    assert.equal(doc.get('isDirty'), false);
+
+    let path = doc.get('data.ref.path');
+    assert.equal(path, 'duck/green');
+
+    doc.set('data.ref', this.store.doc('duck/green'));
+    assert.equal(doc.get('isDirty'), false);
+
+    doc.set('data.ref', this.store.doc('duck/blue'));
+    assert.equal(doc.get('isDirty'), true);
+
+    doc.set('data.ref', ref);
+    assert.equal(doc.get('isDirty'), false);
+  });
+
 });
