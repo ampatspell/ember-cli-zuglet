@@ -59,6 +59,10 @@ export default Internal.extend({
       didResolve: metadata => this.didUpdate(metadata),
       didReject: err => this.updateDidFail(err)
     });
+  },
+
+  onDeleted() {
+    this._super({ _metadata: null });
   }
 
 });
