@@ -1,38 +1,35 @@
 ## Models (and possibly rework or `model`, ...)
 
-* inline, reusable
-* inline with mapping, reusable
-* provided name (with mapping), reusable
-* resolved name (with mapping)
-
 ## All settings
 
 ``` javascript
-from: {
-  deps: {
-    owner: [ 'key' ],
+{
+  from: {
+    deps: {
+      owner: [ 'key' ],
+    },
+    property: owner => owner.key
   },
-  property: owner => owner.key
-},
-array: {
-  deps: {
-    owner: [ 'type' ],
+  array: {
+    deps: {
+      owner: [ 'type' ],
+    },
+    name: owner => `posts/${owner.type}`
   },
-  name: owner => `posts/${owner.type}`
-},
-model: {
-  deps: {
-    doc: [ 'type' ],
-    owner: [ 'type' ],
-  },
-  mapping: doc => ({ doc }),
-  // body or name
-  body: {
-    prepare({ doc }, owner) {
+  model: {
+    deps: {
+      doc: [ 'type' ],
+      owner: [ 'type' ],
+    },
+    mapping: doc => ({ doc }),
+    // body or name
+    body: {
+      prepare({ doc }, owner) {
 
-    }
-  },
-  name: (doc, owner) => `posts/${owner.type}/${doc.data.type}`
+      }
+    },
+    name: (doc, owner) => `posts/${owner.type}/${doc.data.type}`
+  }
 }
 ```
 
@@ -56,6 +53,19 @@ export default EmberObject.extend({
 
 ## Implementations
 
+Models has:
+
+* source
+* array setup (name, or resolved name by owner property)
+* model setup (name or resolved name by document property)
+
+Types:
+
+* inline, reusable
+* inline with mapping, reusable
+* provided name (with mapping), reusable
+* resolved name (with mapping)
+
 ``` javascript
 // inline, inline reusable
 models('query.content', {
@@ -74,12 +84,6 @@ models('query', {
     doc
   };
 }).reusable(),
-
-// provided name always with mapping, reusable
-
-// from
-// array (name, or resolved name by owner property)
-// model (name or resolved name by document property)
 
 models()
   .from('key', owner => `${owner.key}.content`)
@@ -110,8 +114,8 @@ models()
   })
 
 models()
-  .from('query.content')
+  .source('query.content')
   .array('posts/basic')
-  .model('posts/basic/post)
+  .model('posts/basic/post')
 
 ```
