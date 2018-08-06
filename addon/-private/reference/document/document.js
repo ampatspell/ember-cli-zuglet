@@ -11,8 +11,11 @@ export default Reference.extend({
   doc: invokeReturningModel('doc'),
 
   load: invokePromiseReturningModel('load'),
+  delete: invokePromiseReturningModel('delete'),
+
   new: invokeReturningModel('new'),
   existing: invokeReturningModel('existing'),
+
   observe: invokeReturningModel('observe'),
 
 });

@@ -57,6 +57,15 @@ export default ReferenceInternal.extend({
     });
   },
 
+  delete() {
+    return this.get('store.queue').schedule({
+      name: 'reference/document/delete',
+      invoke: () => this.ref.delete(),
+      didResolve: () => this,
+      didReject: err => reject(err)
+    });
+  },
+
   loadInTransaction(transaction, opts) {
     return this.get('store.queue').schedule({
       name: 'reference/document/load/transaction',
