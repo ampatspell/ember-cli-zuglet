@@ -99,8 +99,6 @@ import ComputedObservedInternal from 'ember-cli-zuglet/-private/experimental/obs
 import ComputedModelInternal from 'ember-cli-zuglet/-private/experimental/model/internal';
 import ComputedModelsInternal from 'ember-cli-zuglet/-private/experimental/models/internal';
 import ComputedModels from 'ember-cli-zuglet/-private/experimental/models/models';
-import ComputedModelsSourceInternal from 'ember-cli-zuglet/-private/experimental/models/source';
-import ComputedModelsMappingInternal from 'ember-cli-zuglet/-private/experimental/models/mapping';
 
 export default {
   name: 'zuglet:internal',
@@ -244,8 +242,6 @@ export default {
     container.register('zuglet:computed/observed/internal', ComputedObservedInternal);
     container.register('zuglet:computed/model/internal', ComputedModelInternal);
     container.register('zuglet:computed/models/internal', ComputedModelsInternal);
-    container.register('zuglet:computed/models/internal/source', ComputedModelsSourceInternal);
-    container.register('zuglet:computed/models/internal/mapping', ComputedModelsMappingInternal);
     container.register('zuglet:computed/models', ComputedModels);
   }
 }

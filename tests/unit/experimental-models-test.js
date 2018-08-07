@@ -37,7 +37,7 @@ module('experimental-models', function(hooks) {
 
     assert.equal(subject.get('models.length'), 0); // should be undefined
 
-    subject.set('content', [ 'yellow', 'green' ]);
+    run(() => subject.set('content', [ 'yellow', 'green' ]));
 
     let fist = run(() => subject.get('models'));
 
@@ -51,9 +51,8 @@ module('experimental-models', function(hooks) {
 
     let second = run(() => subject.get('models'));
 
-    assert.deepEqual(second.mapBy('id'), []);
+    assert.deepEqual(run(() => second.mapBy('id')), []);
 
-    assert.ok(fist.isDestroyed);
     assert.ok(yellow.isDestroyed);
     assert.ok(green.isDestroyed);
   });

@@ -5,10 +5,10 @@ import ModelMixin from '../../internal/model-mixin';
 
 export default EmberObject.extend(ModelMixin, EmberArray, {
 
-  length: readOnly('_internal.content.length'),
+  length: readOnly('_internal.models.length'),
 
   objectAt(idx) {
-    return this.get('_internal.content').objectAt(idx);
+    return this.get('_internal.models').objectAt(idx);
   }
 
 });
