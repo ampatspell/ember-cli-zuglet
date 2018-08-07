@@ -1,5 +1,33 @@
 ## Models (and possibly rework or `model`, ...)
 
+## Basic implementation
+
+More or less aligns with `experimental` module.
+
+``` javascript
+export default EmberObject.extend({
+
+  query: observed(),
+
+  posts: models('query.content', 'type', (doc, owner) => {
+    let type = doc.data.type;
+    if(!type) {
+      return;
+    }
+    return `post/${type}`;
+  }).mapping((doc, owner) => {
+    return { doc };
+  }),
+
+  prepare() {
+    let query = this.store.collection('posts').query();
+    this.setProperties({ query });
+    return query.observers.promise;
+  }
+
+});
+```
+
 ## All settings
 
 ``` javascript
