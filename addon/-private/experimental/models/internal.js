@@ -46,8 +46,38 @@ export default Internal.extend({
     }).readOnly());
   },
 
+  prepareModelForItem(model, item) {
+    let mapping = this.get('opts.mapping');
+
+    let arg;
+    if(mapping) {
+      arg = mapping(item);
+    } else {
+      arg = item;
+    }
+
+    model.prepare(arg);
+
+    return model;
+  },
+
+  createModelForItem(item) {
+    let factory = this.get('opts.factory');
+
+    if(typeof factory === 'function') {
+      factory = factory(item);
+    }
+
+    factory = getOwner(this).factoryFor(`model:${factory}`);
+
+    let model = factory.create({ [__zuglet_models_raw]: item });
+    this.prepareModelForItem(model, item);
+
+    return model;
+  },
+
   recompute() {
-    let { source, content, opts } = this.getProperties('source', 'content', 'opts');
+    let { source, content } = this.getProperties('source', 'content');
 
     let remove = A(content.slice());
     let next = A();
@@ -60,45 +90,18 @@ export default Internal.extend({
       return model;
     }
 
-    const create = item => {
-      let { factory, mapping } = opts;
-
-      if(typeof factory === 'function') {
-        factory = factory(item);
-      }
-
-      factory = getOwner(this).factoryFor(`model:${factory}`);
-
-      let arg;
-      if(mapping) {
-        arg = mapping(item);
-      } else {
-        arg = item;
-      }
-
-      let model = factory.create({ [__zuglet_models_raw]: item });
-      model.prepare(arg);
-
-      return model;
-    }
-
     source.forEach(item => {
       let model = existing(item);
       if(model) {
-        // TODO: prepare
+        model = this.prepareModelForItem(model, item);
       } else {
-        model = create(item);
+        model = this.createModelForItem(item);
       }
-
-      if(model) {
-        next.push(model);
-      }
+      next.push(model);
     });
 
     content.replace(0, content.get('length'), next);
-
     remove.map(model => model.destroy());
-
     return content;
   },
 
