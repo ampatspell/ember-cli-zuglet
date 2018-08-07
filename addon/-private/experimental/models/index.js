@@ -8,8 +8,8 @@ const build = (opts, nested={}) => {
   return prop;
 }
 
-export default (...deps) => {
-  let arg = deps.pop();
-  let opts = { deps, arg };
+export default (...dependencies) => {
+  let factory = dependencies.pop();
+  let opts = { dependencies, factory };
   return build(opts);
 }

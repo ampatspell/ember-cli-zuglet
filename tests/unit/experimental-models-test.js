@@ -36,17 +36,20 @@ module('experimental-models', function(hooks) {
 
     subject.set('content', [ 'yellow', 'green' ]);
 
-    assert.equal(subject.get('models.length'), 2);
-    assert.deepEqual(subject.get('models').mapBy('id'), [ 'yellow', 'green' ]);
+    let instance = run(() => subject.get('models.length'));
 
-    let yellow = subject.get('models').objectAt(0);
-    let green = subject.get('models').objectAt(1);
+    assert.equal(instance, 2);
+    assert.deepEqual(instance.mapBy('id'), [ 'yellow', 'green' ]);
+
+    let yellow = instance.objectAt(0);
+    let green = instance.objectAt(1);
 
     subject.set('content', []);
     assert.deepEqual(subject.get('models').mapBy('id'), []);
 
+    assert.ok(instance.isDestroyed);
     assert.ok(yellow.isDestroyed);
-    assert.ok(yellow.isDestroyed);
+    assert.ok(green.isDestroyed);
   });
 
 });
