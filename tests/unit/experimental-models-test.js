@@ -32,22 +32,25 @@ module('experimental-models', function(hooks) {
       models: models('content', 'post').mapping(id => ({ id }))
     });
 
-    assert.equal(subject.get('models'), undefined);
+    assert.equal(subject.get('models.length'), 0); // should be undefined
 
     subject.set('content', [ 'yellow', 'green' ]);
 
-    let instance = run(() => subject.get('models.length'));
+    let fist = run(() => subject.get('models'));
 
-    assert.equal(instance, 2);
-    assert.deepEqual(instance.mapBy('id'), [ 'yellow', 'green' ]);
+    assert.equal(fist.get('length'), 2);
+    assert.deepEqual(fist.mapBy('id'), [ 'yellow', 'green' ]);
 
-    let yellow = instance.objectAt(0);
-    let green = instance.objectAt(1);
+    let yellow = fist.objectAt(0);
+    let green = fist.objectAt(1);
 
     subject.set('content', []);
-    assert.deepEqual(subject.get('models').mapBy('id'), []);
 
-    assert.ok(instance.isDestroyed);
+    let second = run(() => subject.get('models'));
+
+    assert.deepEqual(second.mapBy('id'), []);
+
+    assert.ok(fist.isDestroyed);
     assert.ok(yellow.isDestroyed);
     assert.ok(green.isDestroyed);
   });

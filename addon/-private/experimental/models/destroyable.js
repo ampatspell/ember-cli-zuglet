@@ -12,8 +12,9 @@ const normalize = (owner, opts, key) => {
 
 const create = opts => {
   return function(key) {
+    let owner = getOwner(this);
     let props = normalize(this, opts, key);
-    return getOwner(this).factoryFor('zuglet:computed/models/internal').create(props);
+    return owner.factoryFor('zuglet:computed/models/internal').create(props);
   }
 }
 

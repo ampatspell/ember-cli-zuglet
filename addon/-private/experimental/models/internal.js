@@ -1,3 +1,4 @@
+import { getOwner } from '@ember/application';
 import Internal from '../../internal/internal';
 
 export default Internal.extend({
@@ -8,8 +9,12 @@ export default Internal.extend({
   factory: null,
   mapping: null,
 
+  factoryFor(name) {
+    return getOwner(this).factoryFor(name);
+  },
+
   createModel() {
-    console.log('createModel');
+    return this.factoryFor('zuglet:computed/models').create({ _internal: this });
   }
 
 });
