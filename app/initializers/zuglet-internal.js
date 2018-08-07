@@ -238,6 +238,6 @@ export default {
     //
 
     container.register('zuglet:computed/observed/internal', ComputedObservedInternal);
-    container.register('zuglet:model/internal', ComputedModelInternal);
+    container.register('zuglet:computed/model/internal', ComputedModelInternal);
   }
 }

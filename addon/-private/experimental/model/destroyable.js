@@ -21,7 +21,7 @@ const create = opts => {
     if(!factory) {
       return;
     }
-    return owner.factoryFor('zuglet:model/internal').create({ owner: this, factory, mapping });
+    return owner.factoryFor('zuglet:computed/model/internal').create({ owner: this, factory, mapping });
   }
 }
 
