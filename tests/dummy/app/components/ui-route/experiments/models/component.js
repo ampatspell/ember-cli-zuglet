@@ -12,7 +12,7 @@ export default Component.extend({
 
     query: observed(),
 
-    models: models('query.content', {
+    models: models('query.content', 'data.text', {
 
       prepare(doc) {
         this.setProperties({ doc });
@@ -23,6 +23,7 @@ export default Component.extend({
     prepare() {
       let query = this.store.collection('messages').query();
       this.setProperties({ query });
+      window.model = this;
     }
 
   }),
