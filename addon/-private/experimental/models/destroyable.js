@@ -6,8 +6,8 @@ const get = internal => internal.model(true);
 const reusable = () => false;
 
 const normalize = (owner, opts, key) => {
-  let { dependencies, factory, mapping } = opts;
-  return { owner, key, dependencies, factory, mapping };
+  let { source, dependencies, factory, mapping } = opts;
+  return { owner, opts: { key, source, dependencies, factory, mapping } };
 }
 
 const create = opts => {

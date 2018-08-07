@@ -9,7 +9,8 @@ const build = (opts, nested={}) => {
 }
 
 export default (...dependencies) => {
+  let source = dependencies.shift();
   let factory = dependencies.pop();
-  let opts = { dependencies, factory };
+  let opts = { source, dependencies, factory };
   return build(opts);
 }
