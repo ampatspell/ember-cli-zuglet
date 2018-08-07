@@ -31,15 +31,17 @@ export default Internal.extend({
     }).readOnly());
   },
 
-  createModelsProperty() {
+  resolveModelsPropertyDependency() {
     let dependencies = this.get('opts.dependencies');
-    let deps = [];
     if(dependencies.length) {
-      deps.push(`source.@each.{${dependencies.join(',')}}`);
-    } else {
-      deps.push(`source.[]`);
+      return `source.@each.{${dependencies.join(',')}}`;
     }
-    defineProperty(this, 'models', computed(...deps, function() {
+    return `source.[]`;
+  },
+
+  createModelsProperty() {
+    let dependency = this.resolveModelsPropertyDependency();
+    defineProperty(this, 'models', computed(dependency, function() {
       return this.recompute();
     }).readOnly());
   },
