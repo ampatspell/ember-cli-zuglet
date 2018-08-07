@@ -8,12 +8,20 @@ export default Internal.extend({
   owner: null,
   opts: null,
 
-  source: computed(function() {
+  _source: computed(function() {
     let { owner, opts: { source } } = this.getProperties('owner', 'opts');
     return this.factoryFor('zuglet:computed/models/internal/source').create({ owner, key: source });
   }).readOnly(),
 
-  content: readOnly('source.content'),
+  source: readOnly('_source.content'),
+
+  // TODO: destroy mapping on source change
+  _content: computed('source', function() {
+    let { source, opts: { dependencies, factory, mapping } } = this.getProperties('source', 'opts');
+    return this.factoryFor('zuglet:computed/models/internal/mapping').create({ source, dependencies, factory, mapping });
+  }).readOnly(),
+
+  content: readOnly('_content.content'),
 
   factoryFor(name) {
     return getOwner(this).factoryFor(name);
@@ -21,20 +29,6 @@ export default Internal.extend({
 
   createModel() {
     return this.factoryFor('zuglet:computed/models').create({ _internal: this });
-  },
-
-  startObserving() {
-    let content = this.get('content');
-    if(content) {
-      return;
-    }
-  },
-
-  stopObserving() {
-    let content = this.get('content');
-    if(!content) {
-      return;
-    }
   }
 
 });

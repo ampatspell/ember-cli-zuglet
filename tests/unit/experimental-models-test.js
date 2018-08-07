@@ -24,7 +24,10 @@ module('experimental-models', function(hooks) {
 
   test('create and destroy', async function(assert) {
     this.registerModel('post', EmberObject.extend({
-      id: null
+      id: null,
+      prepare({ id }) {
+        this.setProperties({ id });
+      }
     }));
 
     let subject = this.create('subject', {
