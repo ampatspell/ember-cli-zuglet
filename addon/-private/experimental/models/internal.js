@@ -82,9 +82,12 @@ export default Internal.extend({
 
     source.forEach(item => {
       let model = existing(item);
-      if(!model) {
+      if(model) {
+        // TODO: prepare
+      } else {
         model = create(item);
       }
+
       if(model) {
         next.push(model);
       }
