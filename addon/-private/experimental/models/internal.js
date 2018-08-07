@@ -46,18 +46,17 @@ export default Internal.extend({
     }).readOnly());
   },
 
-  prepareModelForItem(model, item) {
+  resolveMapping(item) {
     let mapping = this.get('opts.mapping');
-
-    let arg;
     if(mapping) {
-      arg = mapping(item);
-    } else {
-      arg = item;
+      return mapping(item);
     }
+    return item;
+  },
 
+  prepareModelForItem(model, item) {
+    let arg = this.resolveMapping(item);
     model.prepare(arg);
-
     return model;
   },
 
