@@ -47,7 +47,7 @@ module('experimental-models', function(hooks) {
     let yellow = fist.objectAt(0);
     let green = fist.objectAt(1);
 
-    subject.set('content', []);
+    run(() => subject.set('content', []));
 
     let second = run(() => subject.get('models'));
 

@@ -1,0 +1,7 @@
+{{model.query.content.length}} / {{model.models.length}}
+
+{{#each model.models as |i idx|}}
+  <div>{{idx}}: {{i}}</div>
+{{/each}}
+
+{{log model.models}}

@@ -1,14 +1,9 @@
-import EmberObject from '@ember/object';
+import ArrayProxy from '@ember/array/proxy';
 import { readOnly } from '@ember/object/computed';
-import EmberArray from '@ember/array';
 import ModelMixin from '../../internal/model-mixin';
 
-export default EmberObject.extend(ModelMixin, EmberArray, {
+export default ArrayProxy.extend(ModelMixin, {
 
-  length: readOnly('_internal.models.length'),
-
-  objectAt(idx) {
-    return this.get('_internal.models').objectAt(idx);
-  }
+  content: readOnly('_internal.models')
 
 });

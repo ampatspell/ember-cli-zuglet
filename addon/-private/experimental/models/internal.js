@@ -1,7 +1,10 @@
 import { getOwner } from '@ember/application';
 import { computed, defineProperty } from '@ember/object';
-import Internal from '../../internal/internal';
+import { typeOf } from '@ember/utils';
+import { assert } from '@ember/debug';
 import { A } from '@ember/array';
+import Internal from '../../internal/internal';
+import generateModelClass from '../../util/geneate-model-class';
 
 const __zuglet_models_raw = '__zuglet_models_raw';
 
@@ -60,18 +63,28 @@ export default Internal.extend({
     return model;
   },
 
-  createModelForItem(item) {
-    let factory = this.get('opts.factory');
+  resolveModelFactoryForItem(item) {
+    let { owner, opts: { key, factory } } = this.getProperties('owner', 'opts');
 
     if(typeof factory === 'function') {
       factory = factory(item);
     }
 
-    factory = getOwner(this).factoryFor(`model:${factory}`);
+    let type = typeOf(factory);
 
+    if(type === 'string') {
+      let proxy = getOwner(this).factoryFor(`model:${factory}`);
+      assert(`model '${factory}' is not registered`, !!proxy);
+      return proxy;
+    } else if(type === 'object') {
+      return generateModelClass(owner, key, factory);
+    }
+  },
+
+  createModelForItem(item) {
+    let factory = this.resolveModelFactoryForItem(item);
     let model = factory.create({ [__zuglet_models_raw]: item });
     this.prepareModelForItem(model, item);
-
     return model;
   },
 
@@ -99,9 +112,11 @@ export default Internal.extend({
       next.push(model);
     });
 
-    content.replace(0, content.get('length'), next);
     remove.map(model => model.destroy());
-    return content;
+
+    this.set('content', next);
+
+    return next;
   },
 
   factoryFor(name) {

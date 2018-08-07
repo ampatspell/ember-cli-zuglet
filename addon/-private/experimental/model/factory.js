@@ -1,27 +1,9 @@
-import EmberObject from '@ember/object';
 import { typeOf } from '@ember/utils';
 import { assert } from '@ember/debug';
-import containerKey from '../../util/container-key';
-
-const generateModelName = (owner, key) => {
-  owner = containerKey(owner).replace(':', '/');
-  return `generated/${owner}/property/${key}`;
-}
-
-const modelFullName = name => `model:${name}`;
-
-const generateModelClassForProperties = props => EmberObject.extend(props);
+import generateModelClass from '../../util/geneate-model-class';
 
 const resolveObject = (parent, owner, key, arg) => {
-  let normalizedName = generateModelName(parent, key);
-  let fullName = modelFullName(normalizedName);
-
-  let factory = owner.factoryFor(fullName);
-  if(!factory) {
-    owner.register(fullName, generateModelClassForProperties(arg));
-    factory = owner.factoryFor(fullName);
-  }
-
+  let factory = generateModelClass(parent, key, arg);
   return {
     factory,
     requiresMapping: false
@@ -68,5 +50,5 @@ export const resolveFactory = (parent, owner, key, arg) => {
   } else if(type === 'function') {
     return resolveFunction(parent, owner, key, arg);
   }
-  assert(`model last argument must be object or string`, false);
+  assert(`model last argument must be object, string or function`, false);
 }
