@@ -1,8 +1,7 @@
 import { getOwner } from '@ember/application';
 import EmberObject from '@ember/object';
 import containerKey from './container-key';
-
-const modelFullName = name => `model:${name}`;
+import modelFullName from './model-full-name';
 
 const generateModelClassForProperties = props => EmberObject.extend(props);
 
