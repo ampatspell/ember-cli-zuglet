@@ -25,7 +25,7 @@ const createInstance = deps => {
     object: null,
 
     model: computed(dep, function() {
-      console.log('recomute model', this.get('object')+'');
+      console.log('recompute model', this.get('object')+'');
       let model = this._model;
       if(!model) {
         model = this.createModel();
