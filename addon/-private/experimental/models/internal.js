@@ -6,6 +6,7 @@ import { computed } from '@ember/object';
 import { A } from '@ember/array';
 import { typeOf } from '@ember/utils';
 import generateModelClass from '../../util/geneate-model-class';
+import { assert } from '@ember/debug';
 
 export default Internal.extend({
 
