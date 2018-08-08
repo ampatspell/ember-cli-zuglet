@@ -1,5 +1,57 @@
-{{model.query.content.length}} / {{model.models.length}}
+{{#ui-block/rows as |rows|}}
 
-{{#each model.models as |i idx|}}
-  <div>{{idx}}: {{i}}</div>
-{{/each}}
+  {{#rows.header}}
+    Query content
+  {{/rows.header}}
+
+  {{#rows.row}}
+    {{#each model.query.content as |doc|}}
+      <div>{{doc.data.type}} : {{doc.data.name}} : {{doc.id}}</div>
+    {{/each}}
+  {{/rows.row}}
+
+{{/ui-block/rows}}
+
+{{#ui-block/rows as |rows|}}
+
+  {{#rows.header}}
+    Models
+  {{/rows.header}}
+
+  {{#rows.row}}
+    {{model.models}}
+  {{/rows.row}}
+
+  {{#rows.row}}
+    {{#each model.models.content as |model|}}
+      <div>{{model.type}} : {{model.name}} : {{model.id}} : {{model}}</div>
+    {{/each}}
+  {{/rows.row}}
+
+{{/ui-block/rows}}
+
+{{#let model.models as |models|}}
+
+  {{#ui-block/rows as |rows|}}
+
+      {{#let models._internal.instances as |subject|}}
+
+        {{#rows.header}}
+          Instances
+        {{/rows.header}}
+
+        {{#rows.row}}
+          {{subject}}
+        {{/rows.row}}
+
+        {{#rows.row}}
+          {{#each subject.content as |instance|}}
+            <div>{{instance.model}}</div>
+          {{/each}}
+        {{/rows.row}}
+
+      {{/let}}
+
+  {{/ui-block/rows}}
+
+{{/let}}
