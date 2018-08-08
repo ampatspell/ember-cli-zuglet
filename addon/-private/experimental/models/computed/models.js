@@ -2,6 +2,11 @@ import { computed } from '@ember/object';
 import { A } from '@ember/array';
 
 export default key => computed(`${key}.@each.model`, function() {
+  let instances = this.get(key);
+  if(!instances) {
+    return;
+  }
+
   let models = this._models;
 
   if(!models) {
@@ -10,8 +15,6 @@ export default key => computed(`${key}.@each.model`, function() {
   }
 
   models.clear();
-
-  let instances = this.get(key);
 
   instances.forEach(instance => {
     let model = instance.get('model');

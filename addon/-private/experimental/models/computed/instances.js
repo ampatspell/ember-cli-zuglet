@@ -76,6 +76,11 @@ const Instances = EmberObject.extend({
   opts: null,
 
   content: computed('source.[]', function() {
+    let source = this.get('source');
+    if(!source) {
+      return;
+    }
+
     let content = this._content;
 
     if(!content) {
@@ -83,13 +88,11 @@ const Instances = EmberObject.extend({
       this._content = content;
     }
 
-    let source = A(this.get('source'));
-
     let remove = A(content.slice());
 
     content.clear();
 
-    source.map(object => {
+    A(source).map(object => {
       let model = remove.findBy('object', object);
       if(model) {
         remove.removeObject(model);
