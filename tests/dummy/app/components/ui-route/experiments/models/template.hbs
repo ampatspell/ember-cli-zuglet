@@ -4,11 +4,17 @@
     Query content
   {{/rows.header}}
 
-  {{#rows.row}}
-    {{#each model.query.content as |doc|}}
-      <div>{{doc.data.type}} : {{doc.data.name}} : {{doc.id}}</div>
-    {{/each}}
-  {{/rows.row}}
+  {{#if model.query.isLoading}}
+    {{#rows.row}}
+      Loading…
+    {{/rows.row}}
+  {{else}}
+    {{#rows.row}}
+      {{#each model.query.content as |doc|}}
+        <div>{{doc.data.type}} : {{doc.data.name}} : {{doc.id}}</div>
+      {{/each}}
+    {{/rows.row}}
+  {{/if}}
 
 {{/ui-block/rows}}
 
@@ -22,36 +28,11 @@
     {{model.models}}
   {{/rows.row}}
 
-  {{#rows.row}}
-    {{#each model.models.content as |model|}}
-      <div>{{model.type}} : {{model.name}} : {{model.id}} : {{model}}</div>
-    {{/each}}
-  {{/rows.row}}
+  {{#each model.models.content as |model|}}
+    {{#rows.row}}
+      <div>{{model.type}} : {{model.name}} : {{model.id}}</div>
+      <div>{{model}}</div>
+    {{/rows.row}}
+  {{/each}}
 
 {{/ui-block/rows}}
-
-{{#let model.models as |models|}}
-
-  {{#ui-block/rows as |rows|}}
-
-      {{#let models._internal.instances as |subject|}}
-
-        {{#rows.header}}
-          Instances
-        {{/rows.header}}
-
-        {{#rows.row}}
-          {{subject}}
-        {{/rows.row}}
-
-        {{#rows.row}}
-          {{#each subject.content as |instance|}}
-            <div>{{instance.model}}</div>
-          {{/each}}
-        {{/rows.row}}
-
-      {{/let}}
-
-  {{/ui-block/rows}}
-
-{{/let}}
