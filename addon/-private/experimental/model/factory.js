@@ -1,7 +1,7 @@
 import { typeOf } from '@ember/utils';
 import { assert } from '@ember/debug';
 import modelFullName from '../../util/model-full-name';
-import generateModelClass from '../../util/geneate-model-class';
+import generateModelClass from '../../util/generate-model-class';
 
 const resolveObject = (parent, owner, key, arg) => {
   let factory = generateModelClass(parent, key, arg);
