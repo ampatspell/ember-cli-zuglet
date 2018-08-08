@@ -218,6 +218,32 @@ module('experimental-models', function(hooks) {
     assert.equal(first.get('id'), 'first');
   });
 
+  test('named without mapping', async function(assert) {
+    let subject;
+
+    this.registerModel('book', EmberObject.extend({
+      prepare(raw, owner) {
+        assert.ok(subject === owner);
+        let id = raw.get('id');
+        this.setProperties({ raw, id });
+      }
+    }));
+
+    subject = this.subject({
+      source: A(),
+      models: models('source', 'book')
+    });
+
+    let source = subject.get('source');
+    let prop = subject.get('models');
+
+    source.pushObject(EmberObject.create({ id: 'first' }));
+
+    let first = prop.get('content.firstObject');
+    assert.equal(first.get('raw.id'), 'first');
+    assert.equal(first.get('id'), 'first');
+  });
+
   test('resolved with mapping', async function(assert) {
     this.registerModel('book', EmberObject.extend({
       prepare({ raw, id }) {

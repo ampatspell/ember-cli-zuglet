@@ -40,19 +40,10 @@ const Instance = EmberObject.extend({
     return model;
   },
 
-  arguments() {
-    let { owner, object, opts: { mapping } } = this.getProperties('owner', 'object', 'opts');
-    if(mapping) {
-      let mapped = mapping.call(owner, object, owner);
-      return [ mapped ];
-    }
-    return [ object, owner ];
-  },
-
   factory() {
     let { owner, object, opts: { factory: { type, prop } } } = this.getProperties('owner', 'object', 'opts');
     if(type === 'function') {
-      return prop(object, owner)
+      return prop(object, owner);
     }
     return prop;
   },
@@ -60,6 +51,15 @@ const Instance = EmberObject.extend({
   instantiate() {
     let factory = this.factory();
     return factory.create();
+  },
+
+  arguments() {
+    let { owner, object, opts: { mapping } } = this.getProperties('owner', 'object', 'opts');
+    if(mapping) {
+      let mapped = mapping.call(owner, object, owner);
+      return [ mapped ];
+    }
+    return [ object, owner ];
   },
 
   prepare(model) {
