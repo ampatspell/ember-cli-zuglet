@@ -25,10 +25,10 @@
   {{/rows.header}}
 
   {{#rows.row}}
-    {{model.models}}
+    {{model.hamsters}}
   {{/rows.row}}
 
-  {{#each model.models.content as |model|}}
+  {{#each model.hamsters.content as |model|}}
     {{#rows.row}}
       <div>{{model.type}} : {{model.name}} : {{model.id}}</div>
       <div>{{model}}</div>
