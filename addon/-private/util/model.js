@@ -1,9 +1,10 @@
 import { getOwner } from '@ember/application';
 import EmberObject from '@ember/object';
-import containerKey from './container-key';
-import modelFullName from './model-full-name';
 
-const generateModelClassForProperties = props => EmberObject.extend(props);
+const containerKey = instance => {
+  // https://github.com/emberjs/ember.js/issues/10742
+  return instance._debugContainerKey;
+}
 
 const generateModelName = (owner, key) => {
   owner = containerKey(owner).replace(':', '/');
@@ -14,7 +15,11 @@ const generateModelName = (owner, key) => {
   return name;
 }
 
-export default (parent, key, props) => {
+const generateModelClassForProperties = props => EmberObject.extend(props);
+
+export const modelFullName = name => `model:${name}`;
+
+export const generateModelClass = (parent, key, props) => {
   let normalizedName = generateModelName(parent, key);
   let fullName = modelFullName(normalizedName);
   let owner = getOwner(parent);
