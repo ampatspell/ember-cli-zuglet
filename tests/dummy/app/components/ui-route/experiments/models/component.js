@@ -13,7 +13,7 @@ export default Component.extend({
 
     query: observed(),
 
-    models: models('query.content', 'id', 'data.{type,name}', {
+    models: models('query.content', 'data.type', {
 
       doc: null,
 

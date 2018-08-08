@@ -55,7 +55,7 @@ const createInstanceClass = deps => {
 
     createModel() {
       let model = this.instantiate();
-      model.prepare(this.arguments());
+      model.prepare(...this.arguments());
       return model;
     },
 
