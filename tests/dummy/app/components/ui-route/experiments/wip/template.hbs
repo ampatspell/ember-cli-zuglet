@@ -1,15 +1,9 @@
-{{#each instances as |instance|}}
-  <div>{{instance}}</div>
-{{/each}}
+{{#ui-block/rows as |rows|}}
 
-<br/>
+  {{rows.header value='WIP'}}
 
-{{#each models as |model|}}
-  <div>{{model}}</div>
-{{/each}}
+  {{#rows.row}}
+    {{this}}
+  {{/rows.row}}
 
-<br/>
-
-{{#each proxy as |model|}}
-  {{ui-route/experiments/wip/log model=model}}
-{{/each}}
+{{/ui-block/rows}}
