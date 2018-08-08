@@ -7,21 +7,20 @@ import { resolveFactory } from './factory';
 const get = internal => internal.model(true);
 const reuse = internal => internal.reuse();
 
-const normalize = (parent, owner, opts, key) => {
+const normalize = (parent, opts, key) => {
   let { arg, mapping } = opts;
-  let { factory, requiresMapping } = resolveFactory(parent, owner, key, arg);
+  let { factory, requiresMapping } = resolveFactory(parent, key, arg);
   assert(`model requires mapping`, !requiresMapping || typeof mapping === 'function');
   return { factory, mapping };
 }
 
 const create = opts => {
   return function(key) {
-    let owner = getOwner(this);
-    let { factory, mapping } = normalize(this, owner, opts, key);
+    let { factory, mapping } = normalize(this, opts, key);
     if(!factory) {
       return;
     }
-    return owner.factoryFor('zuglet:computed/model/internal').create({ owner: this, factory, mapping });
+    return getOwner(this).factoryFor('zuglet:computed/model/internal').create({ owner: this, factory, mapping });
   }
 }
 

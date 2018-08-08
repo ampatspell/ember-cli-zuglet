@@ -22,7 +22,60 @@ const Instance = EmberObject.extend({
 
   parent: null,
   object: null,
-  model: null
+  model: null,
+
+  owner: readOnly('parent.owner'),
+
+  recompute() {
+    let model = this._model;
+    if(model) {
+      let current = model;
+      model = this.create();
+      current.destroy();
+      this._model = model;
+    } else {
+      model = this.create();
+      this._model = model;
+    }
+    return model;
+  },
+
+  arguments() {
+    let { owner, object, opts: { mapping } } = this.getProperties('owner', 'object', 'opts');
+    if(mapping) {
+      let mapped = mapping.call(owner, object, owner);
+      return [ mapped ];
+    }
+    return [ object, owner ];
+  },
+
+  factory() {
+    let { owner, object, opts: { factory: { type, prop } } } = this.getProperties('owner', 'object', 'opts');
+    if(type === 'function') {
+      return prop(object, owner)
+    }
+    return prop;
+  },
+
+  instantiate() {
+    let factory = this.factory();
+    return factory.create();
+  },
+
+  prepare(model) {
+    model.prepare(...this.arguments());
+  },
+
+  create() {
+    let model = this.instantiate();
+    this.prepare(model);
+    return model;
+  },
+
+  willDestroy() {
+    this._super(...arguments);
+    this._model && this._model.destroy();
+  }
 
 });
 
@@ -31,38 +84,8 @@ const createInstanceClass = deps => {
   return Instance.extend({
 
     model: computed(...deps, function() {
-      let model = this._model;
-      if(!model) {
-        model = this.createModel();
-        this._model = model;
-      }
-      return model;
-    }).readOnly(),
-
-    arguments() {
-      let { parent, object, opts: { mapping } } = this.getProperties('parent', 'object', 'opts');
-      if(mapping) {
-        let mapped = mapping.call(parent, object, parent);
-        return [ mapped ];
-      }
-      return [ object, parent ];
-    },
-
-    instantiate() {
-      let { object, opts: { factory } } = this.getProperties('object', 'opts');
-      return factory.create();
-    },
-
-    createModel() {
-      let model = this.instantiate();
-      model.prepare(...this.arguments());
-      return model;
-    },
-
-    willDestroy() {
-      this._super(...arguments);
-      this._model && this._model.destroy();
-    }
+      return this.recompute();
+    }).readOnly()
 
   });
 }

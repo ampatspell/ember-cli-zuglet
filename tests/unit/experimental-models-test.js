@@ -112,46 +112,184 @@ module('experimental-models', function(hooks) {
     assert.ok(first.isDestroying);
   });
 
-  // inline without mapping
-  // inline with mapping
-  // resolved without mapping
-  // resolved with mapping
-  // named without mapping
-  // named with mapping
+  test('model is recreated on dependency change', async function(assert) {
+    let subject = this.subject({
+      source: A(),
+      models: models('source', 'id', {
+        prepare(raw) {
+          this.setProperties({ raw });
+        }
+      })
+    });
 
-  test.skip('create and destroy', async function(assert) {
-    this.registerModel('post', EmberObject.extend({
-      id: null,
-      prepare({ id }) {
-        this.setProperties({ id });
+    let source = subject.get('source');
+    let prop = subject.get('models');
+
+    let doc = EmberObject.create({ id: 'first' });
+
+    source.pushObject(doc);
+
+    let first = prop.get('content.firstObject');
+
+    assert.equal(first.get('raw.id'), 'first');
+
+    doc.set('id', 'second');
+
+    let second = run(() => prop.get('content.firstObject'));
+
+    assert.ok(first !== second);
+    assert.ok(first.isDestroying);
+    assert.ok(!second.isDestroying);
+  });
+
+  test('inline without mapping', async function(assert) {
+    let subject = this.subject({
+      source: A(),
+      models: models('source', {
+        prepare(raw, owner) {
+          assert.ok(raw);
+          assert.ok(owner);
+          assert.ok(owner === subject);
+          let id = raw.get('id');
+          this.setProperties({ raw, id });
+        }
+      })
+    });
+
+    let source = subject.get('source');
+    let prop = subject.get('models');
+
+    source.pushObject(EmberObject.create({ id: 'first' }));
+
+    let first = prop.get('content.firstObject');
+
+    assert.equal(first.get('raw.id'), 'first');
+    assert.equal(first.get('id'), 'first');
+  });
+
+  test('inline with mapping', async function(assert) {
+    let subject = this.subject({
+      source: A(),
+      models: models('source', {
+        prepare({ raw, id }) {
+          assert.equal(arguments[1], undefined);
+          this.setProperties({ raw, id });
+        }
+      }).mapping((raw, owner) => {
+        assert.ok(owner === subject);
+        let id = raw.get('id');
+        return { raw, id };
+      })
+    });
+
+    let source = subject.get('source');
+    let prop = subject.get('models');
+
+    source.pushObject(EmberObject.create({ id: 'first' }));
+
+    let first = prop.get('content.firstObject');
+    assert.equal(first.get('raw.id'), 'first');
+    assert.equal(first.get('id'), 'first');
+  });
+
+  test('named with mapping', async function(assert) {
+    this.registerModel('book', EmberObject.extend({
+      prepare({ raw, id }) {
+        this.setProperties({ raw, id });
       }
     }));
 
-    let subject = this.create('subject', {
-      content: null,
-      models: models('content', 'post').mapping(id => ({ id }))
+    let subject = this.subject({
+      source: A(),
+      models: models('source', 'book').mapping((raw, owner) => {
+        assert.ok(owner === subject);
+        let id = raw.get('id');
+        return { raw, id };
+      })
     });
 
-    assert.equal(subject.get('models.content.length'), 0); // should be undefined
+    let source = subject.get('source');
+    let prop = subject.get('models');
 
-    run(() => subject.set('content', [ 'yellow', 'green' ]));
+    source.pushObject(EmberObject.create({ id: 'first' }));
 
-    let fist = run(() => subject.get('models'));
+    let first = prop.get('content.firstObject');
+    assert.equal(first.get('raw.id'), 'first');
+    assert.equal(first.get('id'), 'first');
+  });
 
-    assert.equal(fist.get('content.length'), 2);
-    assert.deepEqual(fist.mapBy('id'), [ 'yellow', 'green' ]);
+  test('resolved with mapping', async function(assert) {
+    this.registerModel('book', EmberObject.extend({
+      prepare({ raw, id }) {
+        this.setProperties({ raw, id });
+      }
+    }));
 
-    let yellow = fist.objectAt(0);
-    let green = fist.objectAt(1);
+    let subject = this.subject({
+      source: A(),
+      models: models('source', (doc, owner) => {
+        assert.equal(doc.get('id'), 'first');
+        assert.ok(owner === subject);
+        return 'book';
+      }).mapping((raw, owner) => {
+        assert.ok(owner === subject);
+        let id = raw.get('id');
+        return { raw, id };
+      })
+    });
 
-    run(() => subject.set('content', []));
+    let source = subject.get('source');
+    let prop = subject.get('models');
 
-    let second = run(() => subject.get('models.content'));
+    source.pushObject(EmberObject.create({ id: 'first' }));
 
-    assert.deepEqual(run(() => second.mapBy('id')), []);
+    let first = prop.get('content.firstObject');
+    assert.equal(first.get('raw.id'), 'first');
+    assert.equal(first.get('id'), 'first');
+  });
 
-    assert.ok(yellow.isDestroyed);
-    assert.ok(green.isDestroyed);
+  test('resolved with mapping replaces model', async function(assert) {
+    this.registerModel('book', EmberObject.extend({
+      modelName: 'book',
+      prepare({ raw, id }) {
+        this.setProperties({ raw, id });
+      }
+    }));
+
+    this.registerModel('newspaper', EmberObject.extend({
+      modelName: 'newspaper',
+      prepare({ raw, id }) {
+        this.setProperties({ raw, id });
+      }
+    }));
+
+    let subject = this.subject({
+      source: A(),
+      models: models('source', 'type', doc => {
+        return doc.get('type');
+      }).mapping((raw, owner) => {
+        assert.ok(owner === subject);
+        let id = raw.get('id');
+        return { raw, id };
+      })
+    });
+
+    let source = subject.get('source');
+    let prop = subject.get('models');
+
+    let doc = EmberObject.create({ id: 'first', type: 'book' });
+    source.pushObject(doc);
+
+    let first = prop.get('content.firstObject');
+    assert.equal(first.get('modelName'), 'book');
+
+    doc.set('type', 'newspaper');
+
+    let second = run(() => prop.get('content.firstObject'));
+    assert.equal(second.get('modelName'), 'newspaper');
+
+    assert.ok(first.isDestroying);
+    assert.ok(!second.isDestroying);
   });
 
 });

@@ -4,7 +4,7 @@ import { typeOf } from '@ember/utils';
 import Internal from '../../internal/internal';
 import { instances, destroyInstances } from './computed/instances';
 import models from './computed/models';
-import { generateModelClass } from '../../util/model';
+import { generateModelClass, modelFactoryForShortName } from '../../util/model';
 import { assert } from '@ember/debug';
 
 export default Internal.extend({
@@ -15,10 +15,16 @@ export default Internal.extend({
   factory: computed(function() {
     let { owner, opts: { key, factory } } = this.getProperties('owner', 'opts');
     let type = typeOf(factory);
+    const result = (type, prop) => ({ type, prop });
     if(type === 'object') {
-      return generateModelClass(owner, key, factory);
+      return result('class', generateModelClass(owner, key, factory));
+    } else if(type === 'string') {
+      return result('class', modelFactoryForShortName(owner, factory));
+    } else if(type === 'function') {
+      let fn = (...args) => modelFactoryForShortName(owner, factory(...args));
+      return result('function', fn);
     }
-    assert(`unsupported model class definition`, false);
+    assert(`models last argument must be object, string or function`, false);
   }).readOnly(),
 
   instances: instances(owner => {

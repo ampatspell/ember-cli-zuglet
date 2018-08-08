@@ -1,5 +1,6 @@
 import { getOwner } from '@ember/application';
 import EmberObject from '@ember/object';
+import { assert } from '@ember/debug';
 
 const containerKey = instance => {
   // https://github.com/emberjs/ember.js/issues/10742
@@ -18,6 +19,13 @@ const generateModelName = (owner, key) => {
 const generateModelClassForProperties = props => EmberObject.extend(props);
 
 export const modelFullName = name => `model:${name}`;
+
+export const modelFactoryForShortName = (parent, name) => {
+  let fullName = modelFullName(name);
+  let factory = getOwner(parent).factoryFor(fullName);
+  assert(`model '${name}' is not registered`, !!factory);
+  return factory;
+}
 
 export const generateModelClass = (parent, key, props) => {
   let normalizedName = generateModelName(parent, key);
