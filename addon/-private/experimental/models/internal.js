@@ -4,6 +4,8 @@ import PropertyObserver from './utils/property-observer';
 import ArrayObserver from './utils/array-observer';
 import { computed } from '@ember/object';
 import { A } from '@ember/array';
+import { typeOf } from '@ember/utils';
+import generateModelClass from '../../util/geneate-model-class';
 
 export default Internal.extend({
 
@@ -41,22 +43,81 @@ export default Internal.extend({
 
   //
 
+  modelFactoryForObject(object) {
+    let { owner, opts: { key, factory } } = this.getProperties('owner', 'opts');
+
+    if(typeof factory === 'function') {
+      factory = factory(object);
+    }
+
+    let type = typeOf(factory);
+
+    if(type === 'string') {
+      let proxy = this.factoryFor(`model:${factory}`);
+      assert(`model '${factory}' is not registered`, !!proxy);
+      return proxy;
+    } else if(type === 'object') {
+      return generateModelClass(owner, key, factory);
+    }
+  },
+
+  resolveMappingForObject(object) {
+    let mapping = this.get('opts.mapping');
+    if(mapping) {
+      return mapping(object);
+    }
+    return object;
+  },
+
+  //
+
+  updateModelForObject(model, object) {
+    console.log('update', model);
+    return model;
+  },
+
+  prepareModelForObject(model, object) {
+    let arg = this.resolveMappingForObject(object);
+    model.prepare(arg);
+    return model;
+  },
+
+  createModelForObject(object) {
+    let factory = this.modelFactoryForObject(object);
+    let model = factory.create();
+    return this.prepareModelForObject(model, object);
+  },
+
+  //
+
   sourceDidChange(value) {
     this.get('array').update(value);
   },
 
   didInsertObjects(objects, start) {
-    let models = this.get('models');
-    models.replace(start, 0, objects);
+    let array = this.get('models');
+    let models = objects.map(object => this.createModelForObject(object));
+    array.replace(start, 0, models);
   },
 
   didRemoveObjects(object, start) {
-    let models = this.get('models');
-    models.replace(start, object.get('length'));
+    let array = this.get('models');
+    let len = object.get('length');
+    let models = array.slice(start, len);
+    array.replace(start, len);
+    models.map(model => model.destroy());
   },
 
   didUpdateObject(object, key, index) {
-    console.log('didUpdate', index, object+'', key);
+    let array = this.get('models');
+    let current = array.objectAt(index);
+    let model = this.updateModelForObject(current, object);
+    if(model !== current) {
+      array.replace(index, 1, [ model ]);
+      if(current) {
+        current.destroy();
+      }
+    }
   },
 
   //
