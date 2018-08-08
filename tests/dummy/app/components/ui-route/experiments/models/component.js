@@ -21,7 +21,7 @@ export default Component.extend({
     }),
 
     prepare() {
-      let query = this.store.collection('messages').query();
+      let query = this.store.collection('ducks').query();
       this.setProperties({ query });
       window.model = this;
     }
