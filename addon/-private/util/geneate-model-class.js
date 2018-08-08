@@ -7,7 +7,11 @@ const generateModelClassForProperties = props => EmberObject.extend(props);
 
 const generateModelName = (owner, key) => {
   owner = containerKey(owner).replace(':', '/');
-  return `generated/${owner}/property/${key}`;
+  let name = `${owner}/property/${key}`;
+  if(!owner.startsWith('model/generated')) {
+    name = `generated/${name}`;
+  }
+  return name;
 }
 
 export default (parent, key, props) => {
