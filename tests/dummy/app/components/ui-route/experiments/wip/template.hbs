@@ -1,1 +1,15 @@
-{{this}}
+{{#each instances as |instance|}}
+  <div>{{instance}}</div>
+{{/each}}
+
+<br/>
+
+{{#each models as |model|}}
+  <div>{{model}}</div>
+{{/each}}
+
+<br/>
+
+{{#each proxy as |model|}}
+  {{ui-route/experiments/wip/log model=model}}
+{{/each}}
