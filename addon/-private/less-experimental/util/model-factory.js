@@ -1,6 +1,48 @@
+import { getOwner } from '@ember/application';
+import EmberObject from '@ember/object';
+import { dasherize } from '@ember/string';
 import { assert } from '@ember/debug';
 import { typeOf } from '@ember/utils';
-import { generateModelClass, modelFactoryForShortName } from '../../util/model';
+
+const instanceContainerKey = instance => {
+  // https://github.com/emberjs/ember.js/issues/10742
+  let key = instance._debugContainerKey;
+  assert(`_debugContainerKey for ${instance} is not set`, !!key);
+  return key;
+}
+
+const modelNameForParentKeyProperty = (owner, key) => {
+  owner = instanceContainerKey(owner).replace(':', '/');
+  let name = `${owner}/property/${key}`;
+  if(!owner.startsWith('model/generated')) {
+    name = `generated/${name}`;
+  }
+  return name;
+}
+
+export const modelFullName = name => `model:${name}`;
+
+const createModelClass = (parent, key, props) => {
+  let normalizedName = modelNameForParentKeyProperty(parent, key);
+  let fullName = modelFullName(normalizedName);
+  let owner = getOwner(parent);
+  let factory = owner.factoryFor(fullName);
+  if(!factory) {
+    owner.register(fullName, EmberObject.extend(props));
+    factory = owner.factoryFor(fullName);
+  }
+  return factory;
+}
+
+export const normalizedModelName = name => dasherize(name);
+
+const modelClassForName = (parent, name) => {
+  let normalizedName = normalizedModelName(name);
+  let fullName = modelFullName(normalizedName);
+  let factory = getOwner(parent).factoryFor(fullName);
+  assert(`model '${normalizedName}' is not registered`, !!factory);
+  return factory;
+}
 
 const validate = (parent, key, inline, named, mapping, delegate) => {
   assert(`parent is required`, !!parent);
@@ -39,16 +81,16 @@ export default class ModelFactory {
   createFactory() {
     let { parent, key, opts: { inline, named } } = this;
     if(inline) {
-      let modelClass = generateModelClass(parent, key, inline);
+      let modelClass = createModelClass(parent, key, inline);
       return props => modelClass.create(props);
     } else if(named) {
       if(typeof named === 'string') {
-        let modelClass = modelFactoryForShortName(parent, named);
+        let modelClass = modelClassForName(parent, named);
         return props => modelClass.create(props);
       } else {
         return (props, args) => {
           let name = named(...this.delegate.named(...args));
-          let modelClass = modelFactoryForShortName(parent, name);
+          let modelClass = modelClassForName(parent, name);
           return modelClass.create(props);
         }
       }
