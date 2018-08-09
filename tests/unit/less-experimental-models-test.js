@@ -189,9 +189,13 @@ module('less-experimental-models', function(hooks) {
 
     assert.deepEqual(subject.get('models').mapBy('name'), [ 'duck' ]);
 
+    let first = subject.get('models.firstObject');
+
     run(() => subject.set('all', null));
 
     assert.deepEqual(subject.get('models').mapBy('name'), []);
+
+    assert.ok(first.isDestroying);
 
     run(() => subject.destroy());
   });
