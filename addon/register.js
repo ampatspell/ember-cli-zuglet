@@ -21,7 +21,7 @@ export default {
   })
 };`, false, {
   id: 'ember-cli-zuglet-register',
-  until: '0.3.0'
+  until: '0.7.0'
 });
 
 export default register;

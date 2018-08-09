@@ -3,6 +3,8 @@ import models from './models';
 import observed from './observed';
 import route from './model/route';
 
+import './-deprecate';
+
 export {
   model,
   models,
