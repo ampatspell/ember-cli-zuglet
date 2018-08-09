@@ -8,7 +8,7 @@ export default class ArrayObserver {
 
   // array: Enumerable
   // observe: [ 'id', 'type' ]
-  // delegate: { removed(array), added(array), updated(object, key) }
+  // delegate: { removed(objects, start, len), added(objects, start, len), updated(object, key) }
   constructor({ array, observe, delegate }) {
     assert(`array must be array`, typeOf(array) === 'array');
     assert(`observe must be array`, typeOf(observe) === 'array');
