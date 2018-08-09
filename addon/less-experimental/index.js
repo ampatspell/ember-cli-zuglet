@@ -1,5 +1,7 @@
 import models from './models';
+import model from './model';
 
 export {
-  models
+  models,
+  model
 }
