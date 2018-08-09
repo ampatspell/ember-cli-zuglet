@@ -29,6 +29,17 @@ models('query.content').owner('product.type').object('data.type').inline({
 ```
 
 ``` javascript
+models('query.content').owner('product.type').object('data.type').inline({
+  prepare({ doc, product }) {
+    this.setProperties({ doc, product });
+  }
+}).mapping((doc, owner) => {
+  let product = owner.product;
+  return { doc, product };
+});
+```
+
+``` javascript
 models('query.content').named('book');
 ```
 
@@ -46,9 +57,19 @@ models('query.content').owner('product.type').object('data.type').named((doc, ow
 ``` javascript
 model('doc').owner('product.type').object('data.type').inline({
   prepare(doc, owner) {
-
   }
 });
+```
+
+``` javascript
+model('doc').owner('product.type').object('data.type').inline({
+  prepare({ doc, product }) {
+    this.setProperties({ doc, product });
+  }
+}).mapping((doc, owner) => {
+  let product = owner.product;
+  return { doc, product };
+})
 ```
 
 ``` javascript
@@ -70,6 +91,17 @@ models('doc').owner('product.type').object('data.type').named((doc, owner) => {
 model().inline({
   prepare(route, params) {
   }
+});
+```
+
+``` javascript
+model().inline({
+  prepare({ products, id }) {
+  }
+}).mapping((route, params) => {
+  let id = params.product_id;
+  let products = route.modelFor('products');
+  return { id, products };
 });
 ```
 
