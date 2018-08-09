@@ -86,7 +86,7 @@ export default class ModelsRuntime {
 
   //
 
-  onSourceArrayReplaced(soure) {
+  onSourceArrayReplaced() {
     this.rebuildModels();
   }
 
