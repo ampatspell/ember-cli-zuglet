@@ -1,6 +1,5 @@
 import Internal from '../../internal/internal';
 import { getOwner } from '@ember/application';
-import { A } from '@ember/array';
 import Runtime from './runtime';
 
 export default Internal.extend({
