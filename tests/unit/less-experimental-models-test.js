@@ -200,4 +200,30 @@ module('less-experimental-models', function(hooks) {
     run(() => subject.destroy());
   });
 
+  test('mapping is used', async function(assert) {
+    let subject = this.subject({
+
+      all: A([ this.object({ name: 'duck' }) ]),
+      color: 'yellow',
+
+      models: models('all').inline({
+        prepare({ name, color }) {
+          this.setProperties({ name, color });
+        }
+      }).mapping((object, owner) => {
+        let name = object.get('name');
+        let color = owner.get('color');
+        return { name, color };
+      })
+
+    });
+
+    let first = subject.get('models.firstObject');
+
+    assert.equal(first.get('name'), 'duck');
+    assert.equal(first.get('color'), 'yellow');
+
+    run(() => subject.destroy());
+  });
+
 });
