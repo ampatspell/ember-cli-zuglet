@@ -2,10 +2,26 @@ import { A } from '@ember/array';
 import ParentManager from './runtime/parent';
 import SourceManager from './runtime/source';
 import ModelFactory from '../util/model-factory';
+import { assert } from '@ember/debug';
+import { typeOf } from '@ember/utils';
+
+const validate = opts => {
+  assert(`opts must be object`, typeOf(opts) === 'object');
+  let { source, parent } = opts;
+  assert(`opts.source must be object`, typeOf(source) === 'object');
+  assert(`opts.parent must be array`, typeOf(parent) === 'array');
+  let { dependencies, key } = source;
+  assert(`opts.source.dependencies must be array`, typeOf(dependencies) === 'array');
+  assert(`duplicate owner dependency '${key}'`, !parent.includes(key));
+  dependencies.forEach(key => {
+    assert(`duplicate owner dependency '${key}`, !parent.includes(key))
+  });
+}
 
 export default class ModelsRuntime {
 
   constructor(parent, key, opts) {
+    validate(opts);
     this.parent = parent;
     this.key = key;
     this.opts = opts;
