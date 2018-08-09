@@ -6,7 +6,7 @@ const compact = array => A(array).compact();
 
 // foo('docs')
 // foo('type', owner => owner.type)
-const key = args => {
+const source = args => {
   args = compact(args);
   if(args.length === 1) {
     return { dependencies: args, key: args[0] };
@@ -28,7 +28,7 @@ const build = (opts, nested={}) => {
   prop.inline = arg => build(opts, { inline: arg });
   prop.named = arg => build(opts, { named: arg });
   prop.mapping = arg => build(opts, { mapping: arg });
-  prop.source = (...args) => build(opts, { source: key(args) });
+  prop.source = (...args) => build(opts, { source: source(args) });
   return prop;
 }
 
