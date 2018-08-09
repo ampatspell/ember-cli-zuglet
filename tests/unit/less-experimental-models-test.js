@@ -158,4 +158,40 @@ module('less-experimental-models', function(hooks) {
     run(() => subject.destroy());
   });
 
+  test('source starts as null', async function(assert) {
+    let subject = this.subject({
+      all: null,
+      models: models('all').inline({
+        prepare(object) {
+          this.setProperties({ name: object.name });
+        }
+      })
+    });
+
+    assert.deepEqual(subject.get('models').mapBy('name'), []);
+
+    subject.set('all', A([ this.object({ name: 'duck' }) ]));
+
+    assert.deepEqual(subject.get('models').mapBy('name'), [ 'duck' ]);
+
+    run(() => subject.destroy());
+  });
+
+  test('source becomes null', async function(assert) {
+    let subject = this.subject({
+      all: A([ this.object({ name: 'duck' }) ]),
+      models: models('all').inline({
+        prepare(object) {
+          this.setProperties({ name: object.name });
+        }
+      })
+    });
+
+    assert.deepEqual(subject.get('models').mapBy('name'), [ 'duck' ]);
+    subject.set('all', null);
+    assert.deepEqual(subject.get('models').mapBy('name'), []);
+
+    run(() => subject.destroy());
+  });
+
 });

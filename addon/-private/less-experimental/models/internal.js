@@ -6,7 +6,7 @@ export default Internal.extend({
 
   parent: null,
   key: null,
-  opts: null, // { source, owner, object, inline, named, mapping }
+  opts: null,
 
   runtime(create) {
     let runtime = this._runtime;

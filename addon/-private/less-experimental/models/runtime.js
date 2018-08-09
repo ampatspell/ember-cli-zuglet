@@ -10,7 +10,6 @@ export default class ModelsRuntime {
     this.key = key;
     this.opts = opts;
     this.content = A([]);
-    console.log('init', this);
 
     this.modelFactory = new ModelFactory({
       parent,
@@ -106,7 +105,6 @@ export default class ModelsRuntime {
   }
 
   destroy() {
-    console.log('destroy', this);
     this.parentManager.destroy();
     this.sourceManager.destroy();
     this.content.map(model => model.destroy());
