@@ -20,9 +20,9 @@ const modelNameForParentKeyProperty = (owner, key) => {
   return name;
 }
 
-export const modelFullName = name => `model:${name}`;
+const modelFullName = name => `model:${name}`;
 
-const createModelClass = (parent, key, props) => {
+export const createModelClassFromProperties = (parent, key, props) => {
   let normalizedName = modelNameForParentKeyProperty(parent, key);
   let fullName = modelFullName(normalizedName);
   let owner = getOwner(parent);
@@ -34,9 +34,9 @@ const createModelClass = (parent, key, props) => {
   return factory;
 }
 
-export const normalizedModelName = name => dasherize(name);
+const normalizedModelName = name => dasherize(name);
 
-const modelClassForName = (parent, name) => {
+export const modelClassForName = (parent, name) => {
   let normalizedName = normalizedModelName(name);
   let fullName = modelFullName(normalizedName);
   let factory = getOwner(parent).factoryFor(fullName);
@@ -81,7 +81,7 @@ export default class ModelFactory {
   createFactory() {
     let { parent, key, opts: { inline, named } } = this;
     if(inline) {
-      let modelClass = createModelClass(parent, key, inline);
+      let modelClass = createModelClassFromProperties(parent, key, inline);
       return props => modelClass.create(props);
     } else if(named) {
       if(typeof named === 'string') {

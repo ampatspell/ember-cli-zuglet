@@ -1,9 +1,9 @@
 import { typeOf } from '@ember/utils';
 import { assert } from '@ember/debug';
-import { generateModelClass, modelFactoryForShortName } from '../-model';
+import { modelClassForName, createModelClassFromProperties } from '../../less-experimental/util/model-factory';
 
 const resolveObject = (parent, key, arg) => {
-  let factory = generateModelClass(parent, key, arg);
+  let factory = createModelClassFromProperties(parent, key, arg);
   return {
     factory,
     requiresMapping: false
@@ -11,7 +11,7 @@ const resolveObject = (parent, key, arg) => {
 }
 
 const resolveString = (parent, arg) => {
-  let factory = modelFactoryForShortName(parent, arg);
+  let factory = modelClassForName(parent, arg);
 
   return {
     factory,
@@ -24,7 +24,7 @@ const resolveFunction = (parent, arg) => {
   let factory;
 
   if(name) {
-    factory = modelFactoryForShortName(parent, name);
+    factory = modelClassForName(parent, name);
   }
 
   return {
