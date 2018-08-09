@@ -47,17 +47,18 @@ export default EmberObject.extend({
       prepare(doc) {
         this.setProperties({ doc });
       }
-    });
+    }),
 
     prepare(id) {
       this.setProperties({ id });
     },
 
     load() {
-      return all([
-        this.duck.observers.promise,
-        this.featherDocs.observers.promise
-      ]);
+      // return all([
+      //   this.duck.observers.promise,
+      //   this.featherDocs.observers.promise
+      // ]);
+      return resolveObservers(this.duck, this.featherDocs);
     }
 
   })
