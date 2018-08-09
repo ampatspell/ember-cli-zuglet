@@ -1,17 +1,28 @@
 import ObjectObserver from '../../util/object-observer';
-import { A } from '@ember/array';
+import { assert } from '@ember/debug';
+import { typeOf } from '@ember/utils';
+
+const validate = (parent, observe, delegate) => {
+  assert(`parent is required`, !!parent);
+  assert(`observe must be array`, typeOf(observe) === 'array');
+  assert(`delegate is required`, !!delegate);
+  assert(`delegate.updated must be function`, typeOf(delegate.updated) === 'function');
+}
 
 export default class ParentManager {
 
-  constructor(object, key, opts) {
-    this.object = object;
-    this.key = key;
-    this.opts = opts;
-    let observe = A([ ...opts.source.dependencies, ...opts.parent ]).uniq();
-    let updated = (object, key) => {
-      console.log('parentKeyDidChange', key);
-    };
-    this.observer = new ObjectObserver({ object, observe, delegate: { updated } });
+  // parent
+
+  constructor({ parent, observe, delegate }) {
+    validate(parent, observe, delegate);
+    this.parent = parent;
+    this.observer = new ObjectObserver({
+      object: parent,
+      observe,
+      delegate: {
+        updated: (object, key) => delegate.updated(object, key)
+      }
+    });
   }
 
   destroy() {
