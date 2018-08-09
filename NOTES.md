@@ -11,7 +11,7 @@ Computed properties:
 
 Concepts:
 
-* source – model/models source dependency
+* source – models source array dependency
 * owner – owner (parent) dependencies which makes model(s) to be recreated
 * object – object dependencies which makes models(s) to be recreated
 * inline – inline model body
@@ -26,15 +26,18 @@ export default EmberObject.extend({
 
   id: 'yellow',
 
-  model: model('id').inline({
+  // model is recreated on owner.id change
+  model: model().owner('id').inline({
 
     id: null,
 
+    // id observer is unnecessary here as parent model will be recrated
     duck: observed().owner('id').content(owner => {
       let id = owner.id;
       return this.store.doc(`duck/${id}`);
     }),
 
+    // id observer is unnecessary here as parent model will be recrated
     featherDocs: observed().owner('id').content(owner => {
       let id = owner.id;
       return this.store.collection(`duck/${id}/feathers`).query();
@@ -119,32 +122,33 @@ models('query.content').owner('product.type').object('data.type').named((doc, ow
 ## Model
 
 ``` javascript
-model('doc').owner('product.type').object('data.type').inline({
-  prepare(doc, owner) {
+model().owner('doc', 'product.type').object('data.type').inline({
+  prepare(owner) {
   }
 });
 ```
 
 ``` javascript
-model('doc').owner('product.type').object('data.type').inline({
+model().owner('doc', 'product.type').object('data.type').inline({
   prepare({ doc, product }) {
     this.setProperties({ doc, product });
   }
-}).mapping((doc, owner) => {
-  let product = owner.product;
+}).mapping(owner => {
+  let { doc, product } = owner;
   return { doc, product };
 })
 ```
 
 ``` javascript
-model('doc').named('book');
+model().owner('doc').named('book');
 ```
 
 ``` javascript
-models('doc').owner('product.type').object('data.type').named((doc, owner) => {
+model().owner('doc', 'product.type').object('data.type').named(({ doc, product }) => {
   let type = doc.get('data.type');
-  return `products/${owner.product.type}/components/${type}`;
-}).mapping((doc, product) => {
+  return `products/${product.type}/components/${type}`;
+}).mapping(owner => {
+  let { doc, product } = owner;
   return { doc, product };
 });
 ```
