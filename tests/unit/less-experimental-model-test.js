@@ -2,7 +2,6 @@ import EmberObject from '@ember/object';
 import { module, test, setupStoreTest } from '../helpers/setup';
 import { getOwner } from '@ember/application';
 import { model } from 'ember-cli-zuglet/less-experimental';
-import { A } from '@ember/array';
 import { run } from '@ember/runloop';
 
 const Owner = EmberObject.extend({

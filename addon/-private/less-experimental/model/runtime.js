@@ -61,7 +61,7 @@ export default class ModelsRuntime {
     }
   }
 
-  onParentPropertyUpdated(object, key) {
+  onParentPropertyUpdated() {
     this.rebuildModel(true);
   }
 
