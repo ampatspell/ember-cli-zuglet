@@ -12,7 +12,7 @@ const validate = (parent, key, inline, named, mapping, prepare) => {
     throw new Error('named not implemented');
   }
   if(mapping) {
-    throw new Error('mapping not implemented');
+    assert(`mapping must be function`, typeOf(mapping) === 'function');
   }
   assert(`prepare must be function`, typeOf(prepare) === 'function');
 }
@@ -23,14 +23,17 @@ export default class ModelFactory {
     validate(parent, key, inline, named, mapping, prepare);
     this.parent = parent;
     this.key = key;
-    this.inline = inline;
-    this.named = named;
-    this.mapping = mapping;
-    this.prepare = prepare;
+    this.opts = {
+      inline,
+      named,
+      mapping,
+      prepare
+    };
+    this.process = {}
   }
 
-  createProcess() {
-    let { parent, key, inline } = this;
+  createFactory() {
+    let { parent, key, opts: { inline } } = this;
     if(inline) {
       let modelClass = generateModelClass(parent, key, inline);
       return props => modelClass.create(props);
@@ -39,24 +42,45 @@ export default class ModelFactory {
   }
 
   get factory() {
-    let process = this._process;
+    let process = this.process.factory;
     if(!process) {
-      process = this.createProcess();
-      this._process = process;
+      process = this.createFactory();
+      this.process.factory = process;
     }
     return process;
   }
 
-  prepareModel(model, ...args) {
-    let prepare = this.prepare(...args);
+  createMapping() {
+    let { mapping } = this.opts;
+    if(mapping) {
+      return (...args) => {
+        let ret = mapping(...args);
+        return [ ret ];
+      }
+    }
+    return (...args) => args;
+  }
+
+  get mapping() {
+    let process = this.process.mapping;
+    if(!process) {
+      process = this.createMapping();
+      this.process.mapping = process;
+    }
+    return process;
+  }
+
+  prepare(model, ...args) {
+    let prepare = this.opts.prepare(...args);
+    let mapped = this.mapping(...prepare);
     assert(`'prepare' function is required for ${model}`, typeOf(model.prepare) === 'function');
-    return model.prepare(...prepare);
+    return model.prepare(...mapped);
   }
 
   create(...args) {
     let factory = this.factory;
     let model = factory();
-    let promise = this.prepareModel(model, ...args);
+    let promise = this.prepare(model, ...args);
     return { model, promise };
   }
 
