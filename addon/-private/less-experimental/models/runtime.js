@@ -32,11 +32,12 @@ export default class ModelsRuntime {
     this.sourceManager = new SourceManager({
       parent,
       source: opts.source,
+      observe: opts.object,
       delegate: {
         replaced: array => this.onSourceArrayReplaced(array),
         added: (objects, start, len) => this.onSourceObjectsAdded(objects, start, len),
         removed: (objects, start, len) => this.onSourceObjectsRemoved(objects, start, len),
-        updated: (object, key) => this.onSourceObjectUpdated(object, key)
+        updated: (object, key, idx) => this.onSourceObjectUpdated(object, key, idx)
       }
     });
 
@@ -66,6 +67,11 @@ export default class ModelsRuntime {
     }
   }
 
+  replaceModel(idx, object) {
+    let { model } = this.modelFactory.create(object);
+    this.replaceModels(idx, 1, [ model ]);
+  }
+
   rebuildModels() {
     let objects = this.sourceManager.source;
     let models;
@@ -91,8 +97,8 @@ export default class ModelsRuntime {
     this.replaceModels(start, len);
   }
 
-  onSourceObjectUpdated(object, key) {
-    console.log('source object updated', object, key);
+  onSourceObjectUpdated(object, key, idx) {
+    this.replaceModel(idx, object);
   }
 
   onParentPropertyUpdated(object, key) {

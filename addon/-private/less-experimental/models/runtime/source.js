@@ -3,10 +3,11 @@ import ArrayObserver from '../../util/array-observer';
 import { assert } from '@ember/debug';
 import { typeOf } from '@ember/utils';
 
-const validate = (parent, source, delegate) => {
+const validate = (parent, source, observe, delegate) => {
   assert(`parent is required`, !!parent);
   assert(`source must be object`, typeOf(source) === 'object');
   assert(`source.dependencies must be array`, typeOf(source.dependencies) === 'array');
+  assert(`observe must be array`, typeOf(observe) === 'array');
   assert(`source.key is required`, !!source.key);
   assert(`delegate is required`, !!delegate);
   assert(`delegate.replaced must be function`, typeOf(delegate.replaced) === 'function');
@@ -19,11 +20,13 @@ export default class SourceManager {
 
   // parent
   // source: { dependencies, key }
+  // observe: [ key, ... ] object deps array
   // delegate: { replaced, added, removed, updated }
-  constructor({ parent, source, delegate }) {
-    validate(parent, source, delegate);
+  constructor({ parent, source, observe, delegate }) {
+    validate(parent, source, observe, delegate);
     this.parent = parent;
     this.delegate = delegate;
+    this.observe = observe;
     this.provider = new ValueProvider({
       object: parent,
       observe: source.dependencies,
@@ -51,11 +54,11 @@ export default class SourceManager {
     if(source) {
       this.observer = new ArrayObserver({
         array: source,
-        observe: [],
+        observe: this.observe,
         delegate: {
           added: (objects, start, len) => this.delegate.added(objects, start, len),
           removed: (objects, start, len) => this.delegate.removed(objects, start, len),
-          updated: (object, key) => this.delegate.updated(object, key)
+          updated: (object, key) => this.delegate.updated(object, key, source.indexOf(object))
         }
       });
     }
@@ -67,6 +70,7 @@ export default class SourceManager {
 
   destroy() {
     this.provider.destroy();
+    this.observer && this.observer.destroy();
   }
 
 }

@@ -101,4 +101,34 @@ module('less-experimental-models', function(hooks) {
     assert.ok(otterModel.isDestroying);
   });
 
+  test('object dependencies recreate models', async function(assert) {
+    let duck = this.object({ name: 'duck' });
+    let hamster = this.object({ name: 'hamster' });
+    let otter = this.object({ name: 'otter' });
+
+    let subject = this.subject({
+      all: A([ duck, hamster, otter ]),
+      models: models('all').object('name').inline({
+        prepare(object) {
+          this.setProperties({ name: object.get('name') });
+        }
+      })
+    });
+
+    let start = subject.get('models').slice();
+    assert.deepEqual(start.mapBy('name'), [ 'duck', 'hamster', 'otter' ]);
+
+    let first = subject.get('models').objectAt(1);
+    assert.equal(first.get('name'), 'hamster');
+
+    run(() => hamster.set('name', 'The Hamster'));
+
+    assert.ok(first.isDestroying);
+    assert.deepEqual(start.map(i => i.isDestroying), [ false, true, false ]);
+
+    assert.deepEqual(subject.get('models').mapBy('name'), [ 'duck', 'The Hamster', 'otter' ]);
+
+    run(() => subject.destroy());
+  });
+
 });
