@@ -250,4 +250,78 @@ module('less-experimental-models', function(hooks) {
     run(() => subject.destroy());
   });
 
+  test('statically named model', async function(assert) {
+    this.registerModel('duck', EmberObject.extend({
+      modelName: 'duck',
+      prepare(object) {
+        let name = object.get('name');
+        this.setProperties({ name });
+      }
+    }));
+
+    let subject = this.subject({
+      all: A([ this.object({ name: 'hamster' }) ]),
+      models: models('all').named('duck')
+    });
+
+    let first = subject.get('models.firstObject');
+
+    assert.equal(first.get('modelName'), 'duck');
+    assert.equal(first.get('name'), 'hamster');
+
+    run(() => subject.destroy());
+  });
+
+  test('dynamically named model', async function(assert) {
+    let Model = EmberObject.extend({
+      prepare(object) {
+        let name = object.get('name');
+        this.setProperties({ name });
+      }
+    });
+
+    this.registerModel('awesome/hamster', Model.extend({
+      modelName: 'awesome/hamster'
+    }));
+
+    this.registerModel('cute/hamster', Model.extend({
+      modelName: 'cute/hamster'
+    }));
+
+    this.registerModel('cute/duck', Model.extend({
+      modelName: 'cute/duck'
+    }));
+
+    let object = this.object({ name: 'hamster' });
+
+    let subject = this.subject({
+      type: 'awesome',
+      all: A([ object ]),
+      models: models('all').owner('type').object('name').named((object, owner) => {
+        let name = object.get('name');
+        let type = owner.get('type');
+        return `${type}/${name}`;
+      })
+    });
+
+    let first = subject.get('models.firstObject');
+    assert.equal(first.get('modelName'), 'awesome/hamster');
+
+    run(() => subject.set('type', 'cute'));
+
+    assert.ok(first.isDestroying);
+
+    let second = subject.get('models.firstObject');
+    assert.equal(second.get('modelName'), 'cute/hamster');
+
+    run(() => object.set('name', 'duck'));
+
+    assert.ok(second.isDestroying);
+
+    let third = subject.get('models.firstObject');
+    assert.equal(third.get('modelName'), 'cute/duck');
+
+    run(() => subject.destroy());
+  });
+
 });

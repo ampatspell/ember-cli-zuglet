@@ -17,7 +17,10 @@ export default class ModelsRuntime {
       inline: opts.inline,
       named: opts.named,
       mapping: opts.mapping,
-      prepare: object => [ object, parent ],
+      delegate: {
+        prepare: object => [ object, parent ],
+        named: object => [ object, parent ]
+      }
     });
 
     this.parentManager = new ParentManager({

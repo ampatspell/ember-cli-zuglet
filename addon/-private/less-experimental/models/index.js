@@ -26,7 +26,7 @@ const build = (opts, nested={}) => {
   prop.owner = (...args) => build(opts, { parent: compact(args) });
   prop.object = (...args) => build(opts, { object: compact(args) });
   prop.inline = arg => build(opts, { inline: arg });
-  prop.named = (...args) => build(opts, { named: key(args) });
+  prop.named = arg => build(opts, { named: arg });
   prop.mapping = arg => build(opts, { mapping: arg });
   prop.source = (...args) => build(opts, { source: key(args) });
   return prop;
