@@ -81,7 +81,7 @@ export default class ModelsRuntime {
     }
     content.replace(start, remove, models);
     if(removed) {
-      removed.map(model => model.destroy());
+      removed.map(model => model && model.destroy());
     }
   }
 
@@ -126,7 +126,7 @@ export default class ModelsRuntime {
   destroy() {
     this.parentObserver.destroy();
     this.sourceObserver.destroy();
-    this.content.map(model => model.destroy());
+    this.content.map(model => model && model.destroy());
   }
 
 }

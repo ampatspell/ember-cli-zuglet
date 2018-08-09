@@ -325,7 +325,48 @@ module('less-experimental-models', function(hooks) {
   });
 
   test('model class lookup yields null', async function(assert) {
-    assert.ok(false, 'todo');
+    this.registerModel('duck', EmberObject.extend({
+      prepare(object) {
+        this.setProperties(object.getProperties('name'));
+      }
+    }));
+
+    let yellow = this.object({ type: 'duck', name: 'yellow' });
+    let green = this.object({ type: null, name: 'green' });
+    let red = this.object({ type: 'duck', name: 'red' });
+
+    let subject = this.subject({
+      all: A([ yellow, green, red ]),
+      models: models('all').object('type').named(object => object.get('type'))
+    });
+
+    let map = () => subject.get('models').map(i => i ? i.get('name') : i);
+
+    assert.deepEqual(map(), [ 'yellow', null, 'red' ]);
+
+    let first = subject.get('models').slice();
+
+    green.set('type', 'duck');
+
+    assert.deepEqual(map(), [ 'yellow', 'green', 'red' ]);
+
+    assert.ok(!first[0].isDestroying);
+    assert.ok(!first[2].isDestroying);
+
+    let second = subject.get('models').slice();
+
+    run(() => green.set('type'));
+
+    assert.deepEqual(map(), [ 'yellow', null, 'red' ]);
+
+    assert.ok(!second[0].isDestroying);
+    assert.ok(second[1].isDestroying);
+    assert.ok(!second[2].isDestroying);
+
+    run(() => subject.destroy());
+
+    assert.ok(second[0].isDestroying);
+    assert.ok(second[2].isDestroying);
   });
 
 });
