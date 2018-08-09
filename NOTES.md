@@ -123,14 +123,14 @@ models('query.content').owner('product.type').object('data.type').named((doc, ow
 ## Model
 
 ``` javascript
-model().owner('doc', 'product.type').object('data.type').inline({
+model().owner('doc', 'product.type').inline({
   prepare(owner) {
   }
 });
 ```
 
 ``` javascript
-model().owner('doc', 'product.type').object('data.type').inline({
+model().owner('doc', 'product.type').inline({
   prepare({ doc, product }) {
     this.setProperties({ doc, product });
   }
@@ -145,7 +145,7 @@ model().owner('doc').named('book');
 ```
 
 ``` javascript
-model().owner('doc', 'product.type').object('data.type').named(({ doc, product }) => {
+model().owner('doc', 'product.type').named(({ doc, product }) => {
   let type = doc.get('data.type');
   return `products/${product.type}/components/${type}`;
 }).mapping(owner => {
