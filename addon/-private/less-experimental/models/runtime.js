@@ -102,7 +102,7 @@ export default class ModelsRuntime {
   }
 
   onParentPropertyUpdated(object, key) {
-    console.log('parent updated', object, key);
+    this.rebuildModels();
   }
 
   destroy() {
