@@ -5,7 +5,9 @@ import { dasherize } from '@ember/string';
 
 const containerKey = instance => {
   // https://github.com/emberjs/ember.js/issues/10742
-  return instance._debugContainerKey;
+  let key = instance._debugContainerKey;
+  assert(`_debugContainerKey for ${instance} is not set`, !!key);
+  return key;
 }
 
 const generateModelName = (owner, key) => {
