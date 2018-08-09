@@ -26,16 +26,20 @@ export const stopObservingObjects = (objects, keys, target, method) => {
   objects.map(object => stopObservingObject(object, keys, target, method));
 }
 
+const validate = (object, observe, delegate) => {
+  assert(`object is required`, !!object);
+  assert(`observe must be array`, typeOf(observe) === 'array');
+  assert(`delegate is required`, !!delegate);
+  assert(`delegate.updated must be function`, typeOf(delegate.updated) === 'function');
+}
+
 export default class ObjectObserver {
 
   // object: EmberObject
   // observe: [ 'id', 'type' ]
   // delegate: { updated(object, key) }
   constructor({ object, observe, delegate }) {
-    assert(`object is required`, !!object);
-    assert(`observe must be array`, typeOf(observe) === 'array');
-    assert(`delegate is required`, !!delegate);
-    assert(`delegate.updated must be function`, typeOf(delegate.updated) === 'function');
+    validate(object, observe, delegate);
     this._object = object;
     this._observe = observe;
     this._delegate = delegate;

@@ -10,7 +10,24 @@ export default class ModelsRuntime {
     this.opts = opts;
     this.content = A([]);
     console.log('init', this);
-    this.sourceManager = new SourceManager({ parent, source: opts.source });
+    this.sourceManager = new SourceManager({
+      parent,
+      source: opts.source,
+      delegate: {
+        replaced(array) {
+          console.log('source replaced', array);
+        },
+        added(objects, start, len) {
+          console.log('source objects added', objects.slice(), start, len);
+        },
+        removed(objects, start, len) {
+          console.log('source objects removed', objects.slice(), start, len);
+        },
+        updated(object, key) {
+          console.log('source object updated', object, key);
+        }
+      }
+    });
   }
 
   destroy() {

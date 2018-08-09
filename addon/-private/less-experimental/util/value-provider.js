@@ -1,5 +1,15 @@
 import ObjectObserver from './object-observer';
 import { get } from '@ember/object';
+import { assert } from '@ember/debug';
+import { typeOf } from '@ember/utils';
+
+const validate = (object, observe, key, delegate) => {
+  assert(`object is required`, !!object);
+  assert(`observe must be array`, typeOf(observe) === 'array');
+  assert(`key must be string or function`, typeOf(key) === 'function' || typeOf(key) === 'string');
+  assert(`delegate is required`, !!delegate);
+  assert(`delegate.updated must be function`, typeOf(delegate.updated) === 'function');
+}
 
 export default class ValueProvider {
 
@@ -8,6 +18,7 @@ export default class ValueProvider {
   // key: function or string
   // delegate: { updated(value) }
   constructor({ object, observe, key, delegate }) {
+    validate(object, observe, key, delegate);
     this.object = object;
     this.key = key;
     this.delegate = delegate;

@@ -1,12 +1,29 @@
 import ValueProvider from '../../util/value-provider';
 import ArrayObserver from '../../util/array-observer';
+import { assert } from '@ember/debug';
+import { typeOf } from '@ember/utils';
+
+const validate = (parent, source, delegate) => {
+  assert(`parent is required`, !!parent);
+  assert(`source must be object`, typeOf(source) === 'object');
+  assert(`source.dependencies must be array`, typeOf(source.dependencies) === 'array');
+  assert(`source.key is required`, !!source.key);
+  assert(`delegate is required`, !!delegate);
+  assert(`delegate.replaced must be function`, typeOf(delegate.replaced) === 'function');
+  assert(`delegate.added must be function`, typeOf(delegate.added) === 'function');
+  assert(`delegate.removed must be function`, typeOf(delegate.removed) === 'function');
+  assert(`delegate.updated must be function`, typeOf(delegate.updated) === 'function');
+}
 
 export default class SourceManager {
 
   // parent
   // source: { dependencies, key }
-  constructor({ parent, source }) {
+  // delegate: { replaced, added, removed, updated }
+  constructor({ parent, source, delegate }) {
+    validate(parent, source, delegate);
     this.parent = parent;
+    this.delegate = delegate;
     this.provider = new ValueProvider({
       object: parent,
       observe: source.dependencies,
@@ -33,20 +50,16 @@ export default class SourceManager {
         array: source,
         observe: [],
         delegate: {
-          added: (objects, start, len) => {
-            console.log('source objects added', objects.slice(), start, len);
-          },
-          removed: (objects, start, len) => {
-            console.log('source objects removed', objects.slice(), start, len);
-          },
-          updated: (object, key) => {
-            console.log('source object updated', object, key);
-          }
+          added: (objects, start, len) => this.delegate.added(objects, start, len),
+          removed: (objects, start, len) => this.delegate.removed(objects, start, len),
+          updated: (object, key) => this.delegate.updated(object, key)
         }
       });
     }
 
-    console.log('source replaced', source);
+    if(notify) {
+      this.delegate.replaced(source);
+    }
   }
 
   destroy() {

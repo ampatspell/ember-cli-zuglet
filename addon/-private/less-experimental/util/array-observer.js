@@ -4,18 +4,22 @@ import { assert } from '@ember/debug';
 import { typeOf } from '@ember/utils';
 import { get } from '@ember/object';
 
+const validate = (array, observe, delegate) => {
+  assert(`array must be array`, typeOf(array) === 'array');
+  assert(`observe must be array`, typeOf(observe) === 'array');
+  assert(`delegate is required`, !!delegate);
+  assert(`delegate.added must be function`, typeOf(delegate.added) === 'function');
+  assert(`delegate.removed must be function`, typeOf(delegate.removed) === 'function');
+  assert(`delegate.updated must be function`, typeOf(delegate.updated) === 'function');
+}
+
 export default class ArrayObserver {
 
   // array: Enumerable
   // observe: [ 'id', 'type' ]
   // delegate: { removed(objects, start, len), added(objects, start, len), updated(object, key) }
   constructor({ array, observe, delegate }) {
-    assert(`array must be array`, typeOf(array) === 'array');
-    assert(`observe must be array`, typeOf(observe) === 'array');
-    assert(`delegate is required`, !!delegate);
-    assert(`delegate.added must be function`, typeOf(delegate.added) === 'function');
-    assert(`delegate.removed must be function`, typeOf(delegate.removed) === 'function');
-    assert(`delegate.updated must be function`, typeOf(delegate.updated) === 'function');
+    validate(array, observe, delegate);
     this._array = array;
     this._observe = observe;
     this._delegate = delegate;
