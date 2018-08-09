@@ -23,15 +23,13 @@ export default class ValueProvider {
     this.key = key;
     this.delegate = delegate;
     this.resolve = typeof key === 'function';
-    if(this.resolve) {
-      this.observer = new ObjectObserver({
-        object,
-        observe,
-        delegate: {
-          updated: () => this.update(true)
-        }
-      });
-    }
+    this.observer = new ObjectObserver({
+      object,
+      observe,
+      delegate: {
+        updated: () => this.update(true)
+      }
+    });
     this.update(false);
   }
 
@@ -62,7 +60,7 @@ export default class ValueProvider {
   }
 
   destroy() {
-    this.observer && this.observer.destroy();
+    this.observer.destroy();
   }
 
 }
