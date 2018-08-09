@@ -32,8 +32,11 @@ export default class SourceManager {
         updated: value => this.update(true)
       }
     });
-    this.source = this.provider.value;
     this.update(false);
+  }
+
+  get source() {
+    return this.provider.value;
   }
 
   update(notify) {

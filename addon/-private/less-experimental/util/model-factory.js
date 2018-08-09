@@ -47,16 +47,16 @@ export default class ModelFactory {
     return process;
   }
 
-  prepare(model, ...args) {
+  prepareModel(model, ...args) {
     let prepare = this.prepare(...args);
-    assert(`'prepare' function is required for ${instance}`, typeOf(instance.prepare) === 'function');
+    assert(`'prepare' function is required for ${model}`, typeOf(model.prepare) === 'function');
     return model.prepare(...prepare);
   }
 
   create(...args) {
     let factory = this.factory;
     let model = factory();
-    let promise = this.prepare(model, ...args);
+    let promise = this.prepareModel(model, ...args);
     return { model, promise };
   }
 

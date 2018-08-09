@@ -43,20 +43,26 @@ module('less-experimental-models', function(hooks) {
 
     });
 
-    assert.deepEqual(subject.models.mapBy('name'), [ 'duck', 'hamster', 'otter' ]);
+    assert.deepEqual(subject.get('models').mapBy('name'), [ 'duck', 'hamster', 'otter' ]);
 
-    subject.set('type', 'selected');
+    let all = subject.get('models').slice();
+    assert.deepEqual(all.map(m => m.isDestroying), [ false, false, false ]);
 
-    assert.deepEqual(subject.models.mapBy('name'), [ 'duck', 'otter' ]);
+    run(() => subject.set('type', 'selected'));
 
-    // hamster destroy
+    assert.deepEqual(all.map(m => m.isDestroying), [ true, true, true ]);
+
+    assert.deepEqual(subject.get('models').mapBy('name'), [ 'duck', 'otter' ]);
+
+    let selected = subject.get('models').slice();
 
     run(() => subject.destroy());
+
+    assert.deepEqual(selected.map(m => m.isDestroying), [ true, true ]);
   });
 
   test('source content mutations', async function(assert) {
     let duck = this.object({ name: 'duck' });
-    let hamster = this.object({ name: 'hamster' });
     let otter = this.object({ name: 'otter' });
 
     let subject = this.subject({
@@ -65,23 +71,34 @@ module('less-experimental-models', function(hooks) {
 
       models: models('all').object('name').inline({
         prepare(object) {
-          this.setProperties({ name: object.name });
+          this.setProperties({ name: object.get('name') });
         }
       })
 
     });
 
-    assert.deepEqual(subject.models.mapBy('name'), [ 'otter' ]);
+    assert.deepEqual(subject.get('models').mapBy('name'), [ 'otter' ]);
+
+    let otterModel = subject.get('models.firstObject');
+    assert.ok(otterModel);
 
     subject.get('all').insertAt(0, duck);
 
-    assert.deepEqual(subject.models.mapBy('name'), [ 'duck', 'otter' ]);
+    assert.deepEqual(subject.get('models').mapBy('name'), [ 'duck', 'otter' ]);
 
-    subject.get('all').removeAt(0);
+    let duckModel = subject.get('models').objectAt(0);
+    assert.ok(!duckModel.isDestroying);
 
-    assert.deepEqual(subject.models.mapBy('name'), [ 'otter' ]);
+    run(() => subject.get('all').removeAt(0));
+    assert.ok(duckModel.isDestroying);
+
+    assert.deepEqual(subject.get('models').mapBy('name'), [ 'otter' ]);
+
+    assert.ok(subject.get('models.firstObject') === otterModel);
 
     run(() => subject.destroy());
+
+    assert.ok(otterModel.isDestroying);
   });
 
 });

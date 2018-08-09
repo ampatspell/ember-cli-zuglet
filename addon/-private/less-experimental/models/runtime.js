@@ -39,24 +39,56 @@ export default class ModelsRuntime {
         updated: (object, key) => this.onSourceObjectUpdated(object, key)
       }
     });
+
+    this.rebuildModels();
   }
 
-  onSourceArrayReplaced(source) {
-    console.log('source array replaced', source.slice());
-    if(source) {
-      let factory = this.modelFactory;
-      source.map(object => {
-        let { model, promise } = factory.create(object);
-      });
+  //
+
+
+  createModels(objects) {
+    let factory = this.modelFactory;
+    return objects.map(object => {
+      let { model } = factory.create(object);
+      return model;
+    });
+  }
+
+  replaceModels(start, remove, models) {
+    let removed;
+    let content = this.content;
+    if(remove) {
+      removed = content.slice(start, start + remove);
+    }
+    content.replace(start, remove, models);
+    if(removed) {
+      removed.map(model => model.destroy());
     }
   }
 
-  onSourceObjectsAdded(objects, start, len) {
-    console.log('source objects added', objects.slice(), start, len);
+  rebuildModels() {
+    let objects = this.sourceManager.source;
+    let models;
+    if(objects) {
+      models = this.createModels(objects);
+    }
+    let remove = this.content.get('length');
+    this.replaceModels(0, remove, models);
+  }
+
+  //
+
+  onSourceArrayReplaced(soure) {
+    this.rebuildModels();
+  }
+
+  onSourceObjectsAdded(objects, start) {
+    let models = this.createModels(objects);
+    this.replaceModels(start, 0, models);
   }
 
   onSourceObjectsRemoved(objects, start, len) {
-    console.log('source objects removed', objects.slice(), start, len);
+    this.replaceModels(start, len);
   }
 
   onSourceObjectUpdated(object, key) {
@@ -71,6 +103,7 @@ export default class ModelsRuntime {
     console.log('destroy', this);
     this.parentManager.destroy();
     this.sourceManager.destroy();
+    this.content.map(model => model.destroy());
   }
 
 }
