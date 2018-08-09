@@ -131,4 +131,31 @@ module('less-experimental-models', function(hooks) {
     run(() => subject.destroy());
   });
 
+  test('owner dependencies recreate models', async function(assert) {
+    let subject = this.subject({
+      all: A([ this.object({ name: 'duck' }) ]),
+      type: 'nice',
+      models: models('all').owner('type').inline({
+        prepare(object, owner) {
+          this.setProperties({
+            name: object.get('name'),
+            type: owner.get('type')
+          });
+        }
+      })
+    });
+
+    let first = subject.get('models').objectAt(0);
+    assert.equal(first.get('type'), 'nice');
+
+    run(() => subject.set('type', 'awesome'));
+
+    assert.ok(first.isDestroying);
+
+    let second = subject.get('models').objectAt(0);
+    assert.equal(second.get('type'), 'awesome');
+
+    run(() => subject.destroy());
+  });
+
 });
