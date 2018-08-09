@@ -1,5 +1,5 @@
-import EmberObject from '@ember/object';
+import ArrayProxy from '@ember/array/proxy';
 import ModelMixin from '../../internal/model-mixin';
 
-export default EmberObject.extend(ModelMixin, {
+export default ArrayProxy.extend(ModelMixin, {
 });
