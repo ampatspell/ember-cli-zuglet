@@ -226,4 +226,28 @@ module('less-experimental-models', function(hooks) {
     run(() => subject.destroy());
   });
 
+  test('noop changes are not propogated', async function(assert) {
+    let object = [ this.object({ name: 'duck' }) ];
+    let subject = this.subject({
+
+      all: A(object),
+      color: 'yellow',
+
+      models: models('all').owner('color').object('name').inline({
+        prepare() {
+        }
+      })
+
+    });
+
+    let first = subject.get('models.firstObject');
+
+    subject.set('color', 'yellow');
+    object.set('name', 'duck');
+
+    assert.ok(!first.isDestroying);
+
+    run(() => subject.destroy());
+  });
+
 });
