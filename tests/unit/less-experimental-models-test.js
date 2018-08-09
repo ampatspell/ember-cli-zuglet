@@ -24,7 +24,7 @@ module('less-experimental-models', function(hooks) {
     };
   });
 
-  test('acceptance', async function(assert) {
+  test('source change', async function(assert) {
     let duck = this.object({ name: 'duck' });
     let hamster = this.object({ name: 'hamster' });
     let otter = this.object({ name: 'otter' });
@@ -50,6 +50,36 @@ module('less-experimental-models', function(hooks) {
     assert.deepEqual(subject.models.mapBy('name'), [ 'duck', 'otter' ]);
 
     // hamster destroy
+
+    run(() => subject.destroy());
+  });
+
+  test('source content mutations', async function(assert) {
+    let duck = this.object({ name: 'duck' });
+    let hamster = this.object({ name: 'hamster' });
+    let otter = this.object({ name: 'otter' });
+
+    let subject = this.subject({
+
+      all: A([ otter ]),
+
+      models: models('all').object('name').inline({
+        prepare(object) {
+          this.setProperties({ name: object.name });
+        }
+      })
+
+    });
+
+    assert.deepEqual(subject.models.mapBy('name'), [ 'otter' ]);
+
+    subject.get('all').insertAt(0, duck);
+
+    assert.deepEqual(subject.models.mapBy('name'), [ 'duck', 'otter' ]);
+
+    subject.get('all').removeAt(0);
+
+    assert.deepEqual(subject.models.mapBy('name'), [ 'otter' ]);
 
     run(() => subject.destroy());
   });
