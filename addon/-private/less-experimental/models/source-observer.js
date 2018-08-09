@@ -1,5 +1,5 @@
-import ValueProvider from '../../util/value-provider';
-import ArrayObserver from '../../util/array-observer';
+import ValueProvider from '../util/value-provider';
+import ArrayObserver from '../util/array-observer';
 import { assert } from '@ember/debug';
 import { typeOf } from '@ember/utils';
 
@@ -16,7 +16,7 @@ const validate = (parent, source, observe, delegate) => {
   assert(`delegate.updated must be function`, typeOf(delegate.updated) === 'function');
 }
 
-export default class SourceManager {
+export default class SourceObserver {
 
   // parent
   // source: { dependencies, key }

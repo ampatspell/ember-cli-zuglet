@@ -1,6 +1,6 @@
 import { A } from '@ember/array';
-import ParentManager from './runtime/parent';
-import SourceManager from './runtime/source';
+import ObjectObserver from '../util/object-observer';
+import SourceObserver from './source-observer';
 import ModelFactory from '../util/model-factory';
 import { assert } from '@ember/debug';
 import { typeOf } from '@ember/utils';
@@ -39,15 +39,15 @@ export default class ModelsRuntime {
       }
     });
 
-    this.parentManager = new ParentManager({
-      parent,
+    this.parentObserver = new ObjectObserver({
+      object: parent,
       observe: opts.parent,
       delegate: {
         updated: (object, key) => this.onParentPropertyUpdated(object, key)
       }
     });
 
-    this.sourceManager = new SourceManager({
+    this.sourceObserver = new SourceObserver({
       parent,
       source: opts.source,
       observe: opts.object,
@@ -91,7 +91,7 @@ export default class ModelsRuntime {
   }
 
   rebuildModels() {
-    let objects = this.sourceManager.source;
+    let objects = this.sourceObserver.source;
     let models;
     if(objects) {
       models = this.createModels(objects);
@@ -124,8 +124,8 @@ export default class ModelsRuntime {
   }
 
   destroy() {
-    this.parentManager.destroy();
-    this.sourceManager.destroy();
+    this.parentObserver.destroy();
+    this.sourceObserver.destroy();
     this.content.map(model => model.destroy());
   }
 
