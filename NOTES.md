@@ -2,7 +2,7 @@
 
 `ember-cli-zuglet/less-experimental`
 
-Properties:
+Computed properties:
 
 * models
 * model
@@ -18,6 +18,62 @@ Concepts:
 * named – model name lookup
 * mapping – owner to model data mapping
 * content – observed only, document or query lookup
+
+## Usage
+
+``` javascript
+export default EmberObject.extend({
+
+  id: 'yellow',
+
+  model: model('id').inline({
+
+    id: null,
+
+    duck: observed().owner('id').content(owner => {
+      let id = owner.id;
+      return this.store.doc(`duck/${id}`);
+    }),
+
+    featherDocs: observed().owner('id').content(owner => {
+      let id = owner.id;
+      return this.store.collection(`duck/${id}/feathers`).query();
+    }),
+
+    feathers: models('featherDocs.content').inline({
+      prepare(doc) {
+        this.setProperties({ doc });
+      }
+    });
+
+    prepare(id) {
+      this.setProperties({ id });
+    },
+
+    load() {
+      return all([
+        this.duck.observers.promise,
+        this.featherDocks.observers.promise
+      ]);
+    }
+
+  })
+
+});
+```
+
+``` javascript
+let model = parent.model; // model, recreated on id change
+await model.load();
+model.duck // => observed doc
+model.featherDocs.content // => observed docs array
+model.feathers // => models for feather docs, created destroyed as docs change
+```
+
+## TODO
+
+* Load
+* observer for multiple documents w/o query
 
 ## Models
 
