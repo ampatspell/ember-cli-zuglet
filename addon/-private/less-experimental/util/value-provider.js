@@ -3,32 +3,32 @@ import { get } from '@ember/object';
 
 export default class ValueProvider {
 
-  // dependencies: array or keys
+  // object
+  // observe: array or keys
   // key: function or string
-  // delegate: { updated }
-  constructor({ object, dependencies, key, delegate }) {
+  // delegate: { updated(value) }
+  constructor({ object, observe, key, delegate }) {
     this.object = object;
-    this.dependencies = dependencies;
     this.key = key;
     this.delegate = delegate;
-    this.observe = typeof key === 'function';
-    if(this.observe) {
+    this.resolve = typeof key === 'function';
+    if(this.resolve) {
       this.observer = new ObjectObserver({
         object,
-        observe: dependencies,
+        observe,
         delegate: {
-          updated: () => this.update()
+          updated: () => this.update(true)
         }
       });
     }
-    this.update();
+    this.update(false);
   }
 
-  update() {
+  update(notify) {
     let object = this.object;
 
     let key;
-    if(this.observe) {
+    if(this.resolve) {
       key = this.key(object);
     } else {
       key = this.key;
@@ -44,7 +44,10 @@ export default class ValueProvider {
     }
 
     this.value = value;
-    this.delegate.updated(value);
+
+    if(notify) {
+      this.delegate.updated(value);
+    }
   }
 
   destroy() {
