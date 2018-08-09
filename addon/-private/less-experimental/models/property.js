@@ -12,8 +12,7 @@ const create = opts => function(key) {
 }
 
 export default opts => {
-  let dependencies = A().compact();
-  return destroyable(...dependencies, {
+  return destroyable({
     create: create(opts),
     reusable,
     get
