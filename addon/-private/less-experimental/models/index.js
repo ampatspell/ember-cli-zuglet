@@ -23,7 +23,7 @@ const key = args => {
 const build = (opts, nested={}) => {
   opts = assign({}, opts, nested);
   let prop = property(opts);
-  prop.owner = (...args) => build(opts, { owner: compact(args) });
+  prop.owner = (...args) => build(opts, { parent: compact(args) });
   prop.object = (...args) => build(opts, { object: compact(args) });
   prop.inline = arg => build(opts, { inline: arg });
   prop.named = (...args) => build(opts, { named: key(args) });
@@ -35,7 +35,7 @@ const build = (opts, nested={}) => {
 export default (...args) => {
   let opts = {
     source: undefined,
-    owner: [],
+    parent: [],
     object: [],
     inline: undefined,
     named: undefined,
