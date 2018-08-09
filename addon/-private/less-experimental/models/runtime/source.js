@@ -32,7 +32,7 @@ export default class SourceManager {
       observe: source.dependencies,
       key: source.key,
       delegate: {
-        updated: value => this.update(true)
+        updated: () => this.update(true)
       }
     });
     this.update(false);

@@ -1,5 +1,4 @@
 import destroyable from '../../util/destroyable';
-import { A } from '@ember/array';
 import { getOwner } from '@ember/application';
 
 const get = internal => internal.model(true);

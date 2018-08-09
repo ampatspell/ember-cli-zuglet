@@ -119,7 +119,7 @@ export default class ModelsRuntime {
     this.replaceModel(idx, object);
   }
 
-  onParentPropertyUpdated(object, key) {
+  onParentPropertyUpdated() {
     this.rebuildModels();
   }
 
