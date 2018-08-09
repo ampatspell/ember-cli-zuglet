@@ -15,7 +15,7 @@ module.exports = function(environment) {
     },
     version: require('../../../package.json').version,
     fastboot: {
-      hostWhitelist: [ 'ember-cli-zuglet.firebaseapp.com', /^localhost:\d+$/ ]
+      hostWhitelist: [ 'ember-cli-zuglet.firebaseapp.com', /^dev\.amateurinmotion\.com:\d+$/, /^localhost:\d+$/ ]
     }
   };
 
