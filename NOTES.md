@@ -56,7 +56,7 @@ export default EmberObject.extend({
     load() {
       return all([
         this.duck.observers.promise,
-        this.featherDocks.observers.promise
+        this.featherDocs.observers.promise
       ]);
     }
 
