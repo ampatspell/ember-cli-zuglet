@@ -13,8 +13,7 @@ module('less-experimental-models', function(hooks) {
   hooks.beforeEach(async function() {
     this.getOwner = () => getOwner(this.store);
     this.registerModel = (name, factory) => this.getOwner().register(`model:${name}`, factory);
-    this.subject = props => {
-      let name = 'subject';
+    this.subject = (props, name='subject') => {
       let factory = Owner.extend(props);
       let owner = this.getOwner();
       let fullName = `component:${name}`;
