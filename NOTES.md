@@ -72,8 +72,16 @@ model.feathers // => models for feather docs, created destroyed as docs change
 
 ## TODO
 
-* Load
-* observer for multiple documents w/o query
+Observed should support arrays of observable
+
+``` javascript
+feathers: observed().owner('duck').content(owner => {
+  let ids = owner.duck.data.get('feathers');
+  return ids.map(id => this.store.doc(`feathers/${id}`).existing());
+  // returns array of documents which needs to be observed
+  // all(this.feathers.map(doc => doc.observers.promise)) -- to resolve
+}),
+```
 
 ## Models
 
