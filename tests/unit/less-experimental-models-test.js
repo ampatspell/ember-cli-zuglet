@@ -115,7 +115,7 @@ module('less-experimental-models', function(hooks) {
       })
     });
 
-    let start = A(subject.get('models')).slice();
+    let start = A(subject.get('models').slice());
     assert.deepEqual(start.mapBy('name'), [ 'duck', 'hamster', 'otter' ]);
 
     let first = subject.get('models').objectAt(1);
