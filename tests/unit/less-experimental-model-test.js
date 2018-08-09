@@ -71,4 +71,103 @@ module('less-experimental-model', function(hooks) {
     assert.ok(second.isDestroying);
   });
 
+  test('statically named model', async function(assert) {
+    this.registerModel('duck', EmberObject.extend({
+      modelName: 'duck',
+      prepare({ message }) {
+        this.setProperties({ message });
+      }
+    }));
+
+    let subject = this.subject({
+      message: 'hello',
+      model: model().named('duck').mapping(owner => {
+        let message = owner.get('message');
+        return { message };
+      })
+    });
+
+    let first = subject.get('model');
+    assert.equal(first.get('modelName'), 'duck');
+    assert.equal(first.get('message'), 'hello');
+
+    run(() => subject.destroy());
+  });
+
+  test('model name lookup', async function(assert) {
+    let Model = EmberObject.extend({
+      prepare(owner) {
+        this.setProperties(owner.getProperties('message'));
+      }
+    });
+    this.registerModel('duck', Model.extend({
+      modelName: 'duck',
+    }));
+    this.registerModel('hamster', Model.extend({
+      modelName: 'hamster',
+    }));
+
+    let subject = this.subject({
+      message: 'hello',
+      type: 'duck',
+      model: model().owner('type').named(owner => owner.get('type'))
+    });
+
+    let first = subject.get('model');
+    assert.equal(first.get('modelName'), 'duck');
+    assert.equal(first.get('message'), 'hello');
+
+    run(() => subject.set('type', 'hamster'));
+
+    assert.ok(first.isDestroying);
+
+    let second = run(() => subject.get('model'));
+    assert.ok(second !== first);
+    assert.equal(second.get('modelName'), 'hamster');
+
+    run(() => subject.destroy());
+
+    assert.ok(second.isDestroying);
+  });
+
+  test('model name lookup yields null', async function(assert) {
+    let Model = EmberObject.extend({
+      prepare(owner) {
+        this.setProperties(owner.getProperties('message'));
+      }
+    });
+    this.registerModel('duck', Model.extend({
+      modelName: 'duck',
+    }));
+
+    let subject = this.subject({
+      message: 'hello',
+      model: model().owner('type').named(owner => owner.get('type'))
+    });
+
+    let first = subject.get('model');
+    assert.ok(first === null);
+
+    run(() => subject.set('type', 'duck'));
+
+    let second = run(() => subject.get('model'));
+    assert.equal(second.get('modelName'), 'duck');
+
+    run(() => subject.set('type', undefined));
+
+    assert.ok(second.isDestroying);
+
+    let third = run(() => subject.get('model'));
+    assert.ok(third === null);
+
+    run(() => subject.set('type', 'duck'));
+
+    let fourth = run(() => subject.get('model'));
+    assert.equal(fourth.get('type', 'duck'));
+
+    run(() => subject.destroy());
+
+    assert.ok(fourth.isDestroying);
+  });
+
 });

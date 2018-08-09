@@ -90,6 +90,9 @@ export default class ModelFactory {
       } else {
         return (props, args) => {
           let name = named(...this.delegate.named(...args));
+          if(!name) {
+            return;
+          }
           let modelClass = modelClassForName(parent, name);
           return modelClass.create(props);
         }
@@ -135,8 +138,11 @@ export default class ModelFactory {
 
   create(...args) {
     let factory = this.factory;
-    let model = factory({}, args);
-    let promise = this.prepare(model, ...args);
+    let model = factory({}, args) || null;
+    let promise;
+    if(model) {
+      promise = this.prepare(model, ...args);
+    }
     return { model, promise };
   }
 

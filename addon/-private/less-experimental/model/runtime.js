@@ -47,17 +47,17 @@ export default class ModelsRuntime {
   }
 
   rebuildModel(notify) {
-    let current = this.content;
+    let previous = this.content;
 
-    let model = this.createModel() || undefined;
-    this.content = model;
+    let content = this.createModel();
+    this.content = content;
 
-    if(current) {
-      current.destroy();
+    if(previous) {
+      previous.destroy();
     }
 
-    if(current !== model && notify) {
-      this.delegate.updated(model);
+    if(previous !== content && notify) {
+      this.delegate.updated(content);
     }
   }
 

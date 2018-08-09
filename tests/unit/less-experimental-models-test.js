@@ -324,4 +324,8 @@ module('less-experimental-models', function(hooks) {
     run(() => subject.destroy());
   });
 
+  test('model class lookup yields null', async function(assert) {
+    assert.ok(false, 'todo');
+  });
+
 });
