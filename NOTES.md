@@ -1,149 +1,97 @@
-## Models (and possibly rework or `model`, ...)
+# Notes
 
-## Basic implementation
+`ember-cli-zuglet/less-experimental`
 
-More or less aligns with `experimental` module.
+Properties:
 
-``` javascript
-export default EmberObject.extend({
+* models
+* model
+* route
+* observed
 
-  query: observed(),
+Concepts:
 
-  posts: models('query.content', 'type', (doc, owner) => {
-    let type = doc.data.type;
-    if(!type) {
-      return;
-    }
-    return `post/${type}`;
-  }).mapping((doc, owner) => {
-    return { doc };
-  }),
+* source – model/models source dependency
+* owner – owner (parent) dependencies which makes model(s) to be recreated
+* object – object dependencies which makes models(s) to be recreated
+* inline – inline model body
+* named – model name lookup
+* mapping – owner to model data mapping
+* content – observed only, document or query lookup
 
-  prepare() {
-    let query = this.store.collection('posts').query();
-    this.setProperties({ query });
-    return query.observers.promise;
-  }
-
-});
-```
-
-## All settings
+## Models
 
 ``` javascript
-{
-  from: {
-    deps: {
-      owner: [ 'key' ],
-    },
-    property: owner => owner.key
-  },
-  array: {
-    deps: {
-      owner: [ 'type' ],
-    },
-    name: owner => `posts/${owner.type}`
-  },
-  model: {
-    deps: {
-      doc: [ 'type' ],
-      owner: [ 'type' ],
-    },
-    mapping: doc => ({ doc }),
-    // body or name
-    body: {
-      prepare({ doc }, owner) {
-
-      }
-    },
-    name: (doc, owner) => `posts/${owner.type}/${doc.data.type}`
-  }
-}
-```
-
-## Parent model
-
-``` javascript
-export default EmberObject.extend({
-
-  key: 'blog',
-
-  query: observed(),
-
-  prepare() {
-    let query = this.store.collection('posts').query();
-    this.setProperties({ query });
-    return query.observers.promise;
-  }
-
-});
-```
-
-## Implementations
-
-Models has:
-
-* source
-* array setup (name, or resolved name by owner property)
-* model setup (name or resolved name by document property)
-
-Types:
-
-* inline, reusable
-* inline with mapping, reusable
-* provided name (with mapping), reusable
-* resolved name (with mapping)
-
-``` javascript
-// inline, inline reusable
-models('query.content', {
+models('query.content').owner('product.type').object('data.type').inline({
   prepare(doc, owner) {
-    this.setProperties({ doc });
   }
-}).reusable(),
+});
+```
 
-// inline with mapping, reusable
-models('query', {
-  prepare({ doc }, owner) {
-    this.setProperties({ doc });
+``` javascript
+models('query.content').named('book');
+```
+
+``` javascript
+models('query.content').owner('product.type').object('data.type').named((doc, owner) => {
+  let type = doc.get('data.type');
+  return `products/${owner.product.type}/components/${type}`;
+}).mapping((doc, product) => {
+  return { doc, product };
+});
+```
+
+## Model
+
+``` javascript
+model('doc').owner('product.type').object('data.type').inline({
+  prepare(doc, owner) {
+
   }
-}).mapping((doc, owner) => {
+});
+```
+
+``` javascript
+model('doc').named('book');
+```
+
+``` javascript
+models('doc').owner('product.type').object('data.type').named((doc, owner) => {
+  let type = doc.get('data.type');
+  return `products/${owner.product.type}/components/${type}`;
+}).mapping((doc, product) => {
+  return { doc, product };
+});
+```
+
+## Route model
+
+``` javascript
+model().inline({
+  prepare(route, params) {
+  }
+});
+```
+
+``` javascript
+model().named('book').mapping((route, params) => {
   return {
-    doc
-  };
-}).reusable(),
+    prducts: route.modelFor('products'),
+    id: params.product_id
+  }
+});
+```
 
-models()
-  .from('key', owner => `${owner.key}.content`)
-  .from('query')
+## Observed
 
-  .array('type', owner => `posts/${owner.type}`)
-  .array('posts/basic')
-  .array('type', {
-    prepare(owner) {
-    }
-  }),
+``` javascript
+observed()
+```
 
-  .model({
-    owner: [ 'type' ],
-    doc: [ 'data.type' ],
-    name(doc, owner) {
-      return `posts/${owner.type}/${doc.data.type}`;
-    },
-    mapping(doc, owner) {
-      return { doc };
-    },
-    reusable: true
-  })
-  .model({
-    prepare(doc, owner) {
+``` javascript
+observed().content('doc')
+```
 
-    }
-  })
-
-models()
-  .source('query.content')
-  .array('posts/basic')
-  .model('posts/basic/post')
-
+``` javascript
+observed().owner('id').content(owner => this.store.doc(`product/${owner.id}`))
 ```
