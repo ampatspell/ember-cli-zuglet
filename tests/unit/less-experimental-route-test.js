@@ -46,12 +46,29 @@ module('less-experimental-route', function(hooks) {
   });
 
   test('create and destroy', async function(assert) {
+    let preparePromise = false;
+    let loadPromise = false;
+
     let subject = this.route({
       model: route().inline({
         prepare(route, params) {
           assert.ok(route === subject);
           assert.equal(params.id, 'yellow');
           this.setProperties({ ok: true });
+          return {
+            then(cb) {
+              preparePromise = true;
+              cb();
+            }
+          }
+        },
+        load() {
+          return {
+            then(cb) {
+              loadPromise = true;
+              cb();
+            }
+          }
         }
       })
     });
@@ -72,6 +89,9 @@ module('less-experimental-route', function(hooks) {
 
     assert.ok(instance._internal.isDestroying);
     assert.ok(instance.isDestroying);
+
+    assert.ok(preparePromise);
+    assert.ok(loadPromise);
   });
 
   test('default prepare for mapping', async function(assert) {
