@@ -162,7 +162,47 @@ module('less-experimental-model', function(hooks) {
     run(() => subject.set('type', 'duck'));
 
     let fourth = run(() => subject.get('model'));
-    assert.equal(fourth.get('type', 'duck'));
+    assert.equal(fourth.get('modelName'), 'duck');
+
+    run(() => subject.destroy());
+
+    assert.ok(fourth.isDestroying);
+  });
+
+  test('mapping returns null', async function(assert) {
+    let subject = this.subject({
+      model: model().owner('type').inline({
+        prepare({ type }) {
+          this.setProperties({ type });
+        }
+      }).mapping(owner => {
+        let type = owner.get('type');
+        if(!type) {
+          return;
+        }
+        return { type };
+      })
+    });
+
+    let first = subject.get('model');
+    assert.ok(first === null);
+
+    run(() => subject.set('type', 'duck'));
+
+    let second = run(() => subject.get('model'));
+    assert.equal(second.get('type'), 'duck');
+
+    run(() => subject.set('type', undefined));
+
+    assert.ok(second.isDestroying);
+
+    let third = run(() => subject.get('model'));
+    assert.ok(third === null);
+
+    run(() => subject.set('type', 'hamster'));
+
+    let fourth = run(() => subject.get('model'));
+    assert.equal(fourth.get('type'), 'hamster');
 
     run(() => subject.destroy());
 

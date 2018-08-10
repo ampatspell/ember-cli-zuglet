@@ -88,8 +88,8 @@ export default class ModelFactory {
         let modelClass = modelClassForName(parent, named);
         return props => modelClass.create(props);
       } else {
-        return (props, args) => {
-          let name = named(...this.delegate.named(...args));
+        return (props, args, mapped) => {
+          let name = named(...this.delegate.named(...args), mapped);
           if(!name) {
             return;
           }
@@ -114,6 +114,9 @@ export default class ModelFactory {
     if(mapping) {
       return (...args) => {
         let ret = mapping(...args);
+        if(!ret) {
+          return;
+        }
         return [ ret ];
       }
     }
@@ -129,20 +132,27 @@ export default class ModelFactory {
     return process;
   }
 
-  prepare(model, ...args) {
+  map(...args) {
     let prepare = this.delegate.prepare(...args);
-    let mapped = this.mapping(...prepare);
+    return this.mapping(...prepare);
+  }
+
+  prepare(model, args) {
     assert(`'prepare' function is required for ${model}`, typeOf(model.prepare) === 'function');
-    return model.prepare(...mapped);
+    return model.prepare(...args);
   }
 
   create(...args) {
-    let factory = this.factory;
-    let props = this.delegate.props && this.delegate.props()
-    let model = factory(props, args) || null;
-    let promise;
-    if(model) {
-      promise = this.prepare(model, ...args);
+    let mapped = this.map(...args);
+    let model = null;
+    let promise = null;
+    if(mapped) {
+      let factory = this.factory;
+      let props = this.delegate.props && this.delegate.props();
+      model = factory(props, args, mapped) || null;
+      if(model) {
+        promise = this.prepare(model, mapped);
+      }
     }
     return { model, promise };
   }
