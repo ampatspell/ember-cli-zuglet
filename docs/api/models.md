@@ -3,9 +3,9 @@ title: Models
 pos: 10
 ---
 
-# Experimental Models
+# (Less) Experimental Models
 
-> Documentation is provided for 2nd iteration located in `less-experimental` module
+> Documentation is provided for 2nd iteration located in `less-experimental` module. If all goes well, this will be moved to `models`.
 
 Addon contains tools which allows you to easily create models that manages lifecycle of document and query observers in the scope of routes and components.
 
