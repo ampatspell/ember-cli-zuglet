@@ -1,6 +1,5 @@
 import Route from '@ember/routing/route';
-import { route } from 'ember-cli-zuglet/less-experimental';
-import observed from 'ember-cli-zuglet/experimental/observed';
+import { route, observed, resolveObservers } from 'ember-cli-zuglet/less-experimental';
 import { reject } from 'rsvp';
 
 export default Route.extend({
@@ -26,7 +25,7 @@ export default Route.extend({
         posts
       });
 
-      return posts.get('observers.promise');
+      return resolveObservers(posts);
     }
 
   })

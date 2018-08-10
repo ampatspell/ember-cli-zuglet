@@ -1,5 +1,5 @@
 import EmberObject from '@ember/object';
-import observed from 'ember-cli-zuglet/experimental/observed';
+import { observed } from 'ember-cli-zuglet/less-experimental';
 
 const isKindaValidPath = path => {
   if(!path) {

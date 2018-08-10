@@ -1,6 +1,5 @@
 import Route from '@ember/routing/route';
-import { route, models } from 'ember-cli-zuglet/less-experimental';
-import observed from 'ember-cli-zuglet/experimental/observed';
+import { route, models, observed } from 'ember-cli-zuglet/less-experimental';
 import { readOnly } from '@ember/object/computed';
 
 export default Route.extend({

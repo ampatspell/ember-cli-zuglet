@@ -1,6 +1,5 @@
 import Route from '@ember/routing/route';
-import { route } from 'ember-cli-zuglet/less-experimental';
-import observed from 'ember-cli-zuglet/experimental/observed';
+import { route, observed } from 'ember-cli-zuglet/less-experimental';
 import { all } from 'rsvp';
 
 let inserted = false;
