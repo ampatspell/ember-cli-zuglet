@@ -32,6 +32,12 @@ export const getInternal = (arg, route) => {
 
 const keyFromRouteName = routeName => `route/${routeName.replace(/\./g, '/')}`;
 
+const load = model => {
+  if(typeof model.load === 'function') {
+    return model.load();
+  }
+}
+
 export default Internal.extend({
 
   route: null,
@@ -66,7 +72,10 @@ export default Internal.extend({
   load() {
     let hash = this.model(true);
     assert(`route model is required`, !!hash.model);
-    return resolve(hash.promise).then(() => hash.model);
+    return resolve()
+      .then(() => hash.promise)
+      .then(() => load(hash.model))
+      .then(() => hash.model);
   }
 
 });
