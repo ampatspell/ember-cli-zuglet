@@ -4,7 +4,7 @@ import { typeOf } from '@ember/utils';
 import Internal from '../../internal/internal';
 import { instances, destroyInstances } from './computed/instances';
 import models from './computed/models';
-import { generateModelClass, modelFactoryForShortName } from '../../util/model';
+import { modelClassForName, createModelClassFromProperties } from '../../less-experimental/util/model-factory';
 import { assert } from '@ember/debug';
 
 export default Internal.extend({
@@ -17,11 +17,11 @@ export default Internal.extend({
     let type = typeOf(factory);
     const result = (type, prop) => ({ type, prop });
     if(type === 'object') {
-      return result('class', generateModelClass(owner, key, factory));
+      return result('class', createModelClassFromProperties(owner, key, factory));
     } else if(type === 'string') {
-      return result('class', modelFactoryForShortName(owner, factory));
+      return result('class', modelClassForName(owner, factory));
     } else if(type === 'function') {
-      let fn = (...args) => modelFactoryForShortName(owner, factory(...args));
+      let fn = (...args) => modelClassForName(owner, factory(...args));
       return result('function', fn);
     }
     assert(`models last argument must be object, string or function`, false);

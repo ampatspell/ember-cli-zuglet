@@ -1,9 +1,9 @@
 import Route from '@ember/routing/route';
-import model from 'ember-cli-zuglet/experimental/model/route';
+import { route } from 'ember-cli-zuglet/less-experimental';
 
 export default Route.extend({
 
-  model: model().mapping((route, params) => {
+  model: route().mapping((route, params) => {
     let blog = route.modelFor('experiments.blogs.blog');
     let id = params.post_id;
     return {

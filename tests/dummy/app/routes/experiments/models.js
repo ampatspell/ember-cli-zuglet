@@ -1,16 +1,14 @@
 import Route from '@ember/routing/route';
-import model from 'ember-cli-zuglet/experimental/model/route';
-import models from 'ember-cli-zuglet/experimental/models';
-import observed from 'ember-cli-zuglet/experimental/observed';
+import { route, models, observed } from 'ember-cli-zuglet/less-experimental';
 import { readOnly } from '@ember/object/computed';
 
 export default Route.extend({
 
-  model: model({
+  model: route().inline({
 
     query: observed(),
 
-    hamsters: models('query.content', {
+    hamsters: models('query.content').inline({
 
       doc: null,
 
@@ -20,7 +18,7 @@ export default Route.extend({
 
       prepare(doc) {
         this.setProperties({ doc });
-      }
+      },
 
     }),
 
@@ -52,6 +50,8 @@ export default Route.extend({
     prepare() {
       let query = this.store.collection('hamsters').query();
       this.setProperties({ query });
+
+      window.route = this;
 
       return query.observers.promise.then(() => this.insert());
     }

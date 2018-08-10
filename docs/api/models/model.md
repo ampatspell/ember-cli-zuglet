@@ -3,20 +3,17 @@ pos: 3
 ---
 
 ``` javascript
-import model from 'ember-cli-zuglet/experimental/model';
+import { model } from 'ember-cli-zuglet/less-experimental';
 ```
 
 # Model
-
-* inline
-* provided name
 
 ## Inline
 
 ``` javascript
 export default Component.extend({
 
-  model: model('path', {
+  model: model().owner('path').inline({
 
     prepare(owner) {
     }
@@ -31,9 +28,10 @@ export default Component.extend({
 ``` javascript
 export default Component.extend({
 
-  model: model('path', {
+  model: model().owner('path').inline({
 
     prepare({ path }) {
+      this.setProperties(arguments[0]); // default if prepare() is not provided
     }
 
   }).mapping(owner => ({
@@ -50,14 +48,12 @@ export default Component.extend({
 ``` javascript
 export default Component.extend({
 
-  model: model('path', 'document-by-path').mapping(owner => ({
+  model: model().owner('path').named('document-by-path').mapping(owner => ({
     path: owner.path
   }))
 
 });
 ```
-
-* mapping is required
 
 ## Resolved name
 
@@ -66,34 +62,25 @@ export default Component.extend({
 
   type: 'book',
 
-  model: model('type', 'path', owner => {
+  model: model().owner('type', 'path').named(owner => {
     let type = owner.type;
     if(!type) {
       return;
     }
     return `document/${type}`;
-  }).mapping(owner => ({
-    path: owner.path
-  }))
+  }).mapping(owner => ({ path: owner.path }))
 
 });
 ```
 
-* mapping is required
-* doesn't support `reusable()`
-
-## Reusable (inline and provided)
-
 ``` javascript
-export default Component.extend({
+// models/document/book.ks
 
-  model: model('path', {
+export default EmberObject.extend({
 
-    prepare(owner) {
-      // called every time owner.path changes
-    }
+  prepare({ path }) {
+    this.setProperties(arguments[0]); // default if prepare() is not provided
+  }
 
-  }).reusable()
-
-});
+})
 ```

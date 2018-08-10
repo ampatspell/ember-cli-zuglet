@@ -28,7 +28,7 @@
     {{model.hamsters}}
   {{/rows.row}}
 
-  {{#each model.hamsters.content as |model|}}
+  {{#each model.hamsters as |model|}}
     {{#rows.row}}
       <div>{{model.type}} : {{model.name}} : {{model.id}}</div>
       <div>{{model}}</div>
