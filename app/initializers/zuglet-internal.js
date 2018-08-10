@@ -104,6 +104,8 @@ import LessExperimentalModelsInternal from 'ember-cli-zuglet/-private/less-exper
 import LessExperimentalModels from 'ember-cli-zuglet/-private/less-experimental/models/models';
 import LessExperimentalModelInternal from 'ember-cli-zuglet/-private/less-experimental/model/internal';
 import LessExperimentalRouteInternal from 'ember-cli-zuglet/-private/less-experimental/route/internal';
+import LessExperimentalObservedDynamicInternal from 'ember-cli-zuglet/-private/less-experimental/observed/internal/dynamic';
+import LessExperimentalObservedWritableInternal from 'ember-cli-zuglet/-private/less-experimental/observed/internal/writable';
 
 export default {
   name: 'zuglet:internal',
@@ -256,5 +258,7 @@ export default {
     container.register('zuglet:less-experimental/models/internal', LessExperimentalModelsInternal);
     container.register('zuglet:less-experimental/models', LessExperimentalModels);
     container.register('zuglet:less-experimental/route/internal', LessExperimentalRouteInternal);
+    container.register('zuglet:less-experimental/observed/writable/internal', LessExperimentalObservedWritableInternal);
+    container.register('zuglet:less-experimental/observed/dynamic/internal', LessExperimentalObservedDynamicInternal);
   }
 }
