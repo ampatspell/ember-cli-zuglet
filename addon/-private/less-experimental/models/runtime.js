@@ -67,7 +67,10 @@ export default class ModelsRuntime {
 
   createModels(objects) {
     let factory = this.modelFactory;
-    return objects.map(object => factory.create(object));
+    return objects.map(object => {
+      let { model } = factory.create(object);
+      return model;
+    });
   }
 
   replaceModels(start, remove, models) {
@@ -83,7 +86,7 @@ export default class ModelsRuntime {
   }
 
   replaceModel(idx, object) {
-    let model = this.modelFactory.create(object);
+    let { model } = this.modelFactory.create(object);
     this.replaceModels(idx, 1, [ model ]);
   }
 
