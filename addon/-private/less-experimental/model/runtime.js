@@ -42,7 +42,8 @@ export default class ModelsRuntime {
   }
 
   createModel() {
-    return this.modelFactory.create();
+    let { model } = this.modelFactory.create();
+    return model;
   }
 
   rebuildModel(notify) {
