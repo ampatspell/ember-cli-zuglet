@@ -372,7 +372,7 @@ module('less-experimental-models', function(hooks) {
   test('default prepare for mapping', async function(assert) {
     let subject = this.subject({
       message: 'hello',
-      array: A([ Ember.Object.create() ]),
+      array: A([ EmberObject.create() ]),
       model: models('array').inline({
       }).mapping((doc, owner) => {
         let message = owner.get('message');
@@ -385,14 +385,14 @@ module('less-experimental-models', function(hooks) {
   test('prepare is required if no mapping', async function(assert) {
     let subject = this.subject({
       message: 'hello',
-      array: A([ Ember.Object.create() ]),
+      array: A([ EmberObject.create() ]),
       model: models('array').inline({
       })
     });
     try {
       subject.get('model');
     } catch(err) {
-      assert.equal(err.message, `Assertion Failed: models require 'prepare' prepare function if mapping is not provided`);
+      assert.equal(err.message, `Assertion Failed: models require 'prepare' function if mapping is not provided`);
     }
   });
 

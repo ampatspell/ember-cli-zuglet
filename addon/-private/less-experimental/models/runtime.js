@@ -34,7 +34,7 @@ export default class ModelsRuntime {
       named: opts.named,
       mapping: opts.mapping,
       delegate: {
-        prepare: object => [ object, parent ],
+        mapping: object => [ object, parent ],
         named: object => [ object, parent ]
       }
     });

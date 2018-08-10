@@ -218,7 +218,7 @@ module('less-experimental-model', function(hooks) {
         return { message };
       })
     });
-    assert.equal(subject.get('model.message', 'hello'));
+    assert.equal(subject.get('model.message'), 'hello');
   });
 
   test('prepare is required if no mapping', async function(assert) {
@@ -229,7 +229,7 @@ module('less-experimental-model', function(hooks) {
     try {
       subject.get('model');
     } catch(err) {
-      assert.equal(err.message, `Assertion Failed: models require 'prepare' prepare function if mapping is not provided`);
+      assert.equal(err.message, `Assertion Failed: models require 'prepare' function if mapping is not provided`);
     }
   });
 

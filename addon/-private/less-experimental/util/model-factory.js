@@ -59,7 +59,7 @@ const validate = (parent, key, inline, named, mapping, delegate) => {
   assert(`inline or named is requied, not both`, !inline || !named);
   assert(`inline or named is required`, inline || named);
   assert(`delegate must be object`, typeOf(delegate) === 'object');
-  assert(`delegate.prepare must be function`, typeOf(delegate.prepare) === 'function');
+  assert(`delegate.mapping must be function`, typeOf(delegate.mapping) === 'function');
   assert(`delegate.named must be function`, typeOf(delegate.named) === 'function');
 }
 
@@ -133,13 +133,24 @@ export default class ModelFactory {
   }
 
   map(...args) {
-    let prepare = this.delegate.prepare(...args);
+    let prepare = this.delegate.mapping(...args);
     return this.mapping(...prepare);
   }
 
   prepare(model, args) {
-    assert(`models require 'prepare' prepare function if mapping is not provided`, typeof model.prepare === 'function');
-    return model.prepare(...args);
+    if(typeof model.prepare === 'function') {
+      model.prepare(...args);
+      return;
+    }
+
+    let mapping = this.opts.mapping;
+    if(mapping) {
+      let [ arg ] = args;
+      model.setProperties(arg);
+      return;
+    }
+
+    assert(`models require 'prepare' function if mapping is not provided`, false);
   }
 
   create(...args) {
@@ -151,7 +162,7 @@ export default class ModelFactory {
       let props = this.delegate.props && this.delegate.props();
       model = factory(props, args, mapped) || null;
       if(model) {
-        promise = this.prepare(model, mapped);
+        this.prepare(model, mapped);
       }
     }
     return { model, promise };

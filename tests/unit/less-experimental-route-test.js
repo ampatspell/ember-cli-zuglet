@@ -74,4 +74,28 @@ module('less-experimental-route', function(hooks) {
     assert.ok(instance.isDestroying);
   });
 
+  test('default prepare for mapping', async function(assert) {
+    let subject = this.route({
+      model: route().inline({
+      }).mapping((route, params) => {
+        return { id: params.id };
+      })
+    });
+
+    let instance = await subject._model({ id: 'yellow' });
+    assert.equal(instance.get('id'), 'yellow');
+  });
+
+  test('prepare is required if no mapping', async function(assert) {
+    let subject = this.route({
+      model: route().inline({
+      })
+    });
+    try {
+      await subject._model({ id: 'yellow' });
+    } catch(err) {
+      assert.equal(err.message, `Assertion Failed: models require 'prepare' function if mapping is not provided`);
+    }
+  });
+
 });

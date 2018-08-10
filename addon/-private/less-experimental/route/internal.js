@@ -57,7 +57,7 @@ export default Internal.extend({
       mapping: opts.mapping,
       delegate: {
         props: () => ({ [__zuglet_route_internal]: true, _internal: this }),
-        prepare: () => [ route, params ],
+        mapping: () => [ route, params ],
         named: () => [ route, params ]
       }
     });
