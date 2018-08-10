@@ -16,6 +16,9 @@ export default Route.extend({
   model: route().inline({
 
     prepare(route, params) {
+    },
+
+    async load() {
     }
 
   })
@@ -31,6 +34,10 @@ export default Route.extend({
   model: route().inline({
 
     prepare({ sources, id }) {
+      this.setProperties(arguments[0]); // default if prepare() is not provided
+    },
+
+    async load() {
     }
 
   }).mapping((route, params) => ({
@@ -44,12 +51,27 @@ export default Route.extend({
 ## Looked up from route name
 
 ``` javascript
+// route/sources/source.js
 export default Route.extend({
 
   model: model().mapping((route, params) => ({
     sources: route.modelFor('sources'),
     id: params.source_id
   }))
+
+});
+```
+
+``` javascript
+// models/route/sources/source.js
+export default EmberObject.extend({
+
+  prepare({ sources, id }) {
+    this.setProperties(arguments[0]); // default if prepare() is not provided
+  },
+
+  async load() {
+  }
 
 });
 ```
@@ -63,6 +85,20 @@ export default Route.extend({
     sources: route.modelFor('sources'),
     id: params.source_id
   }))
+
+});
+```
+
+``` javascript
+// models/route/sources.js
+export default EmberObject.extend({
+
+  prepare({ sources, id }) {
+    this.setProperties(arguments[0]); // default if prepare() is not provided
+  },
+
+  async load() {
+  }
 
 });
 ```

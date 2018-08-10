@@ -31,6 +31,7 @@ export default Component.extend({
   model: model().owner('path').inline({
 
     prepare({ path }) {
+      this.setProperties(arguments[0]); // default if prepare() is not provided
     }
 
   }).mapping(owner => ({
@@ -70,4 +71,16 @@ export default Component.extend({
   }).mapping(owner => ({ path: owner.path }))
 
 });
+```
+
+``` javascript
+// models/document/book.ks
+
+export default EmberObject.extend({
+
+  prepare({ path }) {
+    this.setProperties(arguments[0]); // default if prepare() is not provided
+  }
+
+})
 ```

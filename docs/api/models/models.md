@@ -43,9 +43,11 @@ export default Component.extend({
 ``` javascript
 // models/book.js
 export default EmberObject.extend({
+
   prepare(doc, owner) {
     this.setProperties({ doc });
   }
+
 })
 ```
 
@@ -66,9 +68,11 @@ export default Component.extend({
 ``` javascript
 // models/book.js
 export default EmberObject.extend({
+
   prepare({ doc, owner }) {
-    this.setProperties({ doc });
+    this.setProperties(arguments[0]); // default if prepare() is not provided
   }
+
 })
 ```
 
@@ -90,9 +94,11 @@ export default Component.extend({
 ``` javascript
 // models/book.js
 export default EmberObject.extend({
+
   prepare(doc) {
     this.setProperties({ doc });
   }
+
 })
 ```
 
@@ -120,6 +126,7 @@ export default Component.extend({
 // models/book.js
 export default EmberObject.extend({
   prepare({ doc, owner }) {
+    // this.setProperties(arguments[0]); -- default if prepare() is not provided
     this.setProperties({ doc });
   }
 })
