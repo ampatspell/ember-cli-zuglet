@@ -209,4 +209,28 @@ module('less-experimental-model', function(hooks) {
     assert.ok(fourth.isDestroying);
   });
 
+  test('default prepare for mapping', async function(assert) {
+    let subject = this.subject({
+      message: 'hello',
+      model: model().inline({
+      }).mapping(owner => {
+        let message = owner.get('message');
+        return { message };
+      })
+    });
+    assert.equal(subject.get('model.message', 'hello'));
+  });
+
+  test('prepare is required if no mapping', async function(assert) {
+    let subject = this.subject({
+      message: 'hello',
+      model: model().inline({})
+    });
+    try {
+      subject.get('model');
+    } catch(err) {
+      assert.equal(err.message, `Assertion Failed: models require 'prepare' prepare function if mapping is not provided`);
+    }
+  });
+
 });

@@ -138,7 +138,7 @@ export default class ModelFactory {
   }
 
   prepare(model, args) {
-    assert(`'prepare' function is required for ${model}`, typeof model.prepare === 'function');
+    assert(`models require 'prepare' prepare function if mapping is not provided`, typeof model.prepare === 'function');
     return model.prepare(...args);
   }
 
