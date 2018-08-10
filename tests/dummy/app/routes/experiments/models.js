@@ -1,12 +1,11 @@
 import Route from '@ember/routing/route';
-import model from 'ember-cli-zuglet/experimental/model/route';
-import models from 'ember-cli-zuglet/less-experimental/models';
+import { route, models } from 'ember-cli-zuglet/less-experimental';
 import observed from 'ember-cli-zuglet/experimental/observed';
 import { readOnly } from '@ember/object/computed';
 
 export default Route.extend({
 
-  model: model({
+  model: route().inline({
 
     query: observed(),
 

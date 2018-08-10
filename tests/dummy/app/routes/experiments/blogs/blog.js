@@ -1,11 +1,11 @@
 import Route from '@ember/routing/route';
-import model from 'ember-cli-zuglet/experimental/model/route';
+import { route } from 'ember-cli-zuglet/less-experimental';
 import observed from 'ember-cli-zuglet/experimental/observed';
 import { reject } from 'rsvp';
 
 export default Route.extend({
 
-  model: model({
+  model: route().inline({
 
     blog: null,
     posts: observed(),
