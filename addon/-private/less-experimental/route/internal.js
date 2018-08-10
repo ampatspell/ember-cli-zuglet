@@ -64,13 +64,18 @@ export default Internal.extend({
   },
 
   createModel() {
-    return this.modelFactory.create();
+    let { model, promise } = this.modelFactory.create();
+    let destroy = () => model && model.destroy();
+    return { model, promise, destroy };
   },
 
   load() {
-    let model = this.model(true);
+    let { model, promise } = this.model(true);
     assert(`route model is required`, !!model);
-    return resolve().then(() => load(model)).then(() => model);
+    return resolve()
+      .then(() => promise)
+      .then(() => load(model))
+      .then(() => model);
   }
 
 });
