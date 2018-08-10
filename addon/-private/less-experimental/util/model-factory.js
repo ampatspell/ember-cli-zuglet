@@ -156,7 +156,6 @@ export default class ModelFactory {
   create(...args) {
     let mapped = this.map(...args);
     let model = null;
-    let promise = null;
     if(mapped) {
       let factory = this.factory;
       let props = this.delegate.props && this.delegate.props();
@@ -165,7 +164,7 @@ export default class ModelFactory {
         this.prepare(model, mapped);
       }
     }
-    return { model, promise };
+    return model;
   }
 
 }

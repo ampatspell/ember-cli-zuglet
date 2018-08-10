@@ -386,8 +386,7 @@ module('less-experimental-models', function(hooks) {
     let subject = this.subject({
       message: 'hello',
       array: A([ EmberObject.create() ]),
-      model: models('array').inline({
-      })
+      model: models('array').inline({})
     });
     try {
       subject.get('model');
