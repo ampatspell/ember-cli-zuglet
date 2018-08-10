@@ -4,7 +4,8 @@ This addon is dead simple way to use Google Firebase services in your Ember.js a
 
 It has stateful, observable documents and queries, easy file uploads, auth.
 
-[Documentation is here](https://ember-cli-zuglet.firebaseapp.com/).
+* [Website](https://www.ember-cli-zuglet.com/)
+* [Documentation](https://www.ember-cli-zuglet.com/docs)
 
 Apps built using ember-cli-zuglet:
 

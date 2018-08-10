@@ -81,7 +81,7 @@
   },
   "ember-addon": {
     "configPath": "tests/dummy/config",
-    "demoURL": "https://ember-cli-zuglet.firebaseapp.com",
+    "demoURL": "https://www.ember-cli-zuglet.com/",
     "fastbootDependencies": [
       "xmlhttprequest"
     ]
