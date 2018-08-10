@@ -3,7 +3,7 @@ pos: 4
 ---
 
 ``` javascript
-import models from 'ember-cli-zuglet/experimental/models';
+import { models } from 'ember-cli-zuglet/less-experimental';
 ```
 
 # Models
@@ -17,7 +17,7 @@ export default Component.extend({
 
   query: observed(),
 
-  models: model('query.content', {
+  models: models('query.content').inline({
 
     prepare(doc, owner) {
       this.setProperties({ doc });
@@ -35,7 +35,7 @@ export default Component.extend({
 
   query: observed(),
 
-  models: model('query.content', 'book')
+  models: models('query.content').named('book')
 
 });
 ```
@@ -56,7 +56,7 @@ export default Component.extend({
 
   query: observed(),
 
-  models: model('query.content', 'book').mapping((doc, owner) => {
+  models: models('query.content').named('book').mapping((doc, owner) => {
     return { doc, owner };
   })
 
@@ -79,7 +79,7 @@ export default Component.extend({
 
   query: observed(),
 
-  models: model('query.content', 'data.type', (doc, owner) => {
+  models: models('query.content').object('data.type').named((doc, owner) => {
     let type = doc.data.getProperties('type');
     return `book/${type}`;
   })
@@ -103,9 +103,12 @@ export default Component.extend({
 
   query: observed(),
 
-  models: model('query.content', 'data.type', (doc, owner) => {
-    let type = doc.data.getProperties('type');
-    return `book/${type}`;
+  type: 'book',
+
+  models: model('query.content').owner('type').object('data.type').named((doc, owner) => {
+    let doc = doc.data.getProperties('type');
+    let owner = owner.type;
+    return `${owner}/${type}`;
   }).mapping((doc, owner) => {
     return { doc, owner };
   });

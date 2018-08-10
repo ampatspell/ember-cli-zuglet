@@ -3,21 +3,17 @@ pos: 2
 ---
 
 ``` javascript
-import model from 'ember-cli-zuglet/experimental/model/route';
+import { route } from 'ember-cli-zuglet/less-experimental';
 ```
 
 # Route
-
-* inline
-* looked up from route name
-* provided name
 
 ## Inline without mapping
 
 ``` javascript
 export default Route.extend({
 
-  model: model({
+  model: route().inline({
 
     prepare(route, params) {
     }
@@ -32,7 +28,7 @@ export default Route.extend({
 ``` javascript
 export default Route.extend({
 
-  model: model({
+  model: route().inline({
 
     prepare({ sources, id }) {
     }
@@ -63,7 +59,7 @@ export default Route.extend({
 ``` javascript
 export default Route.extend({
 
-  model: model('route/source').mapping((route, params) => ({
+  model: model().named('route/source').mapping((route, params) => ({
     sources: route.modelFor('sources'),
     id: params.source_id
   }))
