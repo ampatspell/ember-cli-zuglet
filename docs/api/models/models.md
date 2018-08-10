@@ -111,7 +111,7 @@ export default Component.extend({
 
   type: 'book',
 
-  models: model('query.content').owner('type').object('data.type').named((doc, owner) => {
+  models: models('query.content').owner('type').object('data.type').named((doc, owner) => {
     let doc = doc.data.getProperties('type');
     let owner = owner.type;
     return `${owner}/${type}`;
