@@ -138,7 +138,8 @@ export default class ModelFactory {
 
   create(...args) {
     let factory = this.factory;
-    let model = factory({}, args) || null;
+    let props = this.delegate.props && this.delegate.props()
+    let model = factory(props, args) || null;
     let promise;
     if(model) {
       promise = this.prepare(model, ...args);
