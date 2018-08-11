@@ -6,6 +6,8 @@ export default Internal.extend({
   init() {
     this._super(...arguments);
 
+    this._dirty = true;
+
     let { parent, opts } = this.getProperties('parent', 'opts');
 
     this.parentObserver = new ObjectObserver({
@@ -15,8 +17,28 @@ export default Internal.extend({
         updated: (object, key) => this.onParentPropertyUpdated(object, key)
       }
     });
+  },
 
-    this.update(false);
+  getObservable() {
+    if(this._dirty) {
+      this._dirty = false;
+      let observable = this.createObservable();
+      this.setObservable(observable);
+    }
+    return this._super(...arguments);
+  },
+
+  createObservable() {
+    let { parent, opts: { content } } = this.getProperties('parent', 'opts');
+    return content(parent) || null;
+  },
+
+  dirty(notify) {
+    this.setObservable(null);
+    this._dirty = true;
+    if(notify) {
+      this.notifyPropertyChange();
+    }
   },
 
   notifyPropertyChange() {
@@ -27,24 +49,8 @@ export default Internal.extend({
     parent.notifyPropertyChange(key);
   },
 
-  update(notify) {
-    let { parent, opts: { content } } = this.getProperties('parent', 'opts');
-
-    let next = content(parent) || null;
-
-    if(this.observable === next) {
-      return;
-    }
-
-    this.setObservable(next);
-
-    if(notify) {
-      this.notifyPropertyChange();
-    }
-  },
-
   onParentPropertyUpdated() {
-    this.update(true);
+    this.dirty(true);
   },
 
   willDestroy() {
