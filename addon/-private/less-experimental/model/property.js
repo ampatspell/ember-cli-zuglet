@@ -2,7 +2,7 @@ import destroyable from '../../util/destroyable';
 import { getOwner } from '@ember/application';
 
 const get = internal => internal.model(true);
-const reusable = () => false;
+const reusable = () => true;
 
 const create = opts => function(key) {
   let parent = this;
