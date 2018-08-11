@@ -20,9 +20,14 @@ export default Serializer.extend({
   },
 
   deserialize(internal, value) {
-    if(internal.content !== value) {
-      internal.content = value;
+    if(internal.content === value) {
+      return {
+        replace: false,
+        internal
+      };
     }
+
+    internal.content = value;
 
     return {
       replace: true,
