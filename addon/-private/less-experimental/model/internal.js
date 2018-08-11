@@ -29,7 +29,7 @@ export default Internal.extend({
 
   model(create) {
     let runtime = this.runtime(create);
-    return runtime && runtime.content;
+    return runtime && runtime.content(create);
   },
 
   willDestroy() {
