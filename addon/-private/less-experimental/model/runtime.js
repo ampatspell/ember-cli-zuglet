@@ -18,6 +18,9 @@ export default class ModelsRuntime {
     this.opts = opts;
     this.delegate = delegate;
 
+    this._content = null;
+    this._dirty = true;
+
     this.modelFactory = new ModelFactory({
       parent,
       key,
@@ -37,8 +40,31 @@ export default class ModelsRuntime {
         updated: (object, key) => this.onParentPropertyUpdated(object, key)
       }
     });
+  }
 
-    this.rebuildModel(false);
+  content(create) {
+    let content = this._content;
+    if(!content && this._dirty && create) {
+      content = this.createModel();
+      this._dirty = false;
+      this._content = content;
+    }
+    return content;
+  }
+
+  dirty(notify) {
+    if(this._dirty) {
+      return;
+    }
+    this._dirty = true;
+    let content = this._content;
+    if(content) {
+      content.destroy();
+      this._content = null;
+    }
+    if(notify) {
+      this.delegate.updated();
+    }
   }
 
   createModel() {
@@ -46,28 +72,13 @@ export default class ModelsRuntime {
     return model;
   }
 
-  rebuildModel(notify) {
-    let previous = this.content;
-
-    let content = this.createModel();
-    this.content = content;
-
-    if(previous) {
-      previous.destroy();
-    }
-
-    if(previous !== content && notify) {
-      this.delegate.updated(content);
-    }
-  }
-
   onParentPropertyUpdated() {
-    this.rebuildModel(true);
-  }
+    this.dirty(true);
+}
 
   destroy() {
     this.parentObserver.destroy();
-    let content = this.content;
+    let content = this._content;
     content && content.destroy();
   }
 
