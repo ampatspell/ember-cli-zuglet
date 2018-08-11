@@ -92,4 +92,29 @@ module('less-experimental-observed', function(hooks) {
     run(() => subject.destroy());
   });
 
+  test('multiple owner deps should not create content multiple times', async function(assert) {
+    let log = [];
+    let subject = this.subject({
+      parent: 'ducks',
+      id: 'yellow',
+      observed: observed().owner('parent', 'id').content(owner => {
+        let { parent, id } = owner.getProperties('parent', 'id');
+        log.push([ parent, id ]);
+        return owner.store.doc(`${parent}/${id}`).existing();
+      })
+    });
+
+    subject.get('observed');
+    subject.setProperties({ parent: 'messages', id: 'first' });
+    let second = subject.get('observed');
+    assert.equal(second.get('ref.path'), 'messages/first');
+
+    run(() => subject.destroy());
+
+    assert.deepEqual(log, [
+      [ "ducks", "yellow" ],
+      [ "messages", "first" ]
+    ]);
+  });
+
 });
