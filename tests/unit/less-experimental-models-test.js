@@ -395,5 +395,31 @@ module('less-experimental-models', function(hooks) {
     }
   });
 
+  test('object property changes does not recreate model multiple times', async function(assert) {
+    let doc = EmberObject.create({ name: 'duck', color: 'yellow' });
+    let log = [];
+
+    let subject = this.subject({
+      array: A([ doc ]),
+      model: models('array').object('name', 'color').inline({}).mapping(doc => {
+        let { name, color } = doc.getProperties('name', 'color');
+        log.push([ name, color ]);
+        return { name, color };
+      })
+    });
+
+    let first = subject.get('model').slice();
+
+    run(() => doc.setProperties({ name: 'hamster', color: 'brown' }));
+
+    let second = subject.get('model').slice();
+
+    run(() => subject.destroy());
+
+    assert.deepEqual(log, [
+      [ "duck", "yellow" ],
+      [ "hamster", "brown" ]
+    ]);
+  });
 
 });
