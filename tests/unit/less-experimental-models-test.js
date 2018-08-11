@@ -389,7 +389,7 @@ module('less-experimental-models', function(hooks) {
       model: models('array').inline({})
     });
     try {
-      subject.get('model');
+      subject.get('model').slice();
     } catch(err) {
       assert.equal(err.message, `Assertion Failed: models require 'prepare' function if mapping is not provided`);
     }
@@ -408,11 +408,48 @@ module('less-experimental-models', function(hooks) {
       })
     });
 
+    const stringify = arr => arr.map(i => `${i.get('name')}/${i.get('color')}`);
+
     let first = subject.get('model').slice();
+    assert.deepEqual(stringify(first), [ 'duck/yellow' ]);
 
     run(() => doc.setProperties({ name: 'hamster', color: 'brown' }));
 
     let second = subject.get('model').slice();
+    assert.deepEqual(stringify(second), [ 'hamster/brown' ]);
+
+    run(() => subject.destroy());
+
+    assert.deepEqual(log, [
+      [ "duck", "yellow" ],
+      [ "hamster", "brown" ]
+    ]);
+  });
+
+  test('owner prop changes does not recreate models multiple times', async function(assert) {
+    let doc = EmberObject.create({});
+    let log = [];
+
+    let subject = this.subject({
+      array: A([ doc ]),
+      name: 'duck',
+      color: 'yellow',
+      model: models('array').owner('name', 'color').inline({}).mapping((doc, owner) => {
+        let { name, color } = owner.getProperties('name', 'color');
+        log.push([ name, color ]);
+        return { name, color };
+      })
+    });
+
+    const stringify = arr => arr.map(i => `${i.get('name')}/${i.get('color')}`);
+
+    let first = subject.get('model').slice();
+    assert.deepEqual(stringify(first), [ 'duck/yellow' ]);
+
+    run(() => subject.setProperties({ name: 'hamster', color: 'brown' }));
+
+    let second = subject.get('model').slice();
+    assert.deepEqual(stringify(second), [ 'hamster/brown' ]);
 
     run(() => subject.destroy());
 
