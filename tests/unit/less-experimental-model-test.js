@@ -233,4 +233,33 @@ module('less-experimental-model', function(hooks) {
     }
   });
 
+  test('multiple dependencies recreate model once', async function(assert) {
+    let log = [];
+    let subject = this.subject({
+      name: 'duck',
+      type: 'yellow',
+      model: model().owner('name', 'type').inline({
+        prepare(owner) {
+          let { name, type } = owner.getProperties('name', 'type');
+          log.push([ name, type ]);
+        }
+      })
+    });
+
+    let first = subject.get('model');
+    run(() => subject.setProperties({ name: 'hamster', type: 'brown' }));
+    assert.ok(first.isDestroying);
+
+    let second = run(() => subject.get('model'));
+    assert.ok(second !== first);
+
+    run(() => subject.destroy());
+    assert.ok(second.isDestroying);
+
+    assert.deepEqual(log, [
+      [ 'duck', 'yellow' ],
+      [ 'hamster', 'brown' ],
+    ]);
+  });
+
 });
