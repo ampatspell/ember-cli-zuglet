@@ -1,7 +1,7 @@
-import { A } from '@ember/array';
 import ObjectObserver from '../util/object-observer';
 import SourceObserver from './source-observer';
 import ModelFactory from '../util/model-factory';
+import ArrayMapper from './array-mapper';
 import { assert } from '@ember/debug';
 import { typeOf } from '@ember/utils';
 
@@ -25,7 +25,6 @@ export default class ModelsRuntime {
     this.parent = parent;
     this.key = key;
     this.opts = opts;
-    this.content = A([]);
 
     this.modelFactory = new ModelFactory({
       parent,
@@ -59,74 +58,57 @@ export default class ModelsRuntime {
       }
     });
 
-    this.rebuildModels();
+    this.arrayMapper = new ArrayMapper({
+      delegate: {
+        model: object => this.createModelForObject(object)
+      }
+    });
+
+    this.replaceAllModels();
+  }
+
+  get content() {
+    return this.arrayMapper.content;
   }
 
   //
 
-
-  createModels(objects) {
-    let factory = this.modelFactory;
-    return objects.map(object => {
-      let { model } = factory.create(object);
-      return model;
-    });
-  }
-
-  replaceModels(start, remove, models) {
-    let removed;
-    let content = this.content;
-    if(remove) {
-      removed = content.slice(start, start + remove);
-    }
-    content.replace(start, remove, models);
-    if(removed) {
-      removed.map(model => model && model.destroy());
-    }
-  }
-
-  replaceModel(idx, object) {
+  createModelForObject(object) {
     let { model } = this.modelFactory.create(object);
-    this.replaceModels(idx, 1, [ model ]);
+    return model;
   }
 
-  rebuildModels() {
+  replaceAllModels() {
     let objects = this.sourceObserver.source;
-    let models;
-    if(objects) {
-      models = this.createModels(objects);
-    }
-    let remove = this.content.get('length');
-    this.replaceModels(0, remove, models);
+    this.arrayMapper.replaceAll(objects);
   }
 
   //
 
   onSourceArrayReplaced() {
-    this.rebuildModels();
+    this.replaceAllModels();
   }
 
   onSourceObjectsAdded(objects, start) {
-    let models = this.createModels(objects);
-    this.replaceModels(start, 0, models);
+    this.arrayMapper.replace(start, 0, objects);
   }
 
   onSourceObjectsRemoved(objects, start, len) {
-    this.replaceModels(start, len);
+    this.arrayMapper.replace(start, len);
   }
 
   onSourceObjectUpdated(object, key, idx) {
-    this.replaceModel(idx, object);
+    this.arrayMapper.replace(idx, 1, [ object ]);
   }
 
   onParentPropertyUpdated() {
-    this.rebuildModels();
+    this.replaceAllModels();
   }
 
   destroy() {
     this.parentObserver.destroy();
     this.sourceObserver.destroy();
-    this.content.map(model => model && model.destroy());
+    this.arrayMapper.destroy();
   }
 
 }
