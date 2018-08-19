@@ -1,22 +1,23 @@
 import Route from '@ember/routing/route';
 import { route } from 'ember-cli-zuglet/less-experimental';
+import { event } from '../../../scenarios';
 
 export default Route.extend({
 
   model: route().inline({
 
-    prepare(route) {
-      console.log('prepare', route.routeName);
+    prepare() {
+      event('redirect-to-nested.models.index', 'prepare', this);
     },
 
     init() {
       this._super(...arguments);
-      console.log('init', this+'');
+      event('redirect-to-nested.models.index', 'init', this);
     },
 
     willDestroy() {
       this._super(...arguments);
-      console.log('willDestroy', this+'');
+      event('redirect-to-nested.models.index', 'willDestroy', this);
     }
 
   })
