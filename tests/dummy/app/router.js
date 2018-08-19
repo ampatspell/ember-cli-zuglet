@@ -4,11 +4,19 @@ import { isFastBoot } from 'ember-cli-zuglet/-private/util/fastboot';
 
 let isFistTransition = true;
 
+// const namesFromInfos = infos => infos.map(i => i.name);
+
 const Router = EmberRouter.extend({
   location: config.locationType,
   rootURL: config.rootURL,
 
-  didTransition() {
+  willTransition(oldInfos, newInfos, transition) {
+    // console.log('router.willTransition', namesFromInfos(oldInfos), namesFromInfos(newInfos), transition);
+    this._super(...arguments);
+  },
+
+  didTransition(infos) {
+    // console.log('router.didTransition', namesFromInfos(infos));
     if(!isFastBoot(this)) {
       if(!isFistTransition) {
         window.scrollTo(0, 0);

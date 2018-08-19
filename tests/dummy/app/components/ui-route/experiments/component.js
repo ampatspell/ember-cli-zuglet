@@ -10,7 +10,8 @@ const experiments = [
   make('image', 'image upload task, status'),
   make('model', 'destroyable models'),
   make('models', 'destroyable model array'),
-  make('blogs', 'route models')
+  make('blogs', 'route models'),
+  make('wip', 'work in progress')
 ]
 
 export default Component.extend({
