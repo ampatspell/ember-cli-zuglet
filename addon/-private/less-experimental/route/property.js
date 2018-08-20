@@ -2,6 +2,7 @@ import { getOwner } from '@ember/application';
 import { onResetController, onWillDestroy } from './hooks';
 import { getInternal } from './internal';
 import { resolve } from 'rsvp';
+import { next } from '@ember/runloop';
 
 const destroyInternal = internal => {
   internal && internal.destroy();
@@ -13,12 +14,12 @@ const destroyCurentModel = route => {
   destroyInternal(internal);
 }
 
-// const resetController = function() {
-//   destroyCurentModel(this);
-// }
-
-const willDestroy = function() {
-  destroyCurentModel(this);
+const destroyInternalIfAborted = (internal, transition) => {
+  if(!transition.isAborted) {
+    return;
+  }
+  // TODO: cancellation
+  next(() => destroyInternal(internal));
 }
 
 const create = (route, params, opts) => {
@@ -28,16 +29,15 @@ const create = (route, params, opts) => {
 
 export default opts => {
   return function(params, transition) {
-    // onResetController(this, resetController);
-    onWillDestroy(this, willDestroy);
+    onResetController(this, destroyCurentModel);
+    onWillDestroy(this, destroyCurentModel);
     let internal = create(this, params, opts);
-    let promise = resolve(internal.load());
-    // promise.catch(() => {}).finally(() => {
-    //   if(!transition.isAborted) {
-    //     return;
-    //   }
-    //   destroyInternal(internal);
-    // });
-    return promise;
+    return resolve(internal.load()).then(model => {
+      destroyInternalIfAborted(internal, transition);
+      return model;
+    }, err => {
+      destroyInternalIfAborted(internal, transition);
+      return reject(err);
+    });
   }
 }
