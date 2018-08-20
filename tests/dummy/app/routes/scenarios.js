@@ -21,6 +21,7 @@ export default Route.extend({
     },
 
     prepare() {
+      window.scenarios = this;
       this.event('scenarios', 'prepare', this);
     },
 

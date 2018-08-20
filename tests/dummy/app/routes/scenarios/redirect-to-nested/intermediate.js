@@ -7,18 +7,19 @@ export default Route.extend({
   model: route().inline({
 
     prepare(route) {
-      event('redirect-to-nested.index', 'prepare', this);
-      route.transitionTo('scenarios.redirect-to-nested.intermediate');
+      console.log('intermediate');
+      event('redirect-to-nested.intermediate', 'prepare', this);
+      route.transitionTo('scenarios.redirect-to-nested.models', 'default');
     },
 
     init() {
       this._super(...arguments);
-      event('redirect-to-nested.index', 'init', this);
+      event('redirect-to-nested.intermediate', 'init', this);
     },
 
     willDestroy() {
       this._super(...arguments);
-      event('redirect-to-nested.index', 'willDestroy', this);
+      event('redirect-to-nested.intermediate', 'willDestroy', this);
     }
 
   })
