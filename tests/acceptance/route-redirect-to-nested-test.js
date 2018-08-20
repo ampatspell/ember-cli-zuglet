@@ -17,11 +17,13 @@ module('acceptance / route - redirect to nested', function(hooks) {
     await visit('/scenarios/redirect-to-nested');
     assert.equal(currentURL(), '/scenarios/redirect-to-nested/default');
 
+    await visit('/');
+    assert.equal(currentURL(), '/');
+
     let model = this.model();
 
-    model.event('test', 'done');
-
-    console.log(model.events);
+    // model.event('test', 'done');
+    // console.log(model.events);
   });
 
 });
