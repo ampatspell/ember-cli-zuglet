@@ -1,17 +1,14 @@
 import Route from '@ember/routing/route';
 import { route } from 'ember-cli-zuglet/less-experimental';
 import { event } from '../../scenarios';
-import { inject as service } from '@ember/service';
 
 export default Route.extend({
 
   model: route().inline({
 
-    router: service(),
-
-    prepare() {
+    prepare(route) {
       event('redirect-to-external.index', 'prepare', this);
-      this.router.transitionTo('scenarios');
+      route.transitionTo('scenarios');
     },
 
     init() {
