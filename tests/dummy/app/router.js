@@ -27,6 +27,16 @@ Router.map(function() {
     });
   });
 
+  this.route('scenarios', function() {
+    this.route('redirect-to-nested', function() {
+      this.route('intermediate');
+      this.route('models', { path: '/models/:model_id' }, function() {
+      });
+    });
+    this.route('redirect-to-external', function() {
+    });
+  });
+
   // development nonsense
   this.route('experiments', function() {
     this.route('wip');

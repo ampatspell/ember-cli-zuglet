@@ -19,3 +19,4 @@ const extend = (object, functionName, cb) => {
 }
 
 export const onResetController = (route, cb) => extend(route, 'resetController', cb);
+export const onWillDestroy = (route, cb) => extend(route, 'willDestroy', cb);

@@ -26,6 +26,16 @@ export default Route.extend({
       });
 
       return resolveObservers(posts);
+    },
+
+    init() {
+      this._super(...arguments);
+      console.log('init', this+'');
+    },
+
+    willDestroy() {
+      this._super(...arguments);
+      console.log('willDestroy', this+'');
     }
 
   })
