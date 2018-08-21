@@ -1,4 +1,5 @@
 import EmberObject from '@ember/object';
+import Mixin from '@ember/object/mixin';
 import { module, test, setupStoreTest } from '../helpers/setup';
 import { getOwner } from '@ember/application';
 import { model } from 'ember-cli-zuglet/less-experimental';
@@ -260,6 +261,24 @@ module('less-experimental-model', function(hooks) {
       [ 'duck', 'yellow' ],
       [ 'hamster', 'brown' ],
     ]);
+  });
+
+  test('mixins for inline', async function(assert) {
+    const Thing = Mixin.create({
+      thing: true
+    });
+
+    let subject = this.subject({
+      model: model().inline(Thing, {
+        prepare() {
+        }
+      })
+    });
+
+    let first = subject.get('model');
+    assert.equal(first.get('thing'), true);
+
+    run(() => subject.destroy());
   });
 
 });
