@@ -66,10 +66,11 @@ export default Mixin.create(keys.reduce((hash, key) => {
   },
 
   first(opts={}) {
+    let { source } = opts;
     return this.get('store.queue').schedule({
       name: 'reference/queryable/first',
       invoke: () => {
-        return this.ref.get();
+        return this.ref.get({ source });
       },
       didResolve: snapshot => {
         let internals = this.didLoad(snapshot);
