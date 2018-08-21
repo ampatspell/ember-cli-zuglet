@@ -38,6 +38,16 @@ export default Route.extend({
       }
 
       return blogs.get('observers.promise');
+    },
+
+    init() {
+      this._super(...arguments);
+      console.log('init', this+'');
+    },
+
+    willDestroy() {
+      this._super(...arguments);
+      console.log('willDestroy', this+'');
     }
 
   })
