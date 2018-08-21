@@ -9,8 +9,8 @@ export default Mixin.create(keys.reduce((hash, key) => {
 
   query: invokeReturningModel('query'),
 
-  load() {
-    return this._internal.load();
+  load(opts) {
+    return this._internal.load(opts);
   },
 
   first(opts) {

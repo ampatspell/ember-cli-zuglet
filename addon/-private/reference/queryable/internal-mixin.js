@@ -51,11 +51,12 @@ export default Mixin.create(keys.reduce((hash, key) => {
     return snapshot.docs.map(doc => store.createInternalDocumentForSnapshot(doc));
   },
 
-  load() {
+  load(opts={}) {
+    let { source } = opts;
     return this.get('store.queue').schedule({
       name: 'reference/queryable/load',
       invoke: () => {
-        return this.ref.get();
+        return this.ref.get({ source });
       },
       didResolve: snapshot => {
         let internals = this.didLoad(snapshot);
