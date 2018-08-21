@@ -13,7 +13,8 @@ const Route = EmberObject.extend({
   },
 
   _model(params) {
-    return resolve(this.model(params)).then(model => this.currentModel = model);
+    let transition = { isAborted: false };
+    return resolve(this.model(params, transition)).then(model => this.currentModel = model);
   },
 
   _modelFor(key, value) {

@@ -16,6 +16,16 @@ export default EmberObject.extend({
       blog,
       post
     });
+  },
+
+  init() {
+    this._super(...arguments);
+    console.log('init', this+'');
+  },
+
+  willDestroy() {
+    this._super(...arguments);
+    console.log('willDestroy', this+'');
   }
 
 });

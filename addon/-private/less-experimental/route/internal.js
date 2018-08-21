@@ -3,6 +3,7 @@ import ModelFactory from '../util/model-factory';
 import { resolve } from 'rsvp';
 import { assert } from '@ember/debug';
 import { typeOf } from '@ember/utils';
+import { next, cancel } from '@ember/runloop';
 
 const validate = (opts, named) => {
   assert(`opts must be object`, typeOf(opts) === 'object');
@@ -76,6 +77,24 @@ export default Internal.extend({
       .then(() => promise)
       .then(() => load(model))
       .then(() => model);
+  },
+
+  cancelScheduleDestroy() {
+    let scheduleDestroy = this._scheduleDestroy;
+    if(scheduleDestroy) {
+      cancel(scheduleDestroy);
+      this._scheduleDestroy = null;
+    }
+  },
+
+  scheduleDestroy() {
+    this.cancelScheduleDestroy();
+    this._scheduleDestroy = next(() => this.destroy());
+  },
+
+  willDestroy() {
+    this.cancelScheduleDestroy();
+    this._super(...arguments);
   }
 
 });
