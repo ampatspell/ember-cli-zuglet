@@ -1,20 +1,52 @@
 import EmberRouter from '@ember/routing/router';
 import config from './config/environment';
 import { isFastBoot } from 'ember-cli-zuglet/-private/util/fastboot';
+import { cancel, next } from '@ember/runloop';
 
+let {
+  environment
+} = config;
+
+let isGoogleAnalyticsEnabled = environment === 'production';
 let isFistTransition = true;
 
 const Router = EmberRouter.extend({
   location: config.locationType,
   rootURL: config.rootURL,
 
+  sendPageview() {
+    if(typeof gtag_pageview !== 'undefined') {
+      let url = this.get('currentURL');
+      gtag_pageview(url); /* eslint-disable-line no-undef */
+    }
+  },
+
+  schedulePageview() {
+    if(!isGoogleAnalyticsEnabled) {
+      return;
+    }
+    cancel(this._schedulePageview);
+    this._schedulePageview = next(() => this.sendPageview());
+  },
+
+  scrollToTop() {
+    window.scrollTo(0, 0);
+  },
+
   didTransition() {
+    this._super(...arguments);
+
     if(!isFastBoot(this)) {
       if(!isFistTransition) {
-        window.scrollTo(0, 0);
+        this.schedulePageview();
+        this.scrollToTop();
       }
       isFistTransition = false;
     }
+  },
+
+  willDestroy() {
+    cancel(this._schedulePageview);
     this._super(...arguments);
   }
 
