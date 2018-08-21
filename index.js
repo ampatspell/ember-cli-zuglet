@@ -76,9 +76,13 @@ module.exports = {
 
     return mergeTrees(trees);
   },
-  contentFor(type) {
-    let id = 'UA-1159106-17';
+  contentFor(type, config) {
     if(type === 'head') {
+      let enabled = config.environment === 'production';
+      if(!enabled) {
+        return;
+      }
+      let id = 'UA-1159106-17';
       return `
         <script async src="https://www.googletagmanager.com/gtag/js?id=${id}"></script>
         <script>
