@@ -23,6 +23,23 @@ export default Component.extend({
 });
 ```
 
+## Inline with mixins
+
+``` javascript
+import RandomMixin from './-random-mixin';
+
+export default Component.extend({
+
+  model: model().owner('path').inline(RandomMixin, {
+
+    prepare(owner) {
+    }
+
+  })
+
+});
+```
+
 ## Inline with mapping
 
 ``` javascript

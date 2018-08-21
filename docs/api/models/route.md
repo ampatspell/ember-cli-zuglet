@@ -26,6 +26,26 @@ export default Route.extend({
 });
 ```
 
+## Inline with mixins
+
+``` javascript
+import RandomMixin from './-random-mixin';
+
+export default Route.extend({
+
+  model: route().inline(RandomMixin, {
+
+    prepare(route, params) {
+    },
+
+    async load() {
+    }
+
+  })
+
+});
+```
+
 ## Inline with mapping
 
 ``` javascript

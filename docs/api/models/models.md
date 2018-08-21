@@ -28,6 +28,26 @@ export default Component.extend({
 });
 ```
 
+## Inline with mixins
+
+``` javascript
+import RandomMixin from './-random-mixin';
+
+export default Component.extend({
+
+  query: observed(),
+
+  models: models('query.content').inline(RandomMixin, {
+
+    prepare(doc, owner) {
+      this.setProperties({ doc });
+    }
+
+  })
+
+});
+```
+
 ## Static model name without mapping
 
 ``` javascript
