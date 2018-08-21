@@ -17,7 +17,7 @@ export default Internal.extend({
     let type = typeOf(factory);
     const result = (type, prop) => ({ type, prop });
     if(type === 'object') {
-      return result('class', createModelClassFromProperties(owner, key, factory));
+      return result('class', createModelClassFromProperties(owner, key, factory, []));
     } else if(type === 'string') {
       return result('class', modelClassForName(owner, factory));
     } else if(type === 'function') {

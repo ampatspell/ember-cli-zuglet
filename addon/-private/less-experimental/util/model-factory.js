@@ -22,13 +22,13 @@ const modelNameForParentKeyProperty = (owner, key) => {
 
 const modelFullName = name => `model:${name}`;
 
-export const createModelClassFromProperties = (parent, key, props) => {
+export const createModelClassFromProperties = (parent, key, props, mixins) => {
   let normalizedName = modelNameForParentKeyProperty(parent, key);
   let fullName = modelFullName(normalizedName);
   let owner = getOwner(parent);
   let factory = owner.factoryFor(fullName);
   if(!factory) {
-    owner.register(fullName, EmberObject.extend(props));
+    owner.register(fullName, EmberObject.extend(...[...mixins, props]));
     factory = owner.factoryFor(fullName);
   }
   return factory;
@@ -49,6 +49,8 @@ const validate = (parent, key, inline, named, mapping, delegate) => {
   assert(`key is required`, typeOf(key) === 'string');
   if(inline) {
     assert(`inline must be object`, typeOf(inline) === 'object');
+    assert(`inline.props must be object`, typeOf(inline.props) === 'object');
+    assert(`inline.mixins must be array`, typeOf(inline.mixins) === 'array');
   }
   if(named) {
     assert(`named must be string or function`, typeOf(named) === 'string' || typeOf(named) === 'function');
@@ -81,7 +83,7 @@ export default class ModelFactory {
   createFactory() {
     let { parent, key, opts: { inline, named } } = this;
     if(inline) {
-      let modelClass = createModelClassFromProperties(parent, key, inline);
+      let modelClass = createModelClassFromProperties(parent, key, inline.props, inline.mixins);
       return props => modelClass.create(props);
     } else if(named) {
       if(typeof named === 'string') {

@@ -3,7 +3,7 @@ import { assert } from '@ember/debug';
 import { modelClassForName, createModelClassFromProperties } from '../../less-experimental/util/model-factory';
 
 const resolveObject = (parent, key, arg) => {
-  let factory = createModelClassFromProperties(parent, key, arg);
+  let factory = createModelClassFromProperties(parent, key, arg, []);
   return {
     factory,
     requiresMapping: false
