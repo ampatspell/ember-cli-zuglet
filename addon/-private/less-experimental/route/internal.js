@@ -3,7 +3,7 @@ import ModelFactory from '../util/model-factory';
 import { resolve } from 'rsvp';
 import { assert } from '@ember/debug';
 import { typeOf } from '@ember/utils';
-import { next, cancel, scheduleOnce } from '@ember/runloop';
+import { next, cancel } from '@ember/runloop';
 
 const validate = (opts, named) => {
   assert(`opts must be object`, typeOf(opts) === 'object');

@@ -1,7 +1,7 @@
 import { getOwner } from '@ember/application';
 import { onResetController, onWillDestroy } from './hooks';
 import { getInternal } from './internal';
-import { resolve } from 'rsvp';
+import { resolve, reject } from 'rsvp';
 
 const destroyInternal = internal => internal && internal.destroy();
 
