@@ -54,9 +54,14 @@ duck.doc(`images/${name}`); // this will throw assertion
 ```
 
 
-## load({ optional }) `→ Promise<Document>`
+## load({ optional, source }) `→ Promise<Document>`
 
-Loads a document
+Loads a document.
+
+Source:
+
+* `server` → always loaded from the server
+* `cache` → loaded from the cache if possible
 
 If document does not exist:
 

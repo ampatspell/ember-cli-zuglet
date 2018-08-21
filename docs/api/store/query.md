@@ -81,6 +81,7 @@ let json = query.get('serialized');
 
 reference with which this query was created.
 
+
 ## size `→ Number`
 
 latest `onSnapshot` size property.
@@ -115,3 +116,12 @@ observer.cancel();
 query.destroy();
 observer.destroy();
 ```
+
+## load({ source }) `→ Query`
+
+Loads a query.
+
+Source:
+
+* `server` → always loaded from the server
+* `cache` → loaded from the cache if possible

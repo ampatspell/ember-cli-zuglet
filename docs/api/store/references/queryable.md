@@ -5,18 +5,28 @@ pos: 4
 
 # Queryable Reference
 
-## first({ optional }) `→ Promise<Document>`
+## first({ optional, source }) `→ Promise<Document>`
 
 Loads first document. It is not observed by default;
+
+Source:
+
+* `server` → always loaded from the server
+* `cache` → loaded from the cache if possible
 
 ``` javascript
 let document = await store.collection('ducks').first({ optional: true });
 ```
 
 
-## load() `→ Promise<Array<Document>>`
+## load({ source }) `→ Promise<Array<Document>>`
 
 Loads all documents. They are not observed by default.
+
+Source:
+
+* `server` → always loaded from the server
+* `cache` → loaded from the cache if possible
 
 ``` javascript
 let documents = await store.collection('ducks').load();

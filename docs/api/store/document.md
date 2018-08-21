@@ -84,14 +84,24 @@ Document data
 > TODO
 
 
-## load() `→ Promise`
+## load({ source }) `→ Promise`
 
 Loads document if it is not yet loaded.
 
+Source:
 
-## reload() `→ Promise`
+* `server` → always loaded from the server
+* `cache` → loaded from the cache if possible
+
+
+## reload({ source }) `→ Promise`
 
 Reloads document.
+
+Source:
+
+* `server` → always loaded from the server
+* `cache` → loaded from the cache if possible
 
 ## save() `→ Promise`
 
