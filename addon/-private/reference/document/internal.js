@@ -49,9 +49,10 @@ export default ReferenceInternal.extend({
   },
 
   load(opts={}) {
+    let { source } = opts;
     return this.get('store.queue').schedule({
       name: 'reference/document/load',
-      invoke: () => this.ref.get(),
+      invoke: () => this.ref.get({ source }),
       didResolve: snapshot => this.didLoad(snapshot, opts),
       didReject: err => reject(err)
     });

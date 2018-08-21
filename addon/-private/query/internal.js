@@ -88,9 +88,10 @@ export default Internal.extend({
   },
 
   load(opts={}) {
+    let { force, source } = opts;
     let { isLoaded, isLoading } = this.getProperties('isLoaded', 'isLoading');
 
-    if(isLoaded && !isLoading && !opts.force) {
+    if(isLoaded && !isLoading && !force) {
       return resolve(this);
     }
 
@@ -100,7 +101,7 @@ export default Internal.extend({
       invoke: () => {
         this.willLoad();
         let query = this.get('unwrappedQuery');
-        return query.get();
+        return query.get({ source });
       },
       didResolve: snapshot => this.didLoad(snapshot),
       didReject: err => this.loadDidFail(err)

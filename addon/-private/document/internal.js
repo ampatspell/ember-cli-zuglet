@@ -111,9 +111,10 @@ export default Internal.extend({
   },
 
   load(opts={}) {
+    let { force, source } = opts;
     let { isLoaded, isLoading } = this.getProperties('isLoaded', 'isLoading');
 
-    if(isLoaded && !isLoading && !opts.force) {
+    if(isLoaded && !isLoading && !force) {
       return resolve(this);
     }
 
@@ -123,15 +124,15 @@ export default Internal.extend({
       invoke: () => {
         this.willLoad();
         let ref = this.get('ref.ref');
-        return ref.get();
+        return ref.get({ source });
       },
       didResolve: snapshot => this.didLoad(snapshot),
       didReject: err => this.loadDidFail(err)
     });
   },
 
-  reload() {
-    return this.load({ force: true });
+  reload(opts) {
+    return this.load(assign({ force: true }, opts));
   },
 
   willSave() {
