@@ -19,13 +19,6 @@ const willDestroy = function() {
   destroyCurentModel(this);
 }
 
-const destroyInternalIfAborted = (internal, transition) => {
-  if(!transition.isAborted) {
-    return;
-  }
-  internal.scheduleDestroy();
-}
-
 const create = (route, params, opts) => {
   let owner = getOwner(route);
   return owner.factoryFor('zuglet:less-experimental/route/internal').create({ route, params, opts });
@@ -36,11 +29,15 @@ export default opts => {
     onResetController(this, resetController);
     onWillDestroy(this, willDestroy);
     let internal = create(this, params, opts);
-    return resolve(internal.load()).then(model => {
-      destroyInternalIfAborted(internal, transition);
+    return resolve().then(() => {
+      return internal.load();
+    }).then(model => {
+      if(transition.isAborted) {
+        internal.scheduleDestroy();
+      }
       return model;
     }, err => {
-      destroyInternalIfAborted(internal, transition);
+      internal.scheduleDestroy();
       return reject(err);
     });
   }
