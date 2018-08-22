@@ -98,6 +98,7 @@ import Store from 'ember-cli-zuglet/store';
 
 # StorageReferenceMetadata
 
+* `ref → StorageReference`
 * `isLoading → Boolean`
 * `isLoaded → Boolean`
 * `isError → Boolea`
@@ -105,7 +106,6 @@ import Store from 'ember-cli-zuglet/store';
 * `exists → Boolean|undefined`
 * `load(opts) → Promise<This>`
 * `update(object) → Promise`
-* `reference → StorageReference`
 * `raw → Object`
 * `type → raw alias`
 * `name → raw alias`
@@ -127,6 +127,7 @@ import Store from 'ember-cli-zuglet/store';
 
 # StorageReferenceURL
 
+* `ref → StorageReference`
 * `isLoading → Boolean`
 * `isLoaded → Boolean`
 * `isError → Boolea`
