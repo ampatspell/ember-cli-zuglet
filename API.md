@@ -308,4 +308,39 @@ Wraps primitive types in Ember-observable ones and manages dirty tracking
 * `save(doc, opts) → undefined`
 * `delete(doc) → undefined`
 
-# Less-experimental
+# Less-Experimental
+
+## Observed
+
+* `observed()`
+* `owner(...args)`
+* `content(arg)`
+
+## Route
+
+* `route()`
+* `inline(...args)`
+* `named(arg)`
+* `mapping(arg)`
+
+## Model
+
+* `model()`
+* `owner(...args)`
+* `inline(...args)`
+* `named(arg)`
+* `mapping(arg)`
+
+## Models
+
+* `models(arg)`
+* `source(arg)`
+* `owner(...args)`
+* `object(...args)`
+* `inline(...args)`
+* `named(arg)`
+* `mapping(arg)`
+
+## Util
+
+* random-string
