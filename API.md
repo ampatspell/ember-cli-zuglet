@@ -261,11 +261,25 @@ import Store from 'ember-cli-zuglet/store';
 
 * content -> Document|null
 
-# Observers
+# Observers extends Array
+
+* promise -> Promise
 
 # Observer
-# DocumentObserver
-# QueryObserver
+
+* isCancelled -> Boolean
+* promise -> Promise
+* load() -> Promise
+* cancel() -> undefined
+
+# DocumentObserver extends Observer
+
+* doc -> Document
+
+# QueryObserver extends Observer
+
+* query -> Query
+
 # DataRootObject
 # DataObject
 # DataArray
