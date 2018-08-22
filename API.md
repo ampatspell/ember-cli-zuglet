@@ -163,15 +163,56 @@ import Store from 'ember-cli-zuglet/store';
 * call(data) -> Promise
 
 # FirestoreReference
-# QueryableReferenceMixin
+
+* isReference -> true
+* id -> String
+* path -> String
+* parent -> DocumentReference|CollectionReference|QueryReference
+* serialized -> Array<Object>
+* string -> String
+* isEqual(other) -> Boolean
+
 # DocumentReference extends FirestoreReference
+
+* collection(name) -> CollectionReference
+* doc(path) -> DocumentReference
+* load(opts) -> Promise<Document>
+* delete() -> Promise<This>
+* new(object) -> Document
+* existing() -> Document
+* observe() -> DocumentObserver
+
 # CollectionReference extends FirestoreReference, QueryableReferenceMixin
+
+* doc(path) -> DocumentReference
+
+# QueryableReferenceMixin
+
+* where -> QueryReference
+* orderBy -> QueryReference
+* limit -> QueryReference
+* startAt -> QueryReference
+* startAfter -> QueryReference
+* endAt -> QueryReference
+* endBefore -> QueryReference
+* query(opts) -> Query
+* load(opts) -> Promise<Array<Document>>
+* first(opts) -> Promise<Document>
+
 # QueryReference extends QueryableReferenceMixin
+
+* type -> String
+* args -> Array<Any>
+* parent -> QueryReference|CollectionReference
+* serialized -> Array<Object>
+* string -> String
 
 # Document
 # Query
 # Observers
 # Observer
+# DocumentObserver
+# QueryObserver
 # DataObject
 # DataArray
 # DataServerTimestamp
