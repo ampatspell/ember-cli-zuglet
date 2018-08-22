@@ -170,7 +170,7 @@ import Store from 'ember-cli-zuglet/store';
 * parent -> DocumentReference|CollectionReference|QueryReference
 * serialized -> Array<Object>
 * string -> String
-* isEqual(other) -> Boolean
+* `isEqual(other) -> Boolean`
 
 # DocumentReference extends FirestoreReference
 
