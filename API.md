@@ -208,11 +208,65 @@ import Store from 'ember-cli-zuglet/store';
 * string -> String
 
 # Document
+
+* isNew
+* isDirty
+* isLoading
+* isLoaded
+* isSaving
+* isObserving
+* isError
+* error
+* exists
+* metadata
+* isDocument -> true
+* ref -> DocumentReference
+* id -> String
+* path -> String
+* data -> DataRootObject
+* serialized -> Object
+* load(opts) -> Promise<This>
+* reload(opts) -> Promise<This>
+* save(opts) -> Promise<This>
+* delete() -> Promise<This>
+* reset() -> undefined
+* observe() -> DocumentObserver
+* observers -> Observers
+
 # Query
+
+* isQuery -> true
+* isLoading -> Boolean
+* isLoaded -> Boolean
+* isObserving -> Boolean
+* isError -> Boolean
+* error -> Error|Null
+* type -> String (array|first)
+* size -> Number|undefined
+* empty -> Boolean|undefined
+* metadata -> Object|undefined
+* ref -> CollectionReference|QueryReference
+* isArray -> Boolean
+* isFirst -> Boolean
+* serialized -> Object
+* load(opts) -> Promise<This>
+* observe() -> QueryObserver
+* observers -> Observers
+
+# ArrayQuery
+
+* content -> Array<Document>
+
+# FirstQuery
+
+* content -> Document|null
+
 # Observers
+
 # Observer
 # DocumentObserver
 # QueryObserver
+# DataRootObject
 # DataObject
 # DataArray
 # DataServerTimestamp
