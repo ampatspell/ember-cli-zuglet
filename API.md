@@ -223,7 +223,7 @@ import Store from 'ember-cli-zuglet/store';
 * ref -> DocumentReference
 * id -> String
 * path -> String
-* data -> DataRootObject
+* data -> DataObject
 * serialized -> Object
 * load(opts) -> Promise<This>
 * reload(opts) -> Promise<This>
@@ -280,10 +280,21 @@ import Store from 'ember-cli-zuglet/store';
 
 * query -> Query
 
-# DataRootObject
 # DataObject
-# DataArray
+
+* serialized -> Object
+* serialize(type) -> Object
+
+# DataArray extends Array
+
+Wraps primitive types in Ember-observable ones and manages dirty tracking
+
 # DataServerTimestamp
+
+* isTimestamp -> true
+* isServerTimestamp -> Boolean
+* date -> Date
+* dateTime -> Luxon.DateTime
 
 # Batch
 
