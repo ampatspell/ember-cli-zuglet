@@ -795,11 +795,10 @@ Represents a single callable (`functions.https.onCall`) Firebase Cloud Function.
 
 ``` javascript
 // firebase/functions/index.js
-'use strict';
 const functions = require('firebase-functions');
 const HttpsError = functions.https.HttpsError;
 
-exports.hello = functions.https.onCall((data, context) => {
+exports.hello = functions.https.onCall(async (data, context) => {
   let { name } = data;
 
   if(!name) {
