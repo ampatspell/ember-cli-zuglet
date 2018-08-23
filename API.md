@@ -12,11 +12,11 @@ import { register, initialize } from 'ember-cli-zuglet/initialize';
 let stores = getOwner(this).lookup('zuglet:stores');
 ```
 
-## `ready → Promise`
+## ready `→ Promise`
 
 A `Promise` which is resolved when all currently instantiated `Store` instances are ready to be used.
 
-## `createStore(identifier, factory) → Store`
+## createStore(identifier, factory) `→ Store`
 
 Creates and registers a new `Store` instance.
 
@@ -64,7 +64,7 @@ export default {
 
 > TODO: See Register & Initialize helpers for easier store setup.
 
-## `settle() → Promise`
+## settle() `→ Promise`
 
 Returns a promise which resolves when all currently running operations for all currently registered stores are finished.
 
@@ -76,13 +76,13 @@ Returns a promise which resolves when all currently running operations for all c
 import Store from 'ember-cli-zuglet/store';
 ```
 
-## `identifier → String`
+## identifier `→ String`
 
 Unique `Store` identifier which can be used to distinguish multiple stores.
 
 It is provided on `Store` creation and cannot be changed.
 
-## `ready → Promise<Store>`
+## ready `→ Promise<Store>`
 
 A `Promise` which resolves when `Store` is ready to be used, meaning:
 
@@ -91,21 +91,21 @@ A `Promise` which resolves when `Store` is ready to be used, meaning:
 * `Auth` user is restored
 * `restore()` has resolved
 
-## `auth → Auth`
+## auth `→ Auth`
 
 Returns a store `Auth` singleton instance.
 
-## `storage → Storage`
+## storage `→ Storage`
 
 Returns a store `Storage` singleton instance.
 
-## `functions(region) → Functions`
+## functions(region) `→ Functions`
 
 Returns a store `Functions` singleton instance for a region.
 
 * `region` → `string` or `null` (defaults to `us-central1`)
 
-## `observed → Array<Document|Query>`
+## observed `→ Array<Document|Query>`
 
 Returns an observable `EmberArray` with `Document` and `Query` instances currently being observed (having `ref.onSnapshot` listeners).
 
@@ -113,7 +113,7 @@ Useful for debugging purposes to make sure app is not leaking observers.
 
 > TODO: see `observed()`, `Observer`
 
-## `collection(name) → CollectionReference`
+## collection(name) `→ CollectionReference`
 
 Creates a `CollectionReference` with given name or path.
 
@@ -124,7 +124,7 @@ store.collection('ducks');
 store.collection('blog/ducks/posts');
 ```
 
-## `doc(path) → DocumentReference`
+## doc(path) `→ DocumentReference`
 
 Creates a `DocumentReference` with given path.
 
@@ -135,15 +135,15 @@ store.doc('blog/ducks');
 store.doc('blog/ducks/posts/first');
 ```
 
-## `object(arg) → DataObject`
+## object(arg) `→ DataObject`
 
 > TODO: Currently private
 
-## `array(arg) → DataArray`
+## array(arg) `→ DataArray`
 
 > TODO: Currently private
 
-## `serverTimestamp() → DataTimestamp`
+## serverTimestamp() `→ DataTimestamp`
 
 Creates a `DataTimestamp` instance configured as a server timestamp which will instruct Firestore to provide a timestamp value in the server side.
 
@@ -153,260 +153,260 @@ let doc = store.doc('ducks/yellow').new({
 });
 ```
 
-## `transaction(fn) → Promise`
-## `batch() → Batch`
-## `batch(fn) → Promise<Result>`
-## `settle() → Promise`
-## `restore() → Promise (override)`
-## `restoreUser(user) → Promise (override)`
+## transaction(fn) `→ Promise`
+## batch() `→ Batch`
+## batch(fn) `→ Promise<Result>`
+## settle() `→ Promise`
+## restore() `→ Promise (override)`
+## restoreUser(user) `→ Promise (override)`
 
 # Auth
 
-* `methods → AuthMethods`
-* `user → AuthUser|null`
-* `signOut() → Promise`
+## methods `→ AuthMethods`
+## user `→ AuthUser|null`
+## signOut() `→ Promise`
 
 # AuthMethods
 
-* `available → Array<String>`
-* `email → AuthEmailMethod`
-* `anonumous → AuthAnonymousMethod`
+## available `→ Array<String>`
+## email `→ AuthEmailMethod`
+## anonumous `→ AuthAnonymousMethod`
 
 # AuthMethod
 
-* `type → string`
+## type `→ string`
 
 # AuthAnonymousMethod
 
-* `signIn() → Promise<User>`
+## signIn() `→ Promise<User>`
 
 # AuthEmailMethod
 
-* `signIn(email, password) → Promise<User>`
-* `signUp(email, password) → Promise<User>`
+## signIn(email, password) `→ Promise<User>`
+## signUp(email, password) `→ Promise<User>`
 
 # AuthUser
 
-* `token(opts) → Promise<String|Object>`
-* `delete() → Promise`
-* `uid → String`
-* `isAnonymous → Boolean`
-* `displayName → String`
-* `email → String`
-* `emailVerified → Boolean`
-* `phoneNumber → String`
-* `photoURL → String`
-* `providerId → String`
-* `serialized → Object`
+## token(opts) `→ Promise<String|Object>`
+## delete() `→ Promise`
+## uid `→ String`
+## isAnonymous `→ Boolean`
+## displayName `→ String`
+## email `→ String`
+## emailVerified `→ Boolean`
+## phoneNumber `→ String`
+## photoURL `→ String`
+## providerId `→ String`
+## serialized `→ Object`
 
 # Storage
 
-* `tasks → Array<StorageTask>`
-* `ref(opts) → StorageReference`
+## tasks `→ Array<StorageTask>`
+## ref(opts) `→ StorageReference`
 
 # StorageReference
 
-* `parent → StorageReference`
-* `ref(path) → StorageReference`
-* `fullPath → String`
-* `bucket → String`
-* `name → String`
-* `metadata → StorageReferenceMetadata`
-* `url → StorageReferenceURL`
-* `load(opts) → Promise<?>`
-* `delete(opts) → Promise`
-* `put(opts) → StorageTask`
-* `serialized → Object`
+## parent `→ StorageReference`
+## ref(path) `→ StorageReference`
+## fullPath `→ String`
+## bucket `→ String`
+## name `→ String`
+## metadata `→ StorageReferenceMetadata`
+## url `→ StorageReferenceURL`
+## load(opts) `→ Promise<?>`
+## delete(opts) `→ Promise`
+## put(opts) `→ StorageTask`
+## serialized `→ Object`
 
 # StorageReferenceMetadata
 
-* `ref → StorageReference`
-* `isLoading → Boolean`
-* `isLoaded → Boolean`
-* `isError → Boolea`
-* `error → Object|null`
-* `exists → Boolean|undefined`
-* `load(opts) → Promise<This>`
-* `update(object) → Promise`
-* `raw → Object`
-* `type → raw alias`
-* `name → raw alias`
-* `size → raw alias`
-* `contentType → raw alias`
-* `customMetadata → raw alias`
-* `cacheControl → raw alias`
-* `contentDisposition → raw alias`
-* `contentEncoding → raw alias`
-* `contentLanguage → raw alias`
-* `bucket → raw alias`
-* `fullPath → raw alias`
-* `generation → raw alias`
-* `md5Hash → raw alias`
-* `metageneration → raw alias`
-* `createdAt → Date`
-* `updatedAt → Date`
-* `serialized → object`
+## ref `→ StorageReference`
+## isLoading `→ Boolean`
+## isLoaded `→ Boolean`
+## isError `→ Boolea`
+## error `→ Object|null`
+## exists `→ Boolean|undefined`
+## load(opts) `→ Promise<This>`
+## update(object) `→ Promise`
+## raw `→ Object`
+## type `→ raw alias`
+## name `→ raw alias`
+## size `→ raw alias`
+## contentType `→ raw alias`
+## customMetadata `→ raw alias`
+## cacheControl `→ raw alias`
+## contentDisposition `→ raw alias`
+## contentEncoding `→ raw alias`
+## contentLanguage `→ raw alias`
+## bucket `→ raw alias`
+## fullPath `→ raw alias`
+## generation `→ raw alias`
+## md5Hash `→ raw alias`
+## metageneration `→ raw alias`
+## createdAt `→ Date`
+## updatedAt `→ Date`
+## serialized `→ object`
 
 # StorageReferenceURL
 
-* `ref → StorageReference`
-* `isLoading → Boolean`
-* `isLoaded → Boolean`
-* `isError → Boolea`
-* `error → Error|null`
-* `exists → Boolean|undefined`
-* `load(opts) → Promise<This>`
-* `value → String`
-* `serialized → Object`
+## ref `→ StorageReference`
+## isLoading `→ Boolean`
+## isLoaded `→ Boolean`
+## isError `→ Boolea`
+## error `→ Error|null`
+## exists `→ Boolean|undefined`
+## load(opts) `→ Promise<This>`
+## value `→ String`
+## serialized `→ Object`
 
 # StorageTask
 
-* `ref → StorageReference`
-* `serialized → Object`
-* `promise → Promise`
-* `type → String`
-* `percent → Number`
-* `isRunning → Boolean`
-* `isCompleted → Boollean`
-* `isError → Boolean`
-* `error → Error`
-* `bytesTransferred → Number`
-* `totalBytes → Number`
-* `then(resolve, reject) → Promise`
-* `catch(fn) → Promise`
-* `finally(fn) → Promise`
+## ref `→ StorageReference`
+## serialized `→ Object`
+## promise `→ Promise`
+## type `→ String`
+## percent `→ Number`
+## isRunning `→ Boolean`
+## isCompleted `→ Boollean`
+## isError `→ Boolean`
+## error `→ Error`
+## bytesTransferred `→ Number`
+## totalBytes `→ Number`
+## then(resolve, reject) `→ Promise`
+## catch(fn) `→ Promise`
+## finally(fn) `→ Promise`
 
 # Functions
 
-* `region → String`
-* `callable(name) → FunctionsCallable`
+## region `→ String`
+## callable(name) `→ FunctionsCallable`
 
 # FunctionsCallable
 
-* `call(data) → Promise`
+## call(data) `→ Promise`
 
 # FirestoreReference
 
-* `isReference → true`
-* `id → String`
-* `path → String`
-* `parent → DocumentReference|CollectionReference|QueryReference`
-* `isEqual(other) → Boolean`
-* `serialized → Array<Object>`
-* `string → String`
+## isReference `→ true`
+## id `→ String`
+## path `→ String`
+## parent `→ DocumentReference|CollectionReference|QueryReference`
+## isEqual(other) `→ Boolean`
+## serialized `→ Array<Object>`
+## string `→ String`
 
 # DocumentReference extends FirestoreReference
 
-* `collection(name) → CollectionReference`
-* `doc(path) → DocumentReference`
-* `load(opts) → Promise<Document>`
-* `delete() → Promise<This>`
-* `new(object) → Document`
-* `existing() → Document`
-* `observe() → DocumentObserver`
+## collection(name) `→ CollectionReference`
+## doc(path) `→ DocumentReference`
+## load(opts) `→ Promise<Document>`
+## delete() `→ Promise<This>`
+## new(object) `→ Document`
+## existing() `→ Document`
+## observe() `→ DocumentObserver`
 
 # CollectionReference extends FirestoreReference, QueryableReferenceMixin
 
-* `doc(path) → DocumentReference`
+## doc(path) `→ DocumentReference`
 
 # QueryableReferenceMixin
 
-* `where → QueryReference`
-* `orderBy → QueryReference`
-* `limit → QueryReference`
-* `startAt → QueryReference`
-* `startAfter → QueryReference`
-* `endAt → QueryReference`
-* `endBefore → QueryReference`
-* `query(opts) → Query`
-* `load(opts) → Promise<Array<Document>>`
-* `first(opts) → Promise<Document>`
+## where `→ QueryReference`
+## orderBy `→ QueryReference`
+## limit `→ QueryReference`
+## startAt `→ QueryReference`
+## startAfter `→ QueryReference`
+## endAt `→ QueryReference`
+## endBefore `→ QueryReference`
+## query(opts) `→ Query`
+## load(opts) `→ Promise<Array<Document>>`
+## first(opts) `→ Promise<Document>`
 
 # QueryReference extends QueryableReferenceMixin
 
-* `type → String`
-* `args → Array<Any>`
-* `parent → QueryReference|CollectionReference`
-* `serialized → Array<Object>`
-* `string → String`
+## type `→ String`
+## args `→ Array<Any>`
+## parent `→ QueryReference|CollectionReference`
+## serialized `→ Array<Object>`
+## string `→ String`
 
 # Document
 
-* `isNew`
-* `isDirty`
-* `isLoading`
-* `isLoaded`
-* `isSaving`
-* `isObserving`
-* `isError`
-* `error`
-* `exists`
-* `metadata`
-* `isDocument → true`
-* `ref → DocumentReference`
-* `id → String`
-* `path → String`
-* `data → DataObject`
-* `serialized → Object`
-* `load(opts) → Promise<This>`
-* `reload(opts) → Promise<This>`
-* `save(opts) → Promise<This>`
-* `delete() → Promise<This>`
-* `reset() → undefined`
-* `observe() → DocumentObserver`
-* `observers → Observers`
+## isNew
+## isDirty
+## isLoading
+## isLoaded
+## isSaving
+## isObserving
+## isError
+## error
+## exists
+## metadata
+## isDocument `→ true`
+## ref `→ DocumentReference`
+## id `→ String`
+## path `→ String`
+## data `→ DataObject`
+## serialized `→ Object`
+## load(opts) `→ Promise<This>`
+## reload(opts) `→ Promise<This>`
+## save(opts) `→ Promise<This>`
+## delete() `→ Promise<This>`
+## reset() `→ undefined`
+## observe() `→ DocumentObserver`
+## observers `→ Observers`
 
 # Query
 
-* `isQuery → true`
-* `isLoading → Boolean`
-* `isLoaded → Boolean`
-* `isObserving → Boolean`
-* `isError → Boolean`
-* `error → Error|Null`
-* `type → String (array|first)`
-* `size → Number|undefined`
-* `empty → Boolean|undefined`
-* `metadata → Object|undefined`
-* `ref → CollectionReference|QueryReference`
-* `isArray → Boolean`
-* `isFirst → Boolean`
-* `serialized → Object`
-* `load(opts) → Promise<This>`
-* `observe() → QueryObserver`
-* `observers → Observers`
+## isQuery `→ true`
+## isLoading `→ Boolean`
+## isLoaded `→ Boolean`
+## isObserving `→ Boolean`
+## isError `→ Boolean`
+## error `→ Error|Null`
+## type `→ String (array|first)`
+## size `→ Number|undefined`
+## empty `→ Boolean|undefined`
+## metadata `→ Object|undefined`
+## ref `→ CollectionReference|QueryReference`
+## isArray `→ Boolean`
+## isFirst `→ Boolean`
+## serialized `→ Object`
+## load(opts) `→ Promise<This>`
+## observe() `→ QueryObserver`
+## observers `→ Observers`
 
 # ArrayQuery
 
-* `content → Array<Document>`
+## content `→ Array<Document>`
 
 # FirstQuery
 
-* `content → Document|null`
+## content `→ Document|null`
 
 # Observers extends Array
 
-* `promise → Promise`
+## promise `→ Promise`
 
 # Observer
 
-* `isCancelled → Boolean`
-* `promise → Promise`
-* `load() → Promise`
-* `cancel() → undefined`
+## isCancelled `→ Boolean`
+## promise `→ Promise`
+## load() `→ Promise`
+## cancel() `→ undefined`
 
 # DocumentObserver extends Observer
 
-* `doc → Document`
+## doc `→ Document`
 
 # QueryObserver extends Observer
 
-* `query → Query`
+## query `→ Query`
 
 # DataObject
 
-* `serialized → Object`
-* `serialize(type) → Object`
+## serialized `→ Object`
+## serialize(type) `→ Object`
 
 # DataArray extends Array
 
@@ -414,56 +414,56 @@ Wraps primitive types in Ember-observable ones and manages dirty tracking
 
 # DataTimestamp
 
-* `isTimestamp → true`
-* `isServerTimestamp → Boolean`
-* `date → Date`
-* `dateTime → Luxon.DateTime`
+## isTimestamp `→ true`
+## isServerTimestamp `→ Boolean`
+## date `→ Date`
+## dateTime `→ Luxon.DateTime`
 
 # Batch
 
-* `save(doc, opts) → Doc`
-* `delete(docOrRef) → Document|DocumentReference`
-* `commit() → Promise`
+## save(doc, opts) `→ Doc`
+## delete(docOrRef) `→ Document|DocumentReference`
+## commit() `→ Promise`
 
 # Transaction
 
-* `load(docOrRef, opts) → Promise<Document>`
-* `save(doc, opts) → undefined`
-* `delete(doc) → undefined`
+## load(docOrRef, opts) `→ Promise<Document>`
+## save(doc, opts) `→ undefined`
+## delete(doc) `→ undefined`
 
 # Less-Experimental
 
 ## Observed
 
-* `observed()`
-* `owner(...args)`
-* `content(arg)`
+### observed()
+### owner(...args)
+### content(arg)
 
 ## Route
 
-* `route()`
-* `inline(...args)`
-* `named(arg)`
-* `mapping(arg)`
+### route()
+### inline(...args)
+### named(arg)
+### mapping(arg)
 
 ## Model
 
-* `model()`
-* `owner(...args)`
-* `inline(...args)`
-* `named(arg)`
-* `mapping(arg)`
+### model()
+### owner(...args)
+### inline(...args)
+### named(arg)
+### mapping(arg)
 
 ## Models
 
-* `models(arg)`
-* `source(arg)`
-* `owner(...args)`
-* `object(...args)`
-* `inline(...args)`
-* `named(arg)`
-* `mapping(arg)`
+### models(arg)
+### source(arg)
+### owner(...args)
+### object(...args)
+### inline(...args)
+### named(arg)
+### mapping(arg)
 
-## Util
+# Util
 
-* random-string
+## random-string
