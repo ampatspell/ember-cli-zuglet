@@ -516,7 +516,7 @@ let ref = storage.ref('duck/yellow');
 await ref.load(); // → StorageReference with metadata and url loaded
 ```
 
-If file does not exist and `optional` is `false`, load `Promise` rejects with `storage/object-not-found` error.
+If file does not exist and `optional` is `false`, load `Promise` rejects with an object not found error.
 
 ## delete({ optional }) `→ Promise<StorageReference>`
 
@@ -605,61 +605,172 @@ Useful for debugging.
 
 # StorageReferenceMetadata
 
+Represents a stateful metadata information about single file.
+
+``` javascript
+let metadata = storage.ref('hello').metadata;
+```
+
 ## ref `→ StorageReference`
-## isLoading `→ Boolean`
-## isLoaded `→ Boolean`
-## isError `→ Boolea`
-## error `→ Object|null`
-## exists `→ Boolean|undefined`
-## load(opts) `→ Promise<This>`
-## update(object) `→ Promise`
-## raw `→ Object`
-## type `→ raw alias`
-## name `→ raw alias`
-## size `→ raw alias`
-## contentType `→ raw alias`
-## customMetadata `→ raw alias`
-## cacheControl `→ raw alias`
-## contentDisposition `→ raw alias`
-## contentEncoding `→ raw alias`
-## contentLanguage `→ raw alias`
-## bucket `→ raw alias`
-## fullPath `→ raw alias`
-## generation `→ raw alias`
-## md5Hash `→ raw alias`
-## metageneration `→ raw alias`
-## createdAt `→ Date`
-## updatedAt `→ Date`
+
+Returns a storage reference associated with this metadata instance.
+
+## load({ optional }) `→ Promise<StorageReference>`
+
+* `optional` → Boolean (defaults to `false`)
+
+Loads metadata for associated storage reference.
+
+If file does not exist and `optional` is `false`, load `Promise` rejects with an object not found error.
+
+``` javascript
+let metadata = storage.ref('hello').metadata;
+
+metadata.isLoaded // → false
+
+await metadata.load();
+
+metadata.isLoaded // → true
+metadata.exists // → true
+```
+
+## update(object) `→ Promise<StorageReference>`
+
+Updates file metadata.
+
+``` javascript
+let metadata = storage.ref('hello').metadata;
+await metadata.update({
+  contentType: 'text/plain',
+  customMetadata: {
+    hello: 'world'
+  }
+});
+```
+
+## State properties
+
+* `isLoading` → `Boolean`
+* `isLoaded` → `Boolean`
+* `isError` → `Boolea`
+* `error` → `Object | null`
+* `exists` → `Boolean | undefined`
+
+## Metadata properties
+
+* `raw → `Object`
+* `type → `String`
+* `name → `String`
+* `size → `Number`
+* `contentType` → `String`
+* `customMetadata` → `Object`
+* `cacheControl` → `String`
+* `contentDisposition` → `String`
+* `contentEncoding` → `String`
+* `contentLanguage` → `String`
+* `bucket` → `String`
+* `fullPath` → `String`
+* `md5Hash` → `String`
+* `generation` → `String`
+* `metageneration` → `String`
+* `createdAt` → `Date`
+* `updatedAt` → `Date`
+
 ## serialized `→ object`
+
+Returns json representation of most important `StorageReferenceMetadata` properties.
+
+Useful for debugging.
 
 # StorageReferenceURL
 
+Represents a stateful public url for a single file.
+
+``` javascript
+let url = storage.ref('hello').url;
+await url.load();
+url.value // → https://....
+```
+
 ## ref `→ StorageReference`
-## isLoading `→ Boolean`
-## isLoaded `→ Boolean`
-## isError `→ Boolea`
-## error `→ Error|null`
-## exists `→ Boolean|undefined`
-## load(opts) `→ Promise<This>`
+
+Returns a storage reference associated with this metadata instance.
+
+## State properties
+
+* `isLoading` → `Boolean`
+* `isLoaded` → `Boolean`
+* `isError` → `Boolea`
+* `error` → `Object | null`
+* `exists` → `Boolean | undefined`
+
+## load(opts) `→ Promise<StorageReferenceURL>`
+
+* `optional` → Boolean (defaults to `false`)
+
+Loads public URL for associated storage reference.
+
+If file does not exist and `optional` is `false`, load `Promise` rejects with an object not found error.
+
 ## value `→ String`
-## serialized `→ Object`
+
+Public URL for associated storage reference.
+
+## serialized `→ object`
+
+Returns json representation of most important `StorageReferenceMetadata` properties.
 
 # StorageTask
 
-## ref `→ StorageReference`
-## serialized `→ Object`
-## promise `→ Promise`
+Storage task represents a single file upload.
+
+``` javascript
+let task = storage.ref('hello').put({
+  type: 'data',
+  data: file,
+  metadata: {
+    contentType: file.type
+  }
+});
+await task;
+task.isCompleted // → true
+```
+
+Task is promise-like but also exposes `promise` property. There is no difference which is awaited for.
+
+Promise methods:
+
+* `then(resolve, reject)`
+* `catch(err)`
+* `finally(fn)`
+
 ## type `→ String`
-## percent `→ Number`
-## isRunning `→ Boolean`
-## isCompleted `→ Boollean`
-## isError `→ Boolean`
-## error `→ Error`
-## bytesTransferred `→ Number`
-## totalBytes `→ Number`
-## then(resolve, reject) `→ Promise`
-## catch(fn) `→ Promise`
-## finally(fn) `→ Promise`
+
+Returns upload file type: `string` or `data`.
+
+## ref `→ StorageReference`
+
+Returns a storage reference associated with this task.
+
+## State properties
+
+* `isRunning` → `Boolean`
+* `isCompleted` → `Boollean`
+* `isError` → `Boolean`
+* `error` → `Error`
+* `bytesTransferred` → `Number`
+* `totalBytes` → `Number`
+* `percent` → `Number`
+
+## promise `→ Promise`
+
+Returns a promise which resolves when file is finished uploading.
+
+## serialized `→ Object`
+
+Returns json representation of most important storage task properties.
+
+Useful for debugging.
 
 # Functions
 
