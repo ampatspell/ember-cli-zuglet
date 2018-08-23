@@ -1,4 +1,4 @@
-import EmberObject from '@ember/object';
+import EmberObject, { computed } from '@ember/object';
 import { readOnly } from '@ember/object/computed';
 import ModelMixin from '../../../internal/model-mixin';
 import Mixin from '@ember/object/mixin';
@@ -11,6 +11,10 @@ const StatePropertiesMixin = Mixin.create(state.reduce((hash, key) => {
 }, {}));
 
 export default EmberObject.extend(ModelMixin, StatePropertiesMixin, {
+
+  ref: computed(function() {
+    return this._internal.ref.model(true);
+  }).readOnly(),
 
   // { optional }
   load: invokePromiseReturningThis('load')

@@ -1,6 +1,6 @@
 {
   "name": "ember-cli-zuglet",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "Google Cloud Firestore documents for Ember.js",
   "keywords": [
     "ember-addon",
@@ -29,8 +29,8 @@
     "test": "ember try:each",
     "coverage": "COVERAGE=true ember test",
     "tags": "git push --follow-tags",
-    "version:patch": "npm version patch; npm run tags",
     "version:minor": "npm version minor; npm run tags",
+    "version:patch": "npm version patch; npm run tags",
     "deploy": "ember build -prod --output-path firebase/public && (cd firebase && firebase deploy)",
     "deploy:travis": "(cd firebase && firebase deploy --except hosting --project ember-cli-zuglet-travis)"
   },
