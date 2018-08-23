@@ -2,7 +2,7 @@ import Model from '../base/model';
 import { state } from '../base/internal';
 import serialized from '../../../util/serialized';
 import { computed } from '@ember/object';
-import { readOnly } from '@ember/object/computed';
+import { readOnly, deprecatingAlias } from '@ember/object/computed';
 import { invokePromiseReturningThis } from '../../../internal/invoke';
 
 const raw = () => computed('raw', function(key) {
@@ -23,9 +23,10 @@ const rawDate = key => computed('raw', function() {
 
 export default Model.extend({
 
-  reference: computed(function() {
-    return this._internal.ref.model(true);
-  }).readOnly(),
+  reference: deprecatingAlias('ref', {
+    id: 'ember-cli-zuglet-store-reference-metadata-ref',
+    until: '0.9.0'
+  }),
 
   raw: readOnly('_internal._metadata'),
 

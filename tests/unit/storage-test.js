@@ -324,7 +324,8 @@ module('storage', function(hooks) {
     let metadata = ref.get('metadata');
     assert.ok(metadata);
     assert.ok(metadata._internal);
-    assert.ok(metadata.get('reference') === ref);
+    assert.ok(metadata.get('reference') === ref); // deprecated
+    assert.ok(metadata.get('ref') === ref);
 
     assert.deepEqual(metadata.get('serialized'), {
       "error": null,
@@ -533,6 +534,11 @@ module('storage', function(hooks) {
     let image = this.storage.ref('images/image');
     let images = image.get('parent');
     assert.equal(images.get('fullPath'), 'images');
+  });
+
+  test('url has ref', async function(assert) {
+    let ref = this.storage.ref({ path: 'hello' });
+    assert.ok(ref.get('url.ref') === ref);
   });
 
   test('load url', async function(assert) {
