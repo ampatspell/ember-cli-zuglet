@@ -774,12 +774,44 @@ Useful for debugging.
 
 # Functions
 
-## region `→ String`
+Represents a Firebase Cloud functions region.
+
+``` javascript
+let functions = store.function();
+await functions.callable('hello-world').call({ });
+```
+
+## region `→ String | null`
+
+Returns a name of the region
+
 ## callable(name) `→ FunctionsCallable`
 
-# FunctionsCallable
+Creates a callable instance for name.
 
-## call(data) `→ Promise`
+``` javascript
+// firebase/functions/index.js
+'use strict';
+const functions = require('firebase-functions');
+
+exports.hello = functions.https.onCall((data, context) => {
+  let { name } = data;
+  return {
+    message: `Hello ${name}`
+  };
+});
+```
+
+``` javascript
+let callable = functions.callable('hello');
+let data = await callable.call({ name: 'duck' });
+// →
+// {
+//   result: {
+//     message: 'Hello duck'
+//   }
+// }
+```
 
 # FirestoreReference
 
