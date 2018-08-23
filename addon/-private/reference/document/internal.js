@@ -67,7 +67,7 @@ export default ReferenceInternal.extend({
     });
   },
 
-  loadInTransaction(transaction, opts) {
+  loadInTransaction(transaction, opts={}) {
     return this.get('store.queue').schedule({
       name: 'reference/document/load/transaction',
       invoke: () => {
