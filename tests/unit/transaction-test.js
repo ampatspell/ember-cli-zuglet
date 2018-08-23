@@ -96,4 +96,14 @@ module('transaction', function(hooks) {
     assert.equal(doc.get('exists'), false);
   });
 
+  test('load missing doc ref', async function(assert) {
+    try {
+      await this.store.transaction(async tx => {
+        await tx.load(this.store.doc('random/missing'));
+      });
+    } catch(err) {
+      assert.equal(err.code, 'zuglet/document-missing');
+    }
+  });
+
 });
