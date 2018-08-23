@@ -3,19 +3,3 @@ pos: 8
 ---
 
 # Functions
-
-``` javascript
-let hello = store.functions(region).callable('hello');
-let result = await hello.call({ name: 'zeeba' });
-```
-
-``` json
-{
-  "data": {
-    "message": "hello, zeeba!"
-  }
-}
-```
-
-* Functions
-* Callable

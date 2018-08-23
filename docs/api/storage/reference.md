@@ -1,5 +1,1 @@
 # Reference
-
-* Reference
-* Metadata
-* URL
