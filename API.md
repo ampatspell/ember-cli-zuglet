@@ -16,6 +16,21 @@ let stores = getOwner(this).lookup('zuglet:stores');
 
 A `Promise` which is resolved when all currently instantiated `Store` instances are ready to be used.
 
+``` javascript
+await store.ready;
+```
+
+``` javascript
+// app/routes/application.js
+import Route from '@ember/routing/route';
+
+export default Route.extend({
+  beforeModel() {
+    return this.store.ready;
+  }
+});
+```
+
 ## createStore(identifier, factory) `→ Store`
 
 Creates and registers a new `Store` instance.
@@ -25,16 +40,15 @@ Creates and registers a new `Store` instance.
 
 ``` javascript
 // app/instance-initializers/zuglet-store.js
-
 import Store from 'ember-cli-zuglet/store';
 
 const options = {
   firebase: {
-    apiKey,
-    authDomain,
-    databaseURL,
-    projectId,
-    storageBucket
+    // apiKey: '',
+    // authDomain: '',
+    // databaseURL: '',
+    // projectId: '',
+    // storageBucket: '',
   },
   firestore: {
     persistenceEnabled: true
@@ -76,6 +90,8 @@ Returns a promise which resolves when all currently running operations for all c
 import Store from 'ember-cli-zuglet/store';
 ```
 
+> TODO: see `Stores`
+
 ## identifier `→ String`
 
 Unique `Store` identifier which can be used to distinguish multiple stores.
@@ -95,9 +111,13 @@ A `Promise` which resolves when `Store` is ready to be used, meaning:
 
 Returns a store `Auth` singleton instance.
 
+It is responsible for user management. Sign-up, sign-in and getting current user.
+
 ## storage `→ Storage`
 
 Returns a store `Storage` singleton instance.
+
+It lets you upload files, lookup and modify file metadata, get file public URLs.
 
 ## functions(region) `→ Functions`
 
