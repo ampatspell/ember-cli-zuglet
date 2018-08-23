@@ -87,7 +87,7 @@ module('less-experimental-observed', function(hooks) {
     subject.get('observed');
     let instance = observerFor(subject, 'observed');
     assert.ok(instance);
-    assert.ok(instance.get('doc', doc));
+    assert.ok(instance.get('content', doc));
 
     run(() => subject.destroy());
   });

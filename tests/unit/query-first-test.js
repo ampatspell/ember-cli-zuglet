@@ -120,7 +120,7 @@ module('query-first', function(hooks) {
     let query = this.store.collection('ducks').orderBy('name').query({ type: 'first' });
 
     let observer = query.observe();
-    assert.ok(observer.get('query') === query);
+    assert.ok(observer.get('content') === query);
 
     assert.deepEqual(query.get('serialized'), {
       "type": "first",

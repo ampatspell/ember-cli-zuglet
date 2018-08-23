@@ -38,4 +38,14 @@ module('query-observers', function(hooks) {
     await observers.get('promise');
   });
 
+  test('observer content', async function(assert) {
+    let query = this.store.collection('ducks').query({ type: 'array' });
+    let observer = query.observe();
+
+    assert.ok(observer.get('query') === query); // deprecated
+    assert.ok(observer.get('content') === query);
+
+    observer.cancel();
+  });
+
 });
