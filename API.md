@@ -606,18 +606,11 @@ console.log(store.auth.user.serialized);
 
 # Observer
 
+## content `→ Document | Query`
 ## isCancelled `→ Boolean`
 ## promise `→ Promise`
 ## load() `→ Promise`
 ## cancel() `→ undefined`
-
-# DocumentObserver extends Observer
-
-## doc `→ Document`
-
-# QueryObserver extends Observer
-
-## query `→ Query`
 
 # DataObject
 
