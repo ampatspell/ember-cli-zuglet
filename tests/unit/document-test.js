@@ -238,7 +238,7 @@ module('document', function(hooks) {
     let doc = this.store.doc('ducks/yellow').new();
     let observer = doc.observe();
     assert.ok(observer);
-    assert.ok(observer.get('doc') === doc);
+    assert.ok(observer.get('content') === doc);
     assert.ok(observer.get('promise'));
     assert.equal(typeof observer.load, 'function');
     assert.equal(typeof observer.cancel, 'function');
@@ -406,7 +406,7 @@ module('document', function(hooks) {
 
     let observer = this.store.doc('ducks/yellow').observe();
 
-    let doc = observer.get('doc');
+    let doc = observer.get('content');
 
     assert.deepEqual(doc.get('serialized'), {
       "data": {},
@@ -456,7 +456,7 @@ module('document', function(hooks) {
 
     let observer = this.store.doc('ducks/yellow').observe();
 
-    let doc = observer.get('doc');
+    let doc = observer.get('content');
 
     assert.deepEqual(doc.get('serialized'), {
       "data": {},
