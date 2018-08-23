@@ -1,20 +1,14 @@
 import Observer from '../observer/observer';
 import { computed } from '@ember/object';
-import { deprecatingAlias } from '@ember/object/computed';
 
 export default Observer.extend({
 
-  content: computed(function() {
+  query: computed(function() {
     return this.get('_internal.query').model(true);
   }).readOnly(),
 
-  query: deprecatingAlias('content', {
-    id: 'ember-cli-zuglet-observer-query',
-    until: '0.9.0'
-  }),
-
   toStringExtension() {
-    return this.get('content.ref.string');
+    return this.get('query.ref.string');
   }
 
 });

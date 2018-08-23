@@ -79,14 +79,4 @@ module('document-observers', function(hooks) {
     await observers.get('promise');
   });
 
-  test('observer content', async function(assert) {
-    let doc = this.store.doc('ducks/yellow').existing();
-    let observer = doc.observe();
-
-    assert.ok(observer.get('doc') === doc); // deprecated
-    assert.ok(observer.get('content') === doc);
-
-    observer.cancel();
-  });
-
 });
