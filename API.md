@@ -787,7 +787,7 @@ Returns a name of the region
 
 ## callable(name) `→ FunctionsCallable`
 
-Creates a callable instance for name.
+Creates a callable instance for name which can be used to invoke `functions.https.onCall` callable Firebase Cloud Functions.
 
 ``` javascript
 // firebase/functions/index.js
