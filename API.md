@@ -153,7 +153,20 @@ let doc = store.doc('ducks/yellow').new({
 });
 ```
 
-## transaction(fn) `→ Promise`
+## transaction(fn) `→ Promise<Store>`
+
+Creates a transaction you can use to batch multiple reads and writes in a single atomic operation.
+
+``` javascript
+await store.transaction(async tx => {
+  let doc = await tx.load(store.doc('books/yellow'));
+  doc.incrementProperty('data.pages');
+  tx.save(doc);
+});
+```
+
+> TODO: see Transaction
+
 ## batch() `→ Batch`
 ## batch(fn) `→ Promise<Result>`
 ## settle() `→ Promise`
