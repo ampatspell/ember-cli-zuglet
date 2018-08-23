@@ -240,42 +240,180 @@ await store.settle();
 
 # Auth
 
+``` javascript
+let auth = store.auth;
+```
+
 ## methods `→ AuthMethods`
-## user `→ AuthUser|null`
+
+``` javascript
+let methods = store.auth.methods;
+methods.anonymous // → AuthAnonymousMethod
+```
+
+## user `→ AuthUser | null`
+
+Returns currently logged-in `AuthUser` instance or null of user is not logged in.
+
 ## signOut() `→ Promise`
+
+Signs out currently logged in user.
+
+``` javascript
+await store.auth.signOut();
+store.auth.user // → null
+```
 
 # AuthMethods
 
+Lists and gives access to all available auth methods.
+
+> Note: Currently only Email and Anonumous auth methods are implemented in ember-cli-zuglet
+
 ## available `→ Array<String>`
+
+Returns an array of auth method names.
+
+``` javascript
+let names = store.auth.methods.available;
+let methods = names.map(name => store.auth.methods[name]);
+```
+
 ## email `→ AuthEmailMethod`
+
+Sign-up and sign-in with email and password.
+
+> TODO: See AuthEmailMethod
+
 ## anonumous `→ AuthAnonymousMethod`
+
+Sign-in anonymously.
+
+> TODO: See AuthAnonymousMethod
 
 # AuthMethod
 
 ## type `→ string`
 
+Returns a type of auth method.
+
+``` javascript
+store.auth.methods.anonymous.type // → 'anonymous'
+```
+
 # AuthAnonymousMethod
 
-## signIn() `→ Promise<User>`
+Anonymous auth method lets you sign-in users without any personal details.
+
+Later on it's possible to link anonymous account with any other means of authentication.
+
+## signIn() `→ Promise<AuthUser>`
+
+Returns a `Promise` which resolves with signed-in anonymous `AuthUser`.
+
+At that point also `store.auth.user` is updated.
+
+``` javascript
+let user = await store.auth.methods.anonymous.signIn();
+store.auth.user === user // → true
+```
 
 # AuthEmailMethod
 
-## signIn(email, password) `→ Promise<User>`
-## signUp(email, password) `→ Promise<User>`
+Email method lets you sign-up and later sign-in users with email address and the password.
+
+## signUp(email, password) `→ Promise<AuthUser>`
+
+Signs-up the user with email and password.
+
+Returns a `Promise` which resolves with newly created `AuthUser` instance. At that point also `store.auth.user` is updated.
+
+``` javascript
+let user = await store.auth.methods.email.signUp('zeeba@gmail.com', 'hello-world');
+store.auth.user === user // → true
+```
+
+## signIn(email, password) `→ Promise<AuthUser>`
+
+Signs-in existing user with email and password.
+
+Returns a `Promise` which resolves with signed-in `AuthUser` instance. At that point also `store.auth.user` is updated.
+
+``` javascript
+let user = await store.auth.methods.email.signIn('zeeba@gmail.com', 'hello-world');
+store.auth.user === user // → true
+```
 
 # AuthUser
 
-## token(opts) `→ Promise<String|Object>`
+`AuthUser` represents currently signed-in user.
+
+## token({ type, refresh }) `→ Promise<String|Object>`
+
+Returns a `Promise` which is resolved with either encoded or decoded user token.
+
+Decoded user token might be useful to get custom user claims.
+
+* `type` → `String`: `string` or `json` (defaults to `string`)
+* `refresh` → Boolean (defaults to `false`)
+
 ## delete() `→ Promise`
+
+Returns a `Promise` which is resolved when user is deleted.
+
 ## uid `→ String`
+
+Returns user id
+
 ## isAnonymous `→ Boolean`
+
+Returns true if anonymous auth method was used to sign-in.
+
 ## displayName `→ String`
+
+Returns user's display name if available.
+
 ## email `→ String`
+
+Returns user's email if available.
+
 ## emailVerified `→ Boolean`
+
+Returns whether user has verified email.
+
 ## phoneNumber `→ String`
+
+Returns user's phone number if available.
+
 ## photoURL `→ String`
+
+Returns user's photoURL if available.
+
 ## providerId `→ String`
+
+Returns authentication provider id.
+
+If anonymous or email auth methods are used, this is `firebase`.
+
 ## serialized `→ Object`
+
+Returns json representation of most important user's properties.
+
+Useful for debugging.
+
+``` javascript
+console.log(store.auth.user.serialized);
+// {
+//   uid: '....',
+//   isAnonymous: true,
+//   displayName: null,
+//   email: null,
+//   emailVerified: false,
+//   phoneNumber: null,
+//   photoURL: null,
+//   providerId: 'firebase'
+// }
+```
 
 # Storage
 
