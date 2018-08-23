@@ -4,15 +4,71 @@
 import { register, initialize } from 'ember-cli-zuglet/initialize';
 ```
 
+> TODO: content
+
 # Stores
 
 ``` javascript
 let stores = getOwner(this).lookup('zuglet:stores');
 ```
 
-* `ready → Promise`
-* `createStore() → Store`
-* `settle() → Promise`
+## `ready → Promise`
+
+A `Promise` which is resolved when all currently instantiated `Store` instances are ready to be used.
+
+## `createStore(identifier, factory) → Store`
+
+Creates and registers a new `Store` instance.
+
+* `identifier`: store identifier
+* `factory`: `Store` subclass
+
+``` javascript
+// app/instance-initializers/zuglet-store.js
+
+import Store from 'ember-cli-zuglet/store';
+
+const options = {
+  firebase: {
+    apiKey,
+    authDomain,
+    databaseURL,
+    projectId,
+    storageBucket
+  },
+  firestore: {
+    persistenceEnabled: true
+  }
+};
+
+const MainStore = Store.extend({
+
+  options,
+
+  restoreUser(user) {
+  },
+
+  restore() {
+  }
+
+});
+
+export default {
+  name: 'store',
+  initialize(app) {
+    let store = app.lookup('zuglet:stores').createStore('main', MainStore);
+    app.register('service:store', store, { instantiate: false });
+  }
+}
+```
+
+> TODO: See Register & Initialize helpers for easier store setup.
+
+## `settle() → Promise`
+
+Returns a promise which resolves when all currently running operations for all currently registered stores are finished.
+
+> TODO: See `store.settle`
 
 # Store
 
@@ -20,23 +76,89 @@ let stores = getOwner(this).lookup('zuglet:stores');
 import Store from 'ember-cli-zuglet/store';
 ```
 
-* `identifier → String`
-* `ready → Promise<Store>`
-* `auth → Auth`
-* `storage → Storage`
-* `functions(region) → Functions`
-* `observed → Array<Document|Query>`
-* `collection(name) → CollectionReference`
-* `doc(path) → DocumentReference`
-* `object(arg) → DataObject`
-* `array(arg) → DataArray`
-* `serverTimestamp → DataServerTimestamp`
-* `transaction(fn) → Promise`
-* `batch() → Batch`
-* `batch(fn) → Promise<Result>`
-* `settle() → Promise`
-* `restore() → Promise (override)`
-* `restoreUser(user) → Promise (override)`
+## `identifier → String`
+
+Unique `Store` identifier which can be used to distinguish multiple stores.
+
+It is provided on `Store` creation and cannot be changed.
+
+## `ready → Promise<Store>`
+
+A `Promise` which resolves when `Store` is ready to be used, meaning:
+
+* Firestore is ready to be used (with or without local persistence)
+* `restoreUser()` has resolved
+* `Auth` user is restored
+* `restore()` has resolved
+
+## `auth → Auth`
+
+Returns a store `Auth` singleton instance.
+
+## `storage → Storage`
+
+Returns a store `Storage` singleton instance.
+
+## `functions(region) → Functions`
+
+Returns a store `Functions` singleton instance for a region.
+
+* `region` → `string` or `null` (defaults to `us-central1`)
+
+## `observed → Array<Document|Query>`
+
+Returns an observable `EmberArray` with `Document` and `Query` instances currently being observed (having `ref.onSnapshot` listeners).
+
+Useful for debugging purposes to make sure app is not leaking observers.
+
+> TODO: see `observed()`, `Observer`
+
+## `collection(name) → CollectionReference`
+
+Creates a `CollectionReference` with given name or path.
+
+* `name` → `String` name or path
+
+``` javascript
+store.collection('ducks');
+store.collection('blog/ducks/posts');
+```
+
+## `doc(path) → DocumentReference`
+
+Creates a `DocumentReference` with given path.
+
+* `path` → `String`
+
+``` javascript
+store.doc('blog/ducks');
+store.doc('blog/ducks/posts/first');
+```
+
+## `object(arg) → DataObject`
+
+> TODO: Currently private
+
+## `array(arg) → DataArray`
+
+> TODO: Currently private
+
+## `serverTimestamp() → DataTimestamp`
+
+Creates a `DataTimestamp` instance configured as a server timestamp which will instruct Firestore to provide a timestamp value in the server side.
+
+``` javascript
+let doc = store.doc('ducks/yellow').new({
+  createdAt: store.serverTimestamp()
+});
+```
+
+## `transaction(fn) → Promise`
+## `batch() → Batch`
+## `batch(fn) → Promise<Result>`
+## `settle() → Promise`
+## `restore() → Promise (override)`
+## `restoreUser(user) → Promise (override)`
 
 # Auth
 
@@ -290,7 +412,7 @@ import Store from 'ember-cli-zuglet/store';
 
 Wraps primitive types in Ember-observable ones and manages dirty tracking
 
-# DataServerTimestamp
+# DataTimestamp
 
 * `isTimestamp → true`
 * `isServerTimestamp → Boolean`
