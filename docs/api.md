@@ -1,7 +1,10 @@
 ---
 pos: 3
+title: API
 ---
 
-# API
+# API Documentation
 
-> TODO
+This section covers all the public API of ember-cli-zuglet.
+
+You migh want to start with the [Store](api/store).

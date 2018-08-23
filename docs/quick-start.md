@@ -1,5 +1,6 @@
 ---
 pos: 1
+hidden: true
 ---
 
 # Quick Start
