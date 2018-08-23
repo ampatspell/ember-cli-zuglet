@@ -168,10 +168,55 @@ await store.transaction(async tx => {
 > TODO: see Transaction
 
 ## batch() `→ Batch`
-## batch(fn) `→ Promise<Result>`
+
+Creates a `Batch` operation to perform multiple writes in one single atomic operation.
+
+``` javascript
+let batch = store.batch();
+batch.save(duck);
+batch.save(feathers);
+await batch.commit();
+```
+
+## batch(callback) `→ Promise<Result>`
+
+* `callback` → `Function`
+
+Creates a `Batch` operation to perform multiple writes in one single atomic operation. It is commited when the `Promise` returned from `callback` resolves.
+
+``` javascript
+await store.batch(async batch => {
+  batch.save(duck);
+  batch.save(feathers);
+});
+```
+
 ## settle() `→ Promise`
-## restore() `→ Promise (override)`
-## restoreUser(user) `→ Promise (override)`
+
+Returns a promise which resolves when all currently running operations finishes.
+
+Operations may include:
+
+* Document read, write
+* Query load
+* Auth operations (like sign-in)
+* Cloud Function calls
+* Storage operations (upload tasks, metadata lodads)
+
+``` javascript
+let duck = store.doc('duck/yellow').new({ name: 'yellow' });
+duck.save();
+await store.settle();
+// duck.isNew → false
+```
+
+## `abstact` restore() `→ Promise`
+
+> TODO: restore. Check the flow
+
+## `abstract` restoreUser(user) `→ Promise`
+
+> TODO: restoreUser. Check the flow
 
 # Auth
 
