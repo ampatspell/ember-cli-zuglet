@@ -839,22 +839,181 @@ let data = await callable.call({ name: 'duck' });
 # FirestoreReference
 
 ## isReference `→ true`
+
+Always `true` for all Firestore references.
+
 ## id `→ String`
+
+`id` of the document or collection.
+
+``` javascript
+let ref = store.doc('ducks/yellow');
+ref.id // → 'yellow'
+```
+
+``` javascript
+let ref = store.collection('ducks/yellow/feathers');
+ref.id // → 'feathers'
+```
+
 ## path `→ String`
+
+Full document or collection `path`
+
+``` javascript
+let ref = store.doc('ducks/yellow');
+ref.path // → 'ducks/yellow'
+```
+
 ## parent `→ DocumentReference|CollectionReference|QueryReference`
+
+Returns parent Document, Collection, Query reference or null.
+
+``` javascript
+let ref = store.doc('ducks/yellow');
+ref.parent // → collection reference for 'ducks'
+```
+
 ## isEqual(other) `→ Boolean`
+
+Returns true if references are pointing to the same document or collection.
+
 ## serialized `→ Array<Object>`
+
+Returns json representation of reference components.
+
+Useful for debugging.
+
+``` javascript
+let ref = store.collection('ducks/yellow/feathers').where('color', '==', 'white');
+ref.serialized
+// →
+// [
+//   { type: 'collection', id: 'ducks' },
+//   { type: 'document', id: 'yellow' },
+//   { type: 'collection', id: 'feathers' },
+//   { type: 'query', id: 'where', args: [ 'color' , '==', 'white' ] }
+// ]
+```
+
 ## string `→ String`
+
+Returns human readable string representation of reference components
+
+Useful for debugging.
+
+``` javascript
+let ref = store.collection('ducks/yellow/feathers').where('color', '==', 'white');
+ref.string
+// → ducks/yellow/feathers.where(color, ==, white)
+```
 
 # DocumentReference extends FirestoreReference
 
 ## collection(name) `→ CollectionReference`
+
+Creates and returns a nested collection reference.
+
+``` javascript
+let ref = store.doc('ducks/yellow');
+ref.collection('feathers'); // → collection reference for 'ducks/yellow/feathers'
+```
+
 ## doc(path) `→ DocumentReference`
-## load(opts) `→ Promise<Document>`
-## delete() `→ Promise<This>`
+
+Creates and returns nested document reference.
+
+If `path` contains even number of components, document id is generated.
+
+``` javascript
+let ref = store.doc('ducks/yellow');
+ref.doc('feathers/white'); // → collection reference for 'ducks/yellow/feathers/white'
+```
+
+``` javascript
+let ref = store.doc('ducks/yellow');
+ref.doc('feathers'); // → collection reference for 'ducks/yellow/feathers/Xtg4HEQ1KNfOHrHmfRPL'
+```
+
+## load({ source, optional }) `→ Promise<Document>`
+
+* `source` → Boolean: 'server' or 'cache' (defaults to `server`)
+* `optional` → Boolean (defaults to `false`)
+
+Returns a `Promise` which resolves with a loaded `Document`.
+
+If `optional` is `true` and document does not exist, Document with `{ exists: false }` is returned.
+
+If `source` is `cache`, cached document is returned, if document is not in the cache, up-to-date document is returned from the server.
+
+``` javascript
+let ref = store.doc('ducks/yellow');
+let doc = await ref.load({ source: 'cache', optional: true });
+doc.exists // → true
+doc.isLoaded // → true
+doc.data // → document contents
+```
+
+## delete() `→ Promise<DocumentReference>`
+
+Deletes a document.
+
+``` javascript
+let ref = store.doc('ducks/yellow');
+await ref.delete();
+```
+
 ## new(object) `→ Document`
+
+* `object` → Object: document data properties
+
+Creates a new `Document` instance which is not yet saved in the Firestore.
+
+`Document` initially has `{ isNew: false }`.
+
+``` javascript
+let ref = store.doc('ducks/yellow');
+let doc = ref.new({ name: 'Yellow Duck' });
+doc.isNew // → true
+doc.isDirty // → false
+doc.isLoaded // → false
+doc.data.serialized // → { name: 'Yellow Duck' }
+await doc.save();
+```
+
 ## existing() `→ Document`
+
+Creates a `Document` instance which is expected to exist.
+
+`Document` initially has `{ isNew: false }`.
+
+``` javascript
+let ref = store.doc('ducks/yellow');
+let doc = ref.existing();
+doc.isNew // → false
+doc.isDirty // → false
+doc.isLoaded // → false
+await doc.load();
+```
+
 ## observe() `→ DocumentObserver`
+
+Shorthand for:
+
+``` javascript
+let ref = store.doc('ducks/yellow');
+let doc = ref.existing();
+let observer = doc.observe();
+```
+
+> TODO: See Document.observe
+
+``` javascript
+let ref = store.doc('ducks/yellow');
+let observer = ref.observe();
+observer.content // → Document instance
+observer.cancel(); // stop observing this Document
+```
 
 # CollectionReference extends FirestoreReference, QueryableReferenceMixin
 
