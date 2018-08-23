@@ -46,4 +46,22 @@
       }
     }
   }
+
+  @include breakpoint(non-desktop) {
+    > .title {
+      font-size: 15px;
+      > .index {
+        > .version {
+          font-size: 13px;
+        }
+      }
+    }
+    .item {
+      $size: 15px;
+      font-size: $size;
+      line-height: $size * 1.5;
+      font-weight: 400;
+    }
+  }
+
 }
