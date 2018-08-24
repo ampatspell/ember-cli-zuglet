@@ -74,7 +74,7 @@ module('query-first', function(hooks) {
     run(() => query.destroy());
   });
 
-  test.only('query reload', async function(assert) {
+  test('query reload', async function(assert) {
     await this.recreate();
     await all([
       this.coll.doc('yellow').set({ name: 'yellow' }),
