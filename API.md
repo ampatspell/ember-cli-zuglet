@@ -1934,7 +1934,7 @@ await store.transaction(async tx => {
 
 # Models
 
-Standalone helpers for creating `model:${name}` instances.
+Standalone helpers to register and lookup `model:${name}` factories as well as to create model instances.
 
 ``` javascript
 let models = store.models;
