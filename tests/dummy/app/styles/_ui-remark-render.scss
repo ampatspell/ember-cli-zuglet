@@ -15,14 +15,20 @@
   h2 {
     font-weight: 400;
     font-size: 18px;
-    margin: 40px 0 0px 0;
+    margin: 80px 0 0px 0;
     @include header-code();
+  }
+  h1 + h2 {
+    margin-top: 40px;
   }
   h3 {
     font-weight: 400;
     font-size: 17px;
-    margin: 40px 0 0px 0;
+    margin: 80px 0 0px 0;
     @include header-code();
+  }
+  h2 + h3 {
+    margin-top: 40px;
   }
   blockquote {
     margin: 0;

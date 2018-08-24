@@ -239,7 +239,7 @@ doc.serialized
 // }
 ```
 
-**You can also use `doc.data.serialized`:**
+You can also use `doc.data.serialized`:
 
 ``` javascript
 let doc = await store.doc('ducks/yellow').load();

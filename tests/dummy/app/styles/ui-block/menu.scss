@@ -19,6 +19,7 @@
       }
     }
   }
+
   .item {
     $size: 12px;
     font-size: $size;
@@ -35,15 +36,10 @@
       }
     }
   }
+
   > .items {
     .items {
-      padding-left: 10px;
-    }
-    > .item {
-      margin-top: 10px;
-      &:first-child {
-        margin-top: 0;
-      }
+      padding-left: 15px;
     }
   }
 
