@@ -211,7 +211,7 @@ module('references', function(hooks) {
     assert.equal(doc.get('id'), 'first');
     assert.equal(doc.get('parent.id'), 'orders');
     assert.equal(doc.get('parent.parent.id'), 'yellow');
-    assert.equal(doc.get('parent.parent.parent.id'), 'duck');
+    assert.equal(doc.get('parent.parent.parent.id'), 'ducks');
   });
 
 });
