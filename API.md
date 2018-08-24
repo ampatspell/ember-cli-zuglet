@@ -404,7 +404,7 @@ Useful for debugging.
 ``` javascript
 console.log(store.auth.user.serialized);
 // {
-//   uid: '....',
+//   uid: '…',
 //   isAnonymous: true,
 //   displayName: null,
 //   email: null,
@@ -689,7 +689,7 @@ Represents a stateful public url for a single file.
 ``` javascript
 let url = storage.ref('hello').url;
 await url.load();
-url.value // → https://....
+url.value // → https://…
 ```
 
 ## ref `→ StorageReference`
@@ -1071,7 +1071,7 @@ If `type` is `first` query sets `limit` to 1.
 ``` javascript
 let query = store.collection('ducks').query();
 await query.load();
-query.content // → [ Document, ... ]
+query.content // → [ Document, … ]
 ```
 
 ``` javascript
@@ -1095,7 +1095,7 @@ If `source` is `cache`, cached documents are returned, if query results are not 
 ``` javascript
 let ref = store.collection('ducks');
 let array = await ref.load({ source: 'cache' });
-// → [ Document, ... ]
+// → [ Document, … ]
 ```
 
 ## first({ source, optional }) `→ Promise<Document>`
@@ -1507,7 +1507,7 @@ If `force` is `false` and query is already loaded, it is not reloaded. On the ot
 let query = store.collection('ducks').query();
 await query.load(); // → loads
 await query.load({ force: true }); // → reloads
-query.content // → [ Document, ... ]
+query.content // → [ Document, … ]
 ```
 
 ## observe() `→ Observer`
@@ -1578,6 +1578,8 @@ query.serialized
 
 Observer wraps an observation subject (document or query), means of getting initial (cached) content and cancellation.
 
+**Note:** Make sure you cancel all observers when they are not needed anymore.
+
 ## isCancelled `→ Boolean`
 
 Returns `true` if this observer is cancelled. It doesn't mean that the subject is not being observed by other observer(s).
@@ -1592,6 +1594,16 @@ Returns a `Promise` which resolves on **first** `onSnapshot` invocation. Which m
 
 For UI performance reasons it is best practice to observe documents and queries and present them when this promise resolves.
 
+``` javascript
+let doc = store.doc('ducks/yellow').existing();
+let observer = doc.observe();
+await observer.promise;
+doc.isLoaded // → true
+doc.metadata // → { fromCache: true, … }
+```
+
+> TODO: see observed()
+
 ## load() `→ Promise`
 
 Function alias for `promise` property.
@@ -1600,9 +1612,41 @@ Function alias for `promise` property.
 
 Cancels this observer.
 
-# Observers extends Array
+# Observers `extends Array`
+
+An array of currently running observers for a Docuemnt or Query
+
+``` javascript
+let doc = store.doc('ducks/yellow').existing();
+doc.observers // → [ ]
+
+let observer = doc.observe();
+doc.observers // → [ observer ]
+
+observer.cancel();
+doc.observers // → [ ]
+```
 
 ## promise `→ Promise`
+
+Returns a `Promise` which, depending on whether current number of observers are:
+
+* zero → does nothing, resolves immediately
+* one or more → resolves on first Document or Query snapshot (cached)
+
+``` javascript
+let doc = store.doc('ducks/yellow').existing();
+let observer = doc.observe();
+
+await doc.observers.promise;
+
+doc.isLoaded // → true
+doc.metadata // → { fromCache: true, … }
+
+observer.cancel();
+```
+
+> TODO: See observed()
 
 # DataObject
 
