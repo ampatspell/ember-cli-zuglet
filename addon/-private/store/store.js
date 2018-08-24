@@ -11,6 +11,10 @@ export default EmberObject.extend(ModelMixin, {
     return this.get('_internal.ready').then(() => this);
   }).readOnly(),
 
+  models: computed(function() {
+    return this.get('_internal.models').model(true);
+  }).readOnly(),
+
   auth: computed(function() {
     return this.get('_internal.auth').model(true);
   }).readOnly(),

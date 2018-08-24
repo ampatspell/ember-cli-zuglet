@@ -159,6 +159,10 @@ export default Internal.extend({
 
   //
 
+  models: computed(function() {
+    return this.factoryFor('zuglet:models/internal').create({ store: this });
+  }).readOnly(),
+
   auth: computed(function() {
     return this.factoryFor('zuglet:auth/internal').create({ store: this });
   }).readOnly(),
