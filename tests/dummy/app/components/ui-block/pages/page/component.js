@@ -7,14 +7,15 @@ export default Component.extend({
   classNameBindings: [ ':ui-block-pages-page' ],
   layout,
 
+  scrollToContent: false,
+
   didInsertElement() {
     this._super(...arguments);
-    this.scrollToContent();
+    this._scrollToContent();
   },
 
-  scrollToContent: observer('page', function() {
-    let page = this.get('page');
-    if(page && page.get('id').startsWith('index')) {
+  _scrollToContent: observer('page', function() {
+    if(!this.get('scrollToContent')) {
       return;
     }
     let { top } = $(this.element).offset();
