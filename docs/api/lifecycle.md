@@ -1,6 +1,6 @@
 ---
 title: Lifecycle
-pos: 4
+pos: 5
 ---
 
 # Lifecycle Management
@@ -16,4 +16,40 @@ import {
   observerFor,
   resolveObservers
 } from 'ember-cli-zuglet/less-experimental';
+```
+
+```
+## Observed
+
+* also `resolveObservers`
+
+### observed()
+
+### owner(...args)
+### content(arg)
+
+## Route
+
+### route()
+### inline(...args)
+### named(arg)
+### mapping(arg)
+
+## Model
+
+### model()
+### owner(...args)
+### inline(...args)
+### named(arg)
+### mapping(arg)
+
+## Models
+
+### models(arg)
+### source(arg)
+### owner(...args)
+### object(...args)
+### inline(...args)
+### named(arg)
+### mapping(arg)
 ```
