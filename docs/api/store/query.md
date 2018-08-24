@@ -1,127 +1,145 @@
 ---
-pos: 4
+pos: 2
 ---
 
 # Query
 
-Creates a long lived query instance which can be loaded, reloaded and observed.
+## isQuery `→ true`
 
-Type can be:
+Always returns `true` for Query instances.
 
-* `array`
-* `first`
+## ref `→ CollectionReference|QueryReference`
 
-``` javascript
-let query = store.collection('ducks').query({ type: 'array' });
-await query.load();
-```
+Returns collection or query reference associated with this query.
 
-``` javascript
-let query = store.collection('ducks').query({ type: 'array' });
-let { cancel, promise } = query.observe();
+## type `→ String`
 
-// wait for 1st snapshot
-await promise;
-
-// stop observing onSnapshot changes
-cancel();
-
-// or just destroy query
-query.destroy();
-```
-
+Type of this query, either `array` or `first`.
 
 ## isArray `→ Boolean`
 
-return true if type is array
+Alias for `type === 'array'`
 
 ## isFirst `→ Boolean`
 
-return true if type is first
+Alias for `type === 'first'`
 
+## Query state
 
-## state
+* `isLoading`
+* `isLoaded`
+* `isObserving`
+* `isError`
+* `error`
 
-* isLoading
-* isLoaded
-* isError
-* error
+## size `→ Number|undefined`
 
-``` javascript
-query.get('isLoading'); // → Bolean
+Returns number of documents fetched by this query.
+
+## empty `→ Boolean|undefined`
+
+`True` if query yielded zero results.
+
+## metadata `→ Object|undefined`
+
+Query metadata.
+
+``` javascript
+let query = store.collection('ducks').query();
+await query.load();
+query.metadata
+// →
+// {
+//   fromCache: false,
+//   hasPendingWrites: false
+// }
+```
+
+## content `→ Array<Document>|Docuemnt`
+
+Query result or results, depending on the `type`:
+
+* `array` → array of `Document` instances
+* `first` → `Document` or null
+
+## load({ source, force }) `→ Promise<Query>`
+
+Loads a query.
+
+* `source` → `Boolean`: 'server' or 'cache' (defaults to `server`)
+* `force` → `Boolean`: (defaults to `false`)
+
+If `source` is `cache`, cached documents are returned, if query is not in the cache, up-to-date response is returned from the server.
+
+If `force` is `false` and query is already loaded, it is not reloaded. On the other hand, if `force` is `true`, query is always reloaded.
+
+``` javascript
+let query = store.collection('ducks').query();
+await query.load(); // → loads
+await query.load({ force: true }); // → reloads
+query.content // → [ Document, … ]
+```
+
+## observe() `→ Observer`
+
+Creates a new query observer and immediately starts observing query for changes which includes added, removed and updated documents.
+
+``` javascript
+let query = store.collection('ducks').query();
+let observer = query.observe();
+
+await observer.load();
+
+query.isLoaded // → true
+observer.cancel();
+```
+
+While there may be multiple Observer instances for each query, Query always has up to one actual `ref.onSnapshot` observer.
+
+It is more efficient to observe query instead of observing each separate document.
+
+**Note:** Make sure you cancel all unnecessary observers.
+
+> TODO: See `observed()`
+
+## observers `→ Observers`
+
+Returns array of Observers currently observing this query.
+
+``` javascript
+let query = store.collection('ducks').query();
+let observer = query.observe();
+
+let observers = query.observers; // → [ observer ]
+await observers.promise;
+
+query.isLoaded // → true
+observer.cancel();
 ```
 
 ## serialized `→ Object`
 
-Serializes query state and meta as a single object. For debugging.
+Returns json representation of query most important properties.
+
+Useful for debugging.
 
 ``` javascript
-let json = query.get('serialized');
+let query = store.collection('ducks').query();
+await query.load();
+query.serialized
+// →
+// {
+//   isLoading: false,
+//   isLoaded: true,
+//   isObserving: false,
+//   isError: false,
+//   error: null,
+//   type: 'array',
+//   size: 42,
+//   empty: false,
+//   metadata: {
+//     fromCache: false,
+//     hasPendingWrites: false
+//   }
+// }
 ```
-
-``` json
-{
-  "isLoading": false,
-  "isLoaded": true,
-  "isObserving": true,
-  "isError": false,
-  "error": null,
-  "type": "array",
-  "empty": false,
-  "size": 4,
-  "metadata": {
-    "fromCache": false,
-    "hasPendingWrites": false
-  }
-}
-```
-
-
-## ref `→ QueryReference | CollectionReference`
-
-reference with which this query was created.
-
-
-## size `→ Number`
-
-latest `onSnapshot` size property.
-
-
-## metadata `→ Object`
-
-latest `onSnapshot` metadata
-
-
-## observe() `→ QueryObserver`
-
-Starts observing query onSnapshot changes. Returns query observer.
-
-``` javascript
-let query = await store.collection('ducks').query({ type: 'array' });
-let observer = query.observe();
-
-// get query which is being observerd by this observer
-let query = observer.query;
-
-// wait for 1st snapshot (may come from local cache)
-await observer.promise;
-
-// returns the same promise
-await observer.load();
-
-// to stop observing
-observer.cancel();
-
-// or just destroy query or observer
-query.destroy();
-observer.destroy();
-```
-
-## load({ source }) `→ Query`
-
-Loads a query.
-
-Source:
-
-* `server` → always loaded from the server
-* `cache` → loaded from the cache if possible

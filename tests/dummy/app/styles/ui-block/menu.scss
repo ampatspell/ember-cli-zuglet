@@ -1,11 +1,12 @@
 .ui-block-menu {
   > .title {
     margin-bottom: 20px;
+    font-size: 13px;
     > .index {
       font-weight: 600;
       text-decoration: none;
       > .version {
-        font-size: 13px;
+        font-size: 11px;
         padding-left: 5px;
         &:before {
           content: 'v';
@@ -18,8 +19,12 @@
       }
     }
   }
+
   .item {
-    line-height: 15px * 1.5;
+    $size: 12px;
+    font-size: $size;
+    line-height: $size * 1.5;
+    font-weight: 500;
     > a {
       display: block;
       white-space: nowrap;
@@ -31,15 +36,28 @@
       }
     }
   }
+
   > .items {
     .items {
-      padding-left: 10px;
-    }
-    > .item {
-      margin-top: 10px;
-      &:first-child {
-        margin-top: 0;
-      }
+      padding-left: 15px;
     }
   }
+
+  @include breakpoint(non-desktop) {
+    > .title {
+      font-size: 15px;
+      > .index {
+        > .version {
+          font-size: 13px;
+        }
+      }
+    }
+    .item {
+      $size: 15px;
+      font-size: $size;
+      line-height: $size * 1.5;
+      font-weight: 400;
+    }
+  }
+
 }

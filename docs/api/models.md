@@ -1,39 +1,63 @@
 ---
-title: Models
-pos: 10
+pos: 6
 ---
 
-# (Less) Experimental Models
+# Models
 
-> Documentation is provided for 2nd iteration located in `less-experimental` module. If all goes well, this will be moved to `models`.
-
-Addon contains tools which allows you to easily create models that manages lifecycle of document and query observers in the scope of routes and components.
+Standalone helpers to register and lookup `model:${name}` factories as well as to create model instances.
 
 ``` javascript
-import observed, { observerFor, resolveObservers } from 'ember-cli-zuglet/less-experimental/observed';
+let models = store.models;
 ```
 
+## registerFactory(name, factory) `→ undefined`
+
+Registers a `factory` as `model:${name}` in Ember container.
+
+* `name` → `String`
+* `factory` → `EmberObject class`
+
 ``` javascript
-import route from 'ember-cli-zuglet/less-experimental/route';
+models.registerFactory('duck', EmberObject.extend({ ... }));
+let model = models.create('duck', { name: 'yellow' });
+// → <foof@model:duck::ember1142>
 ```
 
+## hasFactoryFor(name) `→ Boolean`
+
+Returns `true` if `model:${name}` is registered.
+
+* `name` → `String`
+
+## factoryFor(name, { optional }) `→ Factory`
+
+Returns a `model:${name}` factory.
+
+* `name` → `String`
+* `optional` → `Boolean` (defaults to `false`)
+
+If factory is not registered and optional is:
+
+* `true` → returns undefined
+* `false` → throws an assertation `Error`
+
 ``` javascript
-import models from 'ember-cli-zuglet/less-experimental/models';
+let factory = models.FactoryFor('duck');
+let model = factory.create{ name: 'yellow' });
+// → <foof@model:duck::ember1142>
 ```
 
-``` javascript
-import model from 'ember-cli-zuglet/less-experimental/model';
-```
+## create(name, props) `→ Instance`
 
-or
+Creates an instance.
+
+* `name` → `String`
+* `props` → `Object`
+
+Throws an assertation `Error` if factory is not registered.
 
 ``` javascript
-import {
-  route,
-  model,
-  models,
-  observed,
-  observerFor,
-  resolveObservers
-} from 'ember-cli-zuglet/less-experimental';
+let factory = models.factoryFor('duck');
+let model = factory.create{ name: 'yellow' });
+// → <foof@model:duck::ember1142>
 ```

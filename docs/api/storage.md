@@ -1,27 +1,31 @@
 ---
-pos: 7
+pos: 3
 ---
 
 # Storage
 
+`Storage` lets you upload files, load and update file metadata and get file public URLs.
+
 ``` javascript
-let storage = this.get('store.storage');
-let ref = storage.ref('images').child('first');
-
-let task = ref.put({
-  type: 'data',
-  data: file,
-  metadata: {
-    contentType: file.type,
-    customMetadata: { filename: file.name }
-  }
-});
-
-await task.get('promise');
+let storage = store.storage;
 ```
 
+## tasks `→ Array<StorageTask>`
+
+Returns an observable array of currently running file upload `StorageTask` instances.
+
+## ref(arg) `→ StorageReference`
+
+Creates a `StorageReference` you can use to upload a file and/or get file metadata or public URL.
+
+* `arg` → `String` or `Object`
+
+If argument is `String`, it is converted to `{ path: arg }`.
+
+Either `path` or `url` is required.
+
 ``` javascript
-await ref.metadata.load({ optional: true }) // loads metatada
-await ref.url.load({ optional: true }) // gets download url
-await ref.load({ url: true, metadata: true, optional: true }); // does 2 identical requests
+storage.ref('pictures/duck');
+storage.ref({ path: 'pictures/duck' })
+storage.ref({ url: 'gs://foo/bar' })
 ```

@@ -8,6 +8,9 @@ export default Service.extend({
     if(!id) {
       return;
     }
+    if(id.startsWith('api')) {
+      return `model:docs/page/api`;
+    }
     return 'model:docs/page';
   }
 

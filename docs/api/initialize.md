@@ -1,6 +1,9 @@
 ---
-pos: 1
+title: Initialize
+pos: 0
 ---
+
+# Register & Initialize
 
 ``` javascript
 import { register, initialize } from 'ember-cli-zuglet/initialize';
@@ -8,7 +11,7 @@ import { register, initialize } from 'ember-cli-zuglet/initialize';
 
 Instance initializer helper to register zuglet store(s) in application container. See `Store` documentation for manual registration using `zuglet:stores` singleton.
 
-# Configuration
+## Configuration
 
 `register` and `initialize` takes the same configuration which:
 
@@ -38,7 +41,7 @@ Instance initializer helper to register zuglet store(s) in application container
 }
 ```
 
-# Initialize
+## Initialize
 
 ``` javascript
 // app/instance-initializers/app-store.js
@@ -56,7 +59,7 @@ export default {
 }
 ```
 
-# Register
+## Register
 
 Use `register` to register multiple stores in a single `instance-initializer`.
 

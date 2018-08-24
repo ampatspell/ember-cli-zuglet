@@ -1,7 +1,7 @@
 .ui-block-master-detail {
 
   @include breakpoint(post-tablet) {
-    $w: 250px;
+    $w: 200px;
     > .master {
       position: fixed;
       top: 0;

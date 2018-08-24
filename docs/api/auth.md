@@ -1,23 +1,29 @@
 ---
-pos: 6
+pos: 2
 ---
 
 # Auth
 
-``` javascript
-let auth = this.get('store.auth');
+``` javascript
+let auth = store.auth;
+```
 
-// current user
-let user = auth.get('user');
+## methods `→ AuthMethods`
 
-// sign up with email
-await auth.get('methods.email').signUp(email, password);
+``` javascript
+let methods = store.auth.methods;
+methods.anonymous // → AuthAnonymousMethod
+```
 
-// sign in with email
-await auth.get('methods.email').signIn(email, password);
+## user `→ AuthUser | null`
 
-// sign in anonymously
-await auth.get('methods.anonymous').signIn();
+Returns currently logged-in `AuthUser` instance or null of user is not logged in.
 
-auth.signOut();
+## signOut() `→ Promise`
+
+Signs out currently logged in user.
+
+``` javascript
+await store.auth.signOut();
+store.auth.user // → null
 ```
