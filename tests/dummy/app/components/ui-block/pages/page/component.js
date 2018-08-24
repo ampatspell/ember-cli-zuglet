@@ -13,6 +13,10 @@ export default Component.extend({
   },
 
   scrollToContent: observer('page', function() {
+    let page = this.get('page');
+    if(page && page.get('id').startsWith('index')) {
+      return;
+    }
     let { top } = $(this.element).offset();
     window.scrollTo(0, top - 30);
   })
