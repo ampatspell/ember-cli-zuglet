@@ -62,3 +62,5 @@ export default EmberObject.extend({
 
 });
 ```
+
+> TODO: `resolveObservers`
