@@ -1574,17 +1574,35 @@ query.serialized
 // }
 ```
 
+# Observer
+
+Observer wraps an observation subject (document or query), means of getting initial (cached) content and cancellation.
+
+## isCancelled `→ Boolean`
+
+Returns `true` if this observer is cancelled. It doesn't mean that the subject is not being observed by other observer(s).
+
+## content `→ Document | Query`
+
+Observation subject.
+
+## promise `→ Promise`
+
+Returns a `Promise` which resolves on **first** `onSnapshot` invocation. Which means it may resolve with cached data if possible.
+
+For UI performance reasons it is best practice to observe documents and queries and present them when this promise resolves.
+
+## load() `→ Promise`
+
+Function alias for `promise` property.
+
+## cancel() `→ undefined`
+
+Cancels this observer.
+
 # Observers extends Array
 
 ## promise `→ Promise`
-
-# Observer
-
-## content `→ Document | Query`
-## isCancelled `→ Boolean`
-## promise `→ Promise`
-## load() `→ Promise`
-## cancel() `→ undefined`
 
 # DataObject
 
