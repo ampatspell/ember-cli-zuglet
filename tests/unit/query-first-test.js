@@ -74,6 +74,23 @@ module('query-first', function(hooks) {
     run(() => query.destroy());
   });
 
+  test.only('query reload', async function(assert) {
+    await this.recreate();
+    await all([
+      this.coll.doc('yellow').set({ name: 'yellow' }),
+    ]);
+
+    let query = this.store.collection('ducks').query({ type: 'first' });
+
+    await query.load();
+    assert.equal(query.get('content.data.name'), 'yellow');
+
+    await this.coll.doc('yellow').set({ name: 'Yellow' });
+
+    await query.reload();
+    assert.equal(query.get('content.data.name'), 'Yellow');
+  });
+
   test('mutations', async function(assert) {
     await this.recreate();
     // await all([
