@@ -30,6 +30,13 @@ module('functions', function(hooks) {
     assert.ok(callable);
   });
 
+  test.only('callable has name and functions', async function(assert) {
+    let functions = this.store.functions();
+    let callable = await functions.callable('callable_success');
+    assert.equal(callable.get('name'), 'callable_success');
+    assert.ok(callable.get('functions') === functions);
+  });
+
   test('call', async function(assert) {
     let callable = await this.store.functions().callable('callable_success');
     let result = await callable.call({ ok: true });
