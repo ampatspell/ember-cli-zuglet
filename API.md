@@ -1863,7 +1863,7 @@ Commits a transaction. Useful only if batch is created without callback.
 let doc = store.doc('ducks/yellow').existing();
 let batch = store.batch();
 batch.delete(doc);
-batch.commit();
+await batch.commit();
 ```
 
 # Transaction
