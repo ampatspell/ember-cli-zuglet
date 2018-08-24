@@ -1389,7 +1389,7 @@ Returns json representation of document state as well as preview of data
 
 Useful for debugging.
 
-``` javascript
+``` javascript
 let doc = await store.doc('ducks/yellow').load();
 doc.serialized
 // →
@@ -1504,7 +1504,10 @@ Wraps primitive types in Ember-observable ones and manages dirty tracking
 
 ## Observed
 
+* also `resolveObservers`
+
 ### observed()
+
 ### owner(...args)
 ### content(arg)
 
