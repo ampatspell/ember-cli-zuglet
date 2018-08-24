@@ -1,6 +1,7 @@
 import Internal from '../internal/internal';
 import { computed } from '@ember/object';
 import { readOnly } from '@ember/object/computed';
+import { assign } from '@ember/polyfills';
 import { resolve, reject } from 'rsvp';
 import setChangedProperties from '../util/set-changed-properties';
 import queue from '../queue/computed';
@@ -106,6 +107,10 @@ export default Internal.extend({
       didResolve: snapshot => this.didLoad(snapshot),
       didReject: err => this.loadDidFail(err)
     });
+  },
+
+  reload(opts={}) {
+    return this.load(assign({ force: true }, opts));
   },
 
   //

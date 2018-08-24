@@ -28,6 +28,7 @@ export default EmberObject.extend(ModelMixin, StateMixin, MetaMixin, {
   serialized: serialized([ ...state, ...meta ]),
 
   load: invokePromiseReturningThis('load'),
+  reload: invokePromiseReturningThis('reload'),
 
   observe: invokeReturningModel('observe'),
   observers: observers(),
