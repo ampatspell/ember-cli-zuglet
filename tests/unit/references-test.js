@@ -189,4 +189,29 @@ module('references', function(hooks) {
     }
   });
 
+  test('parents for nested collection doc references', function(assert) {
+    let doc = this.store.collection('ducks').doc('yellow/feathers/white');
+    assert.equal(doc.get('id'), 'white');
+    assert.equal(doc.get('parent.id'), 'feathers');
+    assert.equal(doc.get('parent.parent.id'), 'yellow');
+    assert.equal(doc.get('parent.parent.parent.id'), 'ducks');
+  });
+
+  test('parent for doc nested collection references', function(assert) {
+    let doc = this.store.doc('ducks/yellow').collection('orders/first/products');
+    assert.equal(doc.get('id'), 'products');
+    assert.equal(doc.get('parent.id'), 'first');
+    assert.equal(doc.get('parent.parent.id'), 'orders');
+    assert.equal(doc.get('parent.parent.parent.id'), 'yellow');
+    assert.equal(doc.get('parent.parent.parent.parent.id'), 'ducks');
+  });
+
+  test('parent for doc nested doc references', function(assert) {
+    let doc = this.store.doc('ducks/yellow').doc('orders/first');
+    assert.equal(doc.get('id'), 'first');
+    assert.equal(doc.get('parent.id'), 'orders');
+    assert.equal(doc.get('parent.parent.id'), 'yellow');
+    assert.equal(doc.get('parent.parent.parent.id'), 'ducks');
+  });
+
 });
