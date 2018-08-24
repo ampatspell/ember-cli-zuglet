@@ -9,6 +9,19 @@ import queue from '../queue/computed';
 import settle from '../util/settle';
 import destroyCached from '../util/destroy-cached';
 import instantiateFirebase from '../firebase/instantiate';
+import { isFirestoreDocumentReference, isFirestoreCollectionReference } from '../util/firestore-types';
+
+const splitReference = (ref, parentRef) => {
+  let refs = [];
+  while(ref) {
+    if(ref instanceof parentRef.constructor && parentRef.isEqual(ref)) {
+      return refs.reverse();
+    } else {
+      refs.push(ref);
+    }
+    ref = ref.parent;
+  }
+}
 
 export default Internal.extend({
 
@@ -72,12 +85,41 @@ export default Internal.extend({
     return this.factory.create({ _internal: this });
   },
 
-  createInternalDocumentReferenceForReference(ref, _parent) {
+  _createInternalReferenceForNestedReference(ref, internal) {
+    assert(`ref is required`, !!ref);
+    assert(`parent is required`, !!internal);
+    let refs = splitReference(ref, internal.ref);
+    assert(`ref parent must be ${internal}`, !!refs);
+    return refs.reduce((parent, ref) => {
+      if(isFirestoreDocumentReference(ref)) {
+        return this._createInternalDocumentReferenceForReference(ref, parent);
+      } else if(isFirestoreCollectionReference(ref)) {
+        return this._createInternalCollectionReferenceForReference(ref, parent);
+      }
+      assert(`ref must be a document or collection reference`, false);
+    }, internal);
+  },
+
+  _createInternalDocumentReferenceForReference(ref, _parent) {
     return this.factoryFor('zuglet:reference/document/internal').create({ store: this, ref, _parent });
   },
 
-  createInternalCollectionReferenceForReference(ref, _parent) {
+  createInternalDocumentReferenceForReference(ref, parent) {
+    if(parent) {
+      return this._createInternalReferenceForNestedReference(ref, parent);
+    }
+    return this._createInternalDocumentReferenceForReference(ref);
+  },
+
+  _createInternalCollectionReferenceForReference(ref, _parent) {
     return this.factoryFor('zuglet:reference/collection/internal').create({ store: this, ref, _parent });
+  },
+
+  createInternalCollectionReferenceForReference(ref, parent) {
+    if(parent) {
+      return this._createInternalReferenceForNestedReference(ref, parent);
+    }
+    return this._createInternalCollectionReferenceForReference(ref);
   },
 
   createInternalQueryReferenceForReference(ref, _parent, info) {
