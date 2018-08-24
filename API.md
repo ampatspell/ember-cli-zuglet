@@ -1932,6 +1932,31 @@ await store.transaction(async tx => {
 });
 ```
 
+# Models
+
+Standalone helpers for creating `model:${name}` instances.
+
+``` javascript
+let models = store.models;
+```
+
+## registerFactory(name, factory) `→ undefined`
+
+Registers a `factory` as `model:${name}` in Ember container.
+
+* `name` → `String`
+* `factory` → `EmberObject class`
+
+``` javascript
+models.registerFactory('duck', EmberObject.extend({ ... }));
+let model = models.create('duck', { name: 'yellow' });
+// →
+```
+
+## hasFactoryFor(name) `→ Boolean`
+## factoryFor(name, { optional }) `→ Factory`
+## create(name, props) `→ Instance`
+
 # Less-Experimental
 
 ## Observed
