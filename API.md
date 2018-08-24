@@ -1857,7 +1857,7 @@ await store.batch(async batch => {
 
 ## commit() `→ Promise`
 
-Commits a transaction. Useful only if batch is created without callback.
+Commits a batch. Useful only if batch is created without callback.
 
 ``` javascript
 let doc = store.doc('ducks/yellow').existing();
@@ -1868,9 +1868,69 @@ await batch.commit();
 
 # Transaction
 
-## load(docOrRef, opts) `→ Promise<Document>`
+Transaction performs multiple reads and writes in a single atomic operation.
+
+``` javascript
+await store.transaction(async tx => {
+  let doc = await tx.load(store.doc('books/yellow'));
+  doc.incrementProperty('data.pages');
+  tx.save(doc);
+});
+```
+
+> TODO: See store.transaction
+
+## load(arg, opts) `→ Promise<Document>`
+
+Loads a document or document reference.
+
+* `arg` → `Docuemnt` or `DocumentReference`
+
+``` javascript
+await store.transaction(async tx => {
+  let ref = store.doc('books/yellow');
+  let doc = await tx.load(ref);
+});
+```
+
+``` javascript
+await store.transaction(async tx => {
+  let doc = store.doc('books/yellow').existing();
+  await tx.load(doc); // → result === doc
+});
+```
+
+> TODO: see doc.load and ref.load
+
 ## save(doc, opts) `→ undefined`
-## delete(doc) `→ undefined`
+
+Enqueues a document save which is performed when transaction commits.
+
+* `doc` → `Docuemnt`
+* `opts` → `Object`
+
+``` javascript
+await store.transaction(async tx => {
+  let doc = await tx.load(store.doc('books/yellow'));
+  doc.incrementProperty('data.pages');
+  tx.save(doc);
+});
+```
+
+> TODO: see doc.save
+
+## delete(arg) `→ undefined`
+
+Enqueues a document delete which is performed when transaction commits.
+
+* `arg` → `Document` or `DocumentReference`
+
+``` javascript
+await store.transaction(async tx => {
+  let doc = await tx.load(store.doc('books/yellow'));
+  tx.delete(doc);
+});
+```
 
 # Less-Experimental
 
