@@ -20,7 +20,7 @@ export default Internal.extend({
 
   createModel() {
     let content = this.runtime(true).content;
-    return getOwner(this.parent).factoryFor('zuglet:less-experimental/models').create({ _internal: this, content });
+    return getOwner(this.parent).factoryFor('zuglet:lifecycle/models').create({ _internal: this, content });
   },
 
   willDestroy() {

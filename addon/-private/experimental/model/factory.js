@@ -1,6 +1,6 @@
 import { typeOf } from '@ember/utils';
 import { assert } from '@ember/debug';
-import { modelClassForName, createModelClassFromProperties } from '../../less-experimental/util/model-factory';
+import { modelClassForName, createModelClassFromProperties } from '../../lifecycle/util/model-factory';
 
 const resolveObject = (parent, key, arg) => {
   let factory = createModelClassFromProperties(parent, key, arg, []);

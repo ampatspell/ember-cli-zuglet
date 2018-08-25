@@ -7,7 +7,7 @@ const set = (internal, value) => internal.setObservable(value);
 
 const factoryName = opts => {
   let { type } = opts;
-  return `zuglet:less-experimental/observed/${type}/internal`;
+  return `zuglet:lifecycle/observed/${type}/internal`;
 }
 
 const create = opts => {
