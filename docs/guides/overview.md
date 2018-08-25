@@ -1,9 +1,9 @@
 ---
 pos: 0
-title: About
+title: Overview
 ---
 
-# About ember-cli-zuglet
+# Overview
 
 This section describes the general idea behind `ember-cli-zuglet` concepts and how they fit together enabling you to quickly and easily build apps where you are in total control of Firestore Database structure as well as the structure of app itself.
 
@@ -25,7 +25,7 @@ In general, store subclass is reponsible for:
 * Optionally handling Ember.js app restore by loading any initially required Firestore documents
 * Optionally handling Firebase Auth state changes and loading any per-user required documents
 
-> **See:** [Getting Started Guide](guides/getting-started) on how to install and configure `ember-cli-zuglet`.
+> **See:** [Install Guide](guides/install) on how to install and configure `ember-cli-zuglet`.
 
 Throughout this guide I'll assume zuglet is configured to be a `store` service and has all the basic setup defaults which includes `window.store` reference accessible from web browser's console (in development environment).
 
@@ -190,16 +190,128 @@ But to manually create and cancel observers like we did in the previous section 
 
 So, to make it easy to observe documents and queries, zuglet has an integrated lifecycle management which provides tools to create and automatically destroy models and `observed` computed property which automatically start and stop document and query observation.
 
+Just to recap, Ember.js has a concept of routes, they are responsible for mapping URLs to pages in the app. In addition to that, they provide `model()` hook which can be used to load any data necessary prior presenting the page to the person viewing it.
+
+Zuglet extends `model()` hook by providing an easy way to create a model class for each route, create a model instance when the route is accessed and to destroy model when app transitions out of the route.
+
+Let's take a basic example of ubiquitous route structure where we have a page which lists all quotes and separate page where we show only one quote:
+
+``` javascript
+// app/router.js
+Router.map(function() {
+
+  this.route('quotes', function() {
+    this.route('quote', { path: ':quote_id' }, function() {
+    });
+  });
+
+});
+```
+
+Let's begin with `quotes.index` which will load all quotes:
+
+``` javascript
+// app/routes/quotes/index.js
+import { route, observed } from 'ember-cli-zuglet/less-experimental';
+
+export default Route.extend({
+
+  // create an inline (generated) model class for this route
+  // instantiated when app transitions into this route
+  // destroyed when app transitions out which also stops `observed` property to observe query
+  model: route().inline({
+
+    // observes whatever is set. in this case -- quotes query
+    quotes: observed(),
+
+    // called in route's `model()` hook
+    prepare() {
+      let quotes = this.store.collection('quotes').query();
+      this.setProperties({ quotes });
+
+      // resolves on either cached or server response
+      return quotes.observers.promise;
+    }
+
+  })
+
+});
+```
+
+And `quotes.quote` which will load just a single quote:
+
+``` javascript
+// app/routes/quotes/quote.js
+import { route, observed } from 'ember-cli-zuglet/less-experimental';
+
+export default Route.extend({
+
+  model: route().inline({
+
+    quote: observed(),
+
+    prepare(route, { quote_id }) {
+      let quote = this.store.collection('quotes').doc(quote_id).existing();
+      this.setProperties({ quote });
+      return quote.observers.promise;
+    }
+
+  })
+
+});
+```
+
+Similarly there is `model` computed-property for defining models in components which are destroyed on component destroy.
+
+``` javascript
+import { model, observed } from 'ember-cli-zuglet/less-experimental';
+
+export default Component.extend({
+
+  id: null,
+
+  quote: model().owner('id').inline({
+
+    doc: observed(),
+
+    body: readOnly('doc.data.body'),
+    author: readOnly('doc.data.author'),
+
+    prepare(owner) {
+      let { id } = owner;
+      let doc = this.store.doc(`quotes/${id}`).existing();
+      this.setProperties({ doc });
+    }
+  })
+
+});
+```
+
+``` html
+<div class="body">{{quote.body}}</div>
+<div class="author">– {{quote.author}}</div>
+```
+
+> **Note:** for `ember-cli-zuglet@1.0` `less-experimental` module will be named `lifecycle`.
+
+> **Note:** Documentation for `lifecycle` here and in API docs are coming soon. See API for more examples.
+
 > **See:** [Lifecycle](api/lifecycle) API documentation for more information
 
 ## Auth service
+
+> **Note:** Section comming soon
 
 > **See:** [Auth](api/auth) API documentation
 
 ## Storage service
 
+> **Note:** Section comming soon
+
 > **See:** [Storage](api/storage) API documentation
 
 ## Functions service
+
+> **Note:** Section comming soon
 
 > **See:** [Functions](api/functions) API documentation

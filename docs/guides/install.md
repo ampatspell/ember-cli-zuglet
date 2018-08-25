@@ -2,7 +2,13 @@
 pos: 1
 ---
 
-# Getting Started
+# Install guide
+
+> **Coming soon.**
+
+``` bash
+ember install ember-cli-zuglet
+```
 
 ```
 Outline
@@ -13,7 +19,4 @@ Outline
 * remove ember-data / rename service
 * provide firebase config
 * window.store
-* save a doc
-* sign in
-* upload a file
 ```
