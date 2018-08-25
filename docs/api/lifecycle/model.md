@@ -3,7 +3,7 @@ pos: 3
 ---
 
 ``` javascript
-import { model } from 'ember-cli-zuglet/less-experimental';
+import { model } from 'ember-cli-zuglet/lifecycle';
 ```
 
 # Model

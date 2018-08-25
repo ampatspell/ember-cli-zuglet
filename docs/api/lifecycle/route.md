@@ -3,7 +3,7 @@ pos: 2
 ---
 
 ``` javascript
-import { route } from 'ember-cli-zuglet/less-experimental';
+import { route } from 'ember-cli-zuglet/lifecycle';
 ```
 
 # Route

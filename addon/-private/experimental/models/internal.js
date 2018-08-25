@@ -4,7 +4,7 @@ import { typeOf } from '@ember/utils';
 import Internal from '../../internal/internal';
 import { instances, destroyInstances } from './computed/instances';
 import models from './computed/models';
-import { modelClassForName, createModelClassFromProperties } from '../../less-experimental/util/model-factory';
+import { modelClassForName, createModelClassFromProperties } from '../../lifecycle/util/model-factory';
 import { assert } from '@ember/debug';
 
 export default Internal.extend({

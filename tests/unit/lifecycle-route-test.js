@@ -1,7 +1,7 @@
 import EmberObject from '@ember/object';
 import { module, test, setupStoreTest } from '../helpers/setup';
 import { getOwner } from '@ember/application';
-import { route } from 'ember-cli-zuglet/less-experimental';
+import { route } from 'ember-cli-zuglet/lifecycle';
 import { run } from '@ember/runloop';
 import { resolve } from 'rsvp';
 
@@ -30,7 +30,7 @@ const Route = EmberObject.extend({
 
 });
 
-module('less-experimental-route', function(hooks) {
+module('lifecycle-route', function(hooks) {
   setupStoreTest(hooks);
 
   hooks.beforeEach(async function() {

@@ -1,3 +1,3 @@
-import model from '../-private/less-experimental/model';
+import './-deprecate';
 
-export default model;
+export { default } from '../lifecycle/model';

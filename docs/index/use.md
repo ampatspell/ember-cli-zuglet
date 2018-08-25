@@ -132,14 +132,14 @@ let user = await email.signIn(props.email, props.password);
 
 Lets you call Firebase Cloud Functions.
 
-## Models
+## Models and Lifecycle Management
 
 Use models in routes and components to encapsulate documents and queries with lifecycle management for change observation.
 
 Models can optionally be declared inline (like in the following example).
 
 ``` javascript
-import { observed, route } from 'ember-cli-zuglet/less-experimental';
+import { observed, route } from 'ember-cli-zuglet/lifecycle';
 
 export default Route.extend({
 

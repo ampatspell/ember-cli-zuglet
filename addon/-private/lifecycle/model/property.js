@@ -7,7 +7,7 @@ const reusable = () => true;
 const create = opts => function(key) {
   let parent = this;
   let owner = getOwner(this);
-  return owner.factoryFor('zuglet:less-experimental/model/internal').create({ parent, key, opts });
+  return owner.factoryFor('zuglet:lifecycle/model/internal').create({ parent, key, opts });
 }
 
 export default opts => {

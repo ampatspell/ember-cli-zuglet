@@ -21,7 +21,7 @@ const willDestroy = function() {
 
 const create = (route, params, opts) => {
   let owner = getOwner(route);
-  return owner.factoryFor('zuglet:less-experimental/route/internal').create({ route, params, opts });
+  return owner.factoryFor('zuglet:lifecycle/route/internal').create({ route, params, opts });
 }
 
 export default opts => {

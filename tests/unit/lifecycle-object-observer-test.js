@@ -1,9 +1,9 @@
 import EmberObject from '@ember/object';
 import { module, test, setupStoreTest } from '../helpers/setup';
-import ObjectObserver from 'ember-cli-zuglet/-private/less-experimental/util/object-observer';
+import ObjectObserver from 'ember-cli-zuglet/-private/lifecycle/util/object-observer';
 import { A } from '@ember/array';
 
-module('less-experimental-object-observer', function(hooks) {
+module('lifecycle-object-observer', function(hooks) {
   setupStoreTest(hooks);
 
   hooks.beforeEach(async function(assert) {
