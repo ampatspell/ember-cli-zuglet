@@ -136,6 +136,40 @@ Lets you call Firebase Cloud Functions.
 
 Use models in routes and components to encapsulate documents and queries with lifecycle management for change observation.
 
+Models can optionally be declared inline (like in the following example).
+
+``` javascript
+import { observed, route } from 'ember-cli-zuglet/less-experimental';
+
+export default Route.extend({
+
+  // creates inline model which is instantiated on route access,
+  // destroyed when app transitions out from this route
+  model: route().inline({
+
+    // observe whatver is set to (document or query)
+    post: observed(),
+
+    title: readOnly('post.data.title'),
+    body:  readOnly('post.data.body'),
+
+    prepare(route, { post_id }) {
+      // create a document
+      let ref = this.store.collection('posts').doc(post_id);
+      let post = ref.existing();
+
+      // set it to `observed` so that it starts observing this document
+      this.setProperties({ post });
+
+      // wait for cached or server response
+      return post.observers.promise;
+    }
+
+  })
+
+});
+```
+
 ## FastBoot
 
 Supports server-side rendering with FastBoot
