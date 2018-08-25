@@ -11,6 +11,9 @@ export default Service.extend({
     if(id.startsWith('api')) {
       return `model:docs/page/api`;
     }
+    if(id.startsWith('guides')) {
+      return `model:docs/page/guide`;
+    }
     return 'model:docs/page';
   }
 
