@@ -212,7 +212,7 @@ Let's begin with `quotes.index` which will load all quotes:
 
 ``` javascript
 // app/routes/quotes/index.js
-import { route, observed } from 'ember-cli-zuglet/less-experimental';
+import { route, observed } from 'ember-cli-zuglet/lifecycle';
 
 export default Route.extend({
 
@@ -242,7 +242,7 @@ And `quotes.quote` which will load just a single quote:
 
 ``` javascript
 // app/routes/quotes/quote.js
-import { route, observed } from 'ember-cli-zuglet/less-experimental';
+import { route, observed } from 'ember-cli-zuglet/lifecycle';
 
 export default Route.extend({
 
@@ -264,7 +264,7 @@ export default Route.extend({
 Similarly there is `model` computed-property for defining models in components which are destroyed on component destroy.
 
 ``` javascript
-import { model, observed } from 'ember-cli-zuglet/less-experimental';
+import { model, observed } from 'ember-cli-zuglet/lifecycle';
 
 export default Component.extend({
 
@@ -291,8 +291,6 @@ export default Component.extend({
 <div class="body">{{quote.body}}</div>
 <div class="author">– {{quote.author}}</div>
 ```
-
-> **Note:** for `ember-cli-zuglet@1.0` `less-experimental` module will be named `lifecycle`.
 
 > **Note:** Documentation for `lifecycle` here and in API docs are coming soon. See API for more examples.
 

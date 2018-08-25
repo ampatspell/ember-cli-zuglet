@@ -15,7 +15,7 @@ import {
   observed,
   observerFor,
   resolveObservers
-} from 'ember-cli-zuglet/less-experimental';
+} from 'ember-cli-zuglet/lifecycle';
 ```
 
 ```

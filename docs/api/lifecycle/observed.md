@@ -3,7 +3,7 @@ pos: 0
 ---
 
 ``` javascript
-import { observed, observerFor } from 'ember-cli-zuglet/less-experimental';
+import { observed, observerFor } from 'ember-cli-zuglet/lifecycle';
 ```
 
 # Observed
@@ -16,7 +16,7 @@ import { observed, observerFor } from 'ember-cli-zuglet/less-experimental';
 // app/models/doc.js
 
 import EmberObject from '@ember/object';
-import { observed } from 'ember-cli-zuglet/less-experimental';
+import { observed } from 'ember-cli-zuglet/lifecycle';
 
 export default EmberObject.extend({
 
@@ -46,7 +46,7 @@ Read only, resolved
 // app/models/doc.js
 
 import EmberObject from '@ember/object';
-import { observed } from 'ember-cli-zuglet/less-experimental';
+import { observed } from 'ember-cli-zuglet/lifecycle';
 
 export default EmberObject.extend({
 
