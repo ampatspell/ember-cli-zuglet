@@ -1,3 +1,3 @@
-import route from '../-private/less-experimental/route';
+export * from '../lifecycle/observed';
 
-export default route;
+export { default } from '../lifecycle/route';

@@ -1,10 +1,5 @@
-import observed from '../-private/less-experimental/observed';
-import observerFor from '../-private/less-experimental/observed/observer-for';
-import resolveObservers from '../-private/less-experimental/observed/resolve-observers';
+import './-deprecate';
 
-export {
-  observerFor,
-  resolveObservers
-}
+export * from '../lifecycle/observed';
 
-export default observed;
+export { default } from '../lifecycle/observed';

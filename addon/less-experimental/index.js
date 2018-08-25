@@ -1,13 +1,3 @@
-import models from './models';
-import model from './model';
-import route from './route';
-import observed, { observerFor, resolveObservers } from './observed';
+import './-deprecate';
 
-export {
-  models,
-  model,
-  route,
-  observed,
-  observerFor,
-  resolveObservers
-}
+export * from '../lifecycle';
