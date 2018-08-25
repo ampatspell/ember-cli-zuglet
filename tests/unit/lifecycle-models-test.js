@@ -1,14 +1,14 @@
 import EmberObject from '@ember/object';
 import { module, test, setupStoreTest } from '../helpers/setup';
 import { getOwner } from '@ember/application';
-import { models } from 'ember-cli-zuglet/less-experimental';
+import { models } from 'ember-cli-zuglet/lifecycle';
 import { A } from '@ember/array';
 import { run } from '@ember/runloop';
 
 const Owner = EmberObject.extend({
 });
 
-module('less-experimental-models', function(hooks) {
+module('lifecycle-models', function(hooks) {
   setupStoreTest(hooks);
 
   hooks.beforeEach(async function() {
