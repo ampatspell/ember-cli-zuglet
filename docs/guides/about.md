@@ -5,24 +5,51 @@ title: About
 
 # About ember-cli-zuglet
 
-This section describes the general idea behind zuglet concepts and how they fit together to be able to easily build apps.
+This section describes the general idea behind `ember-cli-zuglet` concepts and how they fit together enabling you to quickly and easily build apps where you are in total control of Firestore Database structure as well as the structure of app itself.
 
-## Firestore
+It is an Ember.js-native way of working with Google Firebase services: Firestore, Storage, Auth and Functions.
 
-```
-Outline
-* Firestore
-  * Store (restore, restoreUser)
-  * Firestore documents and queries
-  * Observation
-  * Lifecycle tools
+## Store
+
+The central concept in zuglet is the `Store`.
+
+It represents a single Firebase application and gives you access to all of the services. In most cases you'll have one `store` but, if necessary, you can have as many as needed.
+
+When you install the addon by using `ember install ember-cli-zuglet` command, it creates a `store` service bases on `app/store.js` subclass.
+
+> **Note:** If you're planning on using zuglet along with ember-data, make sure you rename zuglet `store` to something else so that the name of the service doesn't clash with ember-data's `store`.
+
+In general, store subclass is reponsible for:
+
+* Providing a Firebase app configuration
+* Optionally handling Ember.js app restore by loading any initially required Firestore documents
+* Optionally handling Firebase Auth state changes and loading any per-user required documents
+
+See [Getting Started Guide](guides/getting-started) on how to install and configure `ember-cli-zuglet`.
+
+Throughout this guide I'll assume zuglet is configured to be a `store` service and has all the basic setup defaults which includes `window.store` reference accessible from web browser's console (in development environment).
+
+If you're following along with an Ember.js app with the zuglet installed and configured for your Firebase project, try typing `store` in browser's console:
+
+``` bash
+> store+''
+<dummy@zuglet:store/store::ember913>
 ```
 
-## Other Firebase Services
+## Firestore documents and queries
 
-```
-Outline
-* Auth
-* Storage
-* Functions
-```
+Firebase apps mostly deal with Firestore documents.
+
+They can be explicitly loaded or they can be observed for changes.
+
+## Document and query observation
+
+## Application lifecycle management
+
+Overall lifecycle management makes it easy to observe and automatically stop observing documents and queries when it is not needed anymore.
+
+## Auth service
+
+## Storage service
+
+## Functions service
