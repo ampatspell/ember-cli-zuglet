@@ -103,12 +103,12 @@ import ComputedModelInternal from 'ember-cli-zuglet/-private/experimental/model/
 import ComputedModelsInternal from 'ember-cli-zuglet/-private/experimental/models/internal';
 import ComputedModels from 'ember-cli-zuglet/-private/experimental/models/models';
 
-import LessExperimentalModelsInternal from 'ember-cli-zuglet/-private/less-experimental/models/internal';
-import LessExperimentalModels from 'ember-cli-zuglet/-private/less-experimental/models/models';
-import LessExperimentalModelInternal from 'ember-cli-zuglet/-private/less-experimental/model/internal';
-import LessExperimentalRouteInternal from 'ember-cli-zuglet/-private/less-experimental/route/internal';
-import LessExperimentalObservedDynamicInternal from 'ember-cli-zuglet/-private/less-experimental/observed/internal/dynamic';
-import LessExperimentalObservedWritableInternal from 'ember-cli-zuglet/-private/less-experimental/observed/internal/writable';
+import LifecycleModelsInternal from 'ember-cli-zuglet/-private/lifecycle/models/internal';
+import LifecycleModels from 'ember-cli-zuglet/-private/lifecycle/models/models';
+import LifecycleModelInternal from 'ember-cli-zuglet/-private/lifecycle/model/internal';
+import LifecycleRouteInternal from 'ember-cli-zuglet/-private/lifecycle/route/internal';
+import LifecycleObservedDynamicInternal from 'ember-cli-zuglet/-private/lifecycle/observed/internal/dynamic';
+import LifecycleObservedWritableInternal from 'ember-cli-zuglet/-private/lifecycle/observed/internal/writable';
 
 export default {
   name: 'zuglet:internal',
@@ -252,21 +252,20 @@ export default {
     container.register('zuglet:observer/query', ObserverQuery);
     container.register('zuglet:observer/query/internal', ObserverQueryInternal);
 
-    //
-
-    // experimental
+    // experimental (deprecated)
 
     container.register('zuglet:computed/observed/internal', ComputedObservedInternal);
     container.register('zuglet:computed/model/internal', ComputedModelInternal);
     container.register('zuglet:computed/models/internal', ComputedModelsInternal);
     container.register('zuglet:computed/models', ComputedModels);
 
-    // less-experimental
-    container.register('zuglet:less-experimental/model/internal', LessExperimentalModelInternal);
-    container.register('zuglet:less-experimental/models/internal', LessExperimentalModelsInternal);
-    container.register('zuglet:less-experimental/models', LessExperimentalModels);
-    container.register('zuglet:less-experimental/route/internal', LessExperimentalRouteInternal);
-    container.register('zuglet:less-experimental/observed/writable/internal', LessExperimentalObservedWritableInternal);
-    container.register('zuglet:less-experimental/observed/dynamic/internal', LessExperimentalObservedDynamicInternal);
+    // lifecycle
+
+    container.register('zuglet:lifecycle/model/internal', LifecycleModelInternal);
+    container.register('zuglet:lifecycle/models/internal', LifecycleModelsInternal);
+    container.register('zuglet:lifecycle/models', LifecycleModels);
+    container.register('zuglet:lifecycle/route/internal', LifecycleRouteInternal);
+    container.register('zuglet:lifecycle/observed/writable/internal', LifecycleObservedWritableInternal);
+    container.register('zuglet:lifecycle/observed/dynamic/internal', LifecycleObservedDynamicInternal);
   }
 }
