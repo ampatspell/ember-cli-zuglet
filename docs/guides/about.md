@@ -190,8 +190,16 @@ But to manually create and cancel observers like we did in the previous section 
 
 So, to make it easy to observe documents and queries, zuglet has an integrated lifecycle management which provides tools to create and automatically destroy models and `observed` computed property which automatically start and stop document and query observation.
 
+> **See:** [Lifecycle](api/lifecycle) API documentation for more information
+
 ## Auth service
+
+> **See:** [Auth](api/auth) API documentation
 
 ## Storage service
 
+> **See:** [Storage](api/storage) API documentation
+
 ## Functions service
+
+> **See:** [Functions](api/functions) API documentation
