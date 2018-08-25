@@ -1,6 +1,6 @@
 import Component from '@ember/component';
 import layout from './template';
-import { model, observed } from 'ember-cli-zuglet/less-experimental';
+import { model, observed } from 'ember-cli-zuglet/lifecycle';
 
 const isKindaValidPath = path => {
   if(!path) {

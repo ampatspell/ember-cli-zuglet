@@ -1,5 +1,5 @@
 import Route from '@ember/routing/route';
-import { route, observed, resolveObservers } from 'ember-cli-zuglet/less-experimental';
+import { route, observed, resolveObservers } from 'ember-cli-zuglet/lifecycle';
 import { reject } from 'rsvp';
 
 export default Route.extend({
