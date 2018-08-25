@@ -26,5 +26,6 @@ package.json.ember-try
 
 /firebase/functions/node_modules
 /firebase/public
+/firebase/.firebase
 
 /ember-cli-remark-static-debug
