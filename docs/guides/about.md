@@ -89,7 +89,7 @@ let ref = store.doc('quotes/springtime'); // → <dummy@zuglet:reference/documen
 // load a single document
 let doc = await ref.load(); // → <dummy@zuglet:document::ember1303:quotes/springtime>
 
-// check out data document data properties
+// check out document data properties
 doc.data.getProperties('author', 'body');
 // →
 // {
@@ -122,7 +122,7 @@ query.content.length // → 1
 // get first loaded document
 let doc = query.content.firstObject; // → <dummy@zuglet:document::ember1131:quotes/springtime>
 
-// check out data document data properties
+// check out document data properties
 doc.data.getProperties('author', 'body');
 // →
 // {
@@ -135,9 +135,60 @@ doc.data.getProperties('author', 'body');
 
 ## Document and query observation
 
+While explicit load and query does it's job, you won't be notified when documents change in the database.
+
+To do that we will use **Observer**.
+
+> **Note:** In most cases you won't need to use observers directly as we will see in the next section, but it might be useful to know how this works under the hood.
+
+Let's just observe the same document we already have:
+
+``` javascript
+// create a document based for 'quotes/springtime' document reference
+let doc = store.doc('quotes/springtime').existing(); // → <dummy@zuglet:document::ember1509:quotes/springtime>
+
+doc.isLoaded // → false
+
+// create an document observer
+let observer = doc.observe(); // → <dummy@zuglet:observer/document::ember1510:quotes/springtime>
+
+doc.isLoaded // → true
+
+// check out document data properties
+doc.data.getProperties('author', 'body', 'isFavorite');
+// →
+// {
+//   author: "Kurt Vonnegut",
+//   body: "To whom it may concern: It is springtime. It is late afternoon.",
+//   isFaviorite: undefined
+// }
+
+// at this point, go ahead and modify this document in Firestore Console
+
+// and check out document data properties again
+doc.data.getProperties('author', 'body', 'isFavorite');
+// →
+// {
+//   author: "Kurt Vonnegut",
+//   body: "To whom it may concern: It is springtime. It is late afternoon.",
+//   isFaviorite: true
+// }
+
+// stop observing document
+observer.cancel();
+```
+
+Query observers work the same way. They observe document order changes, additions, removals and individual document modifications.
+
+> **See:** [Observer](api/store/observer), [Document](api/store/document) and [Query](api/store/query) API documentation for more info.
+
 ## Application lifecycle management
 
-Overall lifecycle management makes it easy to observe and automatically stop observing documents and queries when it is not needed anymore.
+In general sense it's best to observe documents and queries instead of explicity loading them as it greatly improves application performance and overall user experience.
+
+But to manually create and cancel observers like we did in the previous section is way too much work and quite error prone. It is important to stop observing documents and queries when observation is not needed otherwise observers will pile up and saturate the network bandwidth and the app performance will suffer. It is recommended to have at most around 5 observers at any given time (altrough I haven't seen any real issues with slightly more).
+
+So, to make it easy to observe documents and queries, zuglet has an integrated lifecycle management which provides tools to create and automatically destroy models and `observed` computed property which automatically start and stop document and query observation.
 
 ## Auth service
 
