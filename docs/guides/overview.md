@@ -50,12 +50,45 @@ export default Store.extend({
 
 > **Note:** If you're planning on using zuglet along with ember-data, make sure you rename zuglet `store` to something else so that the name of the service doesn't clash with ember-data's `store`.
 
+## References
+
+As you may now, Firestore stores data in Documents which are stored in Collections. Also Documents can have nested Collections.
+
+`ember-cli-zuglet` has a concept of Reference, the same way Firebase Firestore SDK has. There are three Reference types: Document, Collection, Query.
+
+References are just a location information, they don't represent actual data stored in the database.
+
+``` javascript
+store.collection('ducks').doc();                         // ducks/7glmDmR9ah4SlOXxtrLa (generated id)
+store.collection('ducks').doc('yellow');                 // ducks/yellow
+store.doc('ducks/yellow');                               // ducks/yellow
+```
+
+``` javascript
+store.collection('ducks');                               // ducks
+store.collection('ducks').where('name', '==', 'yellow'); // ducks query
+```
+
+Then you use references to create, load and save documents as well as create queries.
+
 ## Refrences & Documents, Queries
 
-While developing appa you mostly deal with the Documents and Queries.
+This is how you save a Document with id 'yellow' in the `ducks` collection:
 
-To load, or create a document you need a thing called Reference, which essentialy is a glorified id.
+``` javascript
+let ref = store.doc('ducks/yellow');
+let doc = ref.new({ name: 'Yellow' });
+await doc.save();
+```
+
+And query all the ducks:
+
+``` javascript
+let ref = store.collection('ducks');
+let query = ref.query();
+await query.load();
+```
 
 ## Observation
 
-what's so special about Firestore is that the service also allows you to observe Documents and Queries to be notified near real-time about changes. This lets you build sophisticated collaboration apps with ease and `ember-cli-zuglet` makes it easy to do so in Ember.js.
+What's so special about Firestore is that the service also allows you to observe Documents and Queries to be notified near real-time about changes. This lets you build sophisticated collaboration apps with ease and `ember-cli-zuglet` makes it easy to do so in Ember.js.
