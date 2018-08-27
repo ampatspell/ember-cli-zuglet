@@ -50,6 +50,8 @@ export default Store.extend({
 
 > **Note:** If you're planning on using zuglet along with ember-data, make sure you rename zuglet `store` to something else so that the name of the service doesn't clash with ember-data's `store`.
 
+See [Install Guide](guides/install) to get started.
+
 ## References
 
 As you may now, Firestore stores data in Documents which are stored in Collections. Also Documents can have nested Collections.
@@ -71,7 +73,7 @@ store.collection('ducks').where('name', '==', 'yellow'); // ducks query
 
 Then you use references to create, load and save documents as well as create queries.
 
-## Refrences & Documents, Queries
+## Documents, Queries
 
 This is how you save a Document with id 'yellow' in the `ducks` collection:
 
@@ -81,14 +83,126 @@ let doc = ref.new({ name: 'Yellow' });
 await doc.save();
 ```
 
-And query all the ducks:
+And query all of the documents in `ducks` collection:
 
 ``` javascript
 let ref = store.collection('ducks');
 let query = ref.query();
 await query.load();
+query.content // → [ Document, ... ]
 ```
+
+See [Documents and Queries Guide](guides/documents-and-queries) for more information about Documents and Queries.
 
 ## Observation
 
-What's so special about Firestore is that the service also allows you to observe Documents and Queries to be notified near real-time about changes. This lets you build sophisticated collaboration apps with ease and `ember-cli-zuglet` makes it easy to do so in Ember.js.
+While explicit loading and querying data is sometimes useful, what's so special about Firestore is that the service also lets you observe Documents and Queries.
+
+Let's say you want to know when any of the ducks in collection is added, removed or updated. You just create a query and start observing it. Whenever anything changes in the database, content of the query will be immediately updated:
+
+``` javascript
+let query = store.collection('ducks').orderBy('name', 'asc').query();
+let observer = query.observe();
+
+query.content // → [ Document, ... ]
+
+observer.cancel();
+```
+
+Same goes for separate documents and queries which yield a single document.
+
+## Models
+
+Observation and Firestore local persistence make it quite easy to build highly responsive apps, but if `doc.observe()` API seemed way too low-level or cumbersome to use, you're absolutely right, it is.
+
+This is the reason `ember-cli-zuglet` has one more concept -- models.
+
+Let's see how you would create a `ducks.index` route which loads and automatically starts observing ducks and also stops observing when person using the app navigates out of the route:
+
+``` javascript
+// app/routes/ducks/index.js
+import { route, observed } from 'ember-cli-zuglet/lifecycle';
+
+export default Route.extend({
+
+  model: route().inline({
+
+    ducks: observed(),
+
+    prepare() {
+      let ducks = this.store.collection('ducks').orderBy('name').query();
+      this.setProperties({ ducks });
+      return ducks.observers.promise;
+      // or better yet `return resolveObservers(ducks);` which is essentially the same
+    }
+
+  })
+
+});
+```
+
+Let's break it down.
+
+**`route()`** will instruct this route to create model when Ember.js will call the model hook. And it will also destroy the model when app transitions out of this route.
+
+**`.inline({})`** will generate an `EmberObject` class from inline hash. You can also create a proper model class in `app/models` folder and reference it here.
+
+**`observed()`** is a computed property-like construct which lets you to set either Document or Query and it starts observing it. If you set another document to it or you destroy the parent EmberObject, it will stop the observation. Together with the fact that route and standalone models are automatically destroyed, this takes care of observation lifecycle.
+
+**`object.observers.promise`** is a convinience property which returns a promise from the first observer and resolves when cached or server data is loaded.
+
+Also there is similar computed property-like model helper for Components which is destroyed on component destroy so that you can automatically observe and stop observing documents and queries in the scope of components:
+
+``` javascript
+import { model } from 'ember-cli-zuglet/lifecycle';
+
+export default Component.extend({
+
+  id: null, // provided duck id
+
+  duck: model().named('duck').mapping(owner => {
+    let { id } = owner;
+    return { id };
+  })
+
+});
+```
+
+``` javascript
+// models/duck.js
+import { observed } from 'ember-cli-zuglet/lifecycle';
+
+export default EmberObject.extend({
+
+  id: null,
+
+  doc: observed().owner('id').content(owner => {
+    let { id } = owner;
+    return this.store.doc(`ducks/${id}`).existing();
+  }),
+
+  isLoaded: readOnly('doc.isLoaded'),
+  name:     readObly('doc.name'),
+
+  prepare({ id }) {
+    this.setProperties({ id });
+  }
+
+});
+```
+
+Here I'm defining a model which has a proper model class in a separate file (mapping is required so that model is more easily reusable in other contexts). And `observed()` now has `owner()` dependencies and `content()` lookup.
+
+Now we can have a template like this:
+
+``` html
+{{#if duck.isLoaded}}
+  <div class="name">{{duck.name}}</div>
+{{else}}
+  <div class="placeholer">Loading…</div>
+{{/}}
+```
+
+Overall `route`, `model` and `models` used with `observed` is quite enough to easily build large, complicated graphs of models with document and query observers.
+
+See [Models Guide](guides/models) for more information.
