@@ -6,10 +6,15 @@ hidden: true
 
 ## Overview
 
+* general info
 * store
+  * central object
+  * multiple stores
 * references
 * documents and queries
+  * identityless
 * route model with observed
+  * lifecycle management
 
 ## Install
 
