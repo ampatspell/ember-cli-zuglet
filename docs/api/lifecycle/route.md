@@ -122,3 +122,12 @@ export default EmberObject.extend({
 
 });
 ```
+
+# Draft
+
+```
+* route()
+* inline(...args)
+* named(arg)
+* *mapping(arg)
+```
