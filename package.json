@@ -1,6 +1,6 @@
 {
   "name": "ember-cli-zuglet",
-  "version": "0.10.1",
+  "version": "0.10.2",
   "description": "Google Cloud Firestore documents for Ember.js",
   "keywords": [
     "ember-addon",
