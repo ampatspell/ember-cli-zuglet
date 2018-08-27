@@ -5,232 +5,135 @@ title: Overview
 
 # Overview
 
-This section describes the general idea behind `ember-cli-zuglet` concepts and how they fit together enabling you to quickly and easily build apps where you are in total control of Firestore Database structure as well as the structure of app itself.
+`ember-cli-zuglet` is an easiest and most productive way of working with Google Firebase services (Firestore, Storage, Auth and Functions) in Ember.js.
 
-It is an Ember.js-native way of working with Google Firebase services: Firestore, Storage, Auth and Functions.
+This section describes the general idea behind `ember-cli-zuglet` concepts and how they fit together enabling you to quickly and easily build apps where you are in total control of Firestore Database structure as well as the structure of app itself.
 
 ## Store
 
 The central concept in zuglet is the `Store`.
 
-It represents a single Firebase application and gives you access to all of the services. In most cases you'll have one `store` but, if necessary, you can have as many as needed.
+It represents a single Firebase application instance and gives you access to all of it's services. In most cases you'll have one `store` in application but, if necessary, you can have as many as needed.
 
-When you install the addon by using `ember install ember-cli-zuglet` command, it creates a `store` service bases on `app/store.js` subclass.
+When you install the addon by using `ember install ember-cli-zuglet` command, it creates a `store` service based on `app/store.js` subclass.
+
+Your `store` subclass is reponsible for:
+
+* Providing a Firebase app configuration
+* Handling Ember.js app restore by loading any initially required Firestore documents (optional)
+* Handling Firebase Auth state changes and loading any per-user required documents (optional)
+
+``` javascript
+import Store from 'ember-cli-zuglet/store';
+
+const options = {
+  firebase: {
+    // ...
+  },
+  firestore: {
+    persistenceEnabled: true
+  }
+};
+
+export default Store.extend({
+
+  options,
+
+  // restore() {
+  // },
+
+  // restoreUser(user) {
+  // }
+
+});
+```
 
 > **Note:** If you're planning on using zuglet along with ember-data, make sure you rename zuglet `store` to something else so that the name of the service doesn't clash with ember-data's `store`.
 
-In general, store subclass is reponsible for:
+See [Install Guide](guides/install) to get started.
 
-* Providing a Firebase app configuration
-* Optionally handling Ember.js app restore by loading any initially required Firestore documents
-* Optionally handling Firebase Auth state changes and loading any per-user required documents
+## References
 
-> **See:** [Install Guide](guides/install) on how to install and configure `ember-cli-zuglet`.
+As you may now, Firestore stores data in Documents which are stored in Collections. Also Documents can have nested Collections.
 
-Throughout this guide I'll assume zuglet is configured to be a `store` service and has all the basic setup defaults which includes `window.store` reference accessible from web browser's console (in development environment).
+`ember-cli-zuglet` has a concept of Reference, the same way Firebase Firestore SDK has. There are three Reference types: Document, Collection, Query.
 
-If you're following along with an Ember.js app with the zuglet installed and configured for your Firebase project, try typing `store` in browser's console:
-
-``` bash
-> store+''
-<dummy@zuglet:store/store::ember913>
-```
-
-## Firestore documents and queries
-
-Firebase apps mostly query, load, modify, save and delete Firestore documents. What's so special about Firestore is that the service allows you also to observe document and query result changes in near real-time.
-
-Both, explicit loading and observation, is supported and made very easy in zuglet by provided application lifecycle tools. But let's focus on the basics for a bit.
-
-There are four base concepts which relates to the Firestore in zuglet:
-
-* References
-* Document
-* Query
-* Observer
-
-## References, Documents and Queries
-
-References deals with document and collection locations in Firestore. They also wrap query criteria. Basically you can think of references as a glorified ids.
-
-There are three referece types:
-
-* Document Reference
-* Collection Reference
-* Query Reference
-
-You can create or load a **Document** based on a document reference or you can create a **Query** based on collection or query reference.
-
-### Document
-
-Let's start with creating a document reference, create a document and save it.
+References are just a location information, they don't represent actual data stored in the database.
 
 ``` javascript
-// create a document reference for 'quotes/springtime' document path
-let ref = store.doc('quotes/springtime'); // → <dummy@zuglet:reference/document::ember1109:quotes/springtime>
+store.collection('ducks').doc();                         // ducks/7glmDmR9ah4SlOXxtrLa (generated id)
+store.collection('ducks').doc('yellow');                 // ducks/yellow
+store.doc('ducks/yellow');                               // ducks/yellow
+```
 
-// create a document for that reference
-let doc = ref.new({
-  author: 'Kurt Vonnegut',
-  body: 'To whom it may concern: It is springtime. It is late afternoon.'
-});
-// → <dummy@zuglet:document::ember1110:quotes/springtime>
+``` javascript
+store.collection('ducks');                               // ducks
+store.collection('ducks').where('name', '==', 'yellow'); // ducks query
+```
 
-// save a document
+Then you use references to create, load and save documents as well as create queries.
+
+## Documents, Queries
+
+This is how you save a Document with id 'yellow' in the `ducks` collection:
+
+``` javascript
+let ref = store.doc('ducks/yellow');
+let doc = ref.new({ name: 'Yellow' });
 await doc.save();
 ```
 
-Now we can also load that document:
+And query all of the documents in `ducks` collection:
 
 ``` javascript
-// create a document reference for 'quotes/springtime' document path
-let ref = store.doc('quotes/springtime'); // → <dummy@zuglet:reference/document::ember1109:quotes/springtime>
-
-// load a single document
-let doc = await ref.load(); // → <dummy@zuglet:document::ember1303:quotes/springtime>
-
-// check out document data properties
-doc.data.getProperties('author', 'body');
-// →
-// {
-//   author: "Kurt Vonnegut",
-//   body: "To whom it may concern: It is springtime. It is late afternoon."
-// }
-```
-
-> **See:** [Reference](api/store/reference) and [Document](api/store/document) API documentation for more details.
-
-### Query
-
-At this point we have single document in `quotes` collection in Firestore.
-
-Now let's create a query for whole `quotes` collection and load it:
-
-``` javascript
-// create a collection reference for 'quotes' collection path
-let ref = store.collection('quotes'); // → <dummy@zuglet:reference/collection::ember1129:quotes>
-
-// create a query for that reference
-let query = ref.query(); // → <dummy@zuglet:query/array::ember1130:quotes>
-
-// load all documents in that collection
+let ref = store.collection('ducks');
+let query = ref.query();
 await query.load();
-
-// get number of loaded documents
-query.content.length // → 1
-
-// get first loaded document
-let doc = query.content.firstObject; // → <dummy@zuglet:document::ember1131:quotes/springtime>
-
-// check out document data properties
-doc.data.getProperties('author', 'body');
-// →
-// {
-//   author: "Kurt Vonnegut",
-//   body: "To whom it may concern: It is springtime. It is late afternoon."
-// }
+query.content // → [ Document, ... ]
 ```
 
-> **See:** [Reference](api/store/reference) and [Query](api/store/query) API documentation for more details.
+See [Documents and Queries Guide](guides/documents-and-queries) for more information about Documents and Queries.
 
-## Document and query observation
+## Observation
 
-While explicit load and query does it's job, you won't be notified when documents change in the database.
+While explicit loading and querying data is sometimes useful, what's so special about Firestore is that the service also lets you observe Documents and Queries.
 
-To do that we will use **Observer**.
-
-> **Note:** In most cases you won't need to use observers directly as we will see in the next section, but it might be useful to know how this works under the hood.
-
-Let's just observe the same document we already have:
+Let's say you want to know when any of the ducks in collection is added, removed or updated. You just create a query and start observing it. Whenever anything changes in the database, content of the query will be immediately updated:
 
 ``` javascript
-// create a document based for 'quotes/springtime' document reference
-let doc = store.doc('quotes/springtime').existing(); // → <dummy@zuglet:document::ember1509:quotes/springtime>
+let query = store.collection('ducks').orderBy('name', 'asc').query();
+let observer = query.observe();
 
-doc.isLoaded // → false
+query.content // → [ Document, ... ]
 
-// create an document observer
-let observer = doc.observe(); // → <dummy@zuglet:observer/document::ember1510:quotes/springtime>
-
-doc.isLoaded // → true
-
-// check out document data properties
-doc.data.getProperties('author', 'body', 'isFavorite');
-// →
-// {
-//   author: "Kurt Vonnegut",
-//   body: "To whom it may concern: It is springtime. It is late afternoon.",
-//   isFaviorite: undefined
-// }
-
-// at this point, go ahead and modify this document in Firestore Console
-
-// and check out document data properties again
-doc.data.getProperties('author', 'body', 'isFavorite');
-// →
-// {
-//   author: "Kurt Vonnegut",
-//   body: "To whom it may concern: It is springtime. It is late afternoon.",
-//   isFaviorite: true
-// }
-
-// stop observing document
 observer.cancel();
 ```
 
-Query observers work the same way. They observe document order changes, additions, removals and individual document modifications.
+Same goes for separate documents and queries which yield a single document.
 
-> **See:** [Observer](api/store/observer), [Document](api/store/document) and [Query](api/store/query) API documentation for more info.
+## Models
 
-## Application lifecycle management
+Observation and Firestore local persistence make it quite easy to build highly responsive apps, but if `doc.observe()` API seemed way too low-level or cumbersome to use, you're absolutely right, it is.
 
-In general sense it's best to observe documents and queries instead of explicity loading them as it greatly improves application performance and overall user experience.
+This is the reason `ember-cli-zuglet` has one more concept -- models.
 
-But to manually create and cancel observers like we did in the previous section is way too much work and quite error prone. It is important to stop observing documents and queries when observation is not needed otherwise observers will pile up and saturate the network bandwidth and the app performance will suffer. It is recommended to have at most around 5 observers at any given time (altrough I haven't seen any real issues with slightly more).
-
-So, to make it easy to observe documents and queries, zuglet has an integrated lifecycle management which provides tools to create and automatically destroy models and `observed` computed property which automatically start and stop document and query observation.
-
-Just to recap, Ember.js has a concept of routes, they are responsible for mapping URLs to pages in the app. In addition to that, they provide `model()` hook which can be used to load any data necessary prior presenting the page to the person viewing it.
-
-Zuglet extends `model()` hook by providing an easy way to create a model class for each route, create a model instance when the route is accessed and to destroy model when app transitions out of the route.
-
-Let's take a basic example of ubiquitous route structure where we have a page which lists all quotes and separate page where we show only one quote:
+Let's see how you would create a `ducks.index` route which loads and automatically starts observing ducks and also stops observing when person using the app navigates out of the route:
 
 ``` javascript
-// app/router.js
-Router.map(function() {
-
-  this.route('quotes', function() {
-    this.route('quote', { path: ':quote_id' }, function() {
-    });
-  });
-
-});
-```
-
-Let's begin with `quotes.index` which will load all quotes:
-
-``` javascript
-// app/routes/quotes/index.js
+// app/routes/ducks/index.js
 import { route, observed } from 'ember-cli-zuglet/lifecycle';
 
 export default Route.extend({
 
-  // create an inline (generated) model class for this route
-  // instantiated when app transitions into this route
-  // destroyed when app transitions out which also stops `observed` property to observe query
   model: route().inline({
 
-    // observes whatever is set. in this case -- quotes query
-    quotes: observed(),
+    ducks: observed(),
 
-    // called in route's `model()` hook
     prepare() {
-      let quotes = this.store.collection('quotes').query();
-      this.setProperties({ quotes });
-
-      // resolves on either cached or server response
-      return quotes.observers.promise;
+      let ducks = this.store.collection('ducks').orderBy('name').query();
+      this.setProperties({ ducks });
+      return ducks.observers.promise;
+      // or better yet `return resolveObservers(ducks);` which is essentially the same
     }
 
   })
@@ -238,78 +141,68 @@ export default Route.extend({
 });
 ```
 
-And `quotes.quote` which will load just a single quote:
+Let's break it down.
+
+**`route()`** will instruct this route to create model when Ember.js will call the model hook. And it will also destroy the model when app transitions out of this route.
+
+**`.inline({})`** will generate an `EmberObject` class from inline hash. You can also create a proper model class in `app/models` folder and reference it here.
+
+**`observed()`** is a computed property-like construct which lets you to set either Document or Query and it starts observing it. If you set another document to it or you destroy the parent EmberObject, it will stop the observation. Together with the fact that route and standalone models are automatically destroyed, this takes care of observation lifecycle.
+
+**`object.observers.promise`** is a convinience property which returns a promise from the first observer and resolves when cached or server data is loaded.
+
+Also there is similar computed property-like model helper for Components which is destroyed on component destroy so that you can automatically observe and stop observing documents and queries in the scope of components:
 
 ``` javascript
-// app/routes/quotes/quote.js
-import { route, observed } from 'ember-cli-zuglet/lifecycle';
-
-export default Route.extend({
-
-  model: route().inline({
-
-    quote: observed(),
-
-    prepare(route, { quote_id }) {
-      let quote = this.store.collection('quotes').doc(quote_id).existing();
-      this.setProperties({ quote });
-      return quote.observers.promise;
-    }
-
-  })
-
-});
-```
-
-Similarly there is `model` computed-property for defining models in components which are destroyed on component destroy.
-
-``` javascript
-import { model, observed } from 'ember-cli-zuglet/lifecycle';
+import { model } from 'ember-cli-zuglet/lifecycle';
 
 export default Component.extend({
 
-  id: null,
+  id: null, // provided duck id
 
-  quote: model().owner('id').inline({
-
-    doc: observed(),
-
-    body: readOnly('doc.data.body'),
-    author: readOnly('doc.data.author'),
-
-    prepare(owner) {
-      let { id } = owner;
-      let doc = this.store.doc(`quotes/${id}`).existing();
-      this.setProperties({ doc });
-    }
+  duck: model().named('duck').mapping(owner => {
+    let { id } = owner;
+    return { id };
   })
 
 });
 ```
 
-``` html
-<div class="body">{{quote.body}}</div>
-<div class="author">– {{quote.author}}</div>
+``` javascript
+// models/duck.js
+import { observed } from 'ember-cli-zuglet/lifecycle';
+
+export default EmberObject.extend({
+
+  id: null,
+
+  doc: observed().owner('id').content(owner => {
+    let { id } = owner;
+    return this.store.doc(`ducks/${id}`).existing();
+  }),
+
+  isLoaded: readOnly('doc.isLoaded'),
+  name:     readObly('doc.name'),
+
+  prepare({ id }) {
+    this.setProperties({ id });
+  }
+
+});
 ```
 
-> **Note:** Documentation for `lifecycle` here and in API docs are coming soon. See API for more examples.
+Here I'm defining a model which has a proper model class in a separate file (mapping is required so that model is more easily reusable in other contexts). And `observed()` now has `owner()` dependencies and `content()` lookup.
 
-> **See:** [Lifecycle](api/lifecycle) API documentation for more information
+Now we can have a template like this:
 
-## Auth service
+``` html
+{{#if duck.isLoaded}}
+  <div class="name">{{duck.name}}</div>
+{{else}}
+  <div class="placeholer">Loading…</div>
+{{/}}
+```
 
-> **Note:** Section comming soon
+Overall `route`, `model` and `models` used with `observed` is quite enough to easily build large, complicated graphs of models with document and query observers.
 
-> **See:** [Auth](api/auth) API documentation
-
-## Storage service
-
-> **Note:** Section comming soon
-
-> **See:** [Storage](api/storage) API documentation
-
-## Functions service
-
-> **Note:** Section comming soon
-
-> **See:** [Functions](api/functions) API documentation
+See [Models Guide](guides/models) for more information.

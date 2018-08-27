@@ -151,3 +151,15 @@ export default EmberObject.extend({
   }
 })
 ```
+
+# Draft
+
+```
+* models(arg)
+* source(arg)
+* owner(...args)
+* object(...args)
+* inline(...args)
+* named(arg)
+* mapping(arg)
+```

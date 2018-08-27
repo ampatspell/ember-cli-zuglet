@@ -101,3 +101,13 @@ export default EmberObject.extend({
 
 })
 ```
+
+# Draft
+
+```
+* model()
+* owner(...args)
+* inline(...args)
+* named(arg)
+* mapping(arg)
+```

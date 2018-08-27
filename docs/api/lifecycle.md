@@ -18,38 +18,9 @@ import {
 } from 'ember-cli-zuglet/lifecycle';
 ```
 
-```
-## Observed
+## Modules
 
-* also `resolveObservers`
-
-### observed()
-
-### owner(...args)
-### content(arg)
-
-## Route
-
-### route()
-### inline(...args)
-### named(arg)
-### mapping(arg)
-
-## Model
-
-### model()
-### owner(...args)
-### inline(...args)
-### named(arg)
-### mapping(arg)
-
-## Models
-
-### models(arg)
-### source(arg)
-### owner(...args)
-### object(...args)
-### inline(...args)
-### named(arg)
-### mapping(arg)
-```
+* [Route](api/lifecycle/route) – define route models
+* [Model](api/lifecycle/model) – define models in components and nsested models
+* [Models](api/lifecycle/models) – define array of models based on another array (`query.content` for example)
+* [Observed](api/lifecycle/observed) – automatically observe a document or query

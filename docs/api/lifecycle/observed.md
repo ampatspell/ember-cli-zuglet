@@ -63,4 +63,13 @@ export default EmberObject.extend({
 });
 ```
 
-> TODO: `resolveObservers`
+# Draft
+
+```
+* observed()
+* owner(...args)
+* content(arg)
+
+* resolveObservers
+* observerFor
+```
