@@ -5,6 +5,9 @@ const crawl = require('prember-crawler');
 
 module.exports = function(defaults) {
   let app = new EmberAddon(defaults, {
+    sassOptions: {
+      implementation: require('sass')
+    },
     'ember-cli-remark-static': {
       paths: {
         'docs': 'docs'
