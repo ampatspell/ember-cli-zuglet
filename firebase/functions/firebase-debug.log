@@ -1,0 +1,94 @@
+[debug] [2018-10-01T15:05:34.191Z] ----------------------------------------------------------------------
+[debug] [2018-10-01T15:05:34.193Z] Command:       /usr/local/bin/node /Users/ampatspell/.npm-global/bin/firebase deploy --only functions
+[debug] [2018-10-01T15:05:34.194Z] CLI Version:   4.2.1
+[debug] [2018-10-01T15:05:34.194Z] Platform:      darwin
+[debug] [2018-10-01T15:05:34.194Z] Node Version:  v10.7.0
+[debug] [2018-10-01T15:05:34.195Z] Time:          Mon Oct 01 2018 18:05:34 GMT+0300 (Eastern European Summer Time)
+[debug] [2018-10-01T15:05:34.195Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2018-10-01T15:05:34.207Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-10-01T15:05:34.207Z] > authorizing via signed-in user
+[debug] [2018-10-01T15:05:34.210Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/ember-cli-zuglet  
+ 
+[debug] [2018-10-01T15:05:34.912Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Deploying to 'ember-cli-zuglet'...
+[info] 
+[info] i  deploying functions
+[info] Running command: npm --prefix "$RESOURCE_DIR" run lint
+[info] ✔  functions: Finished running predeploy script.
+[debug] [2018-10-01T15:05:38.628Z] > [functions] package.json contents: {
+  "name": "functions",
+  "description": "Cloud Functions for Firebase",
+  "scripts": {
+    "lint": "eslint .",
+    "serve": "firebase serve --only functions",
+    "shell": "firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "dependencies": {
+    "cors": "^2.8.4",
+    "firebase-admin": "~6.0.0",
+    "firebase-functions": "^2.0.5"
+  },
+  "devDependencies": {
+    "eslint": "^5.6.1",
+    "eslint-plugin-promise": "^4.0.1"
+  },
+  "private": true,
+  "engines": {
+    "node": "8"
+  }
+}
+[info] i  functions: ensuring necessary APIs are enabled...
+[debug] [2018-10-01T15:05:38.629Z] >>> HTTP REQUEST GET https://servicemanagement.googleapis.com/v1/services/cloudfunctions.googleapis.com/projectSettings/ember-cli-zuglet?view=CONSUMER_VIEW  
+ 
+[debug] [2018-10-01T15:05:38.631Z] >>> HTTP REQUEST GET https://servicemanagement.googleapis.com/v1/services/runtimeconfig.googleapis.com/projectSettings/ember-cli-zuglet?view=CONSUMER_VIEW  
+ 
+[debug] [2018-10-01T15:05:40.089Z] <<< HTTP RESPONSE 200
+[info] ✔  functions: all necessary APIs are enabled
+[debug] [2018-10-01T15:05:40.199Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-01T15:05:40.200Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/ember-cli-zuglet  
+ 
+[debug] [2018-10-01T15:05:41.117Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-01T15:05:41.117Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/337740781111:getServerAppConfig  
+ 
+[debug] [2018-10-01T15:05:41.539Z] <<< HTTP RESPONSE 200
+[info] i  functions: preparing functions directory for uploading...
+[debug] [2018-10-01T15:05:41.549Z] >>> HTTP REQUEST GET https://runtimeconfig.googleapis.com/v1beta1/projects/ember-cli-zuglet/configs  
+ 
+[debug] [2018-10-01T15:05:42.036Z] <<< HTTP RESPONSE 200
+[info] i  functions: packaged functions (51.95 KB) for uploading
+[debug] [2018-10-01T15:05:42.321Z] >>> HTTP REQUEST POST https://cloudfunctions.googleapis.com/v1/projects/ember-cli-zuglet/locations/us-central1/functions:generateUploadUrl  
+ 
+[debug] [2018-10-01T15:05:42.860Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-01T15:05:42.861Z] >>> HTTP REQUEST PUT https://storage.googleapis.com/gcf-upload-us-central1-ae11cc23-9a2d-414a-9600-566b53b2aec3/ac1209bf-e5b2-4799-ab26-8eb8a5a744de.zip?GoogleAccessId=service-337740781111@gcf-admin-robot.iam.gserviceaccount.com&Expires=1538408142&Signature=cMxLdGkPaVcGmHZylVSkGimLpfE9mQcIfcSMizmjGaZhgi4h7LMI4RiTN0UIhbmkhsFRhT3xQlNAUe2NCq0BkPg3y1jYtXmvdjNNv050IxhhiCObHeEaMUU5x5R8SEDUNCNx0%2Fiju9zd9RXsZFMqQVuZZcRjUj%2FOwcb%2Fm39hRAP3GnPt%2BZOuy6fuUnWWPV6xY1AzV23ZjtQvIAIjoUYr8W4vIicBOes9eWV8mmlY%2BYIMaTcgeWLiyps84HcnJXRT5SCh%2FQR9f9DBKVnaU4nGT4sWeQ%2FFnGU8Q7j9xoq3YYc0J20CpA5Ds8LdfMSjSGB1yPdCJN3g%2FFl3GnpPorgWIw%3D%3D  
+
+[debug] [2018-10-01T15:05:43.455Z] <<< HTTP RESPONSE 200
+[info] ✔  functions: functions folder uploaded successfully
+[debug] [2018-10-01T15:05:43.459Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/projects/ember-cli-zuglet/locations/-/functions  
+ 
+[debug] [2018-10-01T15:05:44.206Z] <<< HTTP RESPONSE 200
+[info] i  functions: updating Node.js 8 function callable_success(us-central1)...
+[debug] [2018-10-01T15:05:44.210Z] Trigger is:  {"httpsTrigger":{}}
+[info] i  functions: updating Node.js 8 function callable_error(us-central1)...
+[debug] [2018-10-01T15:05:44.210Z] Trigger is:  {"httpsTrigger":{}}
+[debug] [2018-10-01T15:05:44.212Z] >>> HTTP REQUEST PATCH https://cloudfunctions.googleapis.com/v1/projects/ember-cli-zuglet/locations/us-central1/functions/callable_success 
+query params: {"updateMask":"sourceUploadUrl,name,labels,runtime,httpsTrigger"} 
+
+[debug] [2018-10-01T15:05:44.214Z] >>> HTTP REQUEST PATCH https://cloudfunctions.googleapis.com/v1/projects/ember-cli-zuglet/locations/us-central1/functions/callable_error 
+query params: {"updateMask":"sourceUploadUrl,name,labels,runtime,httpsTrigger"} 
+
+[debug] [2018-10-01T15:05:44.686Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-01T15:05:44.719Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-01T15:05:44.721Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/projects/ember-cli-zuglet/locations/-/functions  
+ 
+[debug] [2018-10-01T15:05:45.482Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-01T15:05:45.483Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/ZW1iZXItY2xpLXp1Z2xldC91cy1jZW50cmFsMS9jYWxsYWJsZV9zdWNjZXNzL3ZFZ05CdTMtYUNz  
+ 
+[debug] [2018-10-01T15:05:45.483Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/ZW1iZXItY2xpLXp1Z2xldC91cy1jZW50cmFsMS9jYWxsYWJsZV9lcnJvci9mQnBVSDZqWUNIcw  
+ 
+[debug] [2018-10-01T15:05:45.917Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-01T15:05:45.922Z] <<< HTTP RESPONSE 200
