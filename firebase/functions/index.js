@@ -3,7 +3,7 @@
 const functions = require('firebase-functions');
 const HttpsError = functions.https.HttpsError;
 
-exports.callable_success = functions.https.onCall((data, context) => {
+exports.callable_success = functions.https.onCall(data => {
   return { request: data };
 });
 
