@@ -35,7 +35,6 @@ export default class FirebaseInitializer {
     this.app = firebase.initializeApp(opts.firebase, `${identifier}-${id}`);
 
     let firestore = this.app.firestore();
-    firestore.settings({ timestampsInSnapshots: true });
 
     let promise;
 

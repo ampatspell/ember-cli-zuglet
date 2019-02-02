@@ -45,7 +45,7 @@ query.isLoaded // => true
 
 ## Query single Firestore document
 
-``` javascript
+``` javascript
 let messages = store.collection('message');
 let query = messages.orderBy('created_at', 'desc').query({ type: 'first' });
 

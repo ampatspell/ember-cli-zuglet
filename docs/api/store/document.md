@@ -75,7 +75,7 @@ doc.data.set('address', { street: 'Duck Street' });
 
 Rollbacks Document data to previous known pristine (server or cached) state so that Document becomes `{ isDirty: false }` again.
 
-``` javascript
+``` javascript
 let doc = await store.doc('ducks/yellow').load();
 doc.isDirty // → false
 

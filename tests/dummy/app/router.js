@@ -1,7 +1,6 @@
 import EmberRouter from '@ember/routing/router';
 import config from './config/environment';
 import { isFastBoot } from 'ember-cli-zuglet/-private/util/fastboot';
-import { cancel, next } from '@ember/runloop';
 
 let {
   environment
@@ -15,39 +14,32 @@ const Router = EmberRouter.extend({
   rootURL: config.rootURL,
 
   sendPageview() {
+    if(!isGoogleAnalyticsEnabled) {
+      return;
+    }
     if(typeof gtag_pageview !== 'undefined') {
       let url = this.get('currentURL');
       gtag_pageview(url); /* eslint-disable-line no-undef */
     }
   },
 
-  schedulePageview() {
-    if(!isGoogleAnalyticsEnabled) {
-      return;
-    }
-    cancel(this._schedulePageview);
-    this._schedulePageview = next(() => this.sendPageview());
-  },
-
   scrollToTop() {
     window.scrollTo(0, 0);
   },
 
-  didTransition() {
-    this._super(...arguments);
-
+  routeDidChange() {
     if(!isFastBoot(this)) {
       if(!isFistTransition) {
-        this.schedulePageview();
+        this.sendPageview();
         this.scrollToTop();
       }
       isFistTransition = false;
     }
   },
 
-  willDestroy() {
-    cancel(this._schedulePageview);
+  init() {
     this._super(...arguments);
+    this.on('routeDidChange', () => this.routeDidChange());
   }
 
 });
