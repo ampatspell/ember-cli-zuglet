@@ -24,7 +24,7 @@
   },
   "scripts": {
     "build": "ember build",
-    "lint:js": "eslint ./*.js addon addon-test-support app blueprints config lib server test-support tests",
+    "lint:js": "eslint ./*.js addon app blueprints config lib tests",
     "start": "ember serve",
     "test": "ember try:each",
     "coverage": "COVERAGE=true ember test",
