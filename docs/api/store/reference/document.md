@@ -87,7 +87,7 @@ Creates a `Document` instance which is expected to exist.
 
 `Document` initially has `{ isNew: false }`.
 
-``` javascript
+``` javascript
 let ref = store.doc('ducks/yellow');
 let doc = ref.existing();
 doc.isNew // → false

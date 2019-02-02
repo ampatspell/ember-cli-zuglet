@@ -42,7 +42,7 @@ doc.isObserved // => false
 
 Read only, resolved
 
-``` javascript
+``` javascript
 // app/models/doc.js
 
 import EmberObject from '@ember/object';
