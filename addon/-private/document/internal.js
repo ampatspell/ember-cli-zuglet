@@ -9,6 +9,7 @@ import { assertDocumentInternalReference } from '../reference/document/internal'
 import observers from '../observers/computed';
 import queue from '../queue/computed';
 import actions from '../util/actions';
+import randomString from '../util/random-string';
 
 export const state = [ 'isNew', 'isDirty', 'isLoading', 'isLoaded', 'isSaving', 'isObserving', 'isError', 'error' ];
 export const meta = [ 'exists', 'metadata' ];
@@ -145,7 +146,10 @@ export default Internal.extend({
     let { token } = opts;
 
     if(token) {
+      token = randomString(20);
       data._token = token;
+    } else {
+      token = undefined;
     }
 
     setChangedProperties(this, {
