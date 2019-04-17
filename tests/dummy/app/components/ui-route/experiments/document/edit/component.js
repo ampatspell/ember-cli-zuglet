@@ -5,16 +5,19 @@ import { observed } from 'ember-cli-zuglet/lifecycle';
 export default Component.extend({
   layout,
 
+  version: 0,
   doc: observed(),
 
   didInsertElement() {
     this._super(...arguments);
-    this.set('doc', this.get('store').doc('messages/first').existing());
+    let doc = this.get('store').doc('messages/first').existing();
+    this.set('doc', doc);
   },
 
   actions: {
     save(doc) {
-      doc.save();
+      this.incrementProperty('version');
+      doc.save({ token: this.version });
     },
     reset(doc) {
       doc.reset();
