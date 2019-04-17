@@ -39,6 +39,8 @@ export default Internal.extend({
   exists: undefined,
   _metadata: undefined,
 
+  token: undefined,
+
   metadata: computed('_metadata', function() {
     let metadata = this.get('_metadata');
     if(!metadata) {
@@ -84,7 +86,7 @@ export default Internal.extend({
   },
 
   shouldApplySnapshotData(json) {
-    return !json._token || this.token !== json._token;
+    return !this.token || this.token !== json._token;
   },
 
   onSnapshot(snapshot) {
