@@ -60,7 +60,9 @@ export default class ArrayMapper {
   }
 
   destroy() {
-    this.content.map(holder => holder.destroy());
+    let { content } = this;
+    content.map(holder => holder.destroy());
+    content.clear();
   }
 
 }
