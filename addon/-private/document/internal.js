@@ -82,10 +82,16 @@ export default Internal.extend({
     this.resolveObservers();
   },
 
+  shouldApplySnapshotData(json) {
+    return !json._token || this.token !== json._token;
+  },
+
   onSnapshot(snapshot) {
     if(snapshot.exists) {
       let json = snapshot.data({ serverTimestamps: 'estimate' });
-      this.onData(json);
+      if(this.shouldApplySnapshotData(json)) {
+        this.onData(json);
+      }
     }
     this._didLoad(snapshot);
   },
@@ -135,11 +141,18 @@ export default Internal.extend({
     return this.load(assign({ force: true }, opts));
   },
 
-  willSave() {
+  willSave(data, opts) {
+    let { token } = opts;
+
+    if(token) {
+      data._token = token;
+    }
+
     setChangedProperties(this, {
       isSaving: true,
       isError: false,
-      error: null
+      error: null,
+      token
     });
   },
 
@@ -180,7 +193,7 @@ export default Internal.extend({
       invoke: () => {
         let ref = this.get('ref.ref');
         let data = this.get('data').serialize('raw');
-        this.willSave();
+        this.willSave(data, opts);
         return this._save(ref, data, opts);
       },
       didResolve: raw => this.didSave(raw),
