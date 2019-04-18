@@ -75,24 +75,5 @@ module.exports = {
     trees.push(create('ember-cli-zuglet/versions.js', versions.join('\n')));
 
     return mergeTrees(trees);
-  },
-  contentFor(type, config) {
-    if(type === 'head') {
-      let enabled = config.environment === 'production';
-      if(!enabled) {
-        return;
-      }
-      let id = 'UA-1159106-17';
-      return `
-        <script async src="https://www.googletagmanager.com/gtag/js?id=${id}"></script>
-        <script>
-          window.dataLayer = window.dataLayer || [];
-          function gtag() { dataLayer.push(arguments); }
-          function gtag_pageview(path) { gtag('config', '${id}', { page_path: path }); }
-          gtag('js', new Date());
-          gtag('config', '${id}');
-        </script>
-      `;
-    }
   }
 };
