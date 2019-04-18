@@ -9,6 +9,7 @@ import { assertDocumentInternalReference } from '../reference/document/internal'
 import observers from '../observers/computed';
 import queue from '../queue/computed';
 import actions from '../util/actions';
+import randomString from '../util/random-string';
 
 export const state = [ 'isNew', 'isDirty', 'isLoading', 'isLoaded', 'isSaving', 'isObserving', 'isError', 'error' ];
 export const meta = [ 'exists', 'metadata' ];
@@ -37,6 +38,8 @@ export default Internal.extend({
 
   exists: undefined,
   _metadata: undefined,
+
+  token: undefined,
 
   metadata: computed('_metadata', function() {
     let metadata = this.get('_metadata');
@@ -82,10 +85,16 @@ export default Internal.extend({
     this.resolveObservers();
   },
 
+  shouldApplySnapshotData(json) {
+    return !this.token || this.token !== json._token;
+  },
+
   onSnapshot(snapshot) {
     if(snapshot.exists) {
       let json = snapshot.data({ serverTimestamps: 'estimate' });
-      this.onData(json);
+      if(this.shouldApplySnapshotData(json)) {
+        this.onData(json);
+      }
     }
     this._didLoad(snapshot);
   },
@@ -135,11 +144,21 @@ export default Internal.extend({
     return this.load(assign({ force: true }, opts));
   },
 
-  willSave() {
+  willSave(data, opts) {
+    let { token } = opts;
+
+    if(token) {
+      token = randomString(20);
+      data._token = token;
+    } else {
+      token = undefined;
+    }
+
     setChangedProperties(this, {
       isSaving: true,
       isError: false,
-      error: null
+      error: null,
+      token
     });
   },
 
@@ -180,7 +199,7 @@ export default Internal.extend({
       invoke: () => {
         let ref = this.get('ref.ref');
         let data = this.get('data').serialize('raw');
-        this.willSave();
+        this.willSave(data, opts);
         return this._save(ref, data, opts);
       },
       didResolve: raw => this.didSave(raw),
