@@ -92,7 +92,7 @@ export default Internal.extend({
   shouldApplySnapshotData(json) {
     let token = json[_token];
     delete json[_token];
-    return this.token !== token;
+    return this.get('token') !== token;
   },
 
   onSnapshot(snapshot) {
@@ -154,7 +154,7 @@ export default Internal.extend({
     let { token } = opts;
 
     if(token) {
-      data[_token] = this.token;
+      data[_token] = this.get('token');
     }
 
     setChangedProperties(this, {
