@@ -14,6 +14,8 @@ import randomString from '../util/random-string';
 export const state = [ 'isNew', 'isDirty', 'isLoading', 'isLoaded', 'isSaving', 'isObserving', 'isError', 'error' ];
 export const meta = [ 'exists', 'metadata' ];
 
+const _token = '_token';
+
 export default Internal.extend({
 
   store: null,
@@ -88,8 +90,8 @@ export default Internal.extend({
   },
 
   shouldApplySnapshotData(json) {
-    let token = json._token;
-    delete json._token;
+    let token = json[_token];
+    delete json[_token];
     return this.token !== token;
   },
 
@@ -152,7 +154,7 @@ export default Internal.extend({
     let { token } = opts;
 
     if(token) {
-      data._token = this.token;
+      data[_token] = this.token;
     }
 
     setChangedProperties(this, {
