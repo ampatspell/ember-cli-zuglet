@@ -39,7 +39,9 @@ export default Internal.extend({
   exists: undefined,
   _metadata: undefined,
 
-  token: undefined,
+  token: computed(function() {
+    return randomString(20);
+  }).readOnly(),
 
   metadata: computed('_metadata', function() {
     let metadata = this.get('_metadata');
@@ -86,7 +88,9 @@ export default Internal.extend({
   },
 
   shouldApplySnapshotData(json) {
-    return !this.token || this.token !== json._token;
+    let token = json._token;
+    delete json._token;
+    return this.token !== token;
   },
 
   onSnapshot(snapshot) {
@@ -148,17 +152,13 @@ export default Internal.extend({
     let { token } = opts;
 
     if(token) {
-      token = randomString(20);
-      data._token = token;
-    } else {
-      token = undefined;
+      data._token = this.token;
     }
 
     setChangedProperties(this, {
       isSaving: true,
       isError: false,
-      error: null,
-      token
+      error: null
     });
   },
 
