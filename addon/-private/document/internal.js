@@ -175,9 +175,15 @@ export default Internal.extend({
     return this;
   },
 
-  saveDidFail(err) {
-    setChangedProperties(this, { isSaving: false, isError: true, error: err });
-    return reject(err);
+  saveDidFail(err, opts) {
+    let { optional } = opts;
+    if(err.code === 'not-found' && optional) {
+      setChangedProperties(this, { isSaving: false, exists: false });
+      return this;
+    } else {
+      setChangedProperties(this, { isSaving: false, isError: true, error: err });
+      return reject(err);
+    }
   },
 
   _save(ref, data, opts) {
@@ -205,7 +211,7 @@ export default Internal.extend({
         return this._save(ref, data, opts);
       },
       didResolve: raw => this.didSave(raw),
-      didReject: err => this.saveDidFail(err)
+      didReject: err => this.saveDidFail(err, opts)
     });
   },
 
