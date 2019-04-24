@@ -123,12 +123,13 @@ await doc.reload(); // → reloads document
 
 Same as `load({ force: true })`.
 
-## save({ type, merge }) `→ Promise<Document>`
+## save({ type, merge, optional }) `→ Promise<Document>`
 
 Saves document in Firestore database.
 
 * `type` → `set` or `update` (defaults to `set`)
 * `merge` → `Boolean` (defaults to `false`), used only if `type` is `set`
+* `optional` → `Boolean` (defaults to `false`), used only if `type` is `update`
 
 If no options are provided, defaults (`{ type: 'set', merge: false }`) always overwrites the whole document. To change this behavior, use `{ merge: true }` to do a server-side merge of existing document properties with added ones.
 
@@ -159,6 +160,15 @@ let doc = await store.doc('duck/yellow').load();
 await doc.save({ type: 'update' });
 // → This save will throw if document was deleted in between load and save
 ```
+
+**Update document silently ignoring rejections:**
+
+``` javascript
+let doc = await store.doc('duck/yellow').load();
+await doc.save({ type: 'update', optional: true });
+// → Save will resolve with doc.exists set to false
+```
+
 
 ## delete() `→ Promise<Document>`
 

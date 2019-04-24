@@ -49,4 +49,10 @@ module('document-save', function(hooks) {
     });
   });
 
+  test('update optional', async function(assert) {
+    await this.recreate();
+    let doc = await this.save({ name: 'yellow' }, { type: 'update', optional: true });
+    assert.ok(!doc.exists);
+  });
+
 });
