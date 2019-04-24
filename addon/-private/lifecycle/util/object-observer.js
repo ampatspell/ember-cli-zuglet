@@ -11,10 +11,16 @@ const withKeys = (keys, cb) => {
 }
 
 export const startObservingObject = (object, keys, target, method) => {
+  if(!object) {
+    return;
+  }
   withKeys(keys, key => addObserver(object, key, target, method));
 }
 
 export const stopObservingObject = (object, keys, target, method) => {
+  if(!object) {
+    return;
+  }
   withKeys(keys, key => removeObserver(object, key, target, method));
 }
 
