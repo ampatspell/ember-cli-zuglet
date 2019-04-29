@@ -136,9 +136,10 @@ export default Internal.extend({
   },
 
   createInternalQueryWithReference(query, opts={}) {
-    opts = assign({ type: 'array' }, opts);
-    let factoryName = this.internalQueryFactoryNameForType(opts.type, 'opts.type');
-    return this.factoryFor(factoryName).create({ store: this, query });
+    opts = assign({ type: 'array', doc: null }, opts);
+    let { type, doc } = opts;
+    let factoryName = this.internalQueryFactoryNameForType(type, 'opts.type');
+    return this.factoryFor(factoryName).create({ store: this, query, opts: { doc: doc } });
   },
 
   createInternalDocumentWithRef(ref) {
