@@ -15,6 +15,7 @@ export default Internal.extend({
 
   store: null,
   query: null,
+  opts: null, // { doc }
 
   isLoading: false,
   isLoaded: false,
@@ -50,7 +51,21 @@ export default Internal.extend({
 
   //
 
+  reuseableInternalDocumentForSnapshot(snapshot) {
+    let doc = this.get('opts.doc');
+    if(doc) {
+      let model = doc(snapshot.ref.path);
+      if(model) {
+        return model._internal;
+      }
+    }
+  },
+
   createInternalDocumentForSnapshot(snapshot) {
+    let internal = this.reuseableInternalDocumentForSnapshot(snapshot);
+    if(internal) {
+      return this.updateInternalDocumentForSnapshot(internal, snapshot);
+    }
     return this.get('store').createInternalDocumentForSnapshot(snapshot);
   },
 
