@@ -4,9 +4,10 @@ import { assert } from '@ember/debug';
 import { typeOf } from '@ember/utils';
 import { get } from '@ember/object';
 import ArrayProxy from '@ember/array/proxy';
+import MutableArray from '@ember/array/mutable';
 
 const validate = (array, observe, delegate) => {
-  assert(`array must be array or array proxy`, typeOf(array) === 'array' || ArrayProxy.detectInstance(array));
+  assert(`array must be array or array proxy`, typeOf(array) === 'array' || ArrayProxy.detectInstance(array) || MutableArray.detect(array));
   assert(`observe must be array`, typeOf(observe) === 'array');
   assert(`delegate is required`, !!delegate);
   assert(`delegate.added must be function`, typeOf(delegate.added) === 'function');
