@@ -50,15 +50,20 @@ export default Serializer.extend({
       return nested;
     }));
 
-    let adding = internals.get('length');
-    let removing = remaining.get('length');
+    let addAmt = internals.get('length');
+    let removeAmt = content.get('length');
+    let remainingAmt = remaining.get('length');
 
     remaining.map(item => item.detach());
 
-    internal.withArrayContentChanges(true, builder => builder(0, adding, removing, () => {
-      let len = content.get('length');
-      content.replace(0, len, internals);
-    }));
+    if(remainingAmt > 0 || addAmt !== removeAmt) {
+
+      // TODO: this can be improved. Instead of replace all which makes all lifecycle models to be recreated, remove add one by one.
+      internal.withArrayContentChanges(true, builder => builder(0, addAmt, removeAmt, () => {
+        content.replace(0, removeAmt, internals);
+      }));
+
+    }
 
     return {
       replace: false,
@@ -71,13 +76,13 @@ export default Serializer.extend({
     return toModel(internal);
   },
 
-  replaceModelValues(internal, idx, amt, array) {
+  replaceModelValues(internal, idx, removeAmt, array) {
     let manager = this.manager;
     let content = internal.content;
-    let len = A(array).get('length');
+    let addAmt = A(array).get('length');
 
-    internal.withArrayContentChanges(true, builder => builder(idx, amt, len, () => {
-      let removing = content.slice(idx, amt);
+    internal.withArrayContentChanges(true, builder => builder(idx, addAmt, removeAmt, () => {
+      let removing = content.slice(idx, removeAmt);
       removing.map(item => item.detach());
 
       let adding = array.map(item => {
@@ -88,7 +93,7 @@ export default Serializer.extend({
         return created;
       });
 
-      content.replace(idx, amt, adding);
+      content.replace(idx, removeAmt, adding);
     }));
   },
 

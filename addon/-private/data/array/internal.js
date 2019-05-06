@@ -22,20 +22,20 @@ export default Internal.extend({
 
   withArrayContentChanges(notify, cb) {
     return this.withPropertyChanges(notify, changed => {
-      let builder = (idx, amt, len, runtime) => {
+      let builder = (idx, adding, removing, runtime) => {
         let model = this.model(false);
 
         if(model) {
-          model.arrayContentWillChange(idx, amt, len);
+          model.arrayContentWillChange(idx, removing, adding);
         }
 
         let result = runtime(changed);
 
         if(model) {
-          model.arrayContentDidChange(idx, amt, len);
+          model.arrayContentDidChange(idx, removing, adding);
         }
 
-        if(amt > 0 || len > 0) {
+        if(adding > 0 || removing > 0) {
           changed();
         }
 

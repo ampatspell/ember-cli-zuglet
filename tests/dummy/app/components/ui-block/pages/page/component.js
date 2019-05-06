@@ -1,7 +1,6 @@
 import Component from '@ember/component';
 import layout from './template';
 import { observer } from '@ember/object';
-import $ from 'jquery';
 
 export default Component.extend({
   classNameBindings: [ ':ui-block-pages-page' ],
@@ -18,7 +17,7 @@ export default Component.extend({
     if(!this.get('scrollToContent')) {
       return;
     }
-    let { top } = $(this.element).offset();
+    let top = this.element.offsetTop;
     window.scrollTo(0, top - 30);
   })
 
