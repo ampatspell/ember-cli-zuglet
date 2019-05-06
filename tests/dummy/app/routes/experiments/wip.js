@@ -1,23 +1,41 @@
 import Route from '@ember/routing/route';
-import { route } from 'ember-cli-zuglet/lifecycle';
+import { route, observed, resolveObservers, models } from 'ember-cli-zuglet/lifecycle';
 
 export default Route.extend({
 
   model: route().inline({
 
-    prepare(route) {
-      console.log('prepare');
-      route.transitionTo('experiments');
+    doc: observed().content(({ store }) => store.doc('things/wip').existing()),
+
+    models: models('doc.data.array').object('type').inline({
+
+      prepare(data, owner) {
+        this.setProperties({ data, owner });
+      },
+
+      remove() {
+        this.owner.remove(this.data);
+      }
+
+    }),
+
+    prepare() {
     },
 
-    init() {
-      this._super(...arguments);
-      console.log('init', this+'');
+    load() {
+      return resolveObservers(this.doc);
     },
 
-    willDestroy() {
-      this._super(...arguments);
-      console.log('willDestroy', this+'');
+    add(type, name) {
+      this.doc.get('data.array').pushObject({ type, name });
+    },
+
+    remove(object) {
+      this.doc.get('data.array').removeObject(object);
+    },
+
+    save() {
+      this.doc.save();
     }
 
   })
