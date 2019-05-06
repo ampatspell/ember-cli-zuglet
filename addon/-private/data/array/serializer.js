@@ -51,13 +51,12 @@ export default Serializer.extend({
     }));
 
     let adding = internals.get('length');
-    let removing = remaining.get('length');
+    let removing = content.get('length');
 
     remaining.map(item => item.detach());
 
     internal.withArrayContentChanges(true, builder => builder(0, adding, removing, () => {
-      let len = content.get('length');
-      content.replace(0, len, internals);
+      content.replace(0, removing, internals);
     }));
 
     return {
