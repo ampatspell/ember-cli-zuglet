@@ -50,13 +50,13 @@ export default Serializer.extend({
       return nested;
     }));
 
-    let adding = internals.get('length');
-    let removing = content.get('length');
+    let addAmt = internals.get('length');
+    let removeAmt = content.get('length');
 
     remaining.map(item => item.detach());
 
-    internal.withArrayContentChanges(true, builder => builder(0, adding, removing, () => {
-      content.replace(0, removing, internals);
+    internal.withArrayContentChanges(true, builder => builder(0, addAmt, removeAmt, () => {
+      content.replace(0, removeAmt, internals);
     }));
 
     return {
@@ -70,13 +70,13 @@ export default Serializer.extend({
     return toModel(internal);
   },
 
-  replaceModelValues(internal, idx, amt, array) {
+  replaceModelValues(internal, idx, removeAmt, array) {
     let manager = this.manager;
     let content = internal.content;
-    let len = A(array).get('length');
+    let addAmt = A(array).get('length');
 
-    internal.withArrayContentChanges(true, builder => builder(idx, amt, len, () => {
-      let removing = content.slice(idx, amt);
+    internal.withArrayContentChanges(true, builder => builder(idx, addAmt, removeAmt, () => {
+      let removing = content.slice(idx, removeAmt);
       removing.map(item => item.detach());
 
       let adding = array.map(item => {
@@ -87,7 +87,7 @@ export default Serializer.extend({
         return created;
       });
 
-      content.replace(idx, amt, adding);
+      content.replace(idx, removeAmt, adding);
     }));
   },
 
