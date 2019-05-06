@@ -52,12 +52,18 @@ export default Serializer.extend({
 
     let addAmt = internals.get('length');
     let removeAmt = content.get('length');
+    let remainingAmt = remaining.get('length');
 
     remaining.map(item => item.detach());
 
-    internal.withArrayContentChanges(true, builder => builder(0, addAmt, removeAmt, () => {
-      content.replace(0, removeAmt, internals);
-    }));
+    if(remainingAmt > 0 || addAmt !== removeAmt) {
+
+      // TODO: this can be improved. Instead of replace all which makes all lifecycle models to be recreated, remove add one by one.
+      internal.withArrayContentChanges(true, builder => builder(0, addAmt, removeAmt, () => {
+        content.replace(0, removeAmt, internals);
+      }));
+
+    }
 
     return {
       replace: false,
