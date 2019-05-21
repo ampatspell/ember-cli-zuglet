@@ -16,6 +16,16 @@ export default QueryInternal.extend({
     return this.store.factoryFor('zuglet:query/array/content').create({ content });
   }).readOnly(),
 
+  proxyContentWillChange() {
+    // When objects are removed from content and before that proxy hasn't been touched,
+    // in proxy array observer (`array.addArrayObserver`) callbacks undefined objects are returned
+    //
+    // This is due to the fact array proxy is using `arrangedContent` in weird way.
+    // That needs a better solution.
+    //
+    this.get('proxy').slice();
+  },
+
   createModel() {
     return this.store.factoryFor('zuglet:query/array').create({ _internal: this });
   },
@@ -26,7 +36,6 @@ export default QueryInternal.extend({
     let { type, oldIndex, newIndex, doc: snapshot } = change;
 
     let path = snapshot.ref.path;
-
     let content = this.get('content');
 
     if(type === 'added') {
@@ -50,10 +59,14 @@ export default QueryInternal.extend({
   },
 
   onChanges(snapshot) {
+    this.proxyContentWillChange();
+
     snapshot.docChanges({ includeMetadataChanges: true }).map(change => this.onChange(change));
   },
 
   onReplace(snapshot) {
+    this.proxyContentWillChange();
+
     let content = this.get('content');
     let documents = A(snapshot.docs.map(doc => {
       let document = content.findBy('ref.path', doc.ref.path);

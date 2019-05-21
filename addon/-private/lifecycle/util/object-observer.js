@@ -12,6 +12,7 @@ const withKeys = (keys, cb) => {
 
 export const startObservingObject = (object, keys, target, method) => {
   if(!object) {
+    console.warn('zuglet', 'startObservingObject without an object', keys, target, method);
     return;
   }
   withKeys(keys, key => addObserver(object, key, target, method));
@@ -19,6 +20,7 @@ export const startObservingObject = (object, keys, target, method) => {
 
 export const stopObservingObject = (object, keys, target, method) => {
   if(!object) {
+    console.warn('zuglet', 'stopObservingObject without an object', keys, target, method);
     return;
   }
   withKeys(keys, key => removeObserver(object, key, target, method));
