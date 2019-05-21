@@ -60,6 +60,7 @@ export default QueryInternal.extend({
 
   onChanges(snapshot) {
     this.proxyContentWillChange();
+
     snapshot.docChanges({ includeMetadataChanges: true }).map(change => this.onChange(change));
   },
 
