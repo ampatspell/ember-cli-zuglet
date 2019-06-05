@@ -12,3 +12,4 @@ const zuglet = (message, code, opts) => error(message, `zuglet/${code}`, opts);
 export const documentMissingError    = opts => zuglet('Document does not exist', 'document-missing', opts);
 export const operationDestroyedError = opts => zuglet('Operation is destroyed', 'operation/destroyed', opts);
 export const noObserversError = opts => zuglet('No observers registered', 'observers/none', opts);
+export const currentUserRequiredError = opts => zuglet('Current user is required', 'current-user-required', opts);

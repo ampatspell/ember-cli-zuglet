@@ -26,6 +26,10 @@ export default Internal.extend({
     } else if(type === 'json') {
       return resolve(this.user.getIdTokenResult(refresh));
     }
+  },
+
+  linkAndRetrieveDataWithCredential(credential) {
+    return this.user.linkAndRetrieveDataWithCredential(credential);
   }
 
 });
