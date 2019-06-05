@@ -54,7 +54,7 @@ Returns authentication provider id.
 
 If anonymous or email auth methods are used, this is `firebase`.
 
-## link(method, ...args) `→ Promise<User>`
+## link(method, ...args) `→ Promise<AuthUser>`
 
 Links user with another auth provider.
 
