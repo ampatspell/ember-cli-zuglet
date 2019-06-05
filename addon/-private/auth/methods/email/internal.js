@@ -17,6 +17,12 @@ export default Internal.extend({
 
   credential(email, password) {
     return firebase.auth.EmailAuthProvider.credential(email, password);
+  },
+
+  sendPasswordReset(email, opts) {
+    return this.withAuth(auth => {
+      return auth.sendPasswordResetEmail(email, opts);
+    });
   }
 
 });
