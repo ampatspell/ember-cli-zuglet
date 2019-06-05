@@ -32,7 +32,7 @@ export default Internal.extend({
     method = this.get(`auth.methods`).method(method);
     let credential = method.credential(...args);
     return this.get('auth').withAuthReturningUser(() => {
-      return this.user.linkAndRetrieveDataWithCredential(credential).then(({ user }) => user);
+      return this.user.linkWithCredential(credential).then(({ user }) => user);
     });
   }
 
