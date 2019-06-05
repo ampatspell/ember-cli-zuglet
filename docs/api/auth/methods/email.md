@@ -28,3 +28,17 @@ Returns a `Promise` which resolves with signed-in `AuthUser` instance. At that p
 let user = await store.auth.methods.email.signIn('zeeba@gmail.com', 'hello-world');
 store.auth.user === user // → true
 ```
+
+## sendPasswordReset(email, opts) `→ Promise<undefined>`
+
+Sends password reset email.
+
+Returns a promise which resolves with `undefined` if email was sent.
+
+``` javascript
+try {
+  await store.auth.methods.email.sendPasswordReset('zeeba@gmail.com');
+} catch(err) {
+  console.log(err.code);
+}
+```

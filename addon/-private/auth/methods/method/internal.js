@@ -13,6 +13,10 @@ export default Internal.extend({
     return this.methods.factoryFor(`zuglet:auth/method/${type}`).create({ _internal: this });
   },
 
+  withAuth(fn) {
+    return this.get('auth').withAuth(fn);
+  },
+
   withAuthReturningUser(fn) {
     return this.get('auth').withAuthReturningUser(fn);
   }

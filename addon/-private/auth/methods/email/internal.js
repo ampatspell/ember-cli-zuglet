@@ -12,6 +12,12 @@ export default Internal.extend({
     return this.withAuthReturningUser(auth => {
       return auth.createUserWithEmailAndPassword(email, password).then(({ user }) => user);
     });
+  },
+
+  sendPasswordReset(email, opts) {
+    return this.withAuth(auth => {
+      return auth.sendPasswordResetEmail(email, opts);
+    });
   }
 
 });
