@@ -98,11 +98,6 @@ import ObserverDocument from 'ember-cli-zuglet/-private/observers/document/obser
 import ObserverQueryInternal from 'ember-cli-zuglet/-private/observers/query/internal';
 import ObserverQuery from 'ember-cli-zuglet/-private/observers/query/observer';
 
-import ComputedObservedInternal from 'ember-cli-zuglet/-private/experimental/observed/internal';
-import ComputedModelInternal from 'ember-cli-zuglet/-private/experimental/model/internal';
-import ComputedModelsInternal from 'ember-cli-zuglet/-private/experimental/models/internal';
-import ComputedModels from 'ember-cli-zuglet/-private/experimental/models/models';
-
 import LifecycleModelsInternal from 'ember-cli-zuglet/-private/lifecycle/models/internal';
 import LifecycleModels from 'ember-cli-zuglet/-private/lifecycle/models/models';
 import LifecycleModelInternal from 'ember-cli-zuglet/-private/lifecycle/model/internal';
@@ -251,13 +246,6 @@ export default {
 
     container.register('zuglet:observer/query', ObserverQuery);
     container.register('zuglet:observer/query/internal', ObserverQueryInternal);
-
-    // experimental (deprecated)
-
-    container.register('zuglet:computed/observed/internal', ComputedObservedInternal);
-    container.register('zuglet:computed/model/internal', ComputedModelInternal);
-    container.register('zuglet:computed/models/internal', ComputedModelsInternal);
-    container.register('zuglet:computed/models', ComputedModels);
 
     // lifecycle
 

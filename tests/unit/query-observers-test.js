@@ -42,7 +42,6 @@ module('query-observers', function(hooks) {
     let query = this.store.collection('ducks').query({ type: 'array' });
     let observer = query.observe();
 
-    assert.ok(observer.get('query') === query); // deprecated
     assert.ok(observer.get('content') === query);
 
     observer.cancel();

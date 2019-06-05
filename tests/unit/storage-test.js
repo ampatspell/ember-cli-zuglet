@@ -324,7 +324,6 @@ module('storage', function(hooks) {
     let metadata = ref.get('metadata');
     assert.ok(metadata);
     assert.ok(metadata._internal);
-    assert.ok(metadata.get('reference') === ref); // deprecated
     assert.ok(metadata.get('ref') === ref);
 
     assert.deepEqual(metadata.get('serialized'), {
