@@ -1,6 +1,7 @@
 import firebase from 'firebase';
 import { resolve } from 'rsvp';
 import { isFastBoot } from '../util/fastboot';
+import prepare from './prepare';
 
 let _id = 0;
 
@@ -31,6 +32,8 @@ export default class FirebaseInitializer {
 
   _prepare() {
     let { identifier, id, opts } = this;
+
+    prepare(this.sender);
 
     this.app = firebase.initializeApp(opts.firebase, `${identifier}-${id}`);
 
