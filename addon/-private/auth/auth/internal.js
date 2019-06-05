@@ -96,6 +96,7 @@ export default Internal.extend({
 
     if(user) {
       if(current && current.user === user) {
+        current.notifyPropertyChange('user');
         return;
       }
       this.scheduleUser(user);
