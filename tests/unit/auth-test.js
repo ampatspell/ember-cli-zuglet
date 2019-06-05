@@ -275,7 +275,7 @@ module('auth', function(hooks) {
     assert.ok(typeOf(token) === 'object');
   });
 
-  test('link with credential', async function(assert) {
+  test.only('link with credential', async function(assert) {
     let auth = this.store.get('auth');
     await auth.signOut();
 
@@ -285,25 +285,27 @@ module('auth', function(hooks) {
     let email = `test-${new Date().getTime()}@test.com`;
     let password = 'heythere';
 
-    let user = await auth.get('methods.email').link(email, password);
+    let user = await anon.link('email', email, password);
     assert.ok(anon === user);
 
     assert.equal(user.get('email'), email);
   });
 
-  test('link without user rejects', async function(assert) {
+  test('link user rejects', async function(assert) {
     let auth = this.store.get('auth');
     await auth.signOut();
 
-    let email = `test-${new Date().getTime()}@test.com`;
-    let password = 'heythere';
+    await auth.get('methods.anonymous').signIn();
+    let anon = auth.get('user');
 
     try {
-      await auth.get('methods.email').link(email, password);
+      await anon.link('email', 'ampatspell@gmail.com', 'heythere');
       assert.ok(false, 'should throw');
     } catch(err) {
-      assert.equal(err.code, 'zuglet/current-user-required');
+      assert.equal(err.code, 'auth/email-already-in-use');
     }
+
+    assert.ok(anon === auth.get('user'));
   });
 
 });

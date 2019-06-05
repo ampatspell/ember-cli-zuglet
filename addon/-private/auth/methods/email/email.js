@@ -4,8 +4,6 @@ import { invokePromiseReturningModel } from '../../../internal/invoke';
 export default Method.extend({
 
   signIn: invokePromiseReturningModel('signIn'),
-  signUp: invokePromiseReturningModel('signUp'),
-
-  link: invokePromiseReturningModel('link')
+  signUp: invokePromiseReturningModel('signUp')
 
 });
