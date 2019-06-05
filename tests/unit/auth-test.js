@@ -275,7 +275,7 @@ module('auth', function(hooks) {
     assert.ok(typeOf(token) === 'object');
   });
 
-  test.only('link with credential', async function(assert) {
+  test('link with credential', async function(assert) {
     let auth = this.store.get('auth');
     await auth.signOut();
 
