@@ -275,4 +275,39 @@ module('auth', function(hooks) {
     assert.ok(typeOf(token) === 'object');
   });
 
+  test('link with credential', async function(assert) {
+    let auth = this.store.get('auth');
+    await auth.signOut();
+
+    await auth.get('methods.anonymous').signIn();
+    let anon = auth.get('user');
+    assert.equal(anon.get('isAnonymous'), true);
+
+    let email = `test-${new Date().getTime()}@test.com`;
+    let password = 'heythere';
+
+    let user = await anon.link('email', email, password);
+    assert.ok(anon === user);
+    assert.equal(anon.get('isAnonymous'), false);
+
+    assert.equal(user.get('email'), email);
+  });
+
+  test('link user rejects', async function(assert) {
+    let auth = this.store.get('auth');
+    await auth.signOut();
+
+    await auth.get('methods.anonymous').signIn();
+    let anon = auth.get('user');
+
+    try {
+      await anon.link('email', 'ampatspell@gmail.com', 'heythere');
+      assert.ok(false, 'should throw');
+    } catch(err) {
+      assert.equal(err.code, 'auth/email-already-in-use');
+    }
+
+    assert.ok(anon === auth.get('user'));
+  });
+
 });

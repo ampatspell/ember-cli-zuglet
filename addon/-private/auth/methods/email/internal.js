@@ -1,4 +1,5 @@
 import Internal from '../method/internal';
+import firebase from 'firebase';
 
 export default Internal.extend({
 
@@ -12,6 +13,10 @@ export default Internal.extend({
     return this.withAuthReturningUser(auth => {
       return auth.createUserWithEmailAndPassword(email, password).then(({ user }) => user);
     });
+  },
+
+  credential(email, password) {
+    return firebase.auth.EmailAuthProvider.credential(email, password);
   },
 
   sendPasswordReset(email, opts) {

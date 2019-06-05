@@ -54,6 +54,18 @@ Returns authentication provider id.
 
 If anonymous or email auth methods are used, this is `firebase`.
 
+## link(method, ...args) `→ Promise<User>`
+
+Links user with another auth provider.
+
+``` javascript
+let user = store.auth.user;
+user.isAnonymous // → true
+await user.link('email', 'zeeb@gmail.com', 'heythere');
+user.isAnonymous // → false
+user.emaik // → zeeba@gmail.com
+```
+
 ## serialized `→ Object`
 
 Returns json representation of most important user's properties.

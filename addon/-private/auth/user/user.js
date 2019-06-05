@@ -1,7 +1,7 @@
 import EmberObject, { computed } from '@ember/object';
 import ModelMixin from '../../internal/model-mixin';
 import Mixin from '@ember/object/mixin';
-import { invoke, invokePromiseReturningUndefined } from '../../internal/invoke';
+import { invoke, invokePromiseReturningUndefined, invokePromiseReturningModel } from '../../internal/invoke';
 import serialized from '../../util/serialized';
 
 const keys = [
@@ -27,6 +27,7 @@ export default EmberObject.extend(ModelMixin, UserPropertiesMixin, {
   token: invoke('token'),
 
   delete: invokePromiseReturningUndefined('delete'),
+  link: invokePromiseReturningModel('link'),
 
   serialized: serialized(keys)
 

@@ -26,6 +26,14 @@ export default Internal.extend({
     } else if(type === 'json') {
       return resolve(this.user.getIdTokenResult(refresh));
     }
+  },
+
+  link(method, ...args) {
+    method = this.get(`auth.methods`).method(method);
+    let credential = method.credential(...args);
+    return this.get('auth').withAuthReturningUser(() => {
+      return this.user.linkAndRetrieveDataWithCredential(credential).then(({ user }) => user);
+    });
   }
 
 });
