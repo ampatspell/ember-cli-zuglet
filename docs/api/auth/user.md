@@ -63,7 +63,7 @@ let user = store.auth.user;
 user.isAnonymous // → true
 await user.link('email', 'zeeb@gmail.com', 'heythere');
 user.isAnonymous // → false
-user.emaik // → zeeba@gmail.com
+user.email // → zeeba@gmail.com
 ```
 
 ## serialized `→ Object`
