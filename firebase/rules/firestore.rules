@@ -37,5 +37,9 @@ service cloud.firestore {
       allow read, write;
     }
 
+    match /random/{document=**} {
+      allow read, write;
+    }
+
   }
 }
