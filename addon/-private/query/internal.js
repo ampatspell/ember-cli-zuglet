@@ -137,7 +137,15 @@ export default Internal.extend({
   subscribeQueryOnSnapshot() {
     let query = this.get('unwrappedQuery');
     let opts = { includeMetadataChanges: true };
-    return query.onSnapshot(opts, snapshot => actions(() => this.onSnapshot(snapshot)));
+    return query.onSnapshot(opts, snapshot => actions(() => {
+      if(this.isDestroying) {
+        return;
+      }
+      this.onSnapshot(snapshot);
+    }), err => {
+      let string = this.get('normalizedQuery.string');
+      console.error(`query '${string}' onSnapshot`, err);
+    });
   },
 
   willObserve() {

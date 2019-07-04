@@ -267,7 +267,9 @@ export default Internal.extend({
         return;
       }
       this.onSnapshot(snapshot);
-    }));
+    }), err => {
+      console.error(`document '${ref.path}' onSnapshot`, err);
+    });
   },
 
   observers: observers({
