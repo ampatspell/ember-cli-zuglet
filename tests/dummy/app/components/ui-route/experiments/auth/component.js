@@ -16,7 +16,7 @@ export default Component.extend({
     },
     signInEmail(email, password) {
       this.get('store.auth.methods.email').signIn(email, password);
-    },
+    }
   }
 
 });
