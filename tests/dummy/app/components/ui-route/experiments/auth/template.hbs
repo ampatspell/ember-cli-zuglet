@@ -42,3 +42,12 @@
     <button {{action 'signInEmail' email password}}>Sign in with email</button>
   {{/rows.row}}
 {{/ui-block/rows}}
+
+{{#ui-block/rows as |rows|}}
+  {{#rows.row}}
+    <button {{action 'loop'}}>Loop</button>
+  {{/rows.row}}
+  {{#rows.row}}
+    {{ui-block/json doc.data.serialized}}
+  {{/rows.row}}
+{{/ui-block/rows}}
