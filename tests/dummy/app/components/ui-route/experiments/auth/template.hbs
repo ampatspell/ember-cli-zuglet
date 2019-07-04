@@ -43,11 +43,14 @@
   {{/rows.row}}
 {{/ui-block/rows}}
 
-{{#ui-block/rows as |rows|}}
-  {{#rows.row}}
-    <button {{action 'loop'}}>Loop</button>
-  {{/rows.row}}
-  {{#rows.row}}
-    {{ui-block/json doc.data.serialized}}
-  {{/rows.row}}
-{{/ui-block/rows}}
+{{#if doc}}
+  {{#ui-block/rows as |rows|}}
+    {{#if doc.exists}}
+      {{#rows.row}}
+        {{ui-block/json doc.data.serialized}}
+      {{/rows.row}}
+    {{else}}
+      {{doc.path}} not found
+    {{/if}}
+  {{/ui-block/rows}}
+{{/if}}

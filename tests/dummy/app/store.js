@@ -20,10 +20,12 @@ export default Store.extend({
       let next = null;
       if(user) {
         next = this.models.create('user', { user });
-        await next.restore();
       }
       this.set('user', next);
       current && current.destroy();
+      if(next) {
+        await next.restore();
+      }
     }
   }
 

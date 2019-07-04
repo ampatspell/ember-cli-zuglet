@@ -2,8 +2,6 @@ import Component from '@ember/component';
 import layout from './template';
 import { readOnly } from '@ember/object/computed';
 
-let times = 0;
-
 export default Component.extend({
   layout,
 
@@ -19,19 +17,6 @@ export default Component.extend({
     signInEmail(email, password) {
       this.get('store.auth.methods.email').signIn(email, password);
     },
-    loop() {
-      this.loop();
-    }
-  },
-
-  async loop() {
-    await this.store.auth.signOut();
-    await this.store.auth.methods.email.signIn('zeeba@gmail.com', 'heythere');
-    times++;
-    if(times > 10) {
-      return;
-    }
-    this.loop();
   }
 
 });
