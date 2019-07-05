@@ -1,7 +1,6 @@
 import Internal from '../../internal/internal';
 import { computed } from '@ember/object';
 import { resolve } from 'rsvp';
-import destroyCached from '../../util/destroy-cached';
 import queue from '../../queue/computed';
 import actions from '../../util/actions';
 
@@ -116,6 +115,7 @@ export default Internal.extend({
   //
 
   onAuthStateChanged(user) {
+    console.log('onAuthStateChanged', user);
     this.onUser(user);
   },
 
@@ -158,7 +158,8 @@ export default Internal.extend({
 
   willDestroy() {
     this.stopObservingAuthState();
-    destroyCached(this, 'user');
+    let user = this.get('user');
+    user && user.destroy();
     this._super(...arguments);
   }
 
