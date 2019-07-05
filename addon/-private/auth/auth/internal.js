@@ -115,7 +115,6 @@ export default Internal.extend({
   //
 
   onAuthStateChanged(user) {
-    console.log('onAuthStateChanged', user);
     this.onUser(user);
   },
 
@@ -144,13 +143,17 @@ export default Internal.extend({
     return resolve(fn(auth));
   },
 
+  _withAuthReturningUser(fn) {
+    return this.withAuth(fn)
+      .then(user => this.onUser(user))
+      .then(() => this.settle())
+      .then(() => this.get('user'));
+  },
+
   withAuthReturningUser(fn) {
     return this.get('queue').schedule({
       name: 'auth',
-      promise: this.withAuth(fn)
-        .then(user => this.onUser(user))
-        .then(() => this.settle())
-        .then(() => this.get('user'))
+      invoke: () => this._withAuthReturningUser(fn)
     });
   },
 
