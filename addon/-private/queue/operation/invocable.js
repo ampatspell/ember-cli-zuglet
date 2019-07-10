@@ -33,7 +33,7 @@ export default EmberObject.extend({
 
     let opts = this.get('opts');
 
-    resolve(opts.invoke()).then(arg => {
+    resolve().then(() => opts.invoke()).then(arg => {
       if(this.isDestroying) {
         return;
       }
