@@ -1,17 +1,20 @@
 import Internal from '../../internal/internal';
 import { computed } from '@ember/object';
 import { resolve, defer } from 'rsvp';
-import queue from '../../queue/computed';
+import _queue from '../../queue/computed';
 import actions from '../../util/actions';
 import settle from '../../util/settle';
 import { A } from '@ember/array';
+
+let queue = () => _queue('serialized', 'store.queue');
 
 export default Internal.extend({
 
   store: null,
   user: null,
 
-  queue: queue('serialized', 'store.queue'),
+  queue: queue(),
+  state: queue(),
 
   init() {
     this._super(...arguments);
@@ -45,12 +48,9 @@ export default Internal.extend({
     return this.factoryFor('zuglet:auth/user/internal').create({ auth: this, user });
   },
 
-  //     if(current && current.user === user) {
-  //       current.notifyPropertyChange('user');
-  //       return;
-  //     }
-
   restoreUserInternal(internal) {
+    console.log('restoreUserInternal', internal+'');
+
     let store = this.get('store').model(true);
     return resolve().then(() => {
       if(store.isDestroying) {
@@ -96,7 +96,7 @@ export default Internal.extend({
 
   onAuthStateChanged(user) {
     console.log('onAuthStateChanged', user && user.uid);
-    return this.get('queue').schedule({
+    return this.get('state').schedule({
       name: 'restore',
       invoke: () => this.restoreUser(user)
     });
@@ -152,8 +152,10 @@ export default Internal.extend({
   //
 
   settle() {
+    let promises = key => this.get(key).promises();
     return settle(() => [
-      ...this.get('queue').promises()
+      ...promises('queue'),
+      ...promises('state')
     ]);
   },
 
