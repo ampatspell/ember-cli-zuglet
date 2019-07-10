@@ -143,8 +143,7 @@ export default Internal.extend({
       }
       this.onSnapshot(snapshot);
     }), err => {
-      let string = this.get('normalizedQuery.string');
-      console.error(`query '${string}' onSnapshot`, err);
+      console.error(`query ${this._model} onSnapshot`, err);
     });
   },
 

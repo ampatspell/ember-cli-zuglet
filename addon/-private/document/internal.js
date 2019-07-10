@@ -268,7 +268,7 @@ export default Internal.extend({
       }
       this.onSnapshot(snapshot);
     }), err => {
-      console.error(`document '${ref.path}' onSnapshot`, err);
+      console.error(`document ${this._model} onSnapshot`, err);
     });
   },
 
