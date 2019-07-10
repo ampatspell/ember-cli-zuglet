@@ -54,8 +54,16 @@ notifyOnAuthStateChanged() {
   listeners.forEach(listener => listener.promise.resolve());
 }
 
+restoreUser(user) {
+  let internal = this.createInternalUser(user);
+  let model = internal.model(true);
+  return store.restoreUser(model).then(() => this.set('user', internal));
+},
+
 onAuthStateChanged(user) {
-  this.notifyOnAuthStateChanged();
+  return this.restoreUser(user).then(() => {
+    this.notifyOnAuthStateChanged();
+  });
 }
 
 ```
