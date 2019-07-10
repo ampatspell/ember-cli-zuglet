@@ -45,27 +45,10 @@ export default Internal.extend({
     return this.factoryFor('zuglet:auth/user/internal').create({ auth: this, user });
   },
 
-  // onUser(user) {
-  //   let current = this.get('user');
-
-  //   if(user) {
   //     if(current && current.user === user) {
   //       current.notifyPropertyChange('user');
   //       return;
   //     }
-  //     this.scheduleUser(user);
-  //   } else {
-  //     if(!current) {
-  //       return;
-  //     }
-  //     this.scheduleUser(null);
-  //     this.set('user', null);
-  //   }
-
-  //   if(current) {
-  //     current.destroy();
-  //   }
-  // },
 
   restoreUserInternal(internal) {
     let store = this.get('store').model(true);
@@ -88,7 +71,7 @@ export default Internal.extend({
   },
 
   restoreUser(user) {
-    console.log('restoreUser', user);
+    console.log('restoreUser', user && user.uid);
     if(this.isDestroying) {
       return;
     }
@@ -106,13 +89,13 @@ export default Internal.extend({
       current.destroy();
     }
 
-    return this.restoreUserInternal(internal);
+    return this.restoreUserInternal(internal).then(() => this.notifyUser());
   },
 
   //
 
   onAuthStateChanged(user) {
-    console.log('onAuthStateChanged', user);
+    console.log('onAuthStateChanged', user && user.uid);
     return this.get('queue').schedule({
       name: 'restore',
       invoke: () => this.restoreUser(user)
@@ -151,6 +134,10 @@ export default Internal.extend({
   },
 
   notifyUser() {
+    if(this.isDestroying) {
+      return;
+    }
+    console.log('notifyUser');
     let listeners = this._waitForUser.slice();
     this._waitForUser.clear();
     listeners.forEach(listener => listener.resolve());
@@ -175,19 +162,26 @@ export default Internal.extend({
     return resolve(fn(auth));
   },
 
-  // _withAuthReturningUser(fn) {
-  //   return this.withAuth(fn)
-  //     .then(user => this.onUser(user))
-  //     .then(() => this.settle())
-  //     .then(() => this.get('user'));
-  // },
-
-  // withAuthReturningUser(fn) {
-  //   return this.get('queue').schedule({
-  //     name: 'auth',
-  //     invoke: () => this._withAuthReturningUser(fn)
-  //   });
-  // },
+  withAuthReturningUser(fn) {
+    return this.get('queue').schedule({
+      name: 'auth',
+      invoke: () => this.withAuth(auth => {
+        let current = this.get('user.user') || null;
+        let waiter = this.waitForUser();
+        return fn(auth).then(next => {
+          if(current === next) {
+            console.log('current===next', current);
+            // same user
+            waiter.cancel();
+          } else {
+            console.log('waitForUser');
+            // wait for onAuthStateChanged
+            return waiter.promise;
+          }
+        }).then(() => this.get('user'));
+      })
+    });
+  },
 
   //
 
