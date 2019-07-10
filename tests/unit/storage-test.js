@@ -3,6 +3,7 @@ import { run } from '@ember/runloop';
 import { resolve } from 'rsvp';
 import { typeOf } from '@ember/utils';
 import getParams from '../helpers/query';
+import { next } from '../helpers/firebase';
 
 let params = getParams();
 let disabled = params['no-auth'] || params['no-storage'];
@@ -555,6 +556,8 @@ module('storage', function(hooks) {
     });
 
     let promise = ref.load({ url: true });
+
+    await next();
 
     assert.deepEqual(ref.get('url.serialized'), {
       "error": null,
