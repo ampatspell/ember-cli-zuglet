@@ -49,8 +49,6 @@ export default Internal.extend({
   },
 
   restoreUserInternal(internal) {
-    console.log('restoreUserInternal', internal+'');
-
     let store = this.get('store').model(true);
     return resolve().then(() => {
       if(store.isDestroying) {
@@ -71,7 +69,6 @@ export default Internal.extend({
   },
 
   restoreUser(user) {
-    console.log('restoreUser', user && user.uid);
     if(this.isDestroying) {
       return;
     }
@@ -99,7 +96,6 @@ export default Internal.extend({
   //
 
   onAuthStateChanged(user) {
-    console.log('onAuthStateChanged', user && user.uid);
     return this.get('state').schedule({
       name: 'restore',
       invoke: () => this.restoreUser(user)
@@ -141,7 +137,6 @@ export default Internal.extend({
     if(this.isDestroying) {
       return;
     }
-    console.log('notifyUser');
     let listeners = this._waitForUser.slice();
     this._waitForUser.clear();
     listeners.forEach(listener => listener.resolve());
