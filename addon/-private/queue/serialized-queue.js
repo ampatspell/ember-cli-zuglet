@@ -23,8 +23,6 @@ export default Queue.extend({
 
     operation.invoke().catch(() => {}).finally(() => {
       assert('running operation must match operation in scope', this.get('running') === operation);
-      // assert('first operation must be operation in scope', operations.get('firstObject') === operation);
-      // operations.shiftObject();
       this.set('running', null);
       this.next();
     });

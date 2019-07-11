@@ -1,8 +1,9 @@
 import { get } from '@ember/object';
-import { later } from '@ember/runloop';
+import { later, next as _next } from '@ember/runloop';
 import { Promise, all } from 'rsvp';
 
 export const wait = delay => new Promise(resolve => later(resolve, delay));
+export const next = () => new Promise(resolve => _next(resolve));
 
 export const waitFor = async (fn, max=30000) => {
   let start = Date.now();

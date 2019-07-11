@@ -1,5 +1,5 @@
 import { module, test, setupStoreTest, setupDucks } from '../helpers/setup';
-import { waitForProp } from '../helpers/firebase';
+import { waitForProp, next } from '../helpers/firebase';
 import { all } from 'rsvp';
 import { run } from '@ember/runloop';
 
@@ -56,6 +56,8 @@ module('document', function(hooks) {
 
     let promise = doc.save();
 
+    await next();
+
     assert.equal(doc.get('isDirty'), false);
     doc.set('data.name', 'green');
     assert.equal(doc.get('isDirty'), true);
@@ -92,6 +94,8 @@ module('document', function(hooks) {
     });
 
     let promise = doc.save();
+
+    await next();
 
     assert.deepEqual(doc.get('serialized'), {
       "id": "yellow",
@@ -159,6 +163,8 @@ module('document', function(hooks) {
     });
 
     let promise = doc.delete();
+
+    await next();
 
     assert.deepEqual(doc.get('serialized'), {
       "data": {

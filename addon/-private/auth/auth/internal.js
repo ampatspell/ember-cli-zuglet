@@ -1,25 +1,28 @@
 import Internal from '../../internal/internal';
 import { computed } from '@ember/object';
-import { resolve } from 'rsvp';
-import destroyCached from '../../util/destroy-cached';
-import queue from '../../queue/computed';
+import { resolve, defer } from 'rsvp';
+import _queue from '../../queue/computed';
 import actions from '../../util/actions';
+import settle from '../../util/settle';
+import { A } from '@ember/array';
+
+let queue = () => _queue('serialized', 'store.queue');
 
 export default Internal.extend({
 
   store: null,
   user: null,
 
-  queue: queue('serialized', 'store.queue'),
+  queue: queue(),
+  state: queue(),
 
   init() {
     this._super(...arguments);
-    this.promise = resolve();
+    this._waitForUser = A();
   },
 
   prepare() {
     this.startObservingAuthState();
-    this.onUser(this.get('auth').currentUser);
     return this.settle();
   },
 
@@ -65,58 +68,38 @@ export default Internal.extend({
     });
   },
 
-  append(fn) {
-    let promise = this.promise;
-    this.promise = promise.catch(() => {}).finally(fn);
-  },
+  restoreUser(user) {
+    if(this.isDestroying) {
+      return;
+    }
 
-  scheduleUser(user) {
-    this.append(() => {
-      if(this.isDestroying) {
-        return;
-      }
-
-      let internal = null;
-
-      if(user) {
-        internal = this.createUserInternal(user);
-      }
-
-      return this.restoreUserInternal(internal).then(() => {
-        if(this.isDestroying) {
-          return;
-        }
-        this.set('user', internal);
-      });
-    });
-  },
-
-  onUser(user) {
     let current = this.get('user');
+    let internal = null;
 
-    if(user) {
-      if(current && current.user === user) {
-        current.notifyPropertyChange('user');
-        return;
-      }
-      this.scheduleUser(user);
-    } else {
-      if(!current) {
-        return;
-      }
-      this.scheduleUser(null);
-      this.set('user', null);
+    if(current && current.get('user') === user) {
+      internal = current;
+      internal.notifyPropertyChange('user');
+    } else if(user) {
+      internal = this.createUserInternal(user);
     }
 
-    if(current) {
-      current.destroy();
+    if(current !== internal) {
+      this.set('user', internal);
+      if(current) {
+        current.destroy();
+      }
     }
+
+    return this.restoreUserInternal(internal).then(() => this.notifyUser());
   },
 
   //
 
   onAuthStateChanged(user) {
-    this.onUser(user);
+    return this.get('state').schedule({
+      name: 'restore',
+      invoke: () => this.restoreUser(user)
+    });
   },
 
   startObservingAuthState() {
@@ -129,6 +112,38 @@ export default Internal.extend({
 
   //
 
+  waitForUser() {
+    let deferred = defer();
+    let promise = deferred.promise;
+
+    let array = this._waitForUser;
+    let object = {};
+
+    let resolve = () => deferred.resolve();
+    let cancel = () => array.removeObject(object);
+
+    object = {
+      resolve,
+      cancel,
+      promise
+    };
+
+    array.pushObject(object);
+
+    return object;
+  },
+
+  notifyUser() {
+    if(this.isDestroying) {
+      return;
+    }
+    let listeners = this._waitForUser.slice();
+    this._waitForUser.clear();
+    listeners.forEach(listener => listener.resolve());
+  },
+
+  //
+
   signOut() {
     return this.withAuthReturningUser(auth => auth.signOut().then(() => null));
   },
@@ -136,7 +151,11 @@ export default Internal.extend({
   //
 
   settle() {
-    return this.promise;
+    let promises = key => this.get(key).promises();
+    return settle(() => [
+      ...promises('queue'),
+      ...promises('state')
+    ]);
   },
 
   withAuth(fn) {
@@ -147,10 +166,18 @@ export default Internal.extend({
   withAuthReturningUser(fn) {
     return this.get('queue').schedule({
       name: 'auth',
-      promise: this.withAuth(fn)
-        .then(user => this.onUser(user))
-        .then(() => this.settle())
-        .then(() => this.get('user'))
+      invoke: () => this.withAuth(auth => {
+        let current = this.get('user.user') || null;
+        let waiter = this.waitForUser();
+        return fn(auth).then(next => {
+          if(current === next) {
+            waiter.cancel();
+            return this.restoreUser(next);
+          } else {
+            return waiter.promise;
+          }
+        }).then(() => this.get('user'));
+      })
     });
   },
 
@@ -158,7 +185,8 @@ export default Internal.extend({
 
   willDestroy() {
     this.stopObservingAuthState();
-    destroyCached(this, 'user');
+    let user = this.get('user');
+    user && user.destroy();
     this._super(...arguments);
   }
 

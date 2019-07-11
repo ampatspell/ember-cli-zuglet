@@ -1,5 +1,5 @@
 import { module, test, setupStoreTest } from '../helpers/setup';
-import { recreateCollection, waitForCollectionSize, waitForLength } from '../helpers/firebase';
+import { recreateCollection, waitForCollectionSize, waitForLength, next } from '../helpers/firebase';
 import { all } from 'rsvp';
 import { run } from '@ember/runloop';
 
@@ -44,6 +44,8 @@ module('query-array', function(hooks) {
     let query = this.store.collection('ducks').orderBy('name').query({ type: 'array' });
 
     let promise = query.load();
+
+    await next();
 
     assert.deepEqual(query.get('serialized'), {
       "type": "array",

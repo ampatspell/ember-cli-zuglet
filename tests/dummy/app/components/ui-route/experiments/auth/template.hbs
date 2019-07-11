@@ -40,5 +40,19 @@
   {{/rows.row}}
   {{#rows.row}}
     <button {{action 'signInEmail' email password}}>Sign in with email</button>
+    <button {{action 'signInEmail' 'zeeba@gmail.com' 'heythere'}}>Sign in zeeba</button>
+    <button {{action 'signInEmail' 'larry@gmail.com' 'heythere'}}>Sign in larry</button>
   {{/rows.row}}
 {{/ui-block/rows}}
+
+{{#if doc}}
+  {{#ui-block/rows as |rows|}}
+    {{#if doc.exists}}
+      {{#rows.row}}
+        {{ui-block/json doc.data.serialized}}
+      {{/rows.row}}
+    {{else}}
+      {{doc.path}} not found
+    {{/if}}
+  {{/ui-block/rows}}
+{{/if}}

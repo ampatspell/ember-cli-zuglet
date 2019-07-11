@@ -1,5 +1,5 @@
 import { module, test, setupStoreTest } from '../helpers/setup';
-import { recreateCollection, waitForCollectionSize } from '../helpers/firebase';
+import { recreateCollection, waitForCollectionSize, next } from '../helpers/firebase';
 import { all } from 'rsvp';
 import { run } from '@ember/runloop';
 
@@ -39,6 +39,8 @@ module('query-first', function(hooks) {
     let query = this.store.collection('ducks').orderBy('name').query({ type: 'first' });
 
     let promise = query.load();
+
+    await next();
 
     assert.deepEqual(query.get('serialized'), {
       "type": "first",

@@ -9,12 +9,24 @@ export default Store.extend({
 
   options,
 
-  // restore() {
-  //
-  // },
+  user: null,
 
-  // restoreUser(user) {
-  //   console.log('restoreUser', user);
-  // }
+  async restoreUser(user) {
+    let next = null;
+    if(user) {
+      next = this.models.create('user', { user });
+    }
+
+    let current = this.user;
+    this.set('user', next);
+
+    if(current) {
+      current.destroy();
+    }
+
+    if(next) {
+      await next.restore();
+    }
+  }
 
 });
