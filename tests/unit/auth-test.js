@@ -190,7 +190,6 @@ module('auth', function(hooks) {
     assert.ok(result === user);
     assert.ok(user.get('ok'));
     assert.deepEqual(log, [
-      user.get('uid'),
       user.get('uid')
     ]);
   });
@@ -251,9 +250,7 @@ module('auth', function(hooks) {
 
     assert.deepEqual(log, [
       uid1,
-      uid1,
       null,
-      uid2,
       uid2,
       null
     ]);
@@ -289,7 +286,6 @@ module('auth', function(hooks) {
     let user = await anon.link('email', email, password);
     assert.ok(anon === user);
     assert.equal(anon.get('isAnonymous'), false);
-
     assert.equal(user.get('email'), email);
   });
 

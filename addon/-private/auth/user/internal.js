@@ -11,12 +11,9 @@ export default Internal.extend({
     return this.auth.factoryFor('zuglet:auth/user').create({ _internal: this });
   },
 
-  onDeleted() {
-    this.get('auth').onUser(null);
-  },
-
   delete() {
-    return resolve(this.user.delete()).then(() => this.onDeleted());
+    let user = this.get('user');
+    return this.auth.withAuthReturningUser(() => user.delete().then(() => null));
   },
 
   token(opts={}) {

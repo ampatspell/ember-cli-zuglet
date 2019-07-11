@@ -76,17 +76,21 @@ export default Internal.extend({
       return;
     }
 
+    let current = this.get('user');
     let internal = null;
 
-    if(user) {
+    if(current && current.get('user') === user) {
+      internal = current;
+      internal.notifyPropertyChange('user');
+    } else if(user) {
       internal = this.createUserInternal(user);
     }
 
-    let current = this.get('user');
-    this.set('user', internal);
-
-    if(current) {
-      current.destroy();
+    if(current !== internal) {
+      this.set('user', internal);
+      if(current) {
+        current.destroy();
+      }
     }
 
     return this.restoreUserInternal(internal).then(() => this.notifyUser());
@@ -172,12 +176,9 @@ export default Internal.extend({
         let waiter = this.waitForUser();
         return fn(auth).then(next => {
           if(current === next) {
-            console.log('current===next', current);
-            // same user
             waiter.cancel();
+            return this.restoreUser(next);
           } else {
-            console.log('waitForUser');
-            // wait for onAuthStateChanged
             return waiter.promise;
           }
         }).then(() => this.get('user'));
