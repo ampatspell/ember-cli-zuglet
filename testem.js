@@ -13,7 +13,9 @@ module.exports = {
       args: [
         // --no-sandbox is needed when running Chrome inside a container
         process.env.TRAVIS ? '--no-sandbox' : null,
-
+        // '--disable-dev-shm-usage',
+        // '--disable-software-rasterizer',
+        // '--mute-audio',
         '--disable-gpu',
         '--headless',
         '--remote-debugging-port=0',
