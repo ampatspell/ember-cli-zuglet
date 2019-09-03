@@ -27,7 +27,7 @@ export default Internal.extend({
 
   prepare() {
     this.startObservingAuthState();
-    return this._deferred.promise.then(() => this.settle());
+    return this.get('_deferred').promise.then(() => this.settle());
   },
 
   createModel() {
@@ -94,7 +94,7 @@ export default Internal.extend({
       }
     }
 
-    this._deferred.resolve();
+    this.get('_deferred').resolve();
 
     return this.restoreUserInternal(internal).then(() => this.notifyUser());
   },
