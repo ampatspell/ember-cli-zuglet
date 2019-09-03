@@ -8,10 +8,13 @@ const isEqual = (a, b) => {
   return a.every((val, i) => val === b[i]);
 }
 
+const isUint8Array = value => value instanceof Uint8Array;
+const toUint8Array = value => isFirestoreBlob(value) ? value.toUint8Array() : value;
+
 export default Serializer.extend({
 
   supports(value) {
-    return value instanceof Uint8Array;
+    return isUint8Array(value) || isFirestoreBlob(value);
   },
 
   matches(internal, value) {
@@ -19,6 +22,7 @@ export default Serializer.extend({
   },
 
   createInternal(content) {
+    content = toUint8Array(content);
     return this.factoryFor('zuglet:data/blob/internal').create({ serializer: this, content });
   },
 
@@ -33,7 +37,7 @@ export default Serializer.extend({
   },
 
   deserialize(internal, value) {
-    value = value.toUint8Array();
+    value = toUint8Array(value);
 
     if(isEqual(internal.content, value)) {
       return {
@@ -51,8 +55,7 @@ export default Serializer.extend({
   },
 
   isDirty(internal, raw) {
-    window.raw = raw;
-    raw = raw.toUint8Array();
+    raw = toUint8Array(raw);
     return !isEqual(internal.content, raw);
   }
 

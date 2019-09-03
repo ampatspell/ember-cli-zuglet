@@ -949,6 +949,12 @@ module('data', function(hooks) {
 
     bytes = doc.get('data.bytes');
     assert.ok(hello === bytes);
+
+    doc = this.store.doc('duck/yellow').existing();
+    await doc.load();
+
+    bytes = doc.get('data.bytes');
+    assert.ok(bytes instanceof Uint8Array);
   });
 
 });
