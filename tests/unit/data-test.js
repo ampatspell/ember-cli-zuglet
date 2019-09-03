@@ -927,4 +927,28 @@ module('data', function(hooks) {
     assert.equal(doc.get('isDirty'), false);
   });
 
+  test('uint8 array', async function(assert) {
+    let hello = new TextEncoder().encode('This is Uint8Array');
+
+    let doc = this.store.doc('duck/yellow').new();
+    assert.equal(doc.get('isDirty'), false);
+
+    doc.set('data.bytes', hello);
+    assert.equal(doc.get('isDirty'), true);
+
+    let bytes;
+
+    bytes = doc.get('data.bytes');
+    assert.ok(hello === bytes);
+
+    await doc.save();
+    assert.equal(doc.get('isDirty'), false);
+
+    await doc.reload();
+    assert.equal(doc.get('isDirty'), false);
+
+    bytes = doc.get('data.bytes');
+    assert.ok(hello === bytes);
+  });
+
 });

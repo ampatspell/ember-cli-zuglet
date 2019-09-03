@@ -49,6 +49,9 @@ import DataObject from 'ember-cli-zuglet/-private/data/object/object';
 import DataPrimitiveSerializer from 'ember-cli-zuglet/-private/data/primitive/serializer';
 import DataPrimitiveInternal from 'ember-cli-zuglet/-private/data/primitive/internal';
 
+import DataBlobSerializer from 'ember-cli-zuglet/-private/data/blob/serializer';
+import DataBlobInternal from 'ember-cli-zuglet/-private/data/blob/internal';
+
 import DataArraySerializer from 'ember-cli-zuglet/-private/data/array/serializer';
 import DataArrayInternal from 'ember-cli-zuglet/-private/data/array/internal';
 import DataArray from 'ember-cli-zuglet/-private/data/array/array';
@@ -195,6 +198,9 @@ export default {
 
     container.register('zuglet:data/primitive/serializer', DataPrimitiveSerializer);
     container.register('zuglet:data/primitive/internal', DataPrimitiveInternal);
+
+    container.register('zuglet:data/blob/serializer', DataBlobSerializer);
+    container.register('zuglet:data/blob/internal', DataBlobInternal);
 
     //
 
