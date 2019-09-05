@@ -4,7 +4,8 @@ const {
   DocumentReference,
   CollectionReference,
   FieldValue,
-  Timestamp
+  Timestamp,
+  Blob
 } = firebase.firestore;
 
 export const isFirestoreDocumentReference = value => value instanceof DocumentReference;
@@ -18,3 +19,6 @@ export const serverTimestamp = FieldValue.serverTimestamp();
 export const isFirestoreServerTimestamp = value => serverTimestamp.isEqual(value);
 
 export const isFirestoreTimestamp = value => value instanceof Timestamp;
+
+export const isFirestoreBlob = value => value instanceof Blob;
+export const blobFromUint8Array = value => Blob.fromUint8Array(value);

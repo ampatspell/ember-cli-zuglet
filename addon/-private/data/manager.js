@@ -8,6 +8,7 @@ const serializers = [
   'reference',
   'timestamp',
   'array',
+  'blob',
   'object',
   'primitive'
 ];
