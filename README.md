@@ -7,8 +7,9 @@ It has stateful, observable documents and queries, easy file uploads, auth.
 * [Website](https://www.ember-cli-zuglet.com/)
 * [Documentation](https://www.ember-cli-zuglet.com/docs)
 
-Apps built using ember-cli-zuglet:
+Open source apps built using ember-cli-zuglet:
 
+* [tiny](http://github.com/ampatspell/tiny)
 * [bain ×](https://getbain.com/)
 * [index65](https://github.com/ampatspell/index65)
 * [ohne-zeit](https://github.com/ampatspell/ohne-zeit)
