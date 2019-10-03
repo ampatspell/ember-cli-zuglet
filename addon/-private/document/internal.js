@@ -200,17 +200,30 @@ export default Internal.extend({
     return assign({ type: 'set', merge: false, optional: false }, opts);
   },
 
+  _shouldSkipSave(opts) {
+    let { isDirty, isNew } = this.getProperties('isDirty', 'isNew');
+    return opts.optional && opts.type === 'set' && !isDirty && !isNew;
+  },
+
   save(opts) {
     opts = this._normalizeSaveOptions(opts);
     return this.get('queue').schedule({
       name: 'document/save',
       invoke: () => {
+        if(this._shouldSkipSave(opts)) {
+          return;
+        }
         let ref = this.get('ref.ref');
         let data = this.get('data').serialize('raw');
         this.willSave(data, opts);
         return this._save(ref, data, opts);
       },
-      didResolve: raw => this.didSave(raw),
+      didResolve: raw => {
+        if(!raw) {
+          return this;
+        }
+        return this.didSave(raw);
+      },
       didReject: err => this.saveDidFail(err, opts)
     });
   },

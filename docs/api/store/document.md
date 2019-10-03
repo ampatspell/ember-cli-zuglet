@@ -131,7 +131,20 @@ Saves document in Firestore database.
 * `merge` → `Boolean` (defaults to `false`), used only if `type` is `set`
 * `optional` → `Boolean` (defaults to `false`), used only if `type` is `update`
 
-If no options are provided, defaults (`{ type: 'set', merge: false }`) always overwrites the whole document. To change this behavior, use `{ merge: true }` to do a server-side merge of existing document properties with added ones.
+If no options are provided, defaults (`{ type: 'set', merge: false, optional: false }`) always overwrites the whole document. To change this behavior, use `{ merge: true }` to do a server-side merge of existing document properties with added ones.
+
+By default documents are saved even if they are not dirty. To skip saving non-new, non-dirty documents, pass `{optional: true }`.
+
+**Save dirty document:**
+
+``` javascript
+let doc = await store.doc('duck/yellow').new();
+doc.set('data.address', { street: 'Duck Street' });
+await doc.save({ optional: true });
+// → This save will save document as it was new
+await doc.save({ optional: true });
+// → This save will skip saving document as it was not dirty and not new
+```
 
 **Save document by overwriting all the properties:**
 

@@ -139,6 +139,38 @@ module('document', function(hooks) {
     });
   });
 
+  test('save pristine document', async function(assert) {
+    let ref = this.store.doc('ducks/yellow');
+    let doc = ref.new({ name: 'yellow', feathers: 'cute' });
+
+    assert.equal(doc.isNew, true);
+    assert.equal(doc.isDirty, false);
+
+    await doc.save({ optional: true });
+
+    assert.equal(doc.isNew, false);
+    assert.equal(doc.isDirty, false);
+
+    let loaded;
+
+    loaded = await this.store.doc('ducks/yellow').load();
+    assert.deepEqual(loaded.data.serialized, {
+      name: 'yellow',
+      feathers: 'cute'
+    });
+
+    loaded.set('data.feathers', 'cutest');
+    await loaded.save();
+
+    await doc.save({ optional: true });
+
+    loaded = await this.store.doc('ducks/yellow').load();
+    assert.deepEqual(loaded.data.serialized, {
+      name: 'yellow',
+      feathers: 'cutest'
+    });
+  });
+
   test('delete document', async function(assert) {
     let doc = this.store.doc('ducks/yellow').new({ name: 'yellow', feathers: 'cute' });
     await doc.save();
