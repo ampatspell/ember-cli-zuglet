@@ -197,7 +197,7 @@ export default Internal.extend({
   },
 
   _normalizeSaveOptions(opts={}) {
-    return assign({ type: 'set', merge: false, optional: false, dirty: false }, opts);
+    return assign({ type: 'set', merge: false, optional: false }, opts);
   },
 
   _shouldSkipSave(opts) {
