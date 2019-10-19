@@ -5,7 +5,6 @@ class ModelHolder {
   constructor(mapper, object) {
     this.mapper = mapper;
     this.object = object;
-    this.model(true);
   }
 
   model(create) {
