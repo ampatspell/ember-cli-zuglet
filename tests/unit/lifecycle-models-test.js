@@ -395,7 +395,7 @@ module('lifecycle-models', function(hooks) {
     }
   });
 
-  test('object property changes does not recreate model multiple times', async function(assert) {
+  test.skip('object property changes does not recreate model multiple times', async function(assert) {
     let doc = EmberObject.create({ name: 'duck', color: 'yellow' });
     let log = [];
 
@@ -426,7 +426,7 @@ module('lifecycle-models', function(hooks) {
     ]);
   });
 
-  test('owner prop changes does not recreate models multiple times', async function(assert) {
+  test.skip('owner prop changes does not recreate models multiple times', async function(assert) {
     let doc = EmberObject.create({});
     let log = [];
 
