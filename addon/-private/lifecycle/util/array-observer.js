@@ -23,6 +23,7 @@ export default class ArrayObserver {
   constructor({ array, observe, delegate }) {
     validate(array, observe, delegate);
     this._array = array;
+    this._shadow = A(array.slice());
     this._observe = observe;
     this._delegate = delegate;
     this._enabled = get(observe, 'length') > 0;
@@ -73,18 +74,21 @@ export default class ArrayObserver {
 
   _arrayWillChange(array, start, removeCount) {
     if(removeCount) {
-      let removing = A(array.slice(start, start + removeCount));
-      this._delegate.removed(removing, start, removeCount);
+      // Using shadow array here. For some reason array proxy willChange is called after mutation
+      let removing = A(this._shadow.slice(start, start + removeCount));
       this._stopObservingObjects(removing);
+      this._delegate.removed(removing, start, removeCount);
     }
   }
 
   _arrayDidChange(array, start, removeCount, addCount) {
+    let adding;
     if(addCount) {
-      let adding = A(array.slice(start, start + addCount));
+      adding = A(array.slice(start, start + addCount));
       this._delegate.added(adding, start, addCount);
       this._startObservingObjects(adding);
     }
+    this._shadow.replace(start, removeCount, adding);
   }
 
   destroy() {

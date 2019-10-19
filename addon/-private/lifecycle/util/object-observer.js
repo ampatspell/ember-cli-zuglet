@@ -15,7 +15,7 @@ export const startObservingObject = (object, keys, target, method) => {
     console.warn('zuglet', 'startObservingObject without an object', keys, target, method);
     return;
   }
-  withKeys(keys, key => addObserver(object, key, target, method));
+  withKeys(keys, key => addObserver(object, key, target, method, true));
 }
 
 export const stopObservingObject = (object, keys, target, method) => {
@@ -23,7 +23,7 @@ export const stopObservingObject = (object, keys, target, method) => {
     console.warn('zuglet', 'stopObservingObject without an object', keys, target, method);
     return;
   }
-  withKeys(keys, key => removeObserver(object, key, target, method));
+  withKeys(keys, key => removeObserver(object, key, target, method, true));
 }
 
 export const startObservingObjects = (objects, keys, target, method) => {
