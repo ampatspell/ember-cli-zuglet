@@ -25,36 +25,36 @@ const normalize = args => {
 class Batch {
 
   constructor(firestore, limit) {
-    this._firestore = firestore;
-    this._limit = limit;
-    this._count = 0;
-    this._instances = [];
+    this.firestore = firestore;
+    this.limit = limit;
+    this.count = 0;
+    this.instances = [];
   }
 
-  _batch() {
-    return this._firestore.batch();
+  batch() {
+    return this.firestore.batch();
   }
 
-  _increment() {
+  increment() {
     this.count++;
-    let { _count, _limit, _instances } = this;
-    if(_count > _limit || !_instances.length) {
-      this._count = 1;
-      _instances.push(this._batch());
+    let { count, limit, instances } = this;
+    if(count > limit || !instances.length) {
+      this.count = 1;
+      instances.push(this.batch());
     }
-    return _instances[_instances.length - 1];
+    return instances[instances.length - 1];
   }
 
   set(...args) {
-    return this._increment().set(...args);
+    return this.increment().set(...args);
   }
 
   delete(...args) {
-    return this._increment().delete(...args);
+    return this.increment().delete(...args);
   }
 
   commit() {
-    return all(this._instances.map(instance => instance.commit())).then(() => undefined);
+    return all(this.instances.map(instance => instance.commit())).then(() => undefined);
   }
 
 }
