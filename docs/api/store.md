@@ -105,7 +105,9 @@ await store.transaction(async tx => {
 
 > TODO: see Transaction
 
-## batch() `→ Batch`
+## batch({ multiple: true }) `→ Batch`
+
+* `multiple` → creates multiple batches if operations are more than 500 (defaults to `false`)
 
 Creates a `Batch` operation to perform multiple writes in one single atomic operation.
 
@@ -116,9 +118,10 @@ batch.save(feathers);
 await batch.commit();
 ```
 
-## batch(callback) `→ Promise<Result>`
+## batch(callback, { multiple: true }) `→ Promise<Result>`
 
 * `callback` → `Function`
+* `multiple` → creates multiple batches if operations are more than 500 (defaults to `false`)
 
 Creates a `Batch` operation to perform multiple writes in one single atomic operation. It is commited when the `Promise` returned from `callback` resolves.
 
