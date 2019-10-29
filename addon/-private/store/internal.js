@@ -231,8 +231,8 @@ export default Internal.extend({
     return this.factoryFor('zuglet:transaction/internal').create({ store: this, fn }).run();
   },
 
-  batch(fn) {
-    return this.factoryFor('zuglet:batch/internal').create({ store: this, fn }).run();
+  batch(...args) {
+    return this.factoryFor('zuglet:batch/internal').create({ store: this, args }).run();
   },
 
   //

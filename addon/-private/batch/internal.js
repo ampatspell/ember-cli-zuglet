@@ -1,15 +1,77 @@
 import Internal from '../internal/internal';
-import { resolve } from 'rsvp';
+import { resolve, all } from 'rsvp';
+import { assign } from '@ember/polyfills';
+
+const normalize = args => {
+  let opts;
+  let fn = null;
+  if(args.length === 2) {
+    fn = args[0];
+    opts = args[1];
+  } else if(args.length === 1) {
+    if(typeof args[0] === 'function') {
+      fn = args[0];
+    } else {
+      opts = args[0];
+    }
+  }
+  opts = assign({ multiple: false }, opts);
+  return {
+    fn,
+    opts
+  };
+}
+
+class Batch {
+
+  constructor(firestore, limit) {
+    this.firestore = firestore;
+    this.limit = limit;
+    this.count = 0;
+    this.instances = [];
+  }
+
+  batch() {
+    return this.firestore.batch();
+  }
+
+  increment() {
+    this.count++;
+    let { count, limit, instances } = this;
+    if(count > limit || !instances.length) {
+      this.count = 1;
+      instances.push(this.batch());
+    }
+    return instances[instances.length - 1];
+  }
+
+  set(...args) {
+    return this.increment().set(...args);
+  }
+
+  delete(...args) {
+    return this.increment().delete(...args);
+  }
+
+  commit() {
+    return all(this.instances.map(instance => instance.commit())).then(() => undefined);
+  }
+
+}
 
 export default Internal.extend({
 
   store: null,
   instance: null,
+  args: null,
+  opts: null,
   fn: null,
 
   init() {
     this._super(...arguments);
-    this.instance = this.store.app.firestore().batch();
+    let { opts, fn } = normalize(this.args);
+    this.setProperties({ opts, fn });
+    this.instance = new Batch(this.store.app.firestore(), opts.multiple ? 500 : Infinity);
   },
 
   createModel() {
