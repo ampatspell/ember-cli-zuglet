@@ -1,6 +1,7 @@
 import firebase from 'firebase';
 import { resolve } from 'rsvp';
 import { isFastBoot } from '../util/fastboot';
+import { isInIframe } from '../util/browser';
 import prepare from './prepare';
 
 let _id = 0;
@@ -23,11 +24,14 @@ export default class FirebaseInitializer {
 
   _shouldEnablePersistence() {
     let { opts, sender } = this;
-    return opts.firestore && opts.firestore.persistenceEnabled && !isFastBoot(sender);
+    return opts.firestore && opts.firestore.persistenceEnabled && !isFastBoot(sender) && !isInIframe();
   }
 
   _enablePersistence(firestore) {
-    return resolve(firestore.enablePersistence({ synchronizeTabs: true })).catch(() => {})
+    return resolve().then(() => {
+      console.log('enable');
+      return firestore.enablePersistence({ synchronizeTabs: true });
+    }).catch(() => {});
   }
 
   _prepare() {
