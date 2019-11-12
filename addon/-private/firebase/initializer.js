@@ -29,7 +29,6 @@ export default class FirebaseInitializer {
 
   _enablePersistence(firestore) {
     return resolve().then(() => {
-      console.log('enable');
       return firestore.enablePersistence({ synchronizeTabs: true });
     }).catch(() => {});
   }
