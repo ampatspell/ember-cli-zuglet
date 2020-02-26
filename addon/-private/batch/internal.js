@@ -29,7 +29,6 @@ class Batch {
     this.limit = limit;
     this.count = 0;
     this.instances = [];
-    console.log('batch limit', limit);
   }
 
   batch() {
