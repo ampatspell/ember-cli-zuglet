@@ -29,6 +29,7 @@ class Batch {
     this.limit = limit;
     this.count = 0;
     this.instances = [];
+    console.log('batch limit', limit);
   }
 
   batch() {
@@ -71,7 +72,8 @@ export default Internal.extend({
     this._super(...arguments);
     let { opts, fn } = normalize(this.args);
     this.setProperties({ opts, fn });
-    this.instance = new Batch(this.store.app.firestore(), opts.multiple ? 500 : Infinity);
+    let limit = opts.limit || 500;
+    this.instance = new Batch(this.store.app.firestore(), opts.multiple ? limit : Infinity);
   },
 
   createModel() {
