@@ -79,6 +79,12 @@ export default Internal.extend({
 
   //
 
+  _onQueryError(operation, err, opts) {
+    this.store.onQueryError(this, operation, err, opts);
+  },
+
+  //
+
   willLoad() {
     setChangedProperties(this, {
       isLoading: true,
@@ -98,8 +104,9 @@ export default Internal.extend({
     return this;
   },
 
-  loadDidFail(err) {
+  loadDidFail(err, opts) {
     setChangedProperties(this, { isLoading: false, isError: true, error: err });
+    this._onQueryError('load', err, opts);
     return reject(err);
   },
 
@@ -120,7 +127,7 @@ export default Internal.extend({
         return query.get({ source });
       },
       didResolve: snapshot => this.didLoad(snapshot),
-      didReject: err => this.loadDidFail(err)
+      didReject: err => this.loadDidFail(err, opts)
     });
   },
 
@@ -134,6 +141,10 @@ export default Internal.extend({
     this._didLoad(snapshot);
   },
 
+  onSnapshotError(err) {
+    this._onQueryError('snapshot', err);
+  },
+
   subscribeQueryOnSnapshot() {
     let query = this.get('unwrappedQuery');
     let opts = { includeMetadataChanges: true };
@@ -142,9 +153,7 @@ export default Internal.extend({
         return;
       }
       this.onSnapshot(snapshot);
-    }), err => {
-      console.error(`query ${this._model} onSnapshot`, err);
-    });
+    }), err => actions(() => this.onSnapshotError(err)));
   },
 
   willObserve() {

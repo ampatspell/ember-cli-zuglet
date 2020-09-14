@@ -75,6 +75,10 @@ export default Internal.extend({
     setChangedProperties(this, { isNew: true });
   },
 
+  _onDocumentError(operation, err, opts) {
+    this.store.onDocumentError(this, operation, err, opts);
+  },
+
   _didLoad(snapshot) {
     let { exists, metadata: _metadata } = snapshot;
     setChangedProperties(this, {
@@ -120,8 +124,9 @@ export default Internal.extend({
     return this;
   },
 
-  loadDidFail(err) {
+  loadDidFail(err, opts) {
     setChangedProperties(this, { isLoading: false, isError: true, error: err });
+    this._onDocumentError(this, 'load', err, opts);
     return reject(err);
   },
 
@@ -142,7 +147,7 @@ export default Internal.extend({
         return ref.get({ source });
       },
       didResolve: snapshot => this.didLoad(snapshot),
-      didReject: err => this.loadDidFail(err)
+      didReject: err => this.loadDidFail(err, opts)
     });
   },
 
@@ -182,6 +187,7 @@ export default Internal.extend({
       return this;
     } else {
       setChangedProperties(this, { isSaving: false, isError: true, error: err });
+      this._onDocumentError('save', err, opts);
       return reject(err);
     }
   },
@@ -248,6 +254,7 @@ export default Internal.extend({
 
   deleteDidFail(err) {
     setChangedProperties(this, { isSaving: false, isError: true, error: err });
+    this._onDocumentError('delete', err);
     return reject(err);
   },
 
@@ -273,6 +280,10 @@ export default Internal.extend({
     }
   },
 
+  onSnapshotError(err) {
+    this._onDocumentError('snapshot', err);
+  },
+
   _subscribeRefOnSnapshot() {
     let ref = this.get('ref.ref');
     return ref.onSnapshot({ includeMetadataChanges: true }, snapshot => actions(() => {
@@ -280,9 +291,7 @@ export default Internal.extend({
         return;
       }
       this.onSnapshot(snapshot);
-    }), err => {
-      console.error(`document ${this._model} onSnapshot`, err);
-    });
+    }), err => actions(() => this.onSnapshotError(err)));
   },
 
   observers: observers({
