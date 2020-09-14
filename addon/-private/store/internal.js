@@ -251,6 +251,18 @@ export default Internal.extend({
 
   //
 
+  onDocumentError(internal, operation, err, opts) {
+    let model = internal.model(false);
+    this.model(true).onError({ type: 'document', model, operation, err, opts });
+  },
+
+  onQueryError(internal, operation, err, opts) {
+    let model = internal.model(false);
+    this.model(true).onError({ type: 'query', model, operation, err, opts });
+  },
+
+  //
+
   settle() {
     return settle(() => [
       ...this.get('queue').promises()

@@ -45,9 +45,11 @@ export default EmberObject.extend(ModelMixin, {
 
   restoreUser() {},
 
+  onError() {}, // document & query errors
+
   find(...args) {
     let string = args.map(arg => typeof arg === 'string' ? `"${arg}"` : arg).join(', ');
     console.warn(`ember-cli-zuglet: store.find(${string})`);
-  }
+  },
 
 });
