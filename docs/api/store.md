@@ -151,6 +151,23 @@ await store.settle();
 // duck.isNew → false
 ```
 
+## `abstract` onError(props)
+
+``` javascript
+import Store from 'ember-cli-zuglet/store';
+
+export default Store.extend({
+
+  onError({ type, model, operation, err, opts }) {
+  }
+
+});
+```
+
+* `type` → `document` or `query`
+* `model` → instance
+* `operation` → `load`, `save`, `delete`, `snapshot`
+
 ## `abstact` restore() `→ Promise`
 
 > TODO: restore. Check the flow
