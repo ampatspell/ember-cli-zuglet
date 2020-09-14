@@ -41,8 +41,8 @@
     "broccoli-merge-trees": "^3.0.2",
     "broccoli-webpack": "^1.0.0",
     "ember-cli-babel": "^7.8.0",
-    "firebase": "^7.2.1",
-    "luxon": "^1.19.3",
+    "firebase": "^7.20.0",
+    "luxon": "^1.25.0",
     "xmlhttprequest": "^1.8.0"
   },
   "devDependencies": {
