@@ -10,7 +10,8 @@ const options = {
     messagingSenderId: ''
   },
   firestore: {
-    persistenceEnabled: true
+    persistenceEnabled: true,
+    // emulator: 'localhost:8080'
   }
 };
 

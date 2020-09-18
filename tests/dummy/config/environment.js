@@ -46,7 +46,8 @@ module.exports = function(environment) {
         // messagingSenderId: "337740781111"
       },
       firestore: {
-        persistenceEnabled: true
+        persistenceEnabled: true,
+        // emulator: 'localhost:8080'
       }
     };
   }

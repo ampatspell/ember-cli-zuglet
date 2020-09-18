@@ -27,6 +27,16 @@ export default Store.extend({
     if(next) {
       await next.restore();
     }
+  },
+
+  onError({ model, operation, err, opts }) {
+    let args = [
+      `onError ${operation} ${err.message} ${model}`,
+    ];
+    if(opts) {
+      args.push(opts);
+    }
+    console.error(...args);
   }
 
 });
