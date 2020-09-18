@@ -33,6 +33,18 @@ export default class FirebaseInitializer {
     }).catch(() => {});
   }
 
+  _setupEmulation(firestore, opts) {
+    let host = opts.firestore && opts.firestore.emulator;
+    if(host) {
+      firestore.settings({
+        host,
+        ssl: false
+      });
+      return true;
+    }
+    return false;
+  }
+
   _prepare() {
     let { identifier, id, opts } = this;
 
@@ -42,12 +54,12 @@ export default class FirebaseInitializer {
 
     let firestore = this.app.firestore();
 
-    let promise;
+    let promise = resolve();
 
-    if(this._shouldEnablePersistence()) {
+    let emulated = this._setupEmulation(firestore, opts);
+
+    if(!emulated && this._shouldEnablePersistence()) {
       promise = this._enablePersistence(firestore);
-    } else {
-      promise = resolve();
     }
 
     this.promise = promise.then(() => this.app);
