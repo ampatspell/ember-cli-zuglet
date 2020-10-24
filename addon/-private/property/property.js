@@ -6,8 +6,4 @@ export default class Property extends EmberObject {
   key = null;
   opts = null;
 
-  init() {
-    super.init(...arguments);
-  }
-
 }
