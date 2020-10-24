@@ -1,4 +1,4 @@
-import Property, { property } from '../property';
+import Property, { property } from './property';
 
 export default class DummyProperty extends Property {
 

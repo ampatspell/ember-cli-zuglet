@@ -1,3 +1,15 @@
 <div class="route-index">
-  {{this.model.foo}}
+
+  <div class="row">
+    <input type="button" value="Toggle" {{on "click" this.toggle}}/>
+  </div>
+
+  <div class="row">
+    active: {{this.activeModel}} {{this.activeModel.isActivated}}
+  </div>
+
+  <div class="row">
+    model: {{this.model}} {{this.model.isActivated}}
+  </div>
+
 </div>

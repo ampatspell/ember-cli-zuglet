@@ -1,6 +1,6 @@
 import { getOwner } from '@ember/application';
 import { computed } from '@ember/object';
-import { getState } from '../state';
+import { getState } from '../../state';
 
 const createProperty = (owner, name, props) => {
   return getOwner(owner).factoryFor(`zuglet:properties/${name}`).create(props);

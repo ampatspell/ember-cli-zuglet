@@ -1,10 +1,12 @@
 import EmberObject from '@ember/object';
 import { associateDestroyableChild } from '@ember/destroyable';
+import { assert } from '@ember/debug';
 
 export default class State extends EmberObject {
 
   owner = null
   properties = Object.create(null);
+  activators = new Set();
 
   init() {
     super.init(...arguments);
@@ -19,6 +21,22 @@ export default class State extends EmberObject {
       this.properties[key] = property;
     }
     return property;
+  }
+
+  get isActivated() {
+    return this.activators.size > 0;
+  }
+
+  activate(activator) {
+    assert(`activator ${activator} already has activated ${this.owner}`, !this.activators.has(activator));
+    this.activators.add(activator);
+    this.owner.isActivated = this.isActivated;
+  }
+
+  deactivate(activator) {
+    assert(`activator ${activator} hasn't activated ${this.owner}`, this.activators.has(activator));
+    this.activators.delete(activator);
+    this.owner.isActivated = this.isActivated;
   }
 
 }
