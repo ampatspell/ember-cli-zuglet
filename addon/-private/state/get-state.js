@@ -1,6 +1,6 @@
 import { getOwner } from '@ember/application';
 
-const _state = Symbol('zuglet');
+const _state = Symbol('ZUGLET');
 
 const createState = owner => {
   return getOwner(owner).factoryFor('zuglet:state').create({ owner });
