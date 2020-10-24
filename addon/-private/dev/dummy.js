@@ -2,6 +2,8 @@ import Property, { property } from '../property';
 
 export default class DummyProperty extends Property {
 
+  value = null
+
   init() {
     super.init(...arguments);
     this.value = this.opts.value;
@@ -22,5 +24,7 @@ export const dummy = value => property({
   readOnly: false,
   deps: [],
   property: 'dummy',
-  opts: { value }
+  opts: {
+    value
+  }
 });
