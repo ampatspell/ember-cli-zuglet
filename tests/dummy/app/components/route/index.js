@@ -1,17 +1,14 @@
 import Component from '@glimmer/component';
-import EmberObject, { computed } from '@ember/object';
+import { computed } from '@ember/object';
 import { getOwner } from '@ember/application';
-import {  } from 'zuglet';
-
-
-
+import { setGlobal } from 'zuglet/util';
 
 export default class RouteIndexComponent extends Component {
 
   @computed
   get model() {
     let model = getOwner(this).factoryFor('model:thing').create();
-    window.model = model;
+    setGlobal({ model });
     return model;
   }
 
