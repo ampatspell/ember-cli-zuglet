@@ -25,7 +25,7 @@ export default class RouteIndexComponent extends Component {
     this.doc = this.store.document({ name: 'zeeba' });
     let second = this.store.document({ name: 'larry' });
     setGlobal({ doc: this.doc });
-    this.array = [ this.doc, second ];
+    this.array = this.store.query([ this.doc, second ]);
   }
 
   @action

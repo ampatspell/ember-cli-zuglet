@@ -7,6 +7,7 @@ import ObjectProperty from 'zuglet/-private/model/properties/object';
 
 import Store from 'zuglet/-private/store/store';
 import Document from 'zuglet/-private/store/firestore/document';
+import Query from 'zuglet/-private/store/firestore/query';
 
 export default {
   name: 'zuglet:internal',
@@ -22,5 +23,6 @@ export default {
 
     container.register('zuglet:store', Store);
     container.register('zuglet:store/firestore/document', Document);
+    container.register('zuglet:store/firestore/query', Query);
   }
 }
