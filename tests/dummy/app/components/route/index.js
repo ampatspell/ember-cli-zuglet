@@ -1,16 +1,23 @@
 import Component from '@glimmer/component';
 import { computed, action } from '@ember/object';
+import { readOnly } from '@ember/object/computed';
 import { getOwner } from '@ember/application';
 import { setGlobal } from 'zuglet/util';
 import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
-import { autoactivate, activate, getStats } from 'zuglet';
+import { autoactivate, activate } from 'zuglet';
 
 @autoactivate
 export default class RouteIndexComponent extends Component {
 
   @service
   router
+
+  @service
+  store
+
+  @readOnly('store.stores.stats')
+  stats
 
   @tracked
   show = false
@@ -21,11 +28,6 @@ export default class RouteIndexComponent extends Component {
   constructor() {
     super(...arguments);
     setGlobal({ component: this, stats: this.stats });
-  }
-
-  @computed
-  get stats() {
-    return getStats(this);
   }
 
   @computed

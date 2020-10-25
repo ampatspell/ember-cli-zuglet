@@ -1,6 +1,6 @@
 import EmberObject from '@ember/object';
 import { assert } from '@ember/debug';
-import { registerActivated, unregisterActivated } from '../../stats';
+import { registerActivated, unregisterActivated } from '../../store/stats';
 
 export default class State extends EmberObject {
 
