@@ -4,17 +4,17 @@ import { inject as service } from '@ember/service';
 import { setGlobal, toString } from 'zuglet/utils';
 
 @root()
-export default class RouteDocumentComponent extends Component {
+export default class RouteQueryComponent extends Component {
 
   @service
   store
 
   @activate()
-  doc
+  query
 
   constructor() {
     super(...arguments);
-    this.doc = this.store.doc('messages/first').existing();
+    this.query = this.store.collection('messages').query();
     setGlobal({ component: this });
   }
 

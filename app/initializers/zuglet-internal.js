@@ -1,8 +1,10 @@
 import Stores from 'zuglet/-private/stores/stores';
 import Stats from 'zuglet/-private/stores/stats';
 import Models from 'zuglet/-private/stores/models';
+
 import ModelState from 'zuglet/-private/model/state/model';
 import RootState from 'zuglet/-private/model/state/root';
+
 import ActivateProperty from 'zuglet/-private/model/properties/activate';
 import ObjectProperty from 'zuglet/-private/model/properties/object';
 import ModelsProperty from 'zuglet/-private/model/properties/models';
@@ -14,7 +16,8 @@ import CollectionReference from 'zuglet/-private/store/firestore/references/coll
 import ConditionReference from 'zuglet/-private/store/firestore/references/condition';
 
 import Document from 'zuglet/-private/store/firestore/document';
-import Query from 'zuglet/-private/store/firestore/query';
+import QueryArray from 'zuglet/-private/store/firestore/query/array';
+import QuerySingle from 'zuglet/-private/store/firestore/query/single';
 
 export default {
   name: 'zuglet:internal',
@@ -37,6 +40,7 @@ export default {
     container.register('zuglet:store/firestore/reference/condition', ConditionReference);
 
     container.register('zuglet:store/firestore/document', Document);
-    container.register('zuglet:store/firestore/query', Query);
+    container.register('zuglet:store/firestore/query/array', QueryArray);
+    container.register('zuglet:store/firestore/query/single', QuerySingle);
   }
 }
