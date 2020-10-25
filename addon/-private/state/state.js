@@ -1,11 +1,14 @@
 import EmberObject from '@ember/object';
 import { assert } from '@ember/debug';
+import { registerActivated, unregisterActivated } from '../stats';
 
 export default class State extends EmberObject {
 
   owner = null
   properties = Object.create(null);
   activators = new Set();
+
+  registersActivated = true
 
   init() {
     super.init(...arguments);
@@ -42,15 +45,19 @@ export default class State extends EmberObject {
   }
 
   onActivated() {
-    this.owner.isActivated = true;
+    if(this.registersActivated) {
+      registerActivated(this.owner);
+    }
     this.withProperties(property => property.onActivated());
     this.invokeOnOwner('onActivated');
   }
 
   onDeactivated() {
-    this.owner.isActivated = false;
     this.invokeOnOwner('onDeactivated');
     this.withProperties(property => property.onDeactivated());
+    if(this.registersActivated) {
+      unregisterActivated(this.owner);
+    }
   }
 
   activate(activator) {

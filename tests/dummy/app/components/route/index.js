@@ -6,6 +6,7 @@ import { tracked } from '@glimmer/tracking';
 import { activate } from 'zuglet/-private/property/activate';
 import { inject as service } from '@ember/service';
 import { autoactivate } from 'zuglet/-private/root';
+import { getStats } from 'zuglet/-private/stats';
 
 @autoactivate
 export default class RouteIndexComponent extends Component {
@@ -21,7 +22,12 @@ export default class RouteIndexComponent extends Component {
 
   constructor() {
     super(...arguments);
-    setGlobal({ component: this });
+    setGlobal({ component: this, stats: this.stats });
+  }
+
+  @computed
+  get stats() {
+    return getStats(this);
   }
 
   @computed
