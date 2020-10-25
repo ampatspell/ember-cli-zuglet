@@ -36,11 +36,19 @@ export default class ModelsProperty extends Property {
 
   //
 
-  createModel(source) {
-    let { owner, opts: { modelName, mapping } } = this;
+  modelNameForSource(source) {
+    let { owner, opts: { resolveModelName } } = this;
+    return resolveModelName.call(owner, source, owner);
+  }
+
+  createModel(source, modelName) {
+    let { owner, opts: { mapping } } = this;
     let props = mapping.call(owner, source, owner);
     let model = this.stores.models.create(modelName, props);
-    setMarker(model, source);
+    setMarker(model, {
+      source,
+      modelName
+    });
     return model;
   }
 
@@ -54,15 +62,27 @@ export default class ModelsProperty extends Property {
     let added = A();
     let models = A();
 
-    let find = doc => current.find(model => getMarker(model) === doc);
-    let create = doc => this.createModel(doc);
+    let find = doc => current.find(model => {
+      let marker = getMarker(model);
+      return marker.source === doc;
+    });
+
+    let create = (doc, modelName) => this.createModel(doc, modelName);
 
     source.forEach(doc => {
       let model = find(doc);
       if(model) {
-        removed.removeObject(model);
+        let marker = getMarker(model);
+        let modelName = this.modelNameForSource(doc);
+        if(marker.modelName !== modelName) {
+          model = create(doc, modelName);
+          added.pushObject(model);
+        } else {
+          removed.removeObject(model);
+        }
       } else {
-        model = create(doc);
+        let modelName = this.modelNameForSource(doc);
+        model = create(doc, modelName);
         added.pushObject(model);
       }
       models.pushObject(model);
@@ -112,13 +132,32 @@ export default class ModelsProperty extends Property {
 
 }
 
-export const models = (sourceKey, modelName, mapping) => property({
+const normalizeSourceDeps = (sourceKey, keys=[]) => {
+  if(keys.length === 0) {
+    return [];
+  }
+  return [ `${sourceKey}.@each.${keys.join(',')}` ];
+}
+
+const normalizeResolveModelName = modelName => {
+  if(typeof modelName === 'function') {
+    return modelName;
+  }
+  return () => modelName;
+}
+
+const log = (arg) => {
+  console.log(arg);
+  return arg;
+}
+
+export const models = (sourceKey, modelName, mapping, sourceDeps) => property({
   readOnly: true,
-  deps: [ `${sourceKey}.[]` ],
+  deps: log([ `${sourceKey}.[]`, ...normalizeSourceDeps(sourceKey, sourceDeps) ]),
   property: 'models',
   opts: {
     sourceKey,
-    modelName,
+    resolveModelName: normalizeResolveModelName(modelName),
     mapping
   }
 });
