@@ -11,6 +11,10 @@ export default class Property extends EmberObject {
     return this.state.isActivated;
   }
 
+  notifyPropertyChange() {
+    this.owner.notifyPropertyChange(this.key);
+  }
+
   onActivated() {
   }
 
