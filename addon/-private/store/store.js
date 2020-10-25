@@ -52,4 +52,31 @@ export default class Store extends EmberObject {
     return this._createQuery({ content });
   }
 
+  //
+
+  get projectId() {
+    return this.firebase.options.projectId;
+  }
+
+  get dashboard() {
+    return `https://console.firebase.google.com/u/0/project/${this.projectId}/overview`;
+  }
+
+  openDashboard() {
+    window.open(this.dashboard, '_blank');
+  }
+
+  get serialized() {
+    let { identifier, projectId } = this;
+    return  {
+      identifier,
+      projectId
+    };
+  }
+
+  toStringExtension() {
+    let { projectId } = this;
+    return `${projectId}`;
+  }
+
 }
