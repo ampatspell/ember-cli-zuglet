@@ -1,5 +1,5 @@
 import EmberObject from '@ember/object';
-import { guidFor } from '@ember/object/internals';
+import toPrimitive from '../../../util/to-primitive';
 
 export default class Property extends EmberObject {
 
@@ -23,7 +23,7 @@ export default class Property extends EmberObject {
   }
 
   toStringExtension() {
-    return `${this.owner.constructor.name}::${guidFor(this.owner)}.${this.key}`;
+    return `${toPrimitive(this.owner)}.${this.key}`;
   }
 
 }
