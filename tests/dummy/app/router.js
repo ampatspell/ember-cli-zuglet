@@ -12,4 +12,5 @@ Router.map(function() {
     this.route('array');
     this.route('single');
   });
+  this.route('models');
 });
