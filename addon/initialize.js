@@ -17,11 +17,9 @@ const normalizeStore = store => {
 const normalizeService = (service, store) => {
   service = assign({
     enabled: true,
-    name: store.identifier,
-    inject: [ 'route', 'controller', 'component', 'model' ]
+    name: store.identifier
   }, service);
   assert(`opts.service.name is required`, typeof service.name === 'string');
-  assert(`opts.service.inject must be array`, typeOf(service.inject) === 'array');
   return service;
 }
 
@@ -79,9 +77,6 @@ export const initialize = (...args) => {
   if(opts.service.enabled) {
     let fullName = `service:${opts.service.name}`;
     app.register(fullName, store, { instantiate: false });
-    A(opts.service.inject).forEach(key => {
-      app.inject(key, opts.service.name, fullName);
-    });
   }
 
   if(opts.development.enabled && environment(app) === 'development') {
