@@ -67,7 +67,10 @@ body {
   }
 
   .row {
-    margin-bottom: 10px;
+    margin-bottom: 15px;
+    > .row {
+      margin-bottom: 5px;
+    }
   }
 
   .json {

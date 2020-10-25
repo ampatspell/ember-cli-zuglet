@@ -19,6 +19,10 @@ export default class User extends EmberObject {
     return this.user.email;
   }
 
+  get isAnonymous() {
+    return this.user.isAnonymous;
+  }
+
   //
 
   async restore(user) {

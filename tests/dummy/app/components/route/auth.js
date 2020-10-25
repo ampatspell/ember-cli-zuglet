@@ -1,17 +1,42 @@
 import Component from '@glimmer/component';
-import { root, activate } from 'zuglet/decorators';
+import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { setGlobal, toString } from 'zuglet/utils';
+import { tracked } from '@glimmer/tracking';
 
-@root()
 export default class RouteAuthComponent extends Component {
 
   @service
   store
 
+  @tracked email
+  @tracked password
+  @tracked error
+
   constructor() {
     super(...arguments);
     setGlobal({ component: this });
+  }
+
+  @action
+  async signOut() {
+    await this.store.auth.signOut();
+  }
+
+  @action
+  async anonymousSignIn() {
+    await this.store.auth.methods.anonymous.signIn();
+  }
+
+  @action
+  async signIn() {
+    let { email, password } = this;
+    this.error = null;
+    try {
+      await this.store.auth.methods.email.signIn(email, password);
+    } catch(err) {
+      this.error = err;
+    }
   }
 
   toString() {
