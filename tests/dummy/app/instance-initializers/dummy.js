@@ -9,6 +9,7 @@ export default {
         name: 'store'
       }
     });
-    setGlobal({ store });
+    let router = app.lookup('service:router');
+    setGlobal({ store, router });
   }
 }

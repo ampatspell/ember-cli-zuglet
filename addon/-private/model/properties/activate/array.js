@@ -1,4 +1,5 @@
 import { A } from '@ember/array';
+import { diffArrays } from '../../../util/diff-arrays';
 
 export default class ArrayActivator {
 
@@ -60,17 +61,17 @@ export default class ArrayActivator {
     values.map(item => this.property.deactivateValue(item));
   }
 
-  activate() {
+  activate(models) {
     if(!this.property.isActivated) {
       return;
     }
     this.startObservingArray();
-    this.activateValues(this.content);
+    this.activateValues(models || this.content);
   }
 
-  deactivate() {
+  deactivate(models) {
     this.stopObservingArray();
-    this.deactivateValues(this.content);
+    this.deactivateValues(models || this.content);
   }
 
   getValue() {
@@ -79,14 +80,15 @@ export default class ArrayActivator {
 
   setValue(value) {
     if(value === this.content) {
-      return this.content;
+      return value;
     }
-    // TODO: possibly same models appear in both current and next array
-    // should not deactivate & activate needlessly
-    // array.replace(0, 2, [ doc ]); // where doc was already there
-    this.deactivate();
+
+    let { removed, added } = diffArrays(this.content, value);
+
+    this.deactivate(removed);
     this.content = A(value);
-    this.activate();
+    this.activate(added);
+
     return this.content;
   }
 
