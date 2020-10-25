@@ -1,72 +1,97 @@
 import Property, { property } from './property';
 import { getState } from '../state';
 
-export default class ActivateProperty extends Property {
+class ObjectActivator {
 
-  value = null
+  value = null;
+  isActivated = false;
 
-  init() {
-    super.init(...arguments);
-    this.isValueActivated = false;
+  constructor(property) {
+    this.property = property;
+    this.isActivated = false;
+    this.value = null;
   }
 
-  activateValue() {
+  activate() {
+    if(!this.property.isActivated) {
+      return;
+    }
+
+    if(this.isActivated) {
+      return;
+    }
+
+    this.isActivated = true;
+
+    let value = this.value;
+    if(value) {
+      let state = getState(value);
+      if(state) {
+        state.activate(this.property);
+      }
+    }
+  }
+
+  deactivate () {
     if(!this.isActivated) {
       return;
     }
 
-    if(this.isValueActivated) {
-      return;
-    }
-
-    this.isValueActivated = true;
+    this.isActivated = false;
 
     let value = this.value;
     if(value) {
       let state = getState(value);
       if(state) {
-        state.activate(this);
+        state.deactivate(this.property);
       }
     }
   }
 
-  deactivateValue() {
-    if(!this.isValueActivated) {
-      return;
-    }
+  getValue() {
+    this.activate();
+    return this.value;
+  }
 
-    this.isValueActivated = false;
+  setValue(value) {
+    this.deactivate();
+    this.value = value;
+    this.activate();
+    return value;
+  }
 
-    let value = this.value;
-    if(value) {
-      let state = getState(value);
-      if(state) {
-        state.deactivate(this);
-      }
-    }
+}
+
+class ArrayActivator {
+  constructor(property) {
+
+  }
+}
+
+export default class ActivateProperty extends Property {
+
+  init() {
+    super.init(...arguments);
+    this.activator = new ObjectActivator(this);
   }
 
   getPropertyValue() {
-    this.activateValue();
-    return this.value;
+    return this.activator.getValue();
   }
 
   setPropertyValue(value) {
     if(value === this.value) {
       return value;
     }
-    this.deactivateValue();
-    this.value = value;
-    this.activateValue();
-    return value;
+    return this.activator.setValue(value);
   }
 
   onActivated() {
-    this.activateValue();
+    this.activator.activate();
   }
 
   onDeactivated() {
-    this.deactivateValue();
+    this.activator.deactivate();
   }
 
 }

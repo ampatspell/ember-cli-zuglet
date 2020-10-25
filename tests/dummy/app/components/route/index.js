@@ -3,6 +3,7 @@ import { action } from '@ember/object';
 import { setGlobal } from 'zuglet/util';
 import { inject as service } from '@ember/service';
 import { autoactivate, activate } from 'zuglet';
+import { tracked } from '@glimmer/tracking';
 
 @autoactivate
 export default class RouteIndexComponent extends Component {
@@ -10,17 +11,28 @@ export default class RouteIndexComponent extends Component {
   @service
   store
 
+  @tracked
+  doc
+
   @activate
   array
 
   constructor() {
     super(...arguments);
     setGlobal({ component: this });
-    this.array = this.store.document();
+    // this.array = [];
+    // this.array.pushObject(this.store.document());
+    this.doc = this.store.document();
+    this.array = this.doc;
   }
 
   @action
   toggle() {
+    if(this.array) {
+      this.array = null;
+    } else {
+      this.array = this.doc;
+    }
   }
 
 }

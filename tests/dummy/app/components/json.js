@@ -2,7 +2,9 @@ import Component from '@glimmer/component';
 
 const objectToJSON = value => {
   if(value) {
-    if(value.serialized) {
+    if(Array.isArray(value)) {
+      return value.map(object => objectToJSON(object));
+    } else if(value.serialized) {
       return value.serialized;
     }
   }
