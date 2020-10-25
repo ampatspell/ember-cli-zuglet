@@ -1,7 +1,6 @@
 import Property, { property } from './property';
 import { get } from '@ember/object';
 import { A } from '@ember/array';
-import { getOwner } from '../../util/get-owner';
 import { getState } from '../state';
 import { getStores } from '../../stores';
 
@@ -146,18 +145,45 @@ const normalizeResolveModelName = modelName => {
   return () => modelName;
 }
 
-const log = (arg) => {
-  console.log(arg);
-  return arg;
-}
+// @models('query.content').named('animal').mapping(doc => ({ doc })).object('data')
+export const models = sourceKey => {
+  let deps = [];
 
-export const models = (sourceKey, modelName, mapping, sourceDeps) => property({
-  readOnly: true,
-  deps: log([ `${sourceKey}.[]`, ...normalizeSourceDeps(sourceKey, sourceDeps) ]),
-  property: 'models',
-  opts: {
-    sourceKey,
-    resolveModelName: normalizeResolveModelName(modelName),
-    mapping
+  const normalizeDeps = () => {
+    return [
+      `${sourceKey}.[]`,
+      ...normalizeSourceDeps(sourceKey, deps)
+    ];
   }
-});
+
+  let props = {
+    readOnly: true,
+    deps: normalizeDeps(),
+    property: 'models',
+    opts: {
+      sourceKey,
+      resolveModelName: null,
+      mapping: null
+    }
+  };
+
+  let extend = () => {
+    let curr = property(props);
+    curr.named = name => {
+      props.opts.resolveModelName = normalizeResolveModelName(name);
+      return extend();
+    }
+    curr.mapping = fn => {
+      props.opts.mapping = fn;
+      return extend();
+    }
+    curr.object = (...keys) => {
+      deps = A([ ...deps, keys ]).uniq();
+      props.deps = normalizeDeps();
+      return extend();
+    }
+    return curr;
+  }
+
+  return extend();
+}

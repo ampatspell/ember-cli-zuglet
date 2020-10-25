@@ -5,7 +5,7 @@ import { inject as service } from '@ember/service';
 import { autoactivate, activate, models } from 'zuglet';
 import { tracked } from '@glimmer/tracking';
 
-@autoactivate
+@autoactivate()
 export default class RouteIndexComponent extends Component {
 
   @service
@@ -17,10 +17,10 @@ export default class RouteIndexComponent extends Component {
   @tracked
   second
 
-  @activate
+  @activate()
   query
 
-  @models('query.content', doc => `${doc.data.type}`, doc => ({ doc }), [ 'data' ])
+  @models('query.content').named(doc => doc.data.type).mapping(doc => ({ doc })).object('data')
   models
 
   constructor() {
