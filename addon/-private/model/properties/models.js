@@ -3,6 +3,7 @@ import { get } from '@ember/object';
 import { A } from '@ember/array';
 import { getOwner } from '../../util/get-owner';
 import { getState } from '../state';
+import { getStores } from '../../stores';
 
 const marker = Symbol('MODELS');
 
@@ -21,6 +22,7 @@ export default class ModelsProperty extends Property {
   init() {
     super.init(...arguments);
     this.models = A([]);
+    this.stores = getStores(this);
   }
 
   get _source() {
@@ -37,8 +39,7 @@ export default class ModelsProperty extends Property {
   createModel(source) {
     let { owner, opts: { modelName, mapping } } = this;
     let props = mapping.call(owner, source, owner);
-    // TODO: proper create
-    let model = getOwner(this).factoryFor(`model:${modelName}`).create(props);
+    let model = this.stores.models.create(modelName, props);
     setMarker(model, source);
     return model;
   }
