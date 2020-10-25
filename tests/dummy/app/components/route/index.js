@@ -11,12 +11,12 @@ export default class RouteIndexComponent extends Component {
   store
 
   @activate
-  doc
+  array
 
   constructor() {
     super(...arguments);
-    setGlobal({ component: this, stats: this.stats });
-    this.doc = this.store.document();
+    setGlobal({ component: this });
+    this.array = this.store.document();
   }
 
   @action
