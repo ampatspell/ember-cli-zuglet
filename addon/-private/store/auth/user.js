@@ -65,8 +65,9 @@ export default class User extends EmberObject {
   //
 
   get serialized() {
-    let { uid, email } = this;
+    let { isAnonymous, uid, email } = this;
     return {
+      isAnonymous,
       uid,
       email
     };

@@ -15,6 +15,9 @@ export default class DummyStore extends Store {
     firestore: {
       persistenceEnabled: true
     },
+    auth: {
+      user: 'user'
+    },
     functions: {
       region: null
     }

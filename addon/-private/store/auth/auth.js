@@ -45,6 +45,14 @@ export default class Auth extends EmberObject {
     return await this._restoreUser(user);
   }
 
+  _createUser(user) {
+    let { store, store: { options: { auth } } } = this;
+    if(auth && auth.user) {
+      return this.store.models.create(auth.user, { store, user });
+    }
+    return getOwner(this).factoryFor(`zuglet:store/auth/user`).create({ store, user });
+  }
+
   async _restoreUser(internal) {
     let { user } = this;
     if(internal) {
@@ -52,7 +60,7 @@ export default class Auth extends EmberObject {
         await user.restore(internal);
       } else {
         let { store } = this;
-        user = getOwner(this).factoryFor('zuglet:store/auth/user').create({ store, user: internal });
+        user = this._createUser(internal);
         this.user = user;
         await user.restore();
       }
