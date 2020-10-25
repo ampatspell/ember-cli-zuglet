@@ -1,5 +1,5 @@
 import EmberObject from '@ember/object';
-import { associateDestroyableChild } from '@ember/destroyable';
+import { registerDestructor } from '@ember/destroyable';
 import { assert } from '@ember/debug';
 
 export default class State extends EmberObject {
@@ -10,14 +10,13 @@ export default class State extends EmberObject {
 
   init() {
     super.init(...arguments);
-    associateDestroyableChild(this.owner, this);
+    registerDestructor(this.owner, () => this.onOwnerWillDestroy());
   }
 
   getProperty(key, create) {
     let property = this.properties[key];
     if(!property && create) {
       property = create(this);
-      associateDestroyableChild(this, property);
       this.properties[key] = property;
     }
     return property;
@@ -78,6 +77,12 @@ export default class State extends EmberObject {
     if(activators.size === 0) {
       this.onDeactivated();
     }
+  }
+
+  //
+
+  onOwnerWillDestroy() {
+    this.withProperties(property => property.onOwnerWillDestroy());
   }
 
 }

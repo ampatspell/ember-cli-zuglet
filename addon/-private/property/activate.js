@@ -73,6 +73,10 @@ export default class ActivateProperty extends Property {
     this.deactivateValue();
   }
 
+  onOwnerWillDestroy() {
+    this.deactivateValue();
+  }
+
 }
 
 export const activate = property({

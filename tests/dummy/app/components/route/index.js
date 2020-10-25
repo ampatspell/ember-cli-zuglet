@@ -4,8 +4,12 @@ import { getOwner } from '@ember/application';
 import { setGlobal } from 'zuglet/util';
 import { tracked } from '@glimmer/tracking';
 import { activate } from 'zuglet/-private/property/activate';
+import { inject as service } from '@ember/service';
 
 export default class RouteIndexComponent extends Component {
+
+  @service
+  router
 
   @tracked
   show = false
@@ -29,7 +33,7 @@ export default class RouteIndexComponent extends Component {
   get model() {
     let child = this.child;
     let model = getOwner(this).factoryFor('model:thing').create({ child });
-    setGlobal({ model });
+    setGlobal({ model, router: this.router });
     return model;
   }
 
