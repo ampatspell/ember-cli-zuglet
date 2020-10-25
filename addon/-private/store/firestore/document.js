@@ -11,7 +11,6 @@ export default class Document extends EmberObject {
 
   init({ data }) {
     super.init(...arguments);
-    console.log(data);
   }
 
   onActivated() {
