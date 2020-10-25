@@ -19,9 +19,7 @@ body {
   box-sizing: border-box;
 }
 
-.application {
-  padding: 10px;
-
+.block-application {
   a,
   a:visited,
   a:active {
@@ -32,7 +30,7 @@ body {
   input[type="button"] {
     font-family: $font-family;
     font-size: $font-size;
-    background: #444;
+    background: fade-out(#000, 0.2);
     border-radius: 3px;
     border: none;
     color: #fff;
@@ -68,5 +66,38 @@ body {
   .json {
     white-space: pre-wrap;
   }
+}
 
+.block-application {
+  > .navigation {
+    display: flex;
+    flex-direction: row;
+    border-bottom: 1px solid fade-out(#000, 0.9);
+    align-items: baseline;
+    > .name {
+      margin: 10px 15px;
+    }
+    > a {
+      display: block;
+      padding: 10px 15px;
+      text-decoration: none;
+      &.active {
+        background: fade-out(#000, 0.2);
+        color: #fff;
+        position: relative;
+        &:after {
+          content: '';
+          position: absolute;
+          left: 0;
+          right: 0;
+          bottom: -1px;
+          height: 1px;
+          background: fade-out(#000, 0.2);
+        }
+      }
+    }
+  }
+  > .content {
+    padding: 10px;
+  }
 }
