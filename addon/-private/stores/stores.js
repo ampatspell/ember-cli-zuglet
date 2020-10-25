@@ -3,13 +3,13 @@ import { getOwner } from '../util/get-owner';
 
 export default class Stores extends EmberObject {
 
-  @computed
+  @computed()
   get stats() {
     let stores = this;
     return getOwner(this).factoryFor('zuglet:stores/stats').create({ stores });
   }
 
-  @computed
+  @computed()
   get models() {
     let stores = this;
     return getOwner(this).factoryFor('zuglet:stores/models').create({ stores });

@@ -14,4 +14,5 @@ Router.map(function() {
   });
   this.route('models');
   this.route('route');
+  this.route('auth');
 });

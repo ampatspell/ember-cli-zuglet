@@ -1,6 +1,5 @@
 import { assert } from '@ember/debug';
 import { typeOf } from '@ember/utils';
-import { A } from '@ember/array';
 import { isFastBoot } from './-private/util/fastboot';
 
 const {

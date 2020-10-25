@@ -1,4 +1,4 @@
-import EmberObject from '@ember/object';
+import EmberObject, { computed } from '@ember/object';
 import { getOwner } from '../util/get-owner';
 import { assert } from '@ember/debug';
 import { initializeApp, enablePersistence } from './firebase';
@@ -32,6 +32,12 @@ export default class Store extends EmberObject {
 
   get models() {
     return this.stores.models;
+  }
+
+  @computed()
+  get auth() {
+    let store = this;
+    return getOwner(this).factoryFor('zuglet:store/auth').create({ store });
   }
 
   //
