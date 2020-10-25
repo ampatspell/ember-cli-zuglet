@@ -1,5 +1,4 @@
 import { initialize } from 'zuglet/initialize';
-import { setGlobal } from 'zuglet/util';
 import Store from '../store';
 
 export default {
@@ -11,7 +10,5 @@ export default {
         factory: Store
       }
     });
-    let router = app.lookup('service:router');
-    setGlobal({ router });
   }
 }

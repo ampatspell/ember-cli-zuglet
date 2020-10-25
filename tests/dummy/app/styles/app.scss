@@ -2,6 +2,7 @@
 
 $font-family: 'Ubuntu Mono';
 $font-size: 15px;
+$font-size-smaller: 12px;
 
 html {
   padding: 0;
@@ -99,5 +100,21 @@ body {
   }
   > .content {
     padding: 10px;
+  }
+  > .stats {
+    padding: 10px;
+  }
+}
+
+.block-stats {
+  font-size: $font-size-smaller;
+  > .section {
+    margin-bottom: 10px;
+    &:last-child {
+      margin-bottom: 10px;
+    }
+    > .label {
+      font-weight: 600;
+    }
   }
 }
