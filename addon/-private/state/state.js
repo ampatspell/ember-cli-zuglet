@@ -1,6 +1,7 @@
 import EmberObject from '@ember/object';
 import { registerDestructor } from '@ember/destroyable';
 import { assert } from '@ember/debug';
+import { isModel } from '../model';
 
 export default class State extends EmberObject {
 
@@ -28,6 +29,10 @@ export default class State extends EmberObject {
 
   //
 
+  get isModel() {
+    return isModel(this.owner);
+  }
+
   invokeOnOwner(name, ...args) {
     let { owner } = this;
     let fn = owner[name];
@@ -40,6 +45,11 @@ export default class State extends EmberObject {
   //
 
   get isActivated() {
+    // TODO: non-models needs another state implementation
+    // which has onDestroy handler and properly invokes onActivated()
+    if(!this.isModel) {
+      return true;
+    }
     return this.activators.size > 0;
   }
 

@@ -1,7 +1,9 @@
 import EmberObject from '@ember/object';
 import { tracked } from '@glimmer/tracking';
-import { model } from 'zuglet/-private/property/activate';
+import { activate } from 'zuglet/-private/property/activate';
+import { model } from 'zuglet/-private/model';
 
+@model
 export default class Thing extends EmberObject {
 
   @tracked
@@ -10,7 +12,7 @@ export default class Thing extends EmberObject {
   @tracked
   foo = 'nothing'
 
-  @model
+  @activate
   child
 
   onActivated() {
