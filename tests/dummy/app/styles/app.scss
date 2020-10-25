@@ -30,7 +30,8 @@ body {
 
   button,
   input[type="button"] {
-    font-family: "Ubuntu Mono";
+    font-family: $font-family;
+    font-size: $font-size;
     background: #444;
     border-radius: 3px;
     border: none;
@@ -50,8 +51,8 @@ body {
   input[type="text"],
   input[type="number"],
   input[type="password"] {
-    font-family: "Ubuntu Mono";
-    font-size: 14px;
+    font-family: $font-family;
+    font-size: $font-size;
     border-radius: 3px;
     border: 1px solid #999;
     padding: 4px 9px 4px 9px;
