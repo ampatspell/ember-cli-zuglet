@@ -1,5 +1,5 @@
 import EmberObject from '@ember/object';
-import { getOwner } from '@ember/application';
+import { getOwner } from '../util/get-owner';
 import { A } from '@ember/array';
 
 export default class Stats extends EmberObject {

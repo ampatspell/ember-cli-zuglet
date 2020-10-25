@@ -1,5 +1,5 @@
 import EmberObject, { computed } from '@ember/object';
-import { getOwner } from '@ember/application';
+import { getOwner } from '../util/get-owner';
 import { getStats } from './stats';
 
 export default class Stores extends EmberObject {

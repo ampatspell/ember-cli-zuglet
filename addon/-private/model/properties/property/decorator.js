@@ -1,4 +1,4 @@
-import { getOwner } from '@ember/application';
+import { getOwner } from '../../../util/get-owner';
 import { computed } from '@ember/object';
 import { getState } from '../../state';
 

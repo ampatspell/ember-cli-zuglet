@@ -1,5 +1,5 @@
 import EmberObject from '@ember/object';
-import { getOwner } from '@ember/application';
+import { getOwner } from '../util/get-owner';
 
 const {
   assign
