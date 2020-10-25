@@ -16,6 +16,9 @@
 
   <div class="row">
     <input type="button" value="Sign in anonymously" {{on "click" this.anonymousSignIn}}/>
+    {{#if this.store.auth.user.isAnonymous}}
+      <input type="button" value="Delete user" {{on "click" this.deleteUser}}/>
+    {{/if}}
   </div>
 
   <div class="row">

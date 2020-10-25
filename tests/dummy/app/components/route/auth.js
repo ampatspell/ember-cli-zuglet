@@ -29,6 +29,11 @@ export default class RouteAuthComponent extends Component {
   }
 
   @action
+  async deleteUser() {
+    await this.store.auth.user.delete();
+  }
+
+  @action
   async signIn() {
     let { email, password } = this;
     this.error = null;
