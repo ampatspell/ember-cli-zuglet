@@ -9,17 +9,23 @@ export default class Document extends EmberObject {
   @raw('data')
   _data
 
-  get serialized() {
-    let { data } = this;
-    return {
-      data
-    };
+  init({ data }) {
+    super.init(...arguments);
+    console.log(data);
   }
 
   onActivated() {
   }
 
   onDeactivated() {
+  }
+
+  get serialized() {
+    let { data, foo } = this;
+    return {
+      data,
+      foo
+    };
   }
 
 }
