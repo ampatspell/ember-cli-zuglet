@@ -17,7 +17,4 @@ export default class Property extends EmberObject {
   onDeactivated() {
   }
 
-  onOwnerWillDestroy() {
-  }
-
 }
