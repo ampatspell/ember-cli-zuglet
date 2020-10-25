@@ -1,15 +1,5 @@
 import Component from '@glimmer/component';
-
-const objectToJSON = value => {
-  if(value) {
-    if(Array.isArray(value)) {
-      return value.map(object => objectToJSON(object));
-    } else if(value.serialized) {
-      return value.serialized;
-    }
-  }
-  return value;
-}
+import { objectToJSON } from 'zuglet/-private/util/object-to-json';
 
 export default class JsonComponent extends Component {
 
