@@ -19,8 +19,15 @@ export default class RouteIndexComponent extends Component {
   }
 
   @computed
-  get model() {
+  get child() {
     let child = getOwner(this).factoryFor('model:child').create();
+    setGlobal({ child });
+    return child;
+  }
+
+  @computed
+  get model() {
+    let child = this.child;
     let model = getOwner(this).factoryFor('model:thing').create({ child });
     setGlobal({ model });
     return model;
