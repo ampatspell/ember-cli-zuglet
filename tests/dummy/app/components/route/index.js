@@ -1,6 +1,6 @@
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
-import { setGlobal } from 'zuglet/util';
+import { setGlobal } from 'zuglet/utils';
 import { inject as service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 import { root, activate, models } from 'zuglet/decorators';

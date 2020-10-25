@@ -3,7 +3,7 @@
     <div class="label">Activated</div>
     <div class="models">
       {{#each this.store.stores.stats.activated as |model|}}
-        <div class="model">{{model}}</div>
+        <div class="model" role="button" {{on "click" (fn this.setGlobal model)}}>{{model}}</div>
       {{/each}}
     </div>
   </div>
