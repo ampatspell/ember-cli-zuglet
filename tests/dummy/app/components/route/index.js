@@ -10,12 +10,12 @@ export default class RouteIndexComponent extends Component {
   @service
   store
 
-  @tracked
+  @activate()
   doc
 
   constructor() {
     super(...arguments);
-    this.doc = this.store.doc('messages/first').new({ text: 'hey there' });
+    this.doc = this.store.doc('messages/first').existing();
     setGlobal({ doc: this.doc });
   }
 
