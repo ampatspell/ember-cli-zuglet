@@ -17,4 +17,12 @@ export default class Child extends EmberObject {
     this.foo = 'deactivated';
   }
 
+  get serialized() {
+    let { isActivated, foo } = this
+    return {
+      isActivated,
+      foo
+    };
+  }
+
 }
