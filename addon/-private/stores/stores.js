@@ -1,12 +1,14 @@
 import EmberObject, { computed } from '@ember/object';
 import { getOwner } from '../util/get-owner';
-import { getStats } from './stats';
+
+export const getStores = owner => getOwner(owner).lookup('zuglet:stores');
 
 export default class Stores extends EmberObject {
 
   @computed
   get stats() {
-    return getStats(this);
+    let stores = this;
+    return getOwner(this).factoryFor('zuglet:stats').create({ stores });
   }
 
   createStore() {

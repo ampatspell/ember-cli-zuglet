@@ -1,6 +1,11 @@
 import EmberObject from '@ember/object';
-import { getOwner } from '../util/get-owner';
+import { getStores } from './stores';
 import { A } from '@ember/array';
+
+export const getStats = owner => getStores(owner).stats;
+
+export const registerActivated = model => getStats(model).registerActivated(model);
+export const unregisterActivated = model => getStats(model).unregisterActivated(model);
 
 export default class Stats extends EmberObject {
 
@@ -15,10 +20,3 @@ export default class Stats extends EmberObject {
   }
 
 }
-
-export const getStats = owner => {
-  return getOwner(owner).lookup('zuglet:stats');
-}
-
-export const registerActivated = model => getStats(model).registerActivated(model);
-export const unregisterActivated = model => getStats(model).unregisterActivated(model);
