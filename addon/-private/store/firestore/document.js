@@ -156,7 +156,7 @@ export default class Document extends EmberObject {
       this._deferred.resolve(this);
     }, error => {
       this.setProperties({ isLoading: false, isError: true, error });
-      // this.store._onSnapshotError(this);
+      this.store.onSnapshotError(this);
       this._deferred.reject(error);
     }));
   }

@@ -84,6 +84,12 @@ export default class Store extends EmberObject {
 
   //
 
+  //
+
+  onSnapshotError(model) {
+    console.error('onSnapshot', model.string || sender.path, sender.error.stack);
+  }
+
   get projectId() {
     return this.firebase.options.projectId;
   }
