@@ -3,7 +3,7 @@ import { inject as service } from '@ember/service';
 import { objectToJSON, toPrimitive, load } from 'zuglet/utils';
 import { activate, models } from 'zuglet/decorators';
 
-export default class Message extends EmberObject {
+export default class Messages extends EmberObject {
 
   @service
   store
