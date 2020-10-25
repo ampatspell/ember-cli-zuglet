@@ -40,6 +40,12 @@ export default class Store extends EmberObject {
     return getOwner(this).factoryFor('zuglet:store/auth').create({ store });
   }
 
+  @computed()
+  get functions() {
+    let store = this;
+    return getOwner(this).factoryFor('zuglet:store/functions').create({ store });
+  }
+
   //
 
   _createDocumentReference(_ref) {

@@ -25,6 +25,9 @@ import AnonymousAuthMethod from 'zuglet/-private/store/auth/methods/anonymous';
 import EmailAuthMethod from 'zuglet/-private/store/auth/methods/email';
 import User from 'zuglet/-private/store/auth/user';
 
+import Functions from 'zuglet/-private/store/functions/functions';
+import FunctionsRegion from 'zuglet/-private/store/functions/region';
+
 export default {
   name: 'zuglet:internal',
   initialize(container) {
@@ -54,5 +57,8 @@ export default {
     container.register('zuglet:store/auth/methods/anonymous', AnonymousAuthMethod);
     container.register('zuglet:store/auth/methods/email', EmailAuthMethod);
     container.register('zuglet:store/auth/user', User);
+
+    container.register('zuglet:store/functions', Functions);
+    container.register('zuglet:store/functions/region', FunctionsRegion);
   }
 }

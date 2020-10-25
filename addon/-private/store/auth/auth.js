@@ -1,3 +1,4 @@
+import 'firebase/auth';
 import EmberObject, { computed } from '@ember/object';
 import { defer } from '../../util/defer';
 import { activate } from '../../model/properties/activate';

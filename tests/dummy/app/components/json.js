@@ -1,5 +1,5 @@
 import Component from '@glimmer/component';
-import { objectToJSON } from 'zuglet/-private/util/object-to-json';
+import { objectToJSON } from 'zuglet/utils';
 
 export default class JsonComponent extends Component {
 
