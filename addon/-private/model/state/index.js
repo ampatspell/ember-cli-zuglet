@@ -1,14 +1,19 @@
 import { getOwner } from '@ember/application';
+import { assert } from '@ember/debug';
 
 const marker = Symbol('ZUGLET');
 
 const createState = owner => {
+  let _owner = getOwner(owner);
+  assert(`${owner} doesn't have owner`, !!_owner);
+
   let factory;
   if(isRoot(owner)) {
-    factory = getOwner(owner).factoryFor('zuglet:state/root');
+    factory = _owner.factoryFor('zuglet:state/root');
   } else {
-    factory = getOwner(owner).factoryFor('zuglet:state/model');
+    factory = _owner.factoryFor('zuglet:state/model');
   }
+
   return factory.create({ owner });
 }
 
