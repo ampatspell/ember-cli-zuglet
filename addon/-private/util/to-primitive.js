@@ -1,5 +1,5 @@
 import { guidFor } from '@ember/object/internals';
 
-export default model => {
+export const toPrimitive = model => {
   return `${model.constructor.name}::${guidFor(model)}`;
 }
