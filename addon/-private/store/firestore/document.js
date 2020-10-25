@@ -32,10 +32,8 @@ export default class Document extends EmberObject {
     delete opts.snapshot;
     super.init(...arguments);
     this._deferred = defer();
-
     if(snapshot) {
-      console.log('has snapshot')
-      // this._onSnapshot(snapshot, false);
+      this._onSnapshot(snapshot);
     } else if(data) {
       this.data = data;
       this.isNew = true;
