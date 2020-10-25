@@ -12,8 +12,8 @@ export default class Store extends EmberObject {
     return getOwner(this).factoryFor('zuglet:store/firestore/document').create(assign({ store }, props));
   }
 
-  document() {
-    return this._createDocument({ data: { ok: true } });
+  document(data) {
+    return this._createDocument({ data });
   }
 
 }

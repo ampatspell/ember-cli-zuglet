@@ -12,4 +12,10 @@
     <Json @value={{this.array}}/>
   </div>
 
+  <div class="row">
+    {{#each this.array as |doc|}}
+      <div>{{doc.data.name}} {{if doc.isActive 'active' 'inactive'}}</div>
+    {{/each}}
+  </div>
+
 </div>

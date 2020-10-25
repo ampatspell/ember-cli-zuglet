@@ -22,9 +22,10 @@ export default class RouteIndexComponent extends Component {
     setGlobal({ component: this });
     // this.array = [];
     // this.array.pushObject(this.store.document());
-    this.doc = this.store.document();
+    this.doc = this.store.document({ name: 'zeeba' });
+    let second = this.store.document({ name: 'larry' });
     setGlobal({ doc: this.doc });
-    this.array = [ this.doc ];
+    this.array = [ this.doc, second ];
   }
 
   @action
