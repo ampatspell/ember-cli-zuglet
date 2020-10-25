@@ -1,97 +1,75 @@
 import Property, { property } from './property';
-import { getState } from '../state';
+import { assert } from '@ember/debug';
+import ObjectActivator from './activate/object';
+import ArrayActivator from './activate/array';
 
-class ObjectActivator {
-
-  value = null;
-  isActivated = false;
-
-  constructor(property) {
-    this.property = property;
-    this.isActivated = false;
-    this.value = null;
-  }
-
-  activate() {
-    if(!this.property.isActivated) {
-      return;
-    }
-
-    if(this.isActivated) {
-      return;
-    }
-
-    this.isActivated = true;
-
-    let value = this.value;
-    if(value) {
-      let state = getState(value);
-      if(state) {
-        state.activate(this.property);
-      }
-    }
-  }
-
-  deactivate () {
-    if(!this.isActivated) {
-      return;
-    }
-
-    this.isActivated = false;
-
-    let value = this.value;
-    if(value) {
-      let state = getState(value);
-      if(state) {
-        state.deactivate(this.property);
-      }
-    }
-  }
-
-  getValue() {
-    this.activate();
-    return this.value;
-  }
-
-  setValue(value) {
-    this.deactivate();
-    this.value = value;
-    this.activate();
-    return value;
-  }
-
-}
-
-class ArrayActivator {
-  constructor(property) {
-
-  }
-}
+const isArray = object => Array.isArray(object); // TODO: this might need Ember array check
 
 export default class ActivateProperty extends Property {
 
   init() {
     super.init(...arguments);
-    this.activator = new ObjectActivator(this);
+  }
+
+  _activatorTypeForValue(value) {
+    if(isArray(value)) {
+      return 'array';
+    } else {
+      return 'object';
+    }
+  }
+
+  activatorTypeForValue(value) {
+    let type = this._activatorTypeForValue(value);
+    let { activator } = this;
+    if(activator && value === null || value === undefined) {
+      return activator.type;
+    }
+    return type;
+  }
+
+  createActivator(value) {
+    if(isArray(value)) {
+      return new ArrayActivator(this, value);
+    }
+    return new ObjectActivator(this, value);
   }
 
   getPropertyValue() {
-    return this.activator.getValue();
+    let { activator } = this;
+    if(!activator) {
+      return null;
+    }
+    return activator.getValue();
   }
 
   setPropertyValue(value) {
-    if(value === this.value) {
-      return value;
+    let { activator } = this;
+    if(!activator) {
+      activator = this.createActivator(value);
+      this.activator = activator;
+    } else {
+      assert([
+        `Changing activator type is not supported.`,
+        `Now property '${this.key}' for ${this.owner} is of type ${activator.type}`,
+        `but value '${value}' asks for activator of type ${this.activatorTypeForValue(value)}`
+      ].join(' '), activator.type === this.activatorTypeForValue(value));
     }
-    return this.activator.setValue(value);
+    return activator.setValue(value);
   }
 
   onActivated() {
-    this.activator.activate();
+    let { activator } = this;
+    if(activator) {
+      activator.activate();
+    }
   }
 
   onDeactivated() {
-    this.activator.deactivate();
+    let { activator } = this;
+    if(activator) {
+      activator.deactivate();
+    }
   }
 
 }

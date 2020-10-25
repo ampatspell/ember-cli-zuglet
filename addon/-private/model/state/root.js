@@ -3,7 +3,7 @@ import { registerDestructor } from '@ember/destroyable';
 
 export default class RootState extends State {
 
-  registersActivated = false
+  registersActivated = true
 
   init() {
     super.init(...arguments);

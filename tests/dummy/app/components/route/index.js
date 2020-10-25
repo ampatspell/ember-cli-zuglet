@@ -23,15 +23,15 @@ export default class RouteIndexComponent extends Component {
     // this.array = [];
     // this.array.pushObject(this.store.document());
     this.doc = this.store.document();
-    this.array = this.doc;
+    this.array = [ this.doc ];
   }
 
   @action
   toggle() {
-    if(this.array) {
+    if(this.array && this.array.length > 0) {
       this.array = null;
     } else {
-      this.array = this.doc;
+      this.array = [ this.doc ];
     }
   }
 
