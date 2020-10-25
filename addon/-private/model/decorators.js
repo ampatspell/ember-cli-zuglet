@@ -1,3 +1,8 @@
-import { setRoot } from './state';
+import { root } from './decorators/root';
+import { route } from './decorators/route';
 
-export const autoactivate = () => Class => setRoot(Class);
+export {
+  root,
+  root as autoactivate, // TODO
+  route
+}
