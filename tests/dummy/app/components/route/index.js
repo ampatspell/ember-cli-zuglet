@@ -12,28 +12,31 @@ export default class RouteIndexComponent extends Component {
   store
 
   @tracked
-  doc
+  first
+
+  @tracked
+  second
 
   @activate
-  array
+  query
 
   constructor() {
     super(...arguments);
     setGlobal({ component: this });
-    // this.array = [];
-    // this.array.pushObject(this.store.document());
-    this.doc = this.store.document({ name: 'zeeba' });
-    let second = this.store.document({ name: 'larry' });
-    setGlobal({ doc: this.doc });
-    this.array = this.store.query([ this.doc, second ]);
+
+    this.zeeba = this.store.document({ name: 'zeeba' });
+    this.larry = this.store.document({ name: 'larry' });
+    setGlobal({ zeeba: this.zeeba, larry: this.larry });
+
+    this.query = this.store.query([ this.zeeba, this.larry ]);
   }
 
   @action
   toggle() {
-    if(this.array && this.array.length > 0) {
-      this.array = null;
+    if(this.query.content.length === 2) {
+      this.query.content = [ this.zeeba ];
     } else {
-      this.array = [ this.doc ];
+      this.query.content = [ this.zeeba, this.larry ];
     }
   }
 

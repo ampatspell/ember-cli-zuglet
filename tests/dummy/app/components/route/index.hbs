@@ -5,15 +5,16 @@
   </div>
 
   <div class="row">
-    <Json @value={{this.doc}}/>
+    <Json @value={{this.zeeba}}/>
+    <Json @value={{this.larry}}/>
   </div>
 
   <div class="row">
-    <Json @value={{this.array}}/>
+    <Json @value={{this.query}}/>
   </div>
 
   <div class="row">
-    {{#each this.array as |doc|}}
+    {{#each this.query.content as |doc|}}
       <div>{{doc.data.name}} {{if doc.isActivated 'active' 'inactive'}}</div>
     {{/each}}
   </div>
