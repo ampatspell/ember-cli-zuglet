@@ -10,6 +10,14 @@ export default class Animal extends EmberObject {
   @tracked
   doc
 
+  get type() {
+    return this.doc.data.type;
+  }
+
+  get name() {
+    return this.doc.data.name;
+  }
+
   onActivated() {
     this.isActivated = true;
   }

@@ -20,15 +20,15 @@ export default class RouteIndexComponent extends Component {
   @activate
   query
 
-  @models('query.content', 'animal', doc => ({ doc }))
+  @models('query.content', doc => `${doc.data.type}`, doc => ({ doc }), [ 'data' ])
   models
 
   constructor() {
     super(...arguments);
     setGlobal({ component: this });
 
-    this.zeeba = this.store.document({ name: 'zeeba' });
-    this.larry = this.store.document({ name: 'larry' });
+    this.zeeba = this.store.document({ name: 'zeeba', type: 'zebra' });
+    this.larry = this.store.document({ name: 'larry', type: 'croc' });
     setGlobal({ zeeba: this.zeeba, larry: this.larry });
 
     this.query = this.store.query([ this.zeeba, this.larry ]);

@@ -11,13 +11,13 @@
 
   <div class="row">
     {{#each this.models as |model|}}
-      <div>{{model}}</div>
+      <div>{{model}} {{model.type}} {{model.name}}</div>
     {{/each}}
   </div>
 
   {{!-- <div class="row">
     {{#each this.query.content as |doc|}}
-      <div>{{doc.data.name}} {{if doc.isActivated 'active' 'inactive'}}</div>
+      <div>{{doc.data.type}} {{doc.type}}</div>
     {{/each}}
   </div> --}}
 
