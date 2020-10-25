@@ -10,14 +10,15 @@ export default class ActivateProperty extends Property {
     this.isValueActivated = false;
   }
 
-  get sholdActivateIndependentlyOfParent() {
-    return this.opts.activateIndependently;
+  get activateIndependentlyFromParent() {
+    return this.opts.activateIndependentlyFromParent;
   }
 
   activateValue() {
-    if(!this.isActivated && this.sholdActivateIndependentlyOfParent !== true) {
+    if(!this.isActivated && this.activateIndependentlyFromParent !== true) {
       return;
     }
+
     if(this.isValueActivated) {
       return;
     }
@@ -79,7 +80,7 @@ export const activate = property({
   deps: [],
   property: 'activate',
   opts: {
-    activateIndependently: true
+    activateIndependentlyFromParent: true
   }
 });
 
@@ -88,6 +89,6 @@ export const model = property({
   deps: [],
   property: 'activate',
   opts: {
-    activateIndependently: false
+    activateIndependentlyFromParent: false
   }
 });
