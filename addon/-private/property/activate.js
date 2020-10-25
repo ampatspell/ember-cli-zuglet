@@ -7,16 +7,22 @@ export default class ActivateProperty extends Property {
 
   init() {
     super.init(...arguments);
-    this.value = this.opts.value;
-    this.activated = false;
+    this.isValueActivated = false;
   }
 
-  activate() {
-    if(this.activated) {
+  get sholdActivateIndependentlyOfParent() {
+    return this.opts.activateIndependently;
+  }
+
+  activateValue() {
+    if(!this.isActivated && this.sholdActivateIndependentlyOfParent !== true) {
+      return;
+    }
+    if(this.isValueActivated) {
       return;
     }
 
-    this.activated = true;
+    this.isValueActivated = true;
 
     let value = this.value;
     if(value) {
@@ -27,12 +33,12 @@ export default class ActivateProperty extends Property {
     }
   }
 
-  deactivate() {
-    if(!this.activated) {
+  deactivateValue() {
+    if(!this.isValueActivated) {
       return;
     }
 
-    this.activated = false;
+    this.isValueActivated = false;
 
     let value = this.value;
     if(value) {
@@ -44,7 +50,7 @@ export default class ActivateProperty extends Property {
   }
 
   getPropertyValue() {
-    this.activate();
+    this.activateValue();
     return this.value;
   }
 
@@ -52,19 +58,36 @@ export default class ActivateProperty extends Property {
     if(value === this.value) {
       return value;
     }
-    this.deactivate();
+    this.deactivateValue();
     this.value = value;
-    this.activate();
+    this.activateValue();
     return value;
+  }
+
+  onActivated() {
+    this.activateValue();
+  }
+
+  onDeactivated() {
+    this.deactivateValue();
   }
 
 }
 
-export const activate = value => property({
+export const activate = property({
   readOnly: false,
   deps: [],
   property: 'activate',
   opts: {
-    value
+    activateIndependently: true
+  }
+});
+
+export const model = property({
+  readOnly: false,
+  deps: [],
+  property: 'activate',
+  opts: {
+    activateIndependently: false
   }
 });

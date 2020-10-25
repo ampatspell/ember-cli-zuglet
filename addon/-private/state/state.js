@@ -16,27 +16,55 @@ export default class State extends EmberObject {
   getProperty(key, create) {
     let property = this.properties[key];
     if(!property && create) {
-      property = create();
+      property = create(this);
       associateDestroyableChild(this, property);
       this.properties[key] = property;
     }
     return property;
   }
 
+  withProperties(cb) {
+    Object.values(this.properties).forEach(property => cb(property));
+  }
+
+  //
+
   get isActivated() {
     return this.activators.size > 0;
   }
 
+  onActivated() {
+    this.owner.isActivated = true;
+    this.withProperties(property => property.onActivated());
+  }
+
+  onDeactivated() {
+    this.owner.isActivated = false;
+    this.withProperties(property => property.onDeactivated());
+  }
+
   activate(activator) {
+    assert(`activator is requied`, !!activator);
     assert(`activator ${activator} already has activated ${this.owner}`, !this.activators.has(activator));
-    this.activators.add(activator);
-    this.owner.isActivated = this.isActivated;
+
+    let { activators } = this;
+    activators.add(activator);
+
+    if(activators.size === 1) {
+      this.onActivated();
+    }
   }
 
   deactivate(activator) {
+    assert(`activator is requied`, !!activator);
     assert(`activator ${activator} hasn't activated ${this.owner}`, this.activators.has(activator));
-    this.activators.delete(activator);
-    this.owner.isActivated = this.isActivated;
+
+    let { activators } = this;
+    activators.delete(activator);
+
+    if(activators.size === 0) {
+      this.onDeactivated();
+    }
   }
 
 }

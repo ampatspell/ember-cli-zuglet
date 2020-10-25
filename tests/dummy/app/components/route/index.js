@@ -10,8 +10,8 @@ export default class RouteIndexComponent extends Component {
   @tracked
   show = false
 
-  @activate(null)
-  activeModel
+  @activate
+  active
 
   constructor() {
     super(...arguments);
@@ -20,7 +20,8 @@ export default class RouteIndexComponent extends Component {
 
   @computed
   get model() {
-    let model = getOwner(this).factoryFor('model:thing').create();
+    let child = getOwner(this).factoryFor('model:child').create();
+    let model = getOwner(this).factoryFor('model:thing').create({ child });
     setGlobal({ model });
     return model;
   }
@@ -29,10 +30,9 @@ export default class RouteIndexComponent extends Component {
   toggle() {
     this.show = !this.show;
     if(this.show) {
-      let model = this.model;
-      this.activeModel = this.model;
+      this.active = this.model;
     } else {
-      this.activeModel = null;
+      this.active = null;
     }
   }
 

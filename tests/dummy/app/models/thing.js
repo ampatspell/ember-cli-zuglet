@@ -1,13 +1,13 @@
 import EmberObject from '@ember/object';
-import { dummy } from 'zuglet/-private/property/dummy';
 import { tracked } from '@glimmer/tracking';
+import { model } from 'zuglet/-private/property/activate';
 
 export default class Thing extends EmberObject {
 
   @tracked
   isActivated = false
 
-  @dummy('foobar')
-  foo
+  @model
+  child
 
 }

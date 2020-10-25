@@ -5,11 +5,13 @@
   </div>
 
   <div class="row">
-    active: {{this.activeModel}} {{this.activeModel.isActivated}}
+    <div>thing: {{this.active}} {{this.active.isActivated}}</div>
+    <div>child: {{this.active.child}} {{this.active.child.isActivated}}</div>
   </div>
 
   <div class="row">
-    model: {{this.model}} {{this.model.isActivated}}
+    <div>model: {{this.model}} {{this.model.isActivated}}</div>
+    <div>child: {{this.model.child}} {{this.model.child.isActivated}}</div>
   </div>
 
 </div>
