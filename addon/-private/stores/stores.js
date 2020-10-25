@@ -15,9 +15,20 @@ export default class Stores extends EmberObject {
     return getOwner(this).factoryFor('zuglet:stores/models').create({ stores });
   }
 
-  createStore() {
+  _registerStoreFactory(identifier, factory) {
+    let factoryName = `zuglet:store/${identifier}`;
+    let registered = getOwner(this).factoryFor(factoryName);
+    if(!registered) {
+      getOwner(this).register(factoryName, factory);
+      registered = getOwner(this).factoryFor(factoryName);
+    }
+    return registered;
+  }
+
+  createStore(identifier, factory) {
     let stores = this;
-    return getOwner(this).factoryFor('zuglet:store').create({ stores });
+    factory = this._registerStoreFactory(identifier, factory);
+    return factory.create({ stores, identifier });
   }
 
 }
