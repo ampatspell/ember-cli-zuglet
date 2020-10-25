@@ -23,9 +23,10 @@
     "test:ember-compatibility": "ember try:each"
   },
   "dependencies": {
+    "ember-auto-import": "^1.6.0",
     "ember-cli-babel": "^7.22.1",
     "ember-cli-htmlbars": "^5.3.1",
-    "ember-auto-import": "^1.6.0",
+    "firebase": "^7.24.0",
     "observable-membrane": "^1.0.1"
   },
   "devDependencies": {

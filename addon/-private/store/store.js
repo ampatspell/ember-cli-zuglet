@@ -1,8 +1,31 @@
 import EmberObject from '@ember/object';
 import { getOwner } from '../util/get-owner';
 import { A } from '@ember/array';
+import { assert } from '@ember/debug';
+import { initializeApp, enablePersistence } from './firebase';
 
 export default class Store extends EmberObject {
+
+  firebase = null
+  enablePersistencePromise = null
+
+  init() {
+    super.init(...arguments);
+    this._initializeApp();
+  }
+
+  _initializeApp() {
+    let { options } = this;
+    assert(`store.options are required`, !!options);
+    let { firebase } = options;
+    assert(`store.options.firebase is require`, !!firebase);
+    this.firebase = initializeApp(firebase, this.identifier);
+    if(options.firestore && options.firestore.persistenceEnabled) {
+      this.enablePersistencePromise = enablePersistence(this.firebase);
+    } else {
+      this.enablePersistencePromise = Promise.resolve();
+    }
+  }
 
   get models() {
     return this.stores.models;
