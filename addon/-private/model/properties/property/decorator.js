@@ -13,7 +13,7 @@ const createProperty = (state, owner, name, props) => {
 export const property = ({ readOnly, deps, property, opts }) => {
 
   let getProperty = (owner, key) => {
-    return getState(owner).getProperty(key, state => createProperty(state, owner, property, { owner, key, opts }));
+    return getState(owner).getProperty(key, state => createProperty(state, owner, property, { owner, key, deps, opts }));
   }
 
   let get = function (key) {

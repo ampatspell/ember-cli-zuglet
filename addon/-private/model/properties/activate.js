@@ -75,7 +75,7 @@ export default class ActivateProperty extends Property {
 
 }
 
-export const activate = property({
+export const activate = () => property({
   readOnly: false,
   deps: [],
   property: 'activate',

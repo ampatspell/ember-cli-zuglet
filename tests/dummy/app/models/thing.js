@@ -10,7 +10,7 @@ export default class Thing extends EmberObject {
   @tracked
   foo = 'nothing'
 
-  @activate
+  @activate()
   child
 
   onActivated() {

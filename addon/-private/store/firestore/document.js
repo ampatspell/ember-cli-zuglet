@@ -4,7 +4,7 @@ import { tracked } from '@glimmer/tracking';
 
 export default class Document extends EmberObject {
 
-  @object
+  @object()
   data
 
   @raw('data')

@@ -40,7 +40,7 @@ export default class ActivateProperty extends Property {
 
 }
 
-export const object = property({
+export const object = () => property({
   readOnly: false,
   deps: [],
   property: 'object',

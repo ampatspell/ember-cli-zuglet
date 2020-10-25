@@ -5,7 +5,7 @@ import { objectToJSON } from '../../util/object-to-json';
 
 export default class Query extends EmberObject {
 
-  @activate
+  @activate()
   content
 
   @tracked
