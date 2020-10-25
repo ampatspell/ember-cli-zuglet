@@ -4,6 +4,8 @@
     <div class="models">
       {{#each this.store.stores.stats.activated as |model|}}
         <div class="model" role="button" {{on "click" (fn this.setGlobal model)}}>{{model}}</div>
+      {{else}}
+        <div class="placeholder">No activated models</div>
       {{/each}}
     </div>
   </div>

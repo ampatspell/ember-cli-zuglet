@@ -103,11 +103,13 @@ body {
     margin: 10px;
   }
   > .stats {
-    margin: 50px 10px 10px 10px;
+    margin: 50px 0 0 0;
   }
 }
 
 .block-stats {
+  border-top: 1px solid fade-out(#000, 0.9);
+  padding: 10px;
   font-size: $font-size-smaller;
   > .section {
     margin-bottom: 10px;
