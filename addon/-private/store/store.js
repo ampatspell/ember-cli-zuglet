@@ -8,6 +8,8 @@ export default class Store extends EmberObject {
     return this.stores.models;
   }
 
+  //
+
   _createDocument({ data }) {
     let store = this;
     return getOwner(this).factoryFor('zuglet:store/firestore/document').create({ store, data });
