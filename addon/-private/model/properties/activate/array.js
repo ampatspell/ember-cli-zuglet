@@ -74,7 +74,6 @@ export default class ArrayActivator {
   }
 
   getValue() {
-    this.activate();
     return this.content;
   }
 
