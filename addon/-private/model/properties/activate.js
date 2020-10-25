@@ -65,7 +65,6 @@ export default class ActivateProperty extends Property {
       let state = getState(value);
       if(state) {
         state.activate(this);
-        console.log('activate', value+'');
       }
     }
   }
@@ -75,7 +74,6 @@ export default class ActivateProperty extends Property {
       let state = getState(value);
       if(state) {
         state.deactivate(this);
-        console.log('deactivate', value+'');
       }
     }
   }

@@ -1,4 +1,5 @@
 import EmberObject from '@ember/object';
+import { guidFor } from '@ember/object/internals';
 
 export default class Property extends EmberObject {
 
@@ -19,6 +20,10 @@ export default class Property extends EmberObject {
   }
 
   onDeactivated() {
+  }
+
+  toStringExtension() {
+    return `${this.owner.constructor.name}::${guidFor(this.owner)}.${this.key}`;
   }
 
 }

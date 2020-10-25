@@ -37,4 +37,8 @@ export default class RouteIndexComponent extends Component {
     }
   }
 
+  toString() {
+    return `<Component:RouteIndex>`;
+  }
+
 }
