@@ -15,8 +15,9 @@ export default class RouteIndexComponent extends Component {
 
   constructor() {
     super(...arguments);
-    this.doc = this.store.doc('messages/first').existing();
-    setGlobal({ doc: this.doc });
+    let doc = this.store.doc('messages/first').existing();
+    this.doc = doc;
+    setGlobal({ component: this, doc });
   }
 
   toString() {

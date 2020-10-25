@@ -4,6 +4,7 @@ import { tracked } from '@glimmer/tracking';
 import { objectToJSON } from '../../util/object-to-json';
 import { assert } from '@ember/debug';
 import { defer } from '../../util/defer';
+import { registerOnSnapshot } from '../../stores/stats';
 
 const {
   assign
@@ -87,7 +88,7 @@ export default class Document extends EmberObject {
     try {
       let snapshot = await this.ref._ref.get();
       this._onSnapshot(snapshot);
-      // this._maybeSubscribeToOnSnapshot();
+      this._maybeSubscribeToOnSnapshot();
       this._deferred.resolve(this);
     } catch(error) {
       this.setProperties({ isLoading: false, isError: true, error });
@@ -111,7 +112,7 @@ export default class Document extends EmberObject {
     try {
       await this.ref._ref.set(this._data, { merge });
       this.setProperties({ isNew: false, isSaving: false, exists: true });
-      // this._maybeSubscribeToOnSnapshot();
+      this._maybeSubscribeToOnSnapshot();
       this._deferred.resolve(this);
     } catch(error) {
       this.setProperties({ isSaving: false, isError: true, error });
@@ -125,7 +126,7 @@ export default class Document extends EmberObject {
     try {
       await this.ref._ref.delete();
       this.setProperties({ isSaving: false, exists: false });
-      // this._maybeSubscribeToOnSnapshot();
+      this._maybeSubscribeToOnSnapshot();
     } catch(error) {
       this.setProperties({ isSaving: false, isError: true, error });
       throw error;
@@ -133,9 +134,79 @@ export default class Document extends EmberObject {
     return this;
   }
 
+  //
+
+  // TODO: issue with current firebase js sdk
+  _shouldIgnoreSnapshot(snapshot) {
+    return this.isSaving && !snapshot.metadata.hasPendingWrites;
+  }
+
+  _subscribeToOnSnapshot() {
+    let { isLoaded } = this;
+
+    if(!isLoaded) {
+      this.setProperties({ isLoading: true, isError: false, error: null });
+    }
+
+    this._cancel = registerOnSnapshot(this, this.ref._ref.onSnapshot({ includeMetadataChanges: true }, snapshot => {
+      if(this._shouldIgnoreSnapshot(snapshot)) {
+        return;
+      }
+      this._onSnapshot(snapshot);
+      this._deferred.resolve(this);
+    }, error => {
+      this.setProperties({ isLoading: false, isError: true, error });
+      // this.store._onSnapshotError(this);
+      this._deferred.reject(error);
+    }));
+  }
+
+  _shouldSubscribeToOnSnapshot() {
+    if(this.parent) {
+      return false;
+    }
+    if(!this._isActivated) {
+      return false;
+    }
+    if(this._cancel) {
+      return false;
+    }
+    if(this.isNew) {
+      return false;
+    }
+    return true;
+  }
+
+  _maybeSubscribeToOnSnapshot() {
+    if(!this._shouldSubscribeToOnSnapshot()) {
+      return;
+    }
+    this._subscribeToOnSnapshot();
+  }
+
+  _unsubscribeFromOnSnapshot() {
+    let { _cancel } = this;
+    if(_cancel) {
+      this._cancel = null;
+      _cancel();
+    }
+  }
+
   // _onDeleted() {
   //   this.setProperties({ exists: false });
   // }
+
+  //
+
+  onActivated() {
+    this._isActivated = true;
+    this._maybeSubscribeToOnSnapshot();
+  }
+
+  onDeactivated() {
+    this._isActivated = false;
+    this._unsubscribeFromOnSnapshot();
+  }
 
   //
 
@@ -154,6 +225,10 @@ export default class Document extends EmberObject {
       exists,
       data: objectToJSON(_data)
     };
+  }
+
+  toStringExtension() {
+    return `${this.path}`;
   }
 
 }

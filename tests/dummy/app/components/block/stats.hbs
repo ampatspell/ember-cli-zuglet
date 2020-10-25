@@ -9,4 +9,14 @@
       {{/each}}
     </div>
   </div>
+  <div class="section">
+    <div class="label">onSnapshot</div>
+    <div class="models">
+      {{#each this.store.stores.stats.snapshots as |model|}}
+        <div class="model" role="button" {{on "click" (fn this.setGlobal model)}}>{{model}}</div>
+      {{else}}
+        <div class="placeholder">No onSnapshot listeners</div>
+      {{/each}}
+    </div>
+  </div>
 </div>

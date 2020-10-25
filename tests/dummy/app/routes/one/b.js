@@ -9,7 +9,7 @@ export default class OneRoute extends Route {
   store
 
   async model() {
-    return this.store.document({ name: 'one/b' });
+    return this.store.doc('messages/one').new({ name: 'one/b' });
   }
 
 }

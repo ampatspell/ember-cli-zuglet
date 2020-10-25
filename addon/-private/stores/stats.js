@@ -2,21 +2,35 @@ import EmberObject from '@ember/object';
 import { getStores } from './get-stores';
 import { A } from '@ember/array';
 
-export const getStats = owner => getStores(owner).stats;
-
-export const registerActivated = model => getStats(model).registerActivated(model);
-export const unregisterActivated = model => getStats(model).unregisterActivated(model);
-
 export default class Stats extends EmberObject {
 
   activated = A();
+  snapshots = A();
 
-  registerActivated(model) {
+  _registerActivated(model) {
     this.activated.pushObject(model);
   }
 
-  unregisterActivated(model) {
+  _unregisterActivated(model) {
     this.activated.removeObject(model);
   }
 
+  _registerOnSnapshot(model) {
+    this.snapshots.pushObject(model);
+    return () => this.snapshots.removeObject(model);
+  }
+
+}
+
+export const getStats = owner => getStores(owner).stats;
+
+export const registerActivated = model => getStats(model)._registerActivated(model);
+export const unregisterActivated = model => getStats(model)._unregisterActivated(model);
+
+export const registerOnSnapshot = (model, cancel) => {
+  let snapshot = getStats(model)._registerOnSnapshot(model);
+  return () => {
+    snapshot();
+    cancel();
+  };
 }
