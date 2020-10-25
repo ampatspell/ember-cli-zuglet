@@ -4,6 +4,10 @@ import { A } from '@ember/array';
 
 export default class Store extends EmberObject {
 
+  get models() {
+    return this.stores.models;
+  }
+
   _createDocument({ data }) {
     let store = this;
     return getOwner(this).factoryFor('zuglet:store/firestore/document').create({ store, data });
