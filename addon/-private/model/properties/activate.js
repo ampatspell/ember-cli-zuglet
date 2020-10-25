@@ -1,5 +1,4 @@
 import Property, { property } from './property';
-import { getState } from '../state';
 import { assert } from '@ember/debug';
 import { isArray } from '@ember/array';
 import ObjectActivator from './activate/object';
@@ -56,26 +55,6 @@ export default class ActivateProperty extends Property {
       ].join(' '), activator.type === this.activatorTypeForValue(value));
     }
     return activator.setValue(value);
-  }
-
-  //
-
-  activateValue(value) {
-    if(value) {
-      let state = getState(value);
-      if(state) {
-        state.activate(this);
-      }
-    }
-  }
-
-  deactivateValue(value) {
-    if(value) {
-      let state = getState(value);
-      if(state) {
-        state.deactivate(this);
-      }
-    }
   }
 
   //

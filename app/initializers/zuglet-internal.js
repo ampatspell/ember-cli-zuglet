@@ -4,6 +4,7 @@ import ModelState from 'zuglet/-private/model/state/model';
 import RootState from 'zuglet/-private/model/state/root';
 import ActivateProperty from 'zuglet/-private/model/properties/activate';
 import ObjectProperty from 'zuglet/-private/model/properties/object';
+import ModelsProperty from 'zuglet/-private/model/properties/models';
 
 import Store from 'zuglet/-private/store/store';
 import Document from 'zuglet/-private/store/firestore/document';
@@ -20,6 +21,7 @@ export default {
 
     container.register('zuglet:properties/activate', ActivateProperty);
     container.register('zuglet:properties/object', ObjectProperty);
+    container.register('zuglet:properties/models', ModelsProperty);
 
     container.register('zuglet:store', Store);
     container.register('zuglet:store/firestore/document', Document);

@@ -46,7 +46,7 @@ export default class ArrayActivator {
 
   contentDidChange(array, start, removeCount, addCount) {
     if(addCount) {
-      let added  = A(array.slice(start, start + addCount));
+      let added = A(array.slice(start, start + addCount));
       this.activateValues(added);
     }
   }

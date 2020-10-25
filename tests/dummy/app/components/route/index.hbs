@@ -10,13 +10,15 @@
   </div>
 
   <div class="row">
-    <Json @value={{this.query}}/>
+    {{#each this.models as |model|}}
+      <div>{{model}}</div>
+    {{/each}}
   </div>
 
-  <div class="row">
+  {{!-- <div class="row">
     {{#each this.query.content as |doc|}}
       <div>{{doc.data.name}} {{if doc.isActivated 'active' 'inactive'}}</div>
     {{/each}}
-  </div>
+  </div> --}}
 
 </div>

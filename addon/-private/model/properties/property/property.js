@@ -1,5 +1,6 @@
 import EmberObject from '@ember/object';
 import toPrimitive from '../../../util/to-primitive';
+import { getState } from '../../state';
 
 export default class Property extends EmberObject {
 
@@ -12,9 +13,31 @@ export default class Property extends EmberObject {
     return this.state.isActivated;
   }
 
+  //
+
   notifyPropertyChange() {
     this.owner.notifyPropertyChange(this.key);
   }
+
+  activateValue(value) {
+    if(value) {
+      let state = getState(value);
+      if(state) {
+        state.activate(this);
+      }
+    }
+  }
+
+  deactivateValue(value) {
+    if(value) {
+      let state = getState(value);
+      if(state) {
+        state.deactivate(this);
+      }
+    }
+  }
+
+  //
 
   onActivated() {
   }
