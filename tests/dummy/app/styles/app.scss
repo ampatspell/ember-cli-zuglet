@@ -73,13 +73,13 @@ body {
     display: flex;
     flex-direction: row;
     border-bottom: 1px solid fade-out(#000, 0.9);
-    align-items: baseline;
+    align-items: center;
     > .name {
-      margin: 10px 15px;
+      margin: 0 15px;
     }
     > a {
       display: block;
-      padding: 10px 15px;
+      padding: 10px 15px 9px 15px;
       text-decoration: none;
       &.active {
         background: fade-out(#000, 0.2);
