@@ -8,6 +8,11 @@ import ObjectProperty from 'zuglet/-private/model/properties/object';
 import ModelsProperty from 'zuglet/-private/model/properties/models';
 
 import Store from 'zuglet/-private/store/store';
+
+import DocumentReference from 'zuglet/-private/store/firestore/references/document';
+import CollectionReference from 'zuglet/-private/store/firestore/references/collection';
+import ConditionReference from 'zuglet/-private/store/firestore/references/condition';
+
 import Document from 'zuglet/-private/store/firestore/document';
 import Query from 'zuglet/-private/store/firestore/query';
 
@@ -26,6 +31,11 @@ export default {
     container.register('zuglet:properties/models', ModelsProperty);
 
     container.register('zuglet:store', Store);
+
+    container.register('zuglet:store/firestore/reference/document', DocumentReference);
+    container.register('zuglet:store/firestore/reference/collection', CollectionReference);
+    container.register('zuglet:store/firestore/reference/condition', ConditionReference);
+
     container.register('zuglet:store/firestore/document', Document);
     container.register('zuglet:store/firestore/query', Query);
   }

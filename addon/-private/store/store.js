@@ -33,24 +33,52 @@ export default class Store extends EmberObject {
 
   //
 
-  _createDocument({ data }) {
+  _createDocumentReference(_ref) {
     let store = this;
-    return getOwner(this).factoryFor('zuglet:store/firestore/document').create({ store, data });
+    return getOwner(this).factoryFor('zuglet:store/firestore/reference/document').create({ store, _ref });
   }
 
-  _createQuery({ content }) {
+  _createCollectionReference(_ref) {
     let store = this;
-    return getOwner(this).factoryFor('zuglet:store/firestore/query').create({ store, content });
+    return getOwner(this).factoryFor('zuglet:store/firestore/reference/collection').create({ store, _ref });
   }
 
-  document(data) {
-    return this._createDocument({ data });
+  _createConditionReference(_ref, string) {
+    let store = this;
+    return getOwner(this).factoryFor('zuglet:store/firestore/reference/condition').create({ store, _ref, string });
   }
 
-  query(content) {
-    content = A(content);
-    return this._createQuery({ content });
+  doc(path) {
+    let ref = path;
+    if(typeof ref === 'string') {
+      ref = this.firebase.firestore().doc(path);
+    }
+    return this._createDocumentReference(ref);
   }
+
+  collection(path) {
+    let ref = path;
+    if(typeof ref === 'string') {
+      ref = this.firebase.firestore().collection(path);
+    }
+    return this._createCollectionReference(ref);
+  }
+
+  get serverTimestamp() {
+    return firebase.firestore.FieldValue.serverTimestamp();
+  }
+
+  //
+
+  // _createDocument({ data }) {
+  //   let store = this;
+  //   return getOwner(this).factoryFor('zuglet:store/firestore/document').create({ store, data });
+  // }
+
+  // _createQuery({ content }) {
+  //   let store = this;
+  //   return getOwner(this).factoryFor('zuglet:store/firestore/query').create({ store, content });
+  // }
 
   //
 
