@@ -7,7 +7,18 @@ export default class Thing extends EmberObject {
   @tracked
   isActivated = false
 
+  @tracked
+  foo = 'nothing'
+
   @model
   child
+
+  onActivated() {
+    this.foo = 'activated';
+  }
+
+  onDeactivated() {
+    this.foo = 'deactivated';
+  }
 
 }

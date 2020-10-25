@@ -29,6 +29,17 @@ export default class State extends EmberObject {
 
   //
 
+  invokeOnOwner(name, ...args) {
+    let { owner } = this;
+    let fn = owner[name];
+    if(!fn) {
+      return;
+    }
+    return fn.call(owner, ...args);
+  }
+
+  //
+
   get isActivated() {
     return this.activators.size > 0;
   }
@@ -36,10 +47,12 @@ export default class State extends EmberObject {
   onActivated() {
     this.owner.isActivated = true;
     this.withProperties(property => property.onActivated());
+    this.invokeOnOwner('onActivated');
   }
 
   onDeactivated() {
     this.owner.isActivated = false;
+    this.invokeOnOwner('onDeactivated');
     this.withProperties(property => property.onDeactivated());
   }
 
