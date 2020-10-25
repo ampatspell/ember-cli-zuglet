@@ -1,6 +1,6 @@
 import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
-import { route } from 'zuglet';
+import { route } from 'zuglet/decorators';
 
 @route()
 export default class OneRoute extends Route {

@@ -1,5 +1,5 @@
 import EmberObject from '@ember/object';
-import { getStores } from './stores';
+import { getStores } from './get-stores';
 import { A } from '@ember/array';
 
 export const getStats = owner => getStores(owner).stats;

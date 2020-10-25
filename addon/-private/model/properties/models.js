@@ -2,7 +2,7 @@ import Property, { property } from './property';
 import { get } from '@ember/object';
 import { A } from '@ember/array';
 import { getState } from '../state';
-import { getStores } from '../../stores';
+import { getStores } from '../../stores/get-stores';
 
 const marker = Symbol('MODELS');
 

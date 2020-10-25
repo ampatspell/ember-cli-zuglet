@@ -1,8 +1,6 @@
 import EmberObject, { computed } from '@ember/object';
 import { getOwner } from '../util/get-owner';
 
-export const getStores = owner => getOwner(owner).lookup('zuglet:stores');
-
 export default class Stores extends EmberObject {
 
   @computed
