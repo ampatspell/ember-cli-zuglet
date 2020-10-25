@@ -1,6 +1,6 @@
 import EmberObject from '@ember/object';
 import { assert } from '@ember/debug';
-import { registerActivated, unregisterActivated } from '../stats';
+import { registerActivated, unregisterActivated } from '../../stats';
 
 export default class State extends EmberObject {
 
@@ -9,10 +9,6 @@ export default class State extends EmberObject {
   activators = new Set();
 
   registersActivated = true
-
-  init() {
-    super.init(...arguments);
-  }
 
   getProperty(key, create) {
     let property = this.properties[key];

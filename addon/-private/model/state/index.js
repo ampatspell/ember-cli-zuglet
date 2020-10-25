@@ -1,7 +1,6 @@
 import { getOwner } from '@ember/application';
-import { isRoot } from '../root';
 
-const _state = Symbol('ZUGLET');
+const marker = Symbol('ZUGLET');
 
 const createState = owner => {
   let factory;
@@ -18,11 +17,21 @@ export const getState = (owner, create=true) => {
     return;
   }
 
-  let state = owner[_state];
+  let state = owner[marker];
   if(!state && create) {
     state = createState(owner);
-    owner[_state] = state;
+    owner[marker] = state;
   }
 
   return state;
+}
+
+const root = 'root';
+
+export const isRoot = instance => {
+  return instance && instance.constructor[marker] === root;
+}
+
+export const setRoot = Class => {
+  Class[marker] = root;
 }

@@ -1,7 +1,7 @@
 import Stats from 'zuglet/-private/stats';
-import ModelState from 'zuglet/-private/state/model-state';
-import RootState from 'zuglet/-private/state/root-state';
-import ActivateProperty from 'zuglet/-private/property/activate';
+import ModelState from 'zuglet/-private/model/state/model';
+import RootState from 'zuglet/-private/model/state/root';
+import ActivateProperty from 'zuglet/-private/model/properties/activate';
 
 export default {
   name: 'zuglet:internal',

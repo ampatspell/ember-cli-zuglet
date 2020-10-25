@@ -1,4 +1,4 @@
-import State from './state';
+import State from './base';
 import { registerDestructor } from '@ember/destroyable';
 
 export default class RootState extends State {

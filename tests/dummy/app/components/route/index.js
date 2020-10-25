@@ -3,10 +3,8 @@ import { computed, action } from '@ember/object';
 import { getOwner } from '@ember/application';
 import { setGlobal } from 'zuglet/util';
 import { tracked } from '@glimmer/tracking';
-import { activate } from 'zuglet/-private/property/activate';
 import { inject as service } from '@ember/service';
-import { autoactivate } from 'zuglet/-private/root';
-import { getStats } from 'zuglet/-private/stats';
+import { autoactivate, activate, getStats } from 'zuglet';
 
 @autoactivate
 export default class RouteIndexComponent extends Component {
