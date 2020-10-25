@@ -15,14 +15,57 @@ body {
   font-size: $font-size;
 }
 
+* {
+  box-sizing: border-box;
+}
+
 .application {
   padding: 10px;
-}
 
-.row {
-  margin-bottom: 10px;
-}
+  a,
+  a:visited,
+  a:active {
+    color: #000;
+  }
 
-.json {
-  white-space: pre-wrap;
+  button,
+  input[type="button"] {
+    font-family: "Ubuntu Mono";
+    background: #444;
+    border-radius: 3px;
+    border: none;
+    color: #fff;
+    padding: 5px 9px 5px 9px;
+    outline: none;
+    font-size: 14px;
+    margin: 0;
+  }
+
+  button:disabled,
+  input[type="button"]:disabled {
+    color: #999;
+  }
+
+  input:not([type]),
+  input[type="text"],
+  input[type="number"],
+  input[type="password"] {
+    font-family: "Ubuntu Mono";
+    font-size: 14px;
+    border-radius: 3px;
+    border: 1px solid #999;
+    padding: 4px 9px 4px 9px;
+    margin: 0;
+    line-height: 1;
+    outline: none;
+  }
+
+  .row {
+    margin-bottom: 10px;
+  }
+
+  .json {
+    white-space: pre-wrap;
+  }
+
 }
