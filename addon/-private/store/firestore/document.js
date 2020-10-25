@@ -16,4 +16,10 @@ export default class Document extends EmberObject {
     };
   }
 
+  onActivated() {
+  }
+
+  onDeactivated() {
+  }
+
 }
