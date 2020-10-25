@@ -14,7 +14,7 @@
 
   <div class="row">
     {{#each this.array as |doc|}}
-      <div>{{doc.data.name}} {{if doc.isActive 'active' 'inactive'}}</div>
+      <div>{{doc.data.name}} {{if doc.isActivated 'active' 'inactive'}}</div>
     {{/each}}
   </div>
 

@@ -23,12 +23,7 @@ export default class ObjectActivator {
     this.isActivated = true;
 
     let value = this.value;
-    if(value) {
-      let state = getState(value);
-      if(state) {
-        state.activate(this.property);
-      }
-    }
+    this.property.activateValue(value);
   }
 
   deactivate() {
@@ -39,12 +34,7 @@ export default class ObjectActivator {
     this.isActivated = false;
 
     let value = this.value;
-    if(value) {
-      let state = getState(value);
-      if(state) {
-        state.deactivate(this.property);
-      }
-    }
+    this.property.deactivateValue(value);
   }
 
   getValue() {

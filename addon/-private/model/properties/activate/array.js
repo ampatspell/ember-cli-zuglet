@@ -1,172 +1,94 @@
-import { objectToJSON } from '../../../util/object-to-json';
-
-const parseKey = key => {
-  if(typeof key === 'symbol') {
-    return {
-      key
-    };
-  }
-
-  let idx = Number(key);
-
-  if(isNaN(idx)) {
-    return {
-      key
-    };
-  }
-
-  return {
-    idx
-  };
-}
-
-const isFunction = arg => typeof arg === 'function';
-
-export const createArrayProxy = instance => new Proxy(instance, {
-  get: (target, _key) => {
-    let { idx, key } = parseKey(_key);
-    if(key) {
-      if(isFunction(target[key])) {
-        return (...args) => target[key].call(target, ...args);
-      }
-      return target[key];
-    } else {
-      return target.atIndex(idx);
-    }
-  },
-  set: (target, _key, value) => {
-    let { key } = parseKey(_key);
-    if(key) {
-      target[key] = value;
-      return true;
-    }
-    return false;
-  }
-});
-
-export class ArrayProxy {
-
-  constructor(content, activator) {
-    this._content = content;
-    this._activator = activator;
-  }
-
-  //
-
-  atIndex(idx) {
-    return this._content[idx];
-  }
-
-  atIndex(idx) {
-    return this._content[idx];
-  }
-
-  get last() {
-    return this._content[this._content.length - 1];
-  }
-
-  map(...args) {
-    return this._content.map(...args);
-  }
-
-  forEach(...args) {
-    return this._content.forEach(...args);
-  }
-
-  reduce(...args) {
-    return this._content.reduce(...args);
-  }
-
-  find(...args) {
-    return this._content.find(...args);
-  }
-
-  filter(...args) {
-    return this._content.filter(...args);
-  }
-
-  get length() {
-    return this._content.length;
-  }
-
-  get serialized() {
-    return this._content.map(object => objectToJSON(object));
-  }
-
-}
+import { A } from '@ember/array';
 
 export default class ArrayActivator {
 
   type = 'array';
 
-  value = null;
-  isActivated = false;
+  arrayObserverOpts = {
+    willChange: this.contentWillChange,
+    didChange: this.contentDidChange
+  }
 
   constructor(property, content) {
     this.property = property;
-    this.isActivated = false;
-    this.content = content || null;
+    this.content = A(content);
+    this.isObserving = false;
     this.activate();
   }
 
-  get array() {
-    let { _array } = this;
-    if(!_array) {
-      _array = new ArrayProxy(this.content, this);
-      this._array = _array;
+  //
+
+  startObservingArray() {
+    if(this.isObserving) {
+      return;
     }
-    return _array;
+    this.isObserving = true;
+    let { content } = this;
+    content.addArrayObserver(this, this.arrayObserverOpts);
   }
 
-  createProxy() {
-    let { array } = this;
-    return createArrayProxy(array);
+  stopObservingArray() {
+    if(!this.isObserving) {
+      return;
+    }
+    this.isObserving = false;
+    let { content } = this;
+    content.removeArrayObserver(this, this.arrayObserverOpts);
   }
 
-  get proxy() {
-    let { _proxy } = this;
-    if(!_proxy) {
-      let { content } = this;
-      if(!content) {
-        return null;
-      }
-      _proxy = this.createProxy();
-      this._proxy = _proxy;
+  contentWillChange(array, start, removeCount, addCount) {
+    if(removeCount) {
+      let removed = array.slice(start, start + removeCount);
+      this.deactivateValues(removed);
     }
-    return _proxy;
+  }
+
+  contentDidChange(array, start, removeCount, addCount) {
+    if(addCount) {
+      let added  = A(array.slice(start, start + addCount));
+      this.activateValues(added);
+    }
+  }
+
+  //
+
+  activateValues(values) {
+    values.map(item => this.property.activateValue(item));
+  }
+
+  deactivateValues(values) {
+    values.map(item => this.property.deactivateValue(item));
   }
 
   activate() {
     if(!this.property.isActivated) {
       return;
     }
-    let { content } = this;
-    console.log('activate', this.property+'', content && content.map(i=>i+""));
+    this.startObservingArray();
+    this.activateValues(this.content);
   }
 
   deactivate() {
-    let { content } = this;
-    console.log('deactivate', this.property+'', content && content.map(i=>i+""));
+    this.stopObservingArray();
+    this.deactivateValues(this.content);
   }
 
   getValue() {
     this.activate();
-    return this.proxy;
+    return this.content;
   }
 
   setValue(value) {
     if(value === this.content) {
-      return this.proxy;
+      return this.content;
     }
-    value = value || null;
     // TODO: possibly same models appear in both current and next array
     // should not deactivate & activate needlessly
+    // array.replace(0, 2, [ doc ]); // where doc was already there
     this.deactivate();
-    this.content = value;
-    this._array = null;
-    this._proxy = null;
+    this.content = A(value);
     this.activate();
-    return this.proxy;
+    return this.content;
   }
 
 }

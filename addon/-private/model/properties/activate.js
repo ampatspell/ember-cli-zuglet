@@ -1,9 +1,9 @@
 import Property, { property } from './property';
+import { getState } from '../state';
 import { assert } from '@ember/debug';
+import { isArray } from '@ember/array';
 import ObjectActivator from './activate/object';
 import ArrayActivator from './activate/array';
-
-const isArray = object => Array.isArray(object); // TODO: this might need Ember array check
 
 export default class ActivateProperty extends Property {
 
@@ -57,6 +57,30 @@ export default class ActivateProperty extends Property {
     }
     return activator.setValue(value);
   }
+
+  //
+
+  activateValue(value) {
+    if(value) {
+      let state = getState(value);
+      if(state) {
+        state.activate(this);
+        console.log('activate', value+'');
+      }
+    }
+  }
+
+  deactivateValue(value) {
+    if(value) {
+      let state = getState(value);
+      if(state) {
+        state.deactivate(this);
+        console.log('deactivate', value+'');
+      }
+    }
+  }
+
+  //
 
   onActivated() {
     let { activator } = this;
