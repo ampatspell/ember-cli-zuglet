@@ -5,7 +5,9 @@ import { setGlobal } from 'zuglet/util';
 import { tracked } from '@glimmer/tracking';
 import { activate } from 'zuglet/-private/property/activate';
 import { inject as service } from '@ember/service';
+import { autoactivate } from 'zuglet/-private/root';
 
+@autoactivate
 export default class RouteIndexComponent extends Component {
 
   @service

@@ -1,11 +1,11 @@
 const marker = Symbol("ZUGLET");
-const value = 'model';
+const value = 'root';
 
-export const isModel = instance => {
+export const isRoot = instance => {
   return instance && instance.constructor[marker] === value;
 }
 
-export const model = Class => {
+export const autoactivate = Class => {
   Class[marker] = value;
   return Class;
 }
