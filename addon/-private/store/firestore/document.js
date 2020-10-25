@@ -190,9 +190,9 @@ export default class Document extends EmberObject {
     }
   }
 
-  // _onDeleted() {
-  //   this.setProperties({ exists: false });
-  // }
+  _onDeleted() {
+    this.setProperties({ exists: false });
+  }
 
   //
 

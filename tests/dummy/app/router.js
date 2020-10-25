@@ -10,5 +10,6 @@ Router.map(function() {
   this.route('document');
   this.route('query', function() {
     this.route('array');
+    this.route('single');
   });
 });

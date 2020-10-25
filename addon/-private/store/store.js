@@ -3,6 +3,10 @@ import { getOwner } from '../util/get-owner';
 import { assert } from '@ember/debug';
 import { initializeApp, enablePersistence } from './firebase';
 
+const {
+  assign
+} = Object;
+
 export default class Store extends EmberObject {
 
   firebase = null
@@ -69,26 +73,39 @@ export default class Store extends EmberObject {
 
   //
 
+  _createDocumentWithProperties(props) {
+    return getOwner(this).factoryFor('zuglet:store/firestore/document').create(props);
+  }
+
   _createDocumentForReference(ref, data) {
     let store = this;
-    return getOwner(this).factoryFor('zuglet:store/firestore/document').create({ store, ref, data });
+    return this._createDocumentWithProperties({ store, ref, data });
   }
 
-  _createDocumentForSnapshot(snapshot) {
+  _createDocumentForSnapshot(snapshot, parent) {
+    let store = this;
+    let ref = this._createDocumentReference(snapshot.ref);
+    return this._createDocumentWithProperties({ store, ref, snapshot, parent });
   }
 
-  // _createQuery({ content }) {
-  //   let store = this;
-  //   return getOwner(this).factoryFor('zuglet:store/firestore/query').create({ store, content });
-  // }
-
-  //
+  _createQuery(ref, opts) {
+    let { type } = assign({ type: 'array' }, opts);
+    let store = this;
+    if(type === 'array') {
+      return getOwner(this).factoryFor('zuglet:store/firestore/query/array').create({ store, ref });
+    } else if(type === 'first' || type === 'single') {
+      return getOwner(this).factoryFor('zuglet:store/firestore/query/single').create({ store, ref });
+    }
+    assert(false, `Unsupported type '${type}'`);
+  }
 
   //
 
   onSnapshotError(model) {
     console.error('onSnapshot', model.string || sender.path, sender.error.stack);
   }
+
+  //
 
   get projectId() {
     return this.firebase.options.projectId;
