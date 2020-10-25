@@ -8,5 +8,7 @@ export default class Router extends EmberRouter {
 
 Router.map(function() {
   this.route('document');
-  this.route('query');
+  this.route('query', function() {
+    this.route('array');
+  });
 });

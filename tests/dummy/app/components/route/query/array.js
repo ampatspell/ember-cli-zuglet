@@ -4,7 +4,7 @@ import { inject as service } from '@ember/service';
 import { setGlobal, toString } from 'zuglet/utils';
 
 @root()
-export default class RouteQueryComponent extends Component {
+export default class RouteQueryArrayComponent extends Component {
 
   @service
   store
