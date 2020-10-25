@@ -9,7 +9,16 @@ export default class ActivateProperty extends Property {
     this.value = {};
   }
 
+  notifyOnChange() {
+    let onChange = this.opts.onChange;
+    if(onChange) {
+      let owner = this.owner;
+      onChange.call(owner, owner, this.key);
+    }
+  }
+
   valueDidChange() {
+    this.notifyOnChange();
     this.notifyPropertyChange();
   }
 
@@ -35,16 +44,18 @@ export default class ActivateProperty extends Property {
     }
     this._proxy = null;
     this.value = value || {};
+    this.notifyOnChange();
     return this.proxy;
   }
 
 }
 
-export const object = () => property({
+export const object = (opts={}) => property({
   readOnly: false,
   deps: [],
   property: 'object',
   opts: {
+    onChange: opts.onChange
   }
 });
 

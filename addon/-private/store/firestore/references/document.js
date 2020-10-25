@@ -1,4 +1,9 @@
 import Reference from './reference';
+import { documentForRefNotFoundError } from '../../../util/error';
+
+const {
+  assign
+} = Object;
 
 export default class DocumentReference extends Reference {
 
@@ -15,6 +20,28 @@ export default class DocumentReference extends Reference {
   }
 
   //
+
+  new(data) {
+    return this.store._createDocumentForReference(this, data || {});
+  }
+
+  existing() {
+    return this.store._createDocumentForReference(this, null);
+  }
+
+  async load(opts) {
+    let { optional } = assign({ optional: false }, opts);
+    let { ref } = this;
+    let snapshot = await ref.get();
+    if(!snapshot.exists) {
+      if(optional) {
+        return;
+      }
+      throw documentForRefNotFoundError(ref);
+    }
+    return this.store._createDocumentForSnapshot(snapshot);
+  }
+
 
   //
 

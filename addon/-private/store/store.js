@@ -1,6 +1,5 @@
 import EmberObject from '@ember/object';
 import { getOwner } from '../util/get-owner';
-import { A } from '@ember/array';
 import { assert } from '@ember/debug';
 import { initializeApp, enablePersistence } from './firebase';
 
@@ -70,10 +69,13 @@ export default class Store extends EmberObject {
 
   //
 
-  // _createDocument({ data }) {
-  //   let store = this;
-  //   return getOwner(this).factoryFor('zuglet:store/firestore/document').create({ store, data });
-  // }
+  _createDocumentForReference(ref, data) {
+    let store = this;
+    return getOwner(this).factoryFor('zuglet:store/firestore/document').create({ store, ref, data });
+  }
+
+  _createDocumentForSnapshot(snapshot) {
+  }
 
   // _createQuery({ content }) {
   //   let store = this;
