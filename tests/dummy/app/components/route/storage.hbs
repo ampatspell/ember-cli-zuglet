@@ -18,6 +18,15 @@
   {{/if}}
 
   {{#if this.task}}
+    {{#if this.task.isCompleted}}
+      <div class="row">
+        Uploaded successfully
+      </div>
+    {{else if this.task.isRunning}}
+      <div class="row">
+        Uploading {{this.task.progress}}%…
+      </div>
+    {{/if}}
     <div class="row">
       <Json @value={{this.task}}/>
     </div>

@@ -1,4 +1,4 @@
-import EmberObject, { computed } from '@ember/object';
+import EmberObject from '@ember/object';
 import firebase from "firebase/app";
 import { objectToJSON } from '../../util/object-to-json';
 import { tracked } from '@glimmer/tracking';
@@ -22,7 +22,6 @@ export default class StorageTask extends EmberObject {
     this._await(this._task);
   }
 
-  @computed('total', 'transferred')
   get progress() {
     let { total, transferred } = this;
     if(total === null || transferred === null) {
