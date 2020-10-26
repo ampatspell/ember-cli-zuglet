@@ -1,4 +1,4 @@
-import { toString } from '../util/to-string';
+import { toString } from '../../util/to-string';
 import { consumeKey, dirtyKey } from './tag';
 
 const KEYS = Symbol();

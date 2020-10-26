@@ -1,5 +1,5 @@
 import Property, { createProperty } from './property';
-import DataManager from '../../tracking/data';
+import DataManager from '../tracking/data';
 import { isServerTimestamp, isTimestamp } from '../../util/object-to-json';
 
 export default class ActivateProperty extends Property {
