@@ -108,7 +108,11 @@ const createObjectProxy = (property, target) => {
       dirtyKey(target, prop);
       dirtyKey(target, KEYS);
       property.dirty();
-      target[prop] = property.wrap(value);
+      if(value === undefined) {
+        delete target[prop];
+      } else {
+        target[prop] = property.wrap(value);
+      }
       return true;
     },
     getPrototypeOf() {
@@ -125,6 +129,14 @@ export default class ObjectProxyManager {
     this.delegate = opts.delegate;
   }
 
+  shouldExpand(target) {
+    let { delegate: { shouldExpand } } = this;
+    if(!shouldExpand) {
+      return true;
+    }
+    return shouldExpand(target);
+  }
+
   wrap(target) {
     let ret = proxy => {
       // console.log('wrap', target, proxy);
@@ -137,13 +149,17 @@ export default class ObjectProxyManager {
       return target;
     }
 
+    if(target === undefined) {
+      return null;
+    } else if(target === null) {
+      return null;
+    }
+
     if(typeof target === 'object') {
       if(Array.isArray(target)) {
         let array = target.map(item => this.wrap(item));
         return ret(createArrayProxy(this, array));
-      } else if(target === null) {
-        return target;
-      } else if(target instanceof Date) {
+      } else if(!this.shouldExpand(target)) {
         return target;
       } else {
         let object = {};

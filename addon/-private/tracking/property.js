@@ -5,9 +5,17 @@ class Property {
   constructor() {
     this.manager = new ObjectProxyManager({
       delegate: {
-        onDirty: () => this.onDirty()
+        onDirty: () => this.onDirty(),
+        shouldExpand: value => this.shouldExpand(value)
       }
     });
+  }
+
+  shouldExpand(value) {
+    if(value instanceof Date) {
+      return false;
+    }
+    return true;
   }
 
   getProxy() {
