@@ -2,7 +2,7 @@ import Component from '@glimmer/component';
 import { inject as service } from '@ember/service';
 import { setGlobal, toString } from 'zuglet/utils';
 import { tracked } from '@glimmer/tracking';
-import { consumeKey, dirtyKey } from 'zuglet/-private/tracking/tag';
+import { object, raw, property } from 'zuglet/-private/tracking/object';
 import { alias } from 'macro-decorators';
 
 export default class RouteDevComponent extends Component {
@@ -11,36 +11,26 @@ export default class RouteDevComponent extends Component {
   store
 
   @tracked
-  isDirty = false
+  isDirty
 
-  _data = { name: 'hey there' }
+  @object()
+  data
 
-  get data() {
-    let { _proxy } = this;
-    if(!_proxy) {
-      _proxy = new Proxy(this._data, {
-        get: (target, prop) => {
-          consumeKey(target, prop);
-          return target[prop];
-        },
-        set: (target, prop, value) => {
-          target[prop] = value;
-          dirtyKey(target, prop);
-          this.isDirty = true;
-          return true;
-        }
-      })
-      this._proxy = _proxy;
-    }
-    return _proxy;
-  }
+  @raw('data')
+  raw
 
-  @alias('data.name')
+  @property('data')
+  property
+
+  @alias('data.info.name')
   name
 
   constructor() {
     super(...arguments);
     setGlobal({ component: this });
+
+    this.data = { info: { name: 'hey there' }}
+    this.property.onDirty = () => this.isDirty = true;
   }
 
   toString() {

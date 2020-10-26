@@ -5,7 +5,13 @@
   </div>
 
   <div class="row">
-    {{this.data.name}}
+    <div class="label">Data</div>
+    <Json @value={{this.data}}/>
+  </div>
+
+  <div class="row">
+    <div class="label">Raw</div>
+    <Json @value={{this.raw}}/>
   </div>
 
   <div class="row">
