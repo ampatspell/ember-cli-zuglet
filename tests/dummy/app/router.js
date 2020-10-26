@@ -17,4 +17,5 @@ Router.map(function() {
   this.route('auth');
   this.route('storage');
   this.route('functions');
+  this.route('dev');
 });
