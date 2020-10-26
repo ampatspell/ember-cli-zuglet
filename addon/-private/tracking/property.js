@@ -1,9 +1,9 @@
-import ObjectProxyManager from './proxy';
+import DataManager from './data';
 
 class Property {
 
   constructor() {
-    this.manager = new ObjectProxyManager({
+    this.manager = new DataManager({
       delegate: {
         onDirty: () => this.onDirty(),
         shouldExpand: value => this.shouldExpand(value)

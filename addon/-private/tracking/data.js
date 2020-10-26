@@ -121,7 +121,7 @@ const createObjectProxy = (property, target) => {
   });
 }
 
-export default class ObjectProxyManager {
+export default class DataManager {
 
   constructor(opts={}) {
     this.object = null;

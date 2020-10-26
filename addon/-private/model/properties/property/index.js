@@ -1,10 +1,11 @@
 import Property from './property';
-import { property } from './decorator';
+import { property, createProperty } from './decorator';
 import { getProperty } from './get-property';
 
 export {
   property,
-  getProperty
+  getProperty,
+  createProperty
 }
 
 export default Property;

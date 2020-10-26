@@ -12,7 +12,7 @@ const {
 
 export default class Document extends EmberObject {
 
-  @object({ onChange: doc => doc._dataDidChange() })
+  @object()
   data
 
   @raw('data')

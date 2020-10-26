@@ -15,7 +15,7 @@ class Tag {
 
 }
 
-export const TAGS = new WeakMap();
+const TAGS = new WeakMap();
 
 const getTag = (object, key) => {
   let tags = TAGS.get(object);
