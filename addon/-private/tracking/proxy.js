@@ -126,7 +126,7 @@ export default class ObjectProxyManager {
   constructor(opts={}) {
     this.object = null;
     this.proxy = null;
-    this.delegate = opts.delegate;
+    this.delegate = opts.delegate; // { onDirty(), shouldExpand(value) }
   }
 
   shouldExpand(target) {
