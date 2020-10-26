@@ -4,8 +4,31 @@
     <Json @value={{this.store.storage}}/>
   </div>
 
+
   <div class="row">
-    <input type="file" {{on "change" this.onFiles}}/>
+    <div class="row">
+      {{if this.url this.url 'No url'}}
+    </div>
+    <div class="row">
+      <input type="button" value="Fetch URL" {{on "click" this.getUrl}}/>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="row">
+      {{#if this.metadata}}
+        <Json @value={{this.metadata}}/>
+      {{else}}
+        No metadata
+      {{/if}}
+    </div>
+    <div class="row">
+      <input type="button" value="Fetch metadata" {{on "click" this.getMetadata}}/>
+    </div>
+  </div>
+
+  <div class="row">
+    <Input::File @onFile={{this.onFile}}/>
   </div>
 
   {{#if this.file}}

@@ -1,72 +1,111 @@
-# zuglet
+# zuglet@nex
 
 ``` javascript
-// component.js
-import Component from '@glimmer/component';
-import { action } from '@ember/object';
-import { setGlobal } from 'zuglet/utils';
-import { inject as service } from '@ember/service';
-import { tracked } from '@glimmer/tracking';
-import { root, activate, models } from 'zuglet/decorators';
+// app/instance-initializers/app-zuglet.js
+import { initialize } from 'zuglet/initialize';
+import Store from '../store';
 
-@root()
-export default class RouteIndexComponent extends Component {
-
-  @service
-  store
-
-  @tracked
-  first
-
-  @tracked
-  second
-
-  @activate()
-  query
-
-  @models('query.content').named(doc => doc.data.type).mapping(doc => ({ doc })).object('data')
-  models
-
-  constructor() {
-    super(...arguments);
-    setGlobal({ component: this });
-
-    this.zeeba = this.store.document({ name: 'zeeba', type: 'zebra' });
-    this.larry = this.store.document({ name: 'larry', type: 'croc' });
-    setGlobal({ zeeba: this.zeeba, larry: this.larry });
-
-    this.query = this.store.query([ this.zeeba, this.larry ]);
+export default {
+  name: 'app:zuglet',
+  initialize(app) {
+    initialize(app, {
+      store: {
+        identifier: 'store',
+        factory: Store
+      }
+    });
   }
+}
+```
 
-  @action
-  toggle() {
-    if(this.query.content.length === 2) {
-      this.query.content.removeObject(this.zeeba);
-    } else {
-      this.query.content.pushObject(this.zeeba);
+``` javascript
+// app/store.js
+import Store from 'zuglet/store';
+
+export default class DummyStore extends Store {
+
+  options = {
+    firebase: {
+      apiKey: "…",
+      authDomain: "…",
+      databaseURL: "…",
+      projectId: "…",
+      storageBucket: "…",
+      appId: "…"
+    },
+    firestore: {
+      persistenceEnabled: true
+    },
+    auth: {
+      user: 'user'
+    },
+    functions: {
+      region: null
     }
-  }
-
-  toString() {
-    return `<Component:RouteIndex>`;
   }
 
 }
 ```
 
 ``` javascript
+// app/models/user.js
+import User from 'zuglet/user';
+import { toPrimitive } from 'zuglet/utils';
+
+export default class DummyUser extends User {
+
+  get serialized() {
+    return Object.assign({
+      instance: toPrimitive(this)
+    }, super.serialized);
+  }
+
+}
+```
+
+``` javascript
+// app/routes/application.js
 import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
 import { route } from 'zuglet/decorators';
+import { load } from 'zuglet/utils';
 
 @route()
-export default class OneRoute extends Route {
+export default class RouteRoute extends Route {
 
   @service
   store
 
   async model() {
-    return this.store.doc('messages/one').new({ name: 'one/a' });
+  }
+
+  async load() {
+    await load(this.store.auth);
+  }
+
+}
+```
+
+``` javascript
+// app/routes/index.js
+import Route from '@ember/routing/route';
+import { inject as service } from '@ember/service';
+import { route } from 'zuglet/decorators';
+
+@route()
+export default class IndexRoute extends Route {
+
+  @service
+  store
+
+  async model() {
+    return this.store.doc('messages/first').new({
+      message: 'To whom it may concern: It is springtime. It is late afternoon.'
+    });
+  }
+
+  async load(doc) {
+    await doc.save();
   }
 
 }

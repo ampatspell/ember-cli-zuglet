@@ -14,6 +14,12 @@ export default class RouteStorageComponent extends Component {
   @tracked
   file
 
+  @tracked
+  url
+
+  @tracked
+  metadata
+
   @activate()
   task
 
@@ -23,14 +29,8 @@ export default class RouteStorageComponent extends Component {
   }
 
   @action
-  onFiles(e) {
-    let files = e.target.files;
-    if(files) {
-      let [ file ] = files;
-      this.file = file || null;
-    } else {
-      this.file = null;
-    }
+  onFile(file) {
+    this.file = file;
   }
 
   @action
@@ -46,6 +46,26 @@ export default class RouteStorageComponent extends Component {
       }
     });
     this.task = task;
+  }
+
+  @action
+  async getUrl() {
+    try {
+      let url = await this.store.storage.ref('hello').url();
+      this.url = url;
+    } catch(err) {
+      this.url = err;
+    }
+  }
+
+  @action
+  async getMetadata() {
+    try {
+      let metadata = await this.store.storage.ref('hello').metadata();
+      this.metadata = metadata;
+    } catch(err) {
+      this.metadata = metadata;
+    }
   }
 
   toString() {

@@ -26,6 +26,19 @@ body {
   box-sizing: border-box;
 }
 
+@mixin button() {
+  font-family: $font-family;
+  font-size: $font-size;
+  background: fade-out(#000, 0.2);
+  border-radius: 3px;
+  border: none;
+  color: #fff;
+  padding: 5px 9px 5px 9px;
+  outline: none;
+  font-size: 14px;
+  margin: 0;
+}
+
 .block-application {
   a,
   a:visited,
@@ -35,16 +48,7 @@ body {
 
   button,
   input[type="button"] {
-    font-family: $font-family;
-    font-size: $font-size;
-    background: fade-out(#000, 0.2);
-    border-radius: 3px;
-    border: none;
-    color: #fff;
-    padding: 5px 9px 5px 9px;
-    outline: none;
-    font-size: 14px;
-    margin: 0;
+    @include button();
   }
 
   button:disabled,
@@ -131,5 +135,31 @@ body {
     > .label {
       font-weight: 600;
     }
+  }
+}
+
+.input-file {
+  position: relative;
+  width: 300px;
+  height: 24px;
+  > .input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.00000001;
+  }
+  > .button {
+    @include button();
+    user-select: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow-x: hidden;
   }
 }
