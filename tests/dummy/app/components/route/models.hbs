@@ -1,17 +1,11 @@
 <div class="route-models">
 
-  {{#each this.models as |model|}}
-    <Block::Message @message={{model}}/>
-  {{/each}}
-
   <div class="row">
-    <input type="button" value="Add new" {{on "click" this.add}}/>
+    <input type="button" value="Add new message" {{on "click" this.add}}/>
   </div>
 
   {{#each this.models as |model|}}
-    <div class="row">
-      <Json @value={{model}}/>
-    </div>
+    <Block::Message @message={{model}}/>
   {{/each}}
 
 </div>

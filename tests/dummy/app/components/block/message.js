@@ -5,12 +5,12 @@ export default class BlockMessageComponent extends Component {
 
   @action
   async save() {
-    await this.args.message.doc.save();
+    await this.args.message.save();
   }
 
   @action
   async delete() {
-    await this.args.message.doc.delete();
+    await this.args.message.delete();
   }
 
 }
