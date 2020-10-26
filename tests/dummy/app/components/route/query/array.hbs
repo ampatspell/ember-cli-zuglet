@@ -1,5 +1,9 @@
 <div class="route-query-array">
 
+  <div class="row">
+    <Json @value={{this.query}}/>
+  </div>
+
   {{#each this.query.content as |doc|}}
     <div class="row">
       <Json @value={{doc}}/>
