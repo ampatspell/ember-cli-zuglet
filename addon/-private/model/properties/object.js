@@ -1,69 +1,70 @@
-import Property, { property, getProperty } from './property';
-import Membrane from 'observable-membrane';
-import { computed } from '@ember/object';
+import Property, { createProperty } from './property';
+import DataManager from '../tracking/data';
+import { isServerTimestamp, isTimestamp } from '../../util/object-to-json';
 
 export default class ActivateProperty extends Property {
 
   init() {
     super.init(...arguments);
-    this.value = {};
+    this.manager = new DataManager({
+      delegate: {
+        onDirty: () => this.onDirty(),
+        shouldExpand: value => this.shouldExpandValue(value)
+      }
+    });
   }
 
-  notifyOnChange() {
-    let onChange = this.opts.onChange;
-    if(onChange) {
-      let owner = this.owner;
-      onChange.call(owner, owner, this.key);
+  shouldExpandValue(value) {
+    if(value instanceof Date) {
+      return false;
+    } else if(isTimestamp(value)) {
+      return false;
+    } else if(isServerTimestamp(value)) {
+      return false;
     }
+    return true;
   }
 
-  valueDidChange() {
-    // I'm not really sure. right now @alias and @readOnly not that happy about the whole setup
-    // this._proxy = null;
-    // this.value = assign({}, this.value);
-    this.notifyOnChange();
-    this.notifyPropertyChange();
+  onDirty() {
+    let onDirty = this.opts.onDirty;
+    onDirty && onDirty();
   }
 
-  get proxy() {
-    let proxy = this._proxy;
-    if(!proxy) {
-      let membrane = new Membrane({
-        valueMutated: () => this.valueDidChange()
-      });
-      proxy = membrane.getProxy(this.value);
-      this._proxy = proxy;
-    }
-    return proxy;
+  getRaw() {
+    return this.manager.getRaw();
   }
 
   getPropertyValue() {
-    return this.proxy;
+    return this.manager.getProxy();
   }
 
   setPropertyValue(value) {
-    if(value === this.proxy) {
-      return value;
-    }
-    this._proxy = null;
-    this.value = value || {};
-    this.notifyOnChange();
-    return this.proxy;
+    return this.manager.setValue(value);
   }
 
 }
 
-export const object = (opts={}) => property({
-  readOnly: false,
-  deps: [],
-  property: 'object',
+let getProperty = (owner, key) => createProperty(owner, key, 'object', {
   opts: {
-    onChange: opts.onChange
+    onDirty: () => owner._dataDidChange()
   }
 });
 
-export const raw = key => computed(key, {
-  get() {
-    return getProperty(this, key).value;
-  }
-}).readOnly();
+export const object = () => (_, key) => {
+  return {
+    get() {
+      return getProperty(this, key).getPropertyValue();
+    },
+    set(value) {
+      return getProperty(this, key).setPropertyValue(value);
+    }
+  };
+}
+
+export const raw = objectKey => () => {
+  return {
+    get() {
+      return getProperty(this, objectKey).getRaw();
+    }
+  };
+}

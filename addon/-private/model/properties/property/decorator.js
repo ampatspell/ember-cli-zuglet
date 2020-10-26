@@ -6,14 +6,16 @@ const {
   assign
 } = Object;
 
-const createProperty = (state, owner, name, props) => {
-  return getOwner(owner).factoryFor(`zuglet:properties/${name}`).create(assign({ state }, props));
+export const createProperty = (owner, key, name, opts) => {
+  return getState(owner).getProperty(key, state => {
+    return getOwner(owner).factoryFor(`zuglet:properties/${name}`).create(assign({ state }, opts));
+  });
 }
 
 export const property = ({ readOnly, deps, property, opts }) => {
 
   let getProperty = (owner, key) => {
-    return getState(owner).getProperty(key, state => createProperty(state, owner, property, { owner, key, deps, opts }));
+    return createProperty(owner, key, property, { owner, key, deps, opts });
   }
 
   let get = function (key) {

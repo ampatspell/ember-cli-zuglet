@@ -3,6 +3,7 @@ import { root, activate } from 'zuglet/decorators';
 import { inject as service } from '@ember/service';
 import { setGlobal, toString } from 'zuglet/utils';
 import { action } from '@ember/object';
+import { alias } from '@ember/object/computed';
 
 @root()
 export default class RouteDocumentComponent extends Component {
@@ -13,13 +14,8 @@ export default class RouteDocumentComponent extends Component {
   @activate()
   doc
 
-  get name() {
-    return this.doc.data.name;
-  }
-
-  set name(value) {
-    this.doc.data.name = value;
-  }
+  @alias('doc.data.name')
+  name
 
   constructor() {
     super(...arguments);

@@ -71,6 +71,10 @@ body {
   }
 
   .row {
+    > .label {
+      font-weight: 600;
+      margin-bottom: 3px;
+    }
     margin-bottom: 15px;
     > .row {
       margin-bottom: 5px;
