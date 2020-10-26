@@ -11,7 +11,7 @@ export default class RouteDevComponent extends Component {
   store
 
   @tracked
-  isDirty
+  isDirty = false
 
   @object()
   data

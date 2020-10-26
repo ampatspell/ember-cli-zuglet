@@ -190,7 +190,7 @@ class Property {
 
   dirty() {
     dirtyKey(this, 'raw');
-    this.onDirty();
+    this.onDirty && this.onDirty();
   }
 
   getRaw() {
