@@ -18,6 +18,9 @@ export default class ActivateProperty extends Property {
   }
 
   valueDidChange() {
+    // I'm not really sure. right now @alias and @readOnly not that happy about the whole setup
+    // this._proxy = null;
+    // this.value = assign({}, this.value);
     this.notifyOnChange();
     this.notifyPropertyChange();
   }

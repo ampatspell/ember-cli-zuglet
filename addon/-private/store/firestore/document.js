@@ -109,7 +109,7 @@ export default class Document extends EmberObject {
     this.setProperties({ isSaving: true, isError: false, error: null });
     try {
       await this.ref._ref.set(this._data, { merge });
-      this.setProperties({ isNew: false, isSaving: false, exists: true });
+      this.setProperties({ isNew: false, isSaving: false, isDirty: false, exists: true });
       this._maybeSubscribeToOnSnapshot();
       this._deferred.resolve(this);
     } catch(error) {
