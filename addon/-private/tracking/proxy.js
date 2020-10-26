@@ -117,13 +117,12 @@ const createObjectProxy = (property, target) => {
   });
 }
 
-class Property {
+export default class ObjectProxyManager {
 
-  constructor(owner, key) {
-    this.owner = owner;
-    this.key = key;
+  constructor(opts={}) {
     this.object = null;
     this.proxy = null;
+    this.delegate = opts.delegate;
   }
 
   wrap(target) {
@@ -190,7 +189,7 @@ class Property {
 
   dirty() {
     dirtyKey(this, 'raw');
-    this.onDirty && this.onDirty();
+    this.delegate.onDirty && this.delegate.onDirty();
   }
 
   getRaw() {
@@ -204,36 +203,7 @@ class Property {
   }
 
   toString() {
-    return toString(this, this.key);
+    return toString(this);
   }
 
-}
-
-const getProperty = (owner, key) => {
-  let _key = `__${key}`;
-  let prop = owner[_key];
-  if(!prop) {
-    prop = new Property(owner, key);
-    owner[_key] = prop;
-  }
-  return prop;
-}
-
-export const object = () => (owner, key) => {
-  return {
-    get: () => getProperty(owner, key).getProxy(),
-    set: value => getProperty(owner, key).setValue(value)
-  };
-}
-
-export const raw = (key) => owner => {
-  return {
-    get: () => getProperty(owner, key).getRaw()
-  };
-}
-
-export const property = (key) => owner => {
-  return {
-    get: () => getProperty(owner, key)
-  };
 }
