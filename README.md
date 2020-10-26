@@ -2,6 +2,8 @@
 
 This addon is dead simple way to use Google Firebase services in your Ember.js apps. Cloud Firestore, Storage, Auth, Functions.
 
+> zuglet@next is in works with full Ember Octane support and way simpler internals
+
 It has stateful, observable documents and queries, easy file uploads, auth.
 
 * [Website](https://www.ember-cli-zuglet.com/)
