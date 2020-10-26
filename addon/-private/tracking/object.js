@@ -172,7 +172,7 @@ class Property {
     }
   }
 
-  get() {
+  getProxy() {
     consumeKey(this, 'proxy');
     let { proxy } = this;
     if(!proxy) {
@@ -182,7 +182,7 @@ class Property {
     return proxy;
   }
 
-  set(value) {
+  setValue(value) {
     dirtyKey(this, 'proxy');
     this.proxy = this.wrap(value);
     return true;
@@ -221,8 +221,8 @@ const getProperty = (owner, key) => {
 
 export const object = () => (owner, key) => {
   return {
-    get: () => getProperty(owner, key).get(),
-    set: value => getProperty(owner, key).set(value)
+    get: () => getProperty(owner, key).getProxy(),
+    set: value => getProperty(owner, key).setValue(value)
   };
 }
 
