@@ -41,6 +41,12 @@ export default class Store extends EmberObject {
   }
 
   @computed()
+  get storage() {
+    let store = this;
+    return getOwner(this).factoryFor('zuglet:store/storage').create({ store });
+  }
+
+  @computed()
   get functions() {
     let store = this;
     return getOwner(this).factoryFor('zuglet:store/functions').create({ store });

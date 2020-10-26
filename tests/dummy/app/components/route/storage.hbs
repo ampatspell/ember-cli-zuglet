@@ -4,4 +4,23 @@
     <Json @value={{this.store.storage}}/>
   </div>
 
+  <div class="row">
+    <input type="file" {{on "change" this.onFiles}}/>
+  </div>
+
+  {{#if this.file}}
+    <div class="row">
+      <Json @value={{this.file}}/>
+    </div>
+    <div class="row">
+      <input type="button" value="Upload" {{on "click" this.upload}}/>
+    </div>
+  {{/if}}
+
+  {{#if this.task}}
+    <div class="row">
+      <Json @value={{this.task}}/>
+    </div>
+  {{/if}}
+
 </div>
