@@ -1,6 +1,7 @@
 import EmberObject from '@ember/object';
 import { objectToJSON, toPrimitive } from 'zuglet/utils';
 import { tracked } from '@glimmer/tracking';
+import { alias } from 'macro-decorators';
 
 export default class Message extends EmberObject {
 
@@ -21,21 +22,11 @@ export default class Message extends EmberObject {
 
   //
 
-  get name() {
-    return this.doc.data.name;
-  }
+  @alias('doc.data.name')
+  name
 
-  set name(value) {
-    this.doc.data.name = value;
-  }
-
-  get text() {
-    return this.doc.data.text;
-  }
-
-  set text(value) {
-    this.doc.data.text = value;
-  }
+  @alias('doc.data.text')
+  text
 
   //
 
