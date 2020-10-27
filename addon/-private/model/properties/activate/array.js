@@ -1,95 +1,83 @@
 import { A } from '@ember/array';
 import { diffArrays } from '../../../util/diff-arrays';
+import ArrayObserver from '../../../model/tracking/array';
 
 export default class ArrayActivator {
 
   type = 'array';
 
-  arrayObserverOpts = {
-    willChange: this.contentWillChange,
-    didChange: this.contentDidChange
-  }
-
   constructor(property, content) {
     this.property = property;
     this.content = A(content);
-    this.isObserving = false;
+    this._observer = null;
     this.activate();
   }
 
-  //
-
-  startObservingArray() {
-    if(this.isObserving) {
-      return;
+  get observer() {
+    let observer = this._observer;
+    if(!observer) {
+      observer = new ArrayObserver({
+        content: this.content,
+        delegate: {
+          onAdd: item => this.activateValue(item),
+          onRemove: item => this.deactivateValue(item)
+        }
+      });
+      this._observer = observer;
     }
-    this.isObserving = true;
-    let { content } = this;
-    content.addArrayObserver(this, this.arrayObserverOpts);
+    return observer;
   }
 
-  stopObservingArray() {
-    if(!this.isObserving) {
-      return;
-    }
-    this.isObserving = false;
-    let { content } = this;
-    content.removeArrayObserver(this, this.arrayObserverOpts);
-  }
-
-  contentWillChange(array, start, removeCount, addCount) {
-    if(removeCount) {
-      let removed = array.slice(start, start + removeCount);
-      this.deactivateValues(removed);
-    }
-  }
-
-  contentDidChange(array, start, removeCount, addCount) {
-    if(addCount) {
-      let added = A(array.slice(start, start + addCount));
-      this.activateValues(added);
-    }
+  get proxy() {
+    return this.observer.proxy;
   }
 
   //
+
+  activateValue(item) {
+    this.property.activateValue(item);
+  }
+
+  deactivateValue(item) {
+    this.property.deactivateValue(item);
+  }
 
   activateValues(values) {
-    values.map(item => this.property.activateValue(item));
+    values.forEach(value => this.activateValue(value));
   }
 
   deactivateValues(values) {
-    values.map(item => this.property.deactivateValue(item));
+    values.forEach(value => this.deactivateValue(value));
   }
 
   activate(models) {
     if(!this.property.isActivated) {
       return;
     }
-    this.startObservingArray();
     this.activateValues(models || this.content);
   }
 
   deactivate(models) {
-    this.stopObservingArray();
     this.deactivateValues(models || this.content);
   }
 
   getValue() {
-    return this.content;
+    return this.proxy;
   }
 
   setValue(value) {
-    if(value === this.content) {
-      return value;
+    if(value === this.proxy) {
+      return this.proxy;
     }
 
     let { removed, added } = diffArrays(this.content, value);
 
     this.deactivate(removed);
     this.content = A(value);
+    this._observer = null;
     this.activate(added);
 
-    return this.content;
+    return this.proxy;
   }
 
 }

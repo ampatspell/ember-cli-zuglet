@@ -54,6 +54,14 @@ const createProxy = (manager, _target) => new Proxy(_target, {
             manager.onItemsRemoved(removed);
             return removed;
           }
+        } else if(prop === 'replace') {
+          return (start, deleteCount, items) => {
+            dirtyKey(target, ARRAY);
+            let removed = target.replace(start, deleteCount, items);
+            manager.onItemsRemoved(removed);
+            manager.onItemsAdded(items);
+            return removed;
+          }
         } else if(ARRAY_MUTATORS.has(prop)) {
           throw new Error(`Array mutator ${prop} is not supported`);
         }

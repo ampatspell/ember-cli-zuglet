@@ -1,4 +1,3 @@
-
 export const propToIndex = prop => {
   if(typeof prop === 'symbol') {
     return null;
@@ -36,13 +35,13 @@ export const ARRAY_GETTERS = new Set([
 ]);
 
 export const ARRAY_MUTATORS = new Set([
-  'replace',    // array.replace(start, deleteCount, items);
+  'replace',    // replace(start, deleteCount, items);
   'copyWithin',
-  'pop',        // * removes last element
-  'push',       // * push(...items)
+  'pop',        // pop()
+  'push',       // push(...items)
   'reverse',
-  'shift',      // * removes first element
+  'shift',      // shift()
   'sort',
-  'splice',     // * adds, removes      splice(start, deleteCount, ...items);
-  'unshift',    // * adds to beginning. unshift(...items)
+  'splice',     // splice(start, deleteCount, ...items);
+  'unshift',    // unshift(...items)
 ]);
