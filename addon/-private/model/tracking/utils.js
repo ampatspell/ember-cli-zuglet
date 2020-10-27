@@ -34,3 +34,15 @@ export const ARRAY_GETTERS = new Set([
   'some',
   'values',
 ]);
+
+export const ARRAY_MUTATORS = new Set([
+  'replace',    // array.replace(start, deleteCount, items);
+  'copyWithin',
+  'pop',        // * removes last element
+  'push',       // * push(...items)
+  'reverse',
+  'shift',      // * removes first element
+  'sort',
+  'splice',     // * adds, removes      splice(start, deleteCount, ...items);
+  'unshift',    // * adds to beginning. unshift(...items)
+]);
