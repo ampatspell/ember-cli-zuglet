@@ -119,6 +119,6 @@ export default class IndexRoute extends Route {
 
 ## TODO
 
-- [ ] array activator should be `Proxy`
+- [ ] array activator should be extended MutableArray or something
 - [ ] models decorator with glimmer tracking
 - [ ] clean up decorator initialization, remove `@computed`
