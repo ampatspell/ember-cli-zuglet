@@ -77,7 +77,7 @@ import { route } from 'zuglet/decorators';
 import { load } from 'zuglet/utils';
 
 @route()
-export default class RouteRoute extends Route {
+export default class ApplicationRoute extends Route {
 
   @service
   store
@@ -119,6 +119,8 @@ export default class IndexRoute extends Route {
 
 ## TODO
 
-- [ ] array activator should be `Proxy`
+- [ ] array activator should be extended MutableArray or something
+- [ ] array activator could just lock down unsupported proxy methods like `pop()`. throw an assert error
 - [ ] models decorator with glimmer tracking
 - [ ] clean up decorator initialization, remove `@computed`
+- [ ] maybe allow activators to activate-deactivate objects multiple times so that zuglet doesn't have to deal with route activate-deactivate ordering
