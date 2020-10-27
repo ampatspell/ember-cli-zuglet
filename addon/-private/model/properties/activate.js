@@ -1,8 +1,9 @@
-import Property, { property } from './property';
+import Property, { createProperty } from './property';
 import { assert } from '@ember/debug';
 import { isArray } from '@ember/array';
 import ObjectActivator from './activate/object';
 import ArrayActivator from './activate/array';
+import { dirtyKey, consumeKey } from '../../model/tracking/tag';
 
 export default class ActivateProperty extends Property {
 
@@ -35,6 +36,7 @@ export default class ActivateProperty extends Property {
   }
 
   getPropertyValue() {
+    consumeKey(this, 'activator');
     let { activator } = this;
     if(!activator) {
       return null;
@@ -43,10 +45,10 @@ export default class ActivateProperty extends Property {
   }
 
   setPropertyValue(value) {
+    dirtyKey(this, 'activator');
     let { activator } = this;
     if(!activator) {
       activator = this.createActivator(value);
-      console.log(this.owner+'');
       this.activator = activator;
     } else {
       assert([
@@ -61,6 +63,7 @@ export default class ActivateProperty extends Property {
   //
 
   onActivated() {
+    consumeKey(this, 'activator');
     let { activator } = this;
     if(activator) {
       activator.activate();
@@ -68,6 +71,7 @@ export default class ActivateProperty extends Property {
   }
 
   onDeactivated() {
+    consumeKey(this, 'activator');
     let { activator } = this;
     if(activator) {
       activator.deactivate();
@@ -76,10 +80,15 @@ export default class ActivateProperty extends Property {
 
 }
 
-export const activate = () => property({
-  readOnly: false,
-  deps: [],
-  property: 'activate',
-  opts: {
-  }
-});
+let getProperty = (owner, key) => createProperty(owner, key, 'activate', { opts: {} });
+
+export const activate = () => (_, key) => {
+  return {
+    get() {
+      return getProperty(this, key).getPropertyValue();
+    },
+    set(value) {
+      return getProperty(this, key).setPropertyValue(value);
+    }
+  };
+}
