@@ -58,8 +58,8 @@ const createProxy = (manager, _target) => new Proxy(_target, {
           return (start, deleteCount, items) => {
             dirtyKey(target, ARRAY);
             let removed = target.replace(start, deleteCount, items);
-            manager.onItemsRemoved(removed);
             manager.onItemsAdded(items);
+            manager.onItemsRemoved(removed);
             return removed;
           }
         } else if(ARRAY_MUTATORS.has(prop)) {
