@@ -15,10 +15,11 @@ export default class RouteDevComponent extends Component {
   constructor() {
     super(...arguments);
     setGlobal({ component: this });
-    this.docs = [
-      this.store.doc('messages/first').existing(),
-      this.store.doc('messages/second').existing()
-    ];
+
+    this.first = this.store.doc('messages/first').existing(),
+    this.second = this.store.doc('messages/second').existing()
+
+    this.docs = [ this.first ];
   }
 
   toString() {

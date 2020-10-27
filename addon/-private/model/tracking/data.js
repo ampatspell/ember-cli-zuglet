@@ -1,5 +1,6 @@
 import { toString } from '../../util/to-string';
 import { consumeKey, dirtyKey } from './tag';
+import { propToIndex, ARRAY_GETTERS } from './util';
 
 const KEYS = Symbol();
 const ARRAY = Symbol();
@@ -10,42 +11,6 @@ class ObjectProxy {
 class ArrayProxy {
 }
 
-const propToIndex = prop => {
-  if(typeof prop === 'symbol') {
-    return null;
-  }
-  let idx = Number(prop);
-  if(isNaN(idx)) {
-    return null;
-  }
-  return idx;
-}
-
-const GETTERS = new Set([
-  Symbol.iterator,
-  'concat',
-  'entries',
-  'every',
-  'fill',
-  'filter',
-  'find',
-  'findIndex',
-  'flat',
-  'flatMap',
-  'forEach',
-  'includes',
-  'indexOf',
-  'join',
-  'keys',
-  'lastIndexOf',
-  'map',
-  'reduce',
-  'reduceRight',
-  'slice',
-  'some',
-  'values',
-]);
-
 const createArrayProxy = (property, target) => {
   return new Proxy(target, {
     get: (target, prop) => {
@@ -54,7 +19,7 @@ const createArrayProxy = (property, target) => {
         if(prop === 'length') {
           consumeKey(target, ARRAY);
           return target[prop];
-        } else if (GETTERS.has(prop)) {
+        } else if (ARRAY_GETTERS.has(prop)) {
           return (...args) => {
             consumeKey(target, ARRAY);
             return target[prop].call(target, ...args);
