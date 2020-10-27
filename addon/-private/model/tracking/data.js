@@ -1,6 +1,6 @@
 import { toString } from '../../util/to-string';
 import { consumeKey, dirtyKey } from './tag';
-import { propToIndex, ARRAY_GETTERS } from './util';
+import { propToIndex, ARRAY_GETTERS } from './utils';
 
 const KEYS = Symbol();
 const ARRAY = Symbol();
