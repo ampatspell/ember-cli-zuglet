@@ -1,7 +1,17 @@
 <div class="route-dev">
 
   <div class="row">
-    {{this}}
+    First: {{this.first}}
+  </div>
+
+  <div class="row">
+    Last: {{this.last}}
+  </div>
+
+  <div class="row">
+    {{#each this.observer.proxy as |item|}}
+      <div>{{item}}</div>
+    {{/each}}
   </div>
 
 </div>
