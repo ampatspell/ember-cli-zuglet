@@ -1,11 +1,12 @@
 import Query from './query';
 import { assert } from '@ember/debug';
+import { A } from '@ember/array';
 
 export default class QueryArray extends Query {
 
   init() {
     super.init(...arguments);
-    this.content = [];
+    this.content = A([]);
   }
 
   _onSnapshotChange(content, change) {
