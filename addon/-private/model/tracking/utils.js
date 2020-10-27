@@ -1,4 +1,3 @@
-
 export const propToIndex = prop => {
   if(typeof prop === 'symbol') {
     return null;
