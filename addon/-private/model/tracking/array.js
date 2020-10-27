@@ -91,7 +91,7 @@ const createProxy = (manager, _target) => new Proxy(_target, {
   }
 });
 
-export default class ArrayManager {
+export default class ArrayObserver {
 
   constructor({ content, delegate }) {
     this.content = content;
