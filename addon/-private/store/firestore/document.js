@@ -33,7 +33,7 @@ export default class Document extends EmberObject {
     super.init(...arguments);
     this._deferred = defer();
     if(snapshot) {
-      this._onSnapshot(snapshot);
+      this._onSnapshot(snapshot, true);
     } else if(data) {
       this.data = data;
       this.isNew = true;
@@ -68,10 +68,12 @@ export default class Document extends EmberObject {
     this.data = data;
   }
 
-  _onSnapshot(snapshot) {
+  _onSnapshot(snapshot, first) {
     let { exists } = snapshot;
     if(exists) {
       this._setData(snapshot.data({ serverTimestamps: 'estimate' }));
+    } else if(first && !exists) {
+      this._setData({});
     }
     this.setProperties({ isNew: false, isLoading: false, isLoaded: true, isDirty: false, exists });
   }
