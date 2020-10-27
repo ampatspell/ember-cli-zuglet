@@ -1,5 +1,6 @@
-import EmberObject, { computed } from '@ember/object';
+import EmberObject from '@ember/object';
 import { getOwner } from '../../util/get-owner';
+import { cached } from '../../model/decorators/cached';
 
 export default class AuthMethods extends EmberObject {
 
@@ -8,12 +9,12 @@ export default class AuthMethods extends EmberObject {
     return getOwner(this).factoryFor(`zuglet:store/auth/methods/${name}`).create({ auth });
   }
 
-  @computed()
+  @cached()
   get anonymous() {
     return this._method('anonymous');
   }
 
-  @computed()
+  @cached()
   get email() {
     return this._method('email');
   }

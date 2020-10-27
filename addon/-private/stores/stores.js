@@ -1,15 +1,16 @@
-import EmberObject, { computed } from '@ember/object';
+import EmberObject from '@ember/object';
 import { getOwner } from '../util/get-owner';
+import { cached } from '../model/decorators/cached';
 
 export default class Stores extends EmberObject {
 
-  @computed()
+  @cached()
   get stats() {
     let stores = this;
     return getOwner(this).factoryFor('zuglet:stores/stats').create({ stores });
   }
 
-  @computed()
+  @cached()
   get models() {
     let stores = this;
     return getOwner(this).factoryFor('zuglet:stores/models').create({ stores });

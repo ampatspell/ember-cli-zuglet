@@ -1,10 +1,11 @@
 import 'firebase/auth';
-import EmberObject, { computed } from '@ember/object';
+import EmberObject from '@ember/object';
 import { defer } from '../../util/defer';
 import { activate } from '../../model/properties/activate';
 import { getOwner } from '../../util/get-owner';
 import { objectToJSON } from '../../util/object-to-json';
 import { root } from '../../model/decorators/root';
+import { cached } from '../../model/decorators/cached';
 import { getState } from '../../model/state';
 
 @root()
@@ -85,7 +86,7 @@ export default class Auth extends EmberObject {
 
   //
 
-  @computed()
+  @cached()
   get methods() {
     let auth = this;
     return getOwner(this).factoryFor('zuglet:store/auth/methods').create({ auth });

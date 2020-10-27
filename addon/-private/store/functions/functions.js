@@ -1,10 +1,11 @@
 import 'firebase/functions';
-import EmberObject, { computed } from '@ember/object';
+import EmberObject from '@ember/object';
 import { getOwner } from '../../util/get-owner';
+import { cached } from '../../model/decorators/cached';
 
 export default class Functions extends EmberObject {
 
-  @computed()
+  @cached()
   get _defaultRegion() {
     let { store: { firebase, options: { functions } } } = this;
     let region = functions && functions.region;

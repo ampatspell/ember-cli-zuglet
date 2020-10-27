@@ -7,6 +7,7 @@ export default class State extends EmberObject {
   owner = null
   properties = Object.create(null);
   activators = new Set();
+  cache = Object.create(null);
 
   registersActivated = true
 

@@ -1,7 +1,8 @@
-import EmberObject, { computed } from '@ember/object';
+import EmberObject from '@ember/object';
 import { getOwner } from '../util/get-owner';
 import { assert } from '@ember/debug';
 import { initializeApp, enablePersistence } from './firebase';
+import { cached } from '../model/decorators/cached';
 
 const {
   assign
@@ -34,19 +35,19 @@ export default class Store extends EmberObject {
     return this.stores.models;
   }
 
-  @computed()
+  @cached()
   get auth() {
     let store = this;
     return getOwner(this).factoryFor('zuglet:store/auth').create({ store });
   }
 
-  @computed()
+  @cached()
   get storage() {
     let store = this;
     return getOwner(this).factoryFor('zuglet:store/storage').create({ store });
   }
 
-  @computed()
+  @cached()
   get functions() {
     let store = this;
     return getOwner(this).factoryFor('zuglet:store/functions').create({ store });
