@@ -38,6 +38,8 @@ export default class Document extends EmberObject {
       this.data = data;
       this.isNew = true;
       this.isDirty = true;
+    } else {
+      this.data = {};
     }
   }
 
