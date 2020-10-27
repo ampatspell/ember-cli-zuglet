@@ -1,4 +1,10 @@
-# zuglet@nex
+# zuglet@next
+
+``` javascript
+"devDependencies": {
+  "zuglet": "git+ssh://git@github.com:ampatspell/zuglet-next.git"
+}
+```
 
 ``` javascript
 // app/instance-initializers/app-zuglet.js
