@@ -1,5 +1,9 @@
 import { objectToJSON } from './object-to-json';
 
+const {
+  assign
+} = Object;
+
 export class ZugletError extends Error {
 
   get serialized() {

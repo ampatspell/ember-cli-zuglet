@@ -1,7 +1,7 @@
 {
   "name": "zuglet",
-  "version": "0.0.0",
-  "description": "The default blueprint for ember-cli addons.",
+  "version": "0.0.1",
+  "description": "zuglet next",
   "keywords": [
     "ember-addon"
   ],

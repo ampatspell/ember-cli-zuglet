@@ -31,13 +31,13 @@ export default class DocumentReference extends Reference {
 
   async load(opts) {
     let { optional } = assign({ optional: false }, opts);
-    let { ref } = this;
-    let snapshot = await ref.get();
+    let { _ref } = this;
+    let snapshot = await _ref.get();
     if(!snapshot.exists) {
       if(optional) {
         return;
       }
-      throw documentForRefNotFoundError(ref);
+      throw documentForRefNotFoundError(_ref);
     }
     return this.store._createDocumentForSnapshot(snapshot);
   }
