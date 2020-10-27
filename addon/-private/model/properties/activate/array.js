@@ -1,46 +1,53 @@
 import { A } from '@ember/array';
 import { diffArrays } from '../../../util/diff-arrays';
-import { consumeKey, dirtyKey } from '../../../model/tracking/tag';
+import ArrayObserver from '../../../model/tracking/array';
 
 export default class ArrayActivator {
 
   type = 'array';
 
-  // arrayObserverOpts = {
-  //   willChange: this.contentWillChange,
-  //   didChange: this.contentDidChange
-  // }
-
   constructor(property, content) {
     this.property = property;
     this.content = A(content);
+    this._observer = null;
     this.activate();
   }
 
+  get observer() {
+    let observer = this._observer;
+    if(!observer) {
+      observer = new ArrayObserver({
+        content: this.content,
+        delegate: {
+          onAdd: item => this.activateValue(item),
+          onRemove: item => this.deactivateValue(item)
+        }
+      });
+      this._observer = observer;
+    }
+    return observer;
+  }
+
+  get proxy() {
+    return this.observer.proxy;
+  }
+
   //
 
-  // contentWillChange(array, start, removeCount, addCount) {
-  //   if(removeCount) {
-  //     let removed = array.slice(start, start + removeCount);
-  //     this.deactivateValues(removed);
-  //   }
-  // }
+  activateValue(item) {
+    this.property.activateValue(item);
+  }
 
-  // contentDidChange(array, start, removeCount, addCount) {
-  //   if(addCount) {
-  //     let added = A(array.slice(start, start + addCount));
-  //     this.activateValues(added);
-  //   }
-  // }
-
-  //
+  deactivateValue(item) {
+    this.property.deactivateValue(item);
+  }
 
   activateValues(values) {
-    values.map(item => this.property.activateValue(item));
+    values.forEach(value => this.activateValue(value));
   }
 
   deactivateValues(values) {
-    values.map(item => this.property.deactivateValue(item));
+    values.forEach(value => this.deactivateValue(value));
   }
 
   activate(models) {
@@ -52,27 +59,6 @@ export default class ArrayActivator {
 
   deactivate(models) {
     this.deactivateValues(models || this.content);
-  }
-
-  get proxy() {
-    let proxy = this._proxy;
-    if(!proxy) {
-      proxy = new Proxy(this.content, {
-        get(target, prop) {
-          consumeKey(target, prop);
-          console.log('get', prop);
-          return target[prop];
-        },
-        set(target, prop, value) {
-          dirtyKey(target, prop);
-          console.log('set', prop, value);
-          target[prop] = value
-          return true;
-        }
-      });
-      this._proxy = proxy;
-    }
-    return proxy;
   }
 
   getValue() {
@@ -88,7 +74,7 @@ export default class ArrayActivator {
 
     this.deactivate(removed);
     this.content = A(value);
-    this._proxy = null;
+    this._observer = null;
     this.activate(added);
 
     return this.proxy;
