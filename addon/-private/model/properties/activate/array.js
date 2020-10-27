@@ -20,6 +20,7 @@ export default class ArrayActivator {
   //
 
   startObservingArray() {
+    console.log('startObserving');
     if(this.isObserving) {
       return;
     }

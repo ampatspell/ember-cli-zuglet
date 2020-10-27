@@ -46,6 +46,7 @@ export default class ActivateProperty extends Property {
     let { activator } = this;
     if(!activator) {
       activator = this.createActivator(value);
+      console.log(this.owner+'');
       this.activator = activator;
     } else {
       assert([

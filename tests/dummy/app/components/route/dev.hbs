@@ -1,7 +1,9 @@
 <div class="route-dev">
 
   <div class="row">
-    {{this}}
+    {{#each this.docs as |doc|}}
+      <div>{{doc}}</div>
+    {{/each}}
   </div>
 
 </div>
