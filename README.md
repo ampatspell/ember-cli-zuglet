@@ -110,3 +110,9 @@ export default class IndexRoute extends Route {
 
 }
 ```
+
+## TODO
+
+- [ ] array activator should be `Proxy`
+- [ ] models decorator with glimmer tracking
+- [ ] clean up decorator initialization, remove `@computed`
