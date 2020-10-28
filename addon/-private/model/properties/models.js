@@ -1,8 +1,20 @@
-import Property, { property } from './property';
-import { get } from '@ember/object';
+import Property, { createProperty } from './property';
 import { A } from '@ember/array';
 import { getState } from '../state';
 import { getStores } from '../../stores/get-stores';
+
+// https://github.com/pzuraq/macro-decorators/blob/master/src/index.ts#L151-L164
+function getPath(obj, path) {
+  let segments = path.split('.');
+  let current = obj;
+  for(let segment of segments) {
+    if(current === undefined || current === null) {
+      break;
+    }
+    current = typeof current.get === 'function' ? current.get(segment) : current[segment];
+  }
+  return current;
+}
 
 const marker = Symbol('MODELS');
 
@@ -26,7 +38,7 @@ export default class ModelsProperty extends Property {
 
   get _source() {
     let { owner, opts: { sourceKey } } = this;
-    let source = get(owner, sourceKey);
+    let source = getPath(owner, sourceKey);
     if(!source) {
       return;
     }
@@ -131,6 +143,8 @@ export default class ModelsProperty extends Property {
 
 }
 
+//
+
 const normalizeSourceDeps = (sourceKey, keys=[]) => {
   if(keys.length === 0) {
     return [];
@@ -147,6 +161,23 @@ const normalizeResolveModelName = modelName => {
 
 // @models('query.content').named('animal').mapping(doc => ({ doc })).object('data')
 export const models = sourceKey => {
+
+  const getProperty = (owner, key, props) => {
+    return createProperty(owner, key, 'models', {
+      owner,
+      key,
+      opts: props.opts
+    });
+  }
+
+  const property = props => (target, key, description) => {
+    return {
+      get() {
+        return getProperty(this, key, props).getPropertyValue();
+      }
+    }
+  }
+
   let deps = [];
 
   const normalizeDeps = () => {

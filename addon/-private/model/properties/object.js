@@ -45,6 +45,8 @@ export default class ActivateProperty extends Property {
 }
 
 let getProperty = (owner, key) => createProperty(owner, key, 'object', {
+  owner,
+  key,
   opts: {
     onDirty: () => owner._dataDidChange()
   }

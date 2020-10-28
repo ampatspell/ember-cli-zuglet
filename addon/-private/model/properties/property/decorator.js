@@ -1,5 +1,4 @@
 import { getOwner } from '../../../util/get-owner';
-import { computed } from '@ember/object';
 import { getState } from '../../state';
 
 const {
@@ -12,31 +11,31 @@ export const createProperty = (owner, key, name, opts) => {
   });
 }
 
-export const property = ({ readOnly, deps, property, opts }) => {
+// export const property = ({ readOnly, deps, property, opts }) => {
 
-  let getProperty = (owner, key) => {
-    return createProperty(owner, key, property, { owner, key, deps, opts });
-  }
+//   let getProperty = (owner, key) => {
+//     return createProperty(owner, key, property, { owner, key, deps, opts });
+//   }
 
-  let get = function (key) {
-    return getProperty(this, key).getPropertyValue();
-  }
+//   let get = function (key) {
+//     return getProperty(this, key).getPropertyValue();
+//   }
 
-  let set;
-  if(!readOnly) {
-    set = function (key, value) {
-      return getProperty(this, key).setPropertyValue(value);
-    }
-  }
+//   let set;
+//   if(!readOnly) {
+//     set = function (key, value) {
+//       return getProperty(this, key).setPropertyValue(value);
+//     }
+//   }
 
-  let decorator = computed(...deps, {
-    get,
-    set
-  });
+//   let decorator = computed(...deps, {
+//     get,
+//     set
+//   });
 
-  if(readOnly) {
-    decorator = decorator.readOnly();
-  }
+//   if(readOnly) {
+//     decorator = decorator.readOnly();
+//   }
 
-  return decorator;
-}
+//   return decorator;
+// }
