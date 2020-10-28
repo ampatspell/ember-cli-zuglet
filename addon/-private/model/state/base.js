@@ -9,8 +9,6 @@ export default class State extends EmberObject {
   activators = new Set();
   cache = Object.create(null);
 
-  registersActivated = true
-
   getProperty(key, create) {
     let property = this.properties[key];
     if(!property && create) {
@@ -42,9 +40,7 @@ export default class State extends EmberObject {
   }
 
   onActivated() {
-    if(this.registersActivated) {
-      registerActivated(this.owner);
-    }
+    registerActivated(this.owner);
     this.withProperties(property => property.onActivated());
     this.invokeOnOwner('onActivated');
   }
@@ -52,9 +48,7 @@ export default class State extends EmberObject {
   onDeactivated() {
     this.invokeOnOwner('onDeactivated');
     this.withProperties(property => property.onDeactivated());
-    if(this.registersActivated) {
-      unregisterActivated(this.owner);
-    }
+    unregisterActivated(this.owner);
   }
 
   activate(activator) {
