@@ -1,4 +1,4 @@
-import Property, { createProperty } from './property';
+import Property, { property } from './property';
 import { A } from '@ember/array';
 import { getState } from '../state';
 import { getStores } from '../../stores/get-stores';
@@ -131,24 +131,25 @@ export default class ModelsProperty extends Property {
 
 }
 
+const getProperty = (owner, key, opts) => property(owner, key, 'models', opts);
+
+const define = props => (_, key) => {
+  return {
+    get() {
+      return getProperty(this, key, props).getPropertyValue();
+    }
+  };
+}
+
+const normalizeResolveModelName = modelName => {
+  if(typeof modelName === 'function') {
+    return modelName;
+  }
+  return () => modelName;
+}
+
 // @models('query.content').named('animal').mapping(doc => ({ doc }))
 export const models = sourceKey => {
-
-  const getProperty = (owner, key, opts) => {
-    return createProperty(owner, key, 'models', {
-      owner,
-      key,
-      opts
-    });
-  }
-
-  const property = props => (target, key, description) => {
-    return {
-      get() {
-        return getProperty(this, key, props).getPropertyValue();
-      }
-    };
-  }
 
   let opts = {
     sourceKey,
@@ -156,15 +157,8 @@ export const models = sourceKey => {
     mapping: null
   };
 
-  const normalizeResolveModelName = modelName => {
-    if(typeof modelName === 'function') {
-      return modelName;
-    }
-    return () => modelName;
-  }
-
   let extend = () => {
-    let curr = property(opts);
+    let curr = define(opts);
     curr.named = name => {
       opts.resolveModelName = normalizeResolveModelName(name);
       return extend();

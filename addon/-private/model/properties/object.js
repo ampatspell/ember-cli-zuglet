@@ -1,4 +1,4 @@
-import Property, { createProperty } from './property';
+import Property, { property } from './property';
 import DataManager from '../tracking/data';
 import { isServerTimestamp, isTimestamp } from '../../util/object-to-json';
 
@@ -44,12 +44,8 @@ export default class ActivateProperty extends Property {
 
 }
 
-let getProperty = (owner, key) => createProperty(owner, key, 'object', {
-  owner,
-  key,
-  opts: {
-    onDirty: () => owner._dataDidChange()
-  }
+let getProperty = (owner, key) => property(owner, key, 'object', {
+  onDirty: () => owner._dataDidChange()
 });
 
 export const object = () => (_, key) => {

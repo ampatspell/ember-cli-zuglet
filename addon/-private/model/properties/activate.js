@@ -1,4 +1,4 @@
-import Property, { createProperty } from './property';
+import Property, { property } from './property';
 import { assert } from '@ember/debug';
 import { isArray } from '@ember/array';
 import ObjectActivator from './activate/object';
@@ -80,12 +80,7 @@ export default class ActivateProperty extends Property {
 
 }
 
-let getProperty = (owner, key) => createProperty(owner, key, 'activate', {
-  owner,
-  key,
-  opts: {
-  }
-});
+let getProperty = (owner, key) => property(owner, key, 'activate');
 
 export const activate = () => (_, key) => {
   return {
