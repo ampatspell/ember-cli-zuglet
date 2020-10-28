@@ -119,7 +119,6 @@ export default class IndexRoute extends Route {
 
 ## TODO
 
-- [ ] add `doc.save({ token: true })`
 - [ ] add something like `observed().content(owner => ....)`
 - [ ] finalize decorator names
 - [ ] Make it work in FastBoot

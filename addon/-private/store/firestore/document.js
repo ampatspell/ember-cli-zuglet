@@ -6,6 +6,8 @@ import { toJSON } from '../../util/to-json';
 import { assert } from '@ember/debug';
 import { defer } from '../../util/defer';
 import { registerOnSnapshot } from '../../stores/stats';
+import { cached } from '../../model/decorators/cached';
+import { randomString } from '../../util/random-string';
 
 const {
   assign
@@ -60,6 +62,13 @@ export default class Document extends EmberObject {
 
   //
 
+  @cached()
+  get token() {
+    return randomString(20);
+  }
+
+  //
+
   _dataDidChange() {
     this.isDirty = true;
   }
@@ -69,10 +78,19 @@ export default class Document extends EmberObject {
     this.data = data;
   }
 
+  _shouldApplySnapshotData(data) {
+    let token = data._token;
+    delete data._token;
+    return this.token !== token;
+  }
+
   _onSnapshot(snapshot, first) {
     let { exists } = snapshot;
     if(exists) {
-      this._setData(snapshot.data({ serverTimestamps: 'estimate' }));
+      let data = snapshot.data({ serverTimestamps: 'estimate' });
+      if(this._shouldApplySnapshotData(data)) {
+        this._setData(data);
+      }
     } else if(first && !exists) {
       this._setData({});
     }
@@ -106,14 +124,18 @@ export default class Document extends EmberObject {
   }
 
   async save(opts) {
-    let { force, merge } = assign({ force: false, merge: false }, opts);
+    let { force, merge, token } = assign({ force: false, merge: false, token: false }, opts);
     let { isDirty } = this;
     if(!isDirty && !force) {
       return this;
     }
     this.setProperties({ isSaving: true, isError: false, error: null });
     try {
-      await this.ref._ref.set(this._data, { merge });
+      let data = this._data;
+      if(token) {
+        data._token = this.token;
+      }
+      await this.ref._ref.set(data, { merge });
       this.setProperties({ isNew: false, isSaving: false, isDirty: false, exists: true });
       this._maybeSubscribeToOnSnapshot();
       this._deferred.resolve(this);
