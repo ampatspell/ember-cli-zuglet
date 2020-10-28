@@ -3,6 +3,7 @@ import { getOwner } from '../util/get-owner';
 import { assert } from '@ember/debug';
 import { initializeApp, enablePersistence } from './firebase';
 import { cached } from '../model/decorators/cached';
+import { toJSON } from '../util/to-json';
 
 const {
   assign
@@ -144,6 +145,11 @@ export default class Store extends EmberObject {
       identifier,
       projectId
     };
+  }
+
+  toJSON() {
+    let { serialized } = this;
+    return toJSON(this, { serialized });
   }
 
   toStringExtension() {

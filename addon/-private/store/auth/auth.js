@@ -7,6 +7,7 @@ import { objectToJSON } from '../../util/object-to-json';
 import { root } from '../../model/decorators/root';
 import { cached } from '../../model/decorators/cached';
 import { getState } from '../../model/state';
+import { toJSON } from '../../util/to-json';
 
 @root()
 export default class Auth extends EmberObject {
@@ -116,6 +117,11 @@ export default class Auth extends EmberObject {
     return  {
       user: objectToJSON(user)
     };
+  }
+
+  toJSON() {
+    let { serialized } = this;
+    return toJSON(this, { serialized });
   }
 
 }

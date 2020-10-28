@@ -1,6 +1,6 @@
 import EmberObject from '@ember/object';
 import { inject as service } from '@ember/service';
-import { objectToJSON, toPrimitive, load } from 'zuglet/utils';
+import { objectToJSON, toJSON, load } from 'zuglet/utils';
 import { activate, models } from 'zuglet/decorators';
 
 const named = doc => {
@@ -39,9 +39,13 @@ export default class Messages extends EmberObject {
   get serialized() {
     let { models } = this;
     return {
-      instance: toPrimitive(this),
       models: objectToJSON(models)
     };
+  }
+
+  toJSON() {
+    let { serialized } = this;
+    return toJSON(this, { serialized });
   }
 
 }

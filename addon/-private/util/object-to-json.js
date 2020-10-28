@@ -30,11 +30,10 @@ export const isPromise = arg => arg && isFunction(arg.then);
 
 export const objectToJSON = value => {
   if(typeof value === 'object') {
-    let serialized;
     if(value === null) {
       return value;
-    } else if(serialized = value.serialized) {
-      return serialized;
+    } else if(isFunction(value.toJSON)) {
+      return value.toJSON();
     } else if(isArray(value)) {
       return value.map(item => objectToJSON(item));
     } else if(value instanceof Date) {
@@ -62,8 +61,6 @@ export const objectToJSON = value => {
       return {
         type: 'server-timestamp',
       };
-    } else if(isFunction(value.toJSON)) {
-      return value.toJSON();
     } else {
       let hash = {};
       Object.getOwnPropertyNames(value).forEach(key => {

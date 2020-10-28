@@ -1,6 +1,7 @@
 import EmberObject from '@ember/object';
 import { assert } from '@ember/debug';
 import { getOwner } from '../../util/get-owner';
+import { toJSON } from '../../util/to-json';
 import firebase from "firebase/app";
 
 const {
@@ -96,6 +97,11 @@ export default class StorageReference extends EmberObject {
       path,
       bucket
     };
+  }
+
+  toJSON() {
+    let { serialized } = this;
+    return toJSON(this, { serialized });
   }
 
   toStringExtension() {

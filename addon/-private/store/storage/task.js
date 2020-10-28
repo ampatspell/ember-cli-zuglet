@@ -2,6 +2,7 @@ import EmberObject from '@ember/object';
 import firebase from "firebase/app";
 import { objectToJSON } from '../../util/object-to-json';
 import { tracked } from '@glimmer/tracking';
+import { toJSON } from '../../util/to-json';
 
 const {
   STATE_CHANGED
@@ -104,6 +105,11 @@ export default class StorageTask extends EmberObject {
       error,
       metadata
     };
+  }
+
+  toJSON() {
+    let { serialized } = this;
+    return toJSON(this, { serialized });
   }
 
   toStringExtension() {

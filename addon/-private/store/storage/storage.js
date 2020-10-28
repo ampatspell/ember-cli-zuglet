@@ -1,6 +1,7 @@
 import 'firebase/storage';
 import EmberObject from '@ember/object';
 import { getOwner } from '../../util/get-owner';
+import { toJSON } from '../../util/to-json';
 
 export default class Storage extends EmberObject {
 
@@ -34,6 +35,11 @@ export default class Storage extends EmberObject {
     return {
       storageBucket
     };
+  }
+
+  toJSON() {
+    let { serialized } = this;
+    return toJSON(this, { serialized });
   }
 
   toStringExtension() {

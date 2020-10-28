@@ -2,6 +2,7 @@ import 'firebase/functions';
 import EmberObject from '@ember/object';
 import { getOwner } from '../../util/get-owner';
 import { cached } from '../../model/decorators/cached';
+import { toJSON } from '../../util/to-json';
 
 export default class Functions extends EmberObject {
 
@@ -39,6 +40,11 @@ export default class Functions extends EmberObject {
     return {
       region
     };
+  }
+
+  toJSON() {
+    let { serialized } = this;
+    return toJSON(this, { serialized });
   }
 
   toStringExtension() {

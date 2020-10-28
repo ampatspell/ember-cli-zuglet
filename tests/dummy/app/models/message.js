@@ -1,5 +1,5 @@
 import EmberObject from '@ember/object';
-import { objectToJSON, toPrimitive } from 'zuglet/utils';
+import { objectToJSON, toPrimitive, toJSON } from 'zuglet/utils';
 import { tracked } from '@glimmer/tracking';
 import { alias } from 'macro-decorators';
 
@@ -33,13 +33,17 @@ export default class Message extends EmberObject {
   get serialized() {
     let { doc } = this;
     return {
-      instance: toPrimitive(this),
       doc: objectToJSON(doc)
     };
   }
 
   toStringExtension() {
     return `${this.id}`;
+  }
+
+  toJSON() {
+    let { serialized } = this;
+    return toJSON(this, { serialized });
   }
 
 }

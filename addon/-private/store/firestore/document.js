@@ -2,6 +2,7 @@ import EmberObject from '@ember/object';
 import { object, raw } from '../../model/properties/object';
 import { tracked } from '@glimmer/tracking';
 import { objectToJSON } from '../../util/object-to-json';
+import { toJSON } from '../../util/to-json';
 import { assert } from '@ember/debug';
 import { defer } from '../../util/defer';
 import { registerOnSnapshot } from '../../stores/stats';
@@ -227,6 +228,11 @@ export default class Document extends EmberObject {
       exists,
       data: objectToJSON(_data)
     };
+  }
+
+  toJSON() {
+    let { serialized } = this;
+    return toJSON(this, { serialized });
   }
 
   toStringExtension() {

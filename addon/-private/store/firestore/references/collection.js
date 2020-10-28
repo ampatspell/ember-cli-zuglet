@@ -24,13 +24,13 @@ export default class CollectionReference extends QueryableReference {
 
   //
 
+  get string() {
+    return this.path;
+  }
+
   get serialized() {
     let { id, path } = this;
     return { id, path };
-  }
-
-  get string() {
-    return this.path;
   }
 
   toStringExtension() {

@@ -1,4 +1,5 @@
 import EmberObject from '@ember/object';
+import { toJSON } from '../../util/to-json';
 
 export default class FunctionsRegion extends EmberObject {
 
@@ -21,6 +22,11 @@ export default class FunctionsRegion extends EmberObject {
     return {
       region
     };
+  }
+
+  toJSON() {
+    let { serialized } = this;
+    return toJSON(this, { serialized });
   }
 
   toStringExtension() {

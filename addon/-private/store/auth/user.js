@@ -1,6 +1,7 @@
 import EmberObject from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import { assert } from '@ember/debug';
+import { toJSON } from '../../util/to-json';
 
 const {
   assign
@@ -71,6 +72,11 @@ export default class User extends EmberObject {
       uid,
       email
     };
+  }
+
+  toJSON() {
+    let { serialized } = this;
+    return toJSON(this, { serialized });
   }
 
   toStringExtension() {
