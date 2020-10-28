@@ -122,4 +122,4 @@ export default class IndexRoute extends Route {
 - [ ] maybe allow activators to activate-deactivate objects multiple times so that zuglet doesn't have to deal with route activate-deactivate ordering
 - [ ] add `doc.save({ token: true })`
 - [ ] add something like `observed().content(owner => ....)`
-
+- [ ] add toJSON(), remove objectToJSON serialized handling
