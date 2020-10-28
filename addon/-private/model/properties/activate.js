@@ -80,15 +80,33 @@ export default class ActivateProperty extends Property {
 
 }
 
-let getProperty = (owner, key) => property(owner, key, 'activate');
+let getProperty = (owner, key, opts) => property(owner, key, 'activate', opts);
 
-export const activate = () => (_, key) => {
+const define = opts => (_, key) => {
   return {
     get() {
-      return getProperty(this, key).getPropertyValue();
+      return getProperty(this, key, opts).getPropertyValue();
     },
     set(value) {
-      return getProperty(this, key).setPropertyValue(value);
+      return getProperty(this, key, opts).setPropertyValue(value);
     }
   };
+}
+
+export const activate = () => {
+
+  let opts = {
+    content: undefined
+  };
+
+  let extend = () => {
+    let curr = define(opts);
+    curr.content = value => {
+      curr.cotent = value;
+      return extend();
+    }
+    return curr;
+  }
+
+  return extend();
 }

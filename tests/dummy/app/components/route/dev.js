@@ -9,7 +9,9 @@ export default class RouteDevComponent extends Component {
   @service
   store
 
-  @activate()
+  @activate().content(() => {
+    console.log('get content');
+  })
   docs
 
   constructor() {
