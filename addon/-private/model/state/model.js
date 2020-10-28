@@ -1,4 +1,4 @@
-import State from './base';
+import State from './state';
 
 export default class ModelState extends State {
 }
