@@ -161,11 +161,6 @@ export default class Document extends EmberObject {
 
   //
 
-  // TODO: issue with current firebase js sdk
-  _shouldIgnoreSnapshot(snapshot) {
-    return this.isSaving && !snapshot.metadata.hasPendingWrites;
-  }
-
   _subscribeToOnSnapshot() {
     let { isLoaded } = this;
 
@@ -174,9 +169,6 @@ export default class Document extends EmberObject {
     }
 
     this._cancel = registerOnSnapshot(this, this.ref._ref.onSnapshot({ includeMetadataChanges: true }, snapshot => {
-      if(this._shouldIgnoreSnapshot(snapshot)) {
-        return;
-      }
       this._onSnapshot(snapshot);
       this._deferred.resolve(this);
     }, error => {
