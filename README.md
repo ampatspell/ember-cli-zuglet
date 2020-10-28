@@ -119,5 +119,7 @@ export default class IndexRoute extends Route {
 
 ## TODO
 
-- [ ] clean up decorator initialization (`createProperty` thing)
 - [ ] maybe allow activators to activate-deactivate objects multiple times so that zuglet doesn't have to deal with route activate-deactivate ordering
+- [ ] add `doc.save({ token: true })`
+- [ ] add something like `observed().content(owner => ....)`
+
