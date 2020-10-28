@@ -123,3 +123,4 @@ export default class IndexRoute extends Route {
 - [ ] add `doc.save({ token: true })`
 - [ ] add something like `observed().content(owner => ....)`
 - [ ] add toJSON(), remove objectToJSON serialized handling
+- [ ] finalize decorator names
