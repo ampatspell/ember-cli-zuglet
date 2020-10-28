@@ -131,13 +131,6 @@ export default class ModelsProperty extends Property {
 
 }
 
-const normalizeResolveModelName = modelName => {
-  if(typeof modelName === 'function') {
-    return modelName;
-  }
-  return () => modelName;
-}
-
 // @models('query.content').named('animal').mapping(doc => ({ doc }))
 export const models = sourceKey => {
 
@@ -154,7 +147,7 @@ export const models = sourceKey => {
       get() {
         return getProperty(this, key, props).getPropertyValue();
       }
-    }
+    };
   }
 
   let opts = {
@@ -162,6 +155,13 @@ export const models = sourceKey => {
     resolveModelName: null,
     mapping: null
   };
+
+  const normalizeResolveModelName = modelName => {
+    if(typeof modelName === 'function') {
+      return modelName;
+    }
+    return () => modelName;
+  }
 
   let extend = () => {
     let curr = property(opts);
