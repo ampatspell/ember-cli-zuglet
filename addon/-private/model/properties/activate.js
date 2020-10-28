@@ -80,7 +80,12 @@ export default class ActivateProperty extends Property {
 
 }
 
-let getProperty = (owner, key) => createProperty(owner, key, 'activate', { opts: {} });
+let getProperty = (owner, key) => createProperty(owner, key, 'activate', {
+  owner,
+  key,
+  opts: {
+  }
+});
 
 export const activate = () => (_, key) => {
   return {

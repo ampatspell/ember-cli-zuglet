@@ -1,6 +1,7 @@
 import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
 import { route } from 'zuglet/decorators';
+import { setGlobal } from 'zuglet/utils';
 
 @route()
 export default class RouteRoute extends Route {
@@ -16,6 +17,7 @@ export default class RouteRoute extends Route {
   // right after model is activated
   // optionally preload data before model() hook resolves
   async load(model) {
+    setGlobal({ model });
     await model.load();
   }
 

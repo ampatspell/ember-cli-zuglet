@@ -3,6 +3,13 @@ import { inject as service } from '@ember/service';
 import { objectToJSON, toPrimitive, load } from 'zuglet/utils';
 import { activate, models } from 'zuglet/decorators';
 
+const named = doc => {
+  if(doc.data.name ==='first') {
+    return 'fancy-message';
+  }
+  return 'message';
+}
+
 export default class Messages extends EmberObject {
 
   @service
@@ -11,7 +18,7 @@ export default class Messages extends EmberObject {
   @activate()
   query
 
-  @models('query.content').named('message').mapping(doc => ({ doc }))
+  @models('query.content').named(named).mapping(doc => ({ doc }))
   models
 
   init() {
@@ -21,6 +28,12 @@ export default class Messages extends EmberObject {
 
   async load() {
     await load(this.query);
+  }
+
+  async add(name) {
+    let doc = this.store.collection('messages').doc().new({ name });
+    await doc.save();
+    return doc;
   }
 
   get serialized() {

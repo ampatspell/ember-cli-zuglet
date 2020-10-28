@@ -1,5 +1,19 @@
 <div class="route-models">
 
+  {{#each @model.models as |message|}}
+    <div class="row">
+      <div class="label">{{message.id}} {{message.serialized.instance}}</div>
+      <div class="row">
+        <Input @value={{message.name}}/>
+        <input type="button" value="Save" {{on "click" (fn this.save message)}}/>
+      </div>
+    </div>
+  {{/each}}
+
+  <div class="row">
+    <input type="button" value="Add new" {{on "click" this.add}}/>
+  </div>
+
   <div class="row">
     <Json @value={{@model}}/>
   </div>

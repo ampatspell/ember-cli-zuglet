@@ -119,6 +119,5 @@ export default class IndexRoute extends Route {
 
 ## TODO
 
-- [ ] models decorator with glimmer tracking
-- [ ] clean up decorator initialization, remove `@computed`
+- [ ] clean up decorator initialization (`createProperty` thing)
 - [ ] maybe allow activators to activate-deactivate objects multiple times so that zuglet doesn't have to deal with route activate-deactivate ordering
