@@ -2,19 +2,7 @@ import Property, { createProperty } from './property';
 import { A } from '@ember/array';
 import { getState } from '../state';
 import { getStores } from '../../stores/get-stores';
-
-// https://github.com/pzuraq/macro-decorators/blob/master/src/index.ts#L151-L164
-function getPath(obj, path) {
-  let segments = path.split('.');
-  let current = obj;
-  for(let segment of segments) {
-    if(current === undefined || current === null) {
-      break;
-    }
-    current = typeof current.get === 'function' ? current.get(segment) : current[segment];
-  }
-  return current;
-}
+import { getPath } from '../../util/get-path';
 
 const marker = Symbol('MODELS');
 
@@ -143,15 +131,6 @@ export default class ModelsProperty extends Property {
 
 }
 
-//
-
-const normalizeSourceDeps = (sourceKey, keys=[]) => {
-  if(keys.length === 0) {
-    return [];
-  }
-  return [ `${sourceKey}.@each.${keys.join(',')}` ];
-}
-
 const normalizeResolveModelName = modelName => {
   if(typeof modelName === 'function') {
     return modelName;
@@ -159,14 +138,14 @@ const normalizeResolveModelName = modelName => {
   return () => modelName;
 }
 
-// @models('query.content').named('animal').mapping(doc => ({ doc })).object('data')
+// @models('query.content').named('animal').mapping(doc => ({ doc }))
 export const models = sourceKey => {
 
-  const getProperty = (owner, key, props) => {
+  const getProperty = (owner, key, opts) => {
     return createProperty(owner, key, 'models', {
       owner,
       key,
-      opts: props.opts
+      opts
     });
   }
 
@@ -178,39 +157,20 @@ export const models = sourceKey => {
     }
   }
 
-  let deps = [];
-
-  const normalizeDeps = () => {
-    return [
-      `${sourceKey}.[]`,
-      ...normalizeSourceDeps(sourceKey, deps)
-    ];
-  }
-
-  let props = {
-    readOnly: true,
-    deps: normalizeDeps(),
-    property: 'models',
-    opts: {
-      sourceKey,
-      resolveModelName: null,
-      mapping: null
-    }
+  let opts = {
+    sourceKey,
+    resolveModelName: null,
+    mapping: null
   };
 
   let extend = () => {
-    let curr = property(props);
+    let curr = property(opts);
     curr.named = name => {
-      props.opts.resolveModelName = normalizeResolveModelName(name);
+      opts.resolveModelName = normalizeResolveModelName(name);
       return extend();
     }
     curr.mapping = fn => {
-      props.opts.mapping = fn;
-      return extend();
-    }
-    curr.object = (...keys) => {
-      deps = A([ ...deps, keys ]).uniq();
-      props.deps = normalizeDeps();
+      opts.mapping = fn;
       return extend();
     }
     return curr;
