@@ -119,6 +119,7 @@ export default class IndexRoute extends Route {
 
 ## TODO
 
+- [ ] add support for emulators
 - [ ] add `doc.save({ token: true })`
 - [ ] add something like `observed().content(owner => ....)`
 - [ ] finalize decorator names
