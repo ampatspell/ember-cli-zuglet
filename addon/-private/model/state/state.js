@@ -1,12 +1,13 @@
 import EmberObject from '@ember/object';
 import { assert } from '@ember/debug';
 import { registerActivated, unregisterActivated } from '../../stores/stats';
+import Activators from './activators';
 
 export default class State extends EmberObject {
 
   owner = null
   properties = Object.create(null);
-  activators = new Set();
+  activators = new Activators();
   cache = Object.create(null);
 
   getProperty(key, create) {
