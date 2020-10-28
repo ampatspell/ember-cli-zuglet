@@ -13,6 +13,7 @@ Router.map(function() {
     this.route('single');
   });
   this.route('models');
+  this.route('content');
   this.route('route');
   this.route('auth');
   this.route('storage');

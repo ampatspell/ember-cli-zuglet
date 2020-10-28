@@ -1,0 +1,22 @@
+<div class="route-content">
+
+  <div class="row">
+    <div class="label">
+      {{this.query.string}}
+    </div>
+    <div class="row">
+      <Input @value={{this.name}}/>
+    </div>
+  </div>
+
+  {{!-- {{#each this.models as |model|}}
+    <Block::Message @message={{model}}/>
+  {{/each}} --}}
+
+  <div class="row">
+    {{#each this.query.content as |doc|}}
+      <div>{{doc}}</div>
+    {{/each}}
+  </div>
+
+</div>

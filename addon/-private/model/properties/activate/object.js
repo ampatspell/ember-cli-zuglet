@@ -43,6 +43,9 @@ export default class ObjectActivator {
   }
 
   setValue(value) {
+    if(value === this.value) {
+      return;
+    }
     value = value || null;
     this.deactivate();
     this.value = value;
