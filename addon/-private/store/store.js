@@ -9,6 +9,34 @@ const {
   assign
 } = Object;
 
+const normalizeOptions = options => {
+  assert(`store.options are required`, !!options);
+  let { firebase, firestore, auth, functions, emulators } = options;
+  assert(`store.options.firebase is required`, !!firebase);
+  firestore = assign({ persistenceEnabled: false }, firestore);
+  auth = assign({ user: null }, auth);
+  functions = assign({ region: null }, functions);
+  emulators = assign({ host: 'localhost', firestore: null, auth: null, functions: null }, emulators);
+  if(emulators.host) {
+    if(emulators.firestore) {
+      emulators.firestore = `${emulators.host}:${emulators.firestore}`;
+    }
+    if(emulators.auth) {
+      emulators.auth = `http://${emulators.host}:${emulators.auth}/`;
+    }
+    if(emulators.functions) {
+      emulators.functions = `http://${emulators.host}:${emulators.functions}`;
+    }
+  }
+  return {
+    firebase,
+    firestore,
+    auth,
+    functions,
+    emulators
+  };
+}
+
 export default class Store extends EmberObject {
 
   firebase = null
@@ -19,16 +47,22 @@ export default class Store extends EmberObject {
     this._initializeApp();
   }
 
+  @cached()
+  get normalizedOptions() {
+    return normalizeOptions(this.options);
+  }
+
   _initializeApp() {
-    let { options } = this;
-    assert(`store.options are required`, !!options);
-    let { firebase } = options;
-    assert(`store.options.firebase is require`, !!firebase);
-    this.firebase = initializeApp(firebase, this.identifier);
-    if(options.firestore && options.firestore.persistenceEnabled) {
+    let { normalizedOptions: options } = this;
+    this.firebase = initializeApp(options.firebase, this.identifier);
+    this.enablePersistencePromise = Promise.resolve();
+    if(options.emulators.firestore) {
+      this.firebase.firestore().settings({
+        host: options.emulators.firestore,
+        ssl: false
+      });
+    } else if(options.firestore.persistenceEnabled) {
       this.enablePersistencePromise = enablePersistence(this.firebase);
-    } else {
-      this.enablePersistencePromise = Promise.resolve();
     }
   }
 
@@ -141,10 +175,15 @@ export default class Store extends EmberObject {
 
   get serialized() {
     let { identifier, projectId } = this;
-    return  {
+    let serialized = {
       identifier,
       projectId
     };
+    let emulator = this.normalizedOptions.emulators.firestore;
+    if(emulator) {
+      serialized.emulator = emulator;
+    }
+    return serialized;
   }
 
   toJSON() {

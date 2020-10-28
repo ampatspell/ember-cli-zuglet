@@ -6,21 +6,33 @@ import { toJSON } from '../../util/to-json';
 
 export default class Functions extends EmberObject {
 
+  init() {
+    super.init(...arguments);
+  }
+
+  _maybeSetupEmulator(functions) {
+    let emulators = this.store.normalizedOptions.emulators;
+    if(emulators.functions) {
+      functions.useFunctionsEmulator(emulators.functions);
+    }
+    return functions;
+  }
+
   @cached()
   get _defaultRegion() {
     let { store: { firebase, options: { functions } } } = this;
     let region = functions && functions.region;
     if(!region) {
-      return firebase.functions();
+      return this._maybeSetupEmulator(firebase.functions());
     }
-    return firebase.functions(region);
+    return this._maybeSetupEmulator(firebase.functions(region));
   }
 
   _functions(region) {
     if(!region) {
       return this._defaultRegion;
     }
-    return this.store.firebase.functions(region);
+    return this._maybeSetupEmulator(this.store.firebase.functions(region));
   }
 
   region(region) {
@@ -37,9 +49,14 @@ export default class Functions extends EmberObject {
 
   get serialized() {
     let region = this._defaultRegion.region;
-    return {
+    let serialized = {
       region
     };
+    let emulator = this.store.normalizedOptions.emulators.functions;
+    if(emulator) {
+      serialized.emulator = emulator;
+    }
+    return serialized;
   }
 
   toJSON() {

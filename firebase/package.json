@@ -1,0 +1,12 @@
+{
+  "name": "firebase",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "emulators": "firebase emulators:start --import ./export --export-on-exit ./export"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

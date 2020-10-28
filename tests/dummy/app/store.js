@@ -20,7 +20,14 @@ export default class DummyStore extends Store {
     },
     functions: {
       region: null
+    },
+    emulators: {
+      // host: 'localhost',
+      // auth: 9099,
+      // firestore: 8080,
+      // functions: 5001
     }
   }
 
 }
+

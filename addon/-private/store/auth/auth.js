@@ -17,6 +17,7 @@ export default class Auth extends EmberObject {
 
   init() {
     super.init(...arguments);
+    this._maybeSetupEmulator();
     getState(this); // auto activate self
     this._deferred = defer();
   }
@@ -36,6 +37,13 @@ export default class Auth extends EmberObject {
 
   get _auth() {
     return this.store.firebase.auth();
+  }
+
+  _maybeSetupEmulator() {
+    let emulators = this.store.normalizedOptions.emulators;
+    if(emulators.auth) {
+      this._auth.useEmulator(emulators.auth);
+    }
   }
 
   async _withAuth(cb) {
@@ -114,9 +122,14 @@ export default class Auth extends EmberObject {
 
   get serialized() {
     let { user } = this;
-    return  {
+    let serialized = {
       user: objectToJSON(user)
     };
+    let emulator = this.store.normalizedOptions.emulators.auth;
+    if(emulator) {
+      serialized.emulator = emulator;
+    }
+    return serialized;
   }
 
   toJSON() {
