@@ -23,6 +23,12 @@ export default class Messages extends EmberObject {
     await load(this.query);
   }
 
+  async add(name) {
+    let doc = this.store.collection('messages').doc().new({ name });
+    await doc.save();
+    return doc;
+  }
+
   get serialized() {
     let { models } = this;
     return {
