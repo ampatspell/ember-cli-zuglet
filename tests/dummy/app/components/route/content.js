@@ -16,8 +16,8 @@ export default class RouteContentComponent extends Component {
   @activate().content(({ store, name }) => store.collection('messages').where('name', '==', name).query())
   query
 
-  // @models('query.content').named('message').mapping(doc => ({ doc }))
-  // models
+  @models('query.content').named('message').mapping(doc => ({ doc }))
+  models
 
   constructor() {
     super(...arguments);

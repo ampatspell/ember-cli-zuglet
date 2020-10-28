@@ -69,9 +69,11 @@ export default class ActivateProperty extends Property {
           return null;
         }
       } else {
-        let value = this._value; // TODO: this causes reset
-        this._assertActivatorType(activator, value);
-        activator.setValue(value);
+        let value = this._value;
+        if(activator.value !== value) {
+          this._assertActivatorType(activator, value);
+          activator.setValue(value);
+        }
         return activator.getValue();
       }
     } else {
