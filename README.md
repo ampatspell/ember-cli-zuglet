@@ -125,3 +125,4 @@ export default class IndexRoute extends Route {
 - [ ] Make it work in FastBoot
 - [ ] await load/onSnapshot to resolve in FastBoot. Maybe replace onSnapshot with regular loads
 - [ ] shoebox support (?)
+- [ ] add blueprint for default classes and initializer
