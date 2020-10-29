@@ -1,6 +1,6 @@
 import { A } from '@ember/array';
-import { diffArrays } from '../../../util/diff-arrays';
-import ArrayObserver from '../../../model/tracking/array';
+import { diffArrays } from '../../../../util/diff-arrays';
+import ArrayObserver from '../../../tracking/array';
 
 export default class ArrayActivator {
 
