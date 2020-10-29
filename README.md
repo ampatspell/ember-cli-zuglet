@@ -121,6 +121,7 @@ export default class IndexRoute extends Route {
 
 - [ ] add something like `observed().content(owner => ....)`
 - [ ] if query is manually loaded and then activated, doc changes might not make any sense
+- [ ] add document onDeleted callback to notify model which could for example navigate to another route
 - [ ] finalize decorator names
 - [ ] Make it work in FastBoot
 - [ ] await load/onSnapshot to resolve in FastBoot. Maybe replace onSnapshot with regular loads
