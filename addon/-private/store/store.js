@@ -4,6 +4,7 @@ import { assert } from '@ember/debug';
 import { initializeApp, enablePersistence } from './firebase';
 import { cached } from '../model/decorators/cached';
 import { toJSON } from '../util/to-json';
+import firebase from "firebase/app";
 
 const {
   assign
