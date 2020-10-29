@@ -1,3 +1,4 @@
+
 export default class ObjectActivator {
 
   type = 'object';
@@ -9,6 +10,7 @@ export default class ObjectActivator {
     this.property = property;
     this.isActivated = false;
     this.value = value || null;
+    this.activate();
   }
 
   activate() {
@@ -43,6 +45,9 @@ export default class ObjectActivator {
   }
 
   setValue(value) {
+    if(value === this.value) {
+      return;
+    }
     value = value || null;
     this.deactivate();
     this.value = value;

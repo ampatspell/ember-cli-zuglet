@@ -5,7 +5,8 @@ import Models from 'zuglet/-private/stores/models';
 import ModelState from 'zuglet/-private/model/state/model';
 import RootState from 'zuglet/-private/model/state/root';
 
-import ActivateProperty from 'zuglet/-private/model/properties/activate';
+import WritableActivateProperty from 'zuglet/-private/model/properties/activate/writable';
+import ContentActivateProperty from 'zuglet/-private/model/properties/activate/content';
 import ObjectProperty from 'zuglet/-private/model/properties/object';
 import ModelsProperty from 'zuglet/-private/model/properties/models';
 
@@ -42,7 +43,8 @@ export default {
     container.register('zuglet:state/model', ModelState);
     container.register('zuglet:state/root', RootState);
 
-    container.register('zuglet:properties/activate', ActivateProperty);
+    container.register('zuglet:properties/activate/writable', WritableActivateProperty);
+    container.register('zuglet:properties/activate/content', ContentActivateProperty);
     container.register('zuglet:properties/object', ObjectProperty);
     container.register('zuglet:properties/models', ModelsProperty);
 

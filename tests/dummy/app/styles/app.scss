@@ -94,6 +94,8 @@ body {
     display: flex;
     flex-direction: row;
     border-bottom: 1px solid fade-out(#000, 0.9);
+    font-size: $font-size-smaller;
+    font-weight: 600;
     align-items: center;
     > .name {
       margin: 0 10px;
