@@ -119,7 +119,6 @@ export default class IndexRoute extends Route {
 
 ## TODO
 
-- [ ] add something like `observed().content(owner => ....)`
 - [ ] finalize decorator names
 - [ ] Make it work in FastBoot
 - [ ] await load/onSnapshot to resolve in FastBoot. Maybe replace onSnapshot with regular loads
