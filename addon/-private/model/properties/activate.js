@@ -16,18 +16,22 @@ const define = opts => (_, key) => {
 export const activate = () => {
 
   let opts = {
-    type: 'writable'
+    type: 'writable',
+    deps: []
   };
 
   let extend = () => {
     let curr = define(opts);
-    curr.content = (...args) => {
-      let value = args.pop();
-      opts.deps = args;
+    curr.content = value => {
       opts.value = value;
       opts.type = 'content';
       return extend();
     }
+    curr.deps = (...deps) => {
+      opts.deps = deps;
+      return extend();
+    }
+    curr.dependencies = curr.deps;
     return curr;
   }
 
