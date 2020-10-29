@@ -120,6 +120,7 @@ export default class IndexRoute extends Route {
 ## TODO
 
 - [ ] add something like `observed().content(owner => ....)`
+- [ ] if query is manually loaded and then activated, doc changes might not make any sense
 - [ ] finalize decorator names
 - [ ] Make it work in FastBoot
 - [ ] await load/onSnapshot to resolve in FastBoot. Maybe replace onSnapshot with regular loads
