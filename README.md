@@ -126,3 +126,4 @@ export default class IndexRoute extends Route {
 - [ ] await load/onSnapshot to resolve in FastBoot. Maybe replace onSnapshot with regular loads
 - [ ] shoebox support (?)
 - [ ] add blueprint for default classes and initializer
+- [ ] @route decorator. make sure resetController is called if model() invokes transitionTo
