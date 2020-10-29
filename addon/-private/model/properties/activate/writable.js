@@ -17,10 +17,10 @@ export default class WirtableActivateProperty extends BaseActivateProperty {
     if(!activator) {
       activator = this.createActivator(value);
       this.activator = activator;
-      dirtyKey(this, 'activator');
     } else {
       this.assertActivatorType(activator, value);
     }
+    dirtyKey(this, 'activator');
     return activator.setValue(value);
   }
 
