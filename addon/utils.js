@@ -5,6 +5,7 @@ import { toPrimitive } from './-private/util/to-primitive';
 import { toJSON } from './-private/util/to-json';
 import { resolve as load } from './-private/util/resolve';
 import { alive } from './-private/util/alive';
+import { delay } from './-private/util/delay';
 
 export {
   setGlobal,
@@ -13,5 +14,6 @@ export {
   toPrimitive,
   toJSON,
   load,
-  alive
+  alive,
+  delay
 }
