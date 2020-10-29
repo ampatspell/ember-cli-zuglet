@@ -3,17 +3,51 @@ import { assert } from '@ember/debug';
 import { isArray } from '@ember/array';
 import ObjectActivator from './activate/object';
 import ArrayActivator from './activate/array';
-import { dirtyKey, consumeKey } from '../../model/tracking/tag';
+import { getPath } from '../../util/get-path';
 
 export default class ActivateProperty extends Property {
 
   init() {
     super.init(...arguments);
+    this.__deps = {};
   }
+
+  //
 
   get providesValue() {
     return this.opts.providesValue;
   }
+
+  get _deps() {
+    let owner = this.owner;
+    let keys = this.opts.deps;
+    let deps = {};
+    for(let key of keys) {
+      let value = getPath(owner, key);
+      deps[key] = value;
+    }
+    return deps;
+  }
+
+  _snapshotDeps() {
+    this.__deps = this._deps;
+    console.log('snapshot', this.__deps);
+  }
+
+  get _hasDepsChanged() {
+    let current = this.__deps;
+    let next = this._deps;
+    for(let key in next) {
+      if(current[key] !== next[key]) {
+        console.log('deps changed', current, next);
+        return true;
+      }
+    }
+    console.log('deps hasnt changed', current);
+    return false;
+  }
+
+  //
 
   get _value() {
     let value = this.opts.value;
@@ -56,21 +90,18 @@ export default class ActivateProperty extends Property {
   }
 
   getPropertyValue() {
-    consumeKey(this, 'activator');
     let { activator } = this;
     if(this.providesValue) {
       if(!activator) {
+        this._snapshotDeps();
         let value = this._value;
-        if(value !== undefined && value !== null) {
-          activator = this.createActivator(value);
-          this.activator = activator;
-          return activator.getValue();
-        } else {
-          return null;
-        }
+        activator = this.createActivator(value);
+        this.activator = activator;
+        return activator.getValue();
       } else {
-        let value = this._value;
-        if(activator.value !== value) {
+        if(this._hasDepsChanged) {
+          this._snapshotDeps();
+          let value = this._value;
           this._assertActivatorType(activator, value);
           activator.setValue(value);
         }
@@ -86,7 +117,6 @@ export default class ActivateProperty extends Property {
 
   // Only if providesValue === false
   setPropertyValue(value) {
-    dirtyKey(this, 'activator');
     let { activator } = this;
     if(!activator) {
       activator = this.createActivator(value);
@@ -100,7 +130,6 @@ export default class ActivateProperty extends Property {
   //
 
   onActivated() {
-    consumeKey(this, 'activator');
     let { activator } = this;
     if(activator) {
       activator.activate();
@@ -108,7 +137,6 @@ export default class ActivateProperty extends Property {
   }
 
   onDeactivated() {
-    consumeKey(this, 'activator');
     let { activator } = this;
     if(activator) {
       activator.deactivate();
@@ -146,7 +174,9 @@ export const activate = () => {
 
   let extend = () => {
     let curr = define(opts);
-    curr.content = value => {
+    curr.content = (...args) => {
+      let value = args.pop();
+      opts.deps = args;
       opts.value = value;
       opts.providesValue = true;
       return extend();
