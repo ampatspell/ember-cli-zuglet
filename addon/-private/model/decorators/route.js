@@ -7,12 +7,13 @@ const extend = Class => class ActivatingRoute extends Class {
   @activate()
   active
 
-  beforeModel() {
-    getState(this).activate(this);
-    return super.beforeModel(...arguments);
-  }
+  isActivated = false;
 
   async model() {
+    if(!this.isActivated) {
+      getState(this).activate(this);
+      this.isActivated = true;
+    }
     let model = await super.model(...arguments);
     this.active = model;
     if(isFunction(this.load)) {
@@ -22,7 +23,10 @@ const extend = Class => class ActivatingRoute extends Class {
   }
 
   resetController() {
-    getState(this).deactivate(this);
+    if(this.isActivated) {
+      this.isActivated = false;
+      getState(this).deactivate(this);
+    }
     this.active = null;
     return super.resetController(...arguments);
   }
