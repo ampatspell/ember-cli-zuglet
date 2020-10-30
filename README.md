@@ -119,6 +119,7 @@ export default class IndexRoute extends Route {
 
 ## TODO
 
+- [ ] Ember: Enabled Cache API, a low-level primitive for memoizing the result of a function based on autotracking
 - [ ] if query is manually loaded and then activated, doc changes might not make any sense
 - [ ] finalize decorator names
 - [ ] Make it work in FastBoot
