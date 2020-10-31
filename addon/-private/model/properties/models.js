@@ -3,6 +3,7 @@ import { A } from '@ember/array';
 import { getState } from '../state';
 import { getStores } from '../../stores/get-stores';
 import { createCache, getValue } from '@glimmer/tracking/primitives/cache';
+import { assert } from '@ember/debug';
 
 class Marker {
 
@@ -43,6 +44,7 @@ export default class ModelsProperty extends Property {
   }
 
   get _sourceCache() {
+    assert(`@models().source(fn) is required and must be function`, typeof this.opts.source === 'function');
     let cache = this.__sourceCache;
     if(!cache) {
       cache = createCache(() => {
@@ -63,6 +65,8 @@ export default class ModelsProperty extends Property {
 
   createModel(source) {
     let { owner, opts } = this;
+    assert(`@models().named(fn) is required and must be string or function`, typeof opts.modelName === 'function');
+    assert(`@models().mapping(fn) is required and must be function`, typeof opts.mapping === 'function');
     let marker = new Marker(source, () => opts.modelName.call(owner, source, owner));
     let props = opts.mapping.call(owner, source, owner);
     let model = this.stores.models.create(marker.modelName, props);
@@ -159,17 +163,21 @@ const normalizeResolveModelName = modelName => {
   return () => modelName;
 }
 
-// @models(({ query }) => query.content).named((doc, owner) => 'animal').mapping(doc => ({ doc }))
-export const models = source => {
+// @models().source(({ query }) => query.content).named((doc, owner) => 'animal').mapping(doc => ({ doc }))
+export const models = () => {
 
   let opts = {
-    source,
+    source: null,
     modelName: null,
     mapping: null
   };
 
   let extend = () => {
     let curr = define(opts);
+    curr.source = source => {
+      opts.source = source;
+      return extend();
+    }
     curr.named = name => {
       opts.modelName = normalizeResolveModelName(name);
       return extend();
