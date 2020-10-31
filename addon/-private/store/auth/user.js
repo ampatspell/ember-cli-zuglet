@@ -20,6 +20,18 @@ export default class User extends EmberObject {
     return this.user.email;
   }
 
+  get emailVerified() {
+    return this.user.emailVerified;
+  }
+
+  get photoURL() {
+    return this.user.photoURL;
+  }
+
+  get displayName() {
+    return this.user.displayName;
+  }
+
   get isAnonymous() {
     return this.user.isAnonymous;
   }
@@ -59,18 +71,19 @@ export default class User extends EmberObject {
     let credential = method.credential(...args);
     return await this.store.auth._withAuthReturningUser(async () => {
       let { user } = await this.user.linkWithCredential(credential);
-      return user;
+      return { user };
     });
   }
 
   //
 
   get serialized() {
-    let { isAnonymous, uid, email } = this;
+    let { isAnonymous, uid, email, emailVerified } = this;
     return {
       isAnonymous,
       uid,
-      email
+      email,
+      emailVerified
     };
   }
 

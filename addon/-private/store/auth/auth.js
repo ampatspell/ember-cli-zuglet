@@ -52,8 +52,13 @@ export default class Auth extends EmberObject {
   }
 
   async _withAuthReturningUser(cb) {
-    let user = await this._withAuth(cb);
-    return await this._restoreUser(user);
+    let hash = await this._withAuth(cb);
+    let user = null;
+    if(hash) {
+      user = hash.user;
+      delete hash.user;
+    }
+    return await this._restoreUser(user, hash);
   }
 
   _createUser(user) {
@@ -64,16 +69,15 @@ export default class Auth extends EmberObject {
     return getOwner(this).factoryFor(`zuglet:store/auth/user`).create({ store, user });
   }
 
-  async _restoreUser(internal) {
+  async _restoreUser(internal, details) {
     let { user } = this;
     if(internal) {
       if(user && internal.uid === user.user.uid) {
-        await user.restore(internal);
+        await user.restore(internal, details);
       } else {
-        let { store } = this;
         user = this._createUser(internal);
         this.user = user;
-        await user.restore();
+        await user.restore(null, details);
       }
     } else {
       user = null;
@@ -90,7 +94,7 @@ export default class Auth extends EmberObject {
     await this._withAuthReturningUser(async () => {
       await internal.delete();
       return null;
-    })
+    });
   }
 
   //

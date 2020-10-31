@@ -24,6 +24,8 @@ import Auth from 'zuglet/-private/store/auth/auth';
 import AuthMethods from 'zuglet/-private/store/auth/methods';
 import AnonymousAuthMethod from 'zuglet/-private/store/auth/methods/anonymous';
 import EmailAuthMethod from 'zuglet/-private/store/auth/methods/email';
+import PopupAuthMethod from 'zuglet/-private/store/auth/methods/popup';
+import PopupGoogleAuthMethod from 'zuglet/-private/store/auth/methods/popup/google';
 import User from 'zuglet/-private/store/auth/user';
 
 import Storage from 'zuglet/-private/store/storage/storage';
@@ -62,6 +64,8 @@ export default {
     container.register('zuglet:store/auth/methods', AuthMethods);
     container.register('zuglet:store/auth/methods/anonymous', AnonymousAuthMethod);
     container.register('zuglet:store/auth/methods/email', EmailAuthMethod);
+    container.register('zuglet:store/auth/methods/popup', PopupAuthMethod);
+    container.register('zuglet:store/auth/methods/popup/google', PopupGoogleAuthMethod);
     container.register('zuglet:store/auth/user', User);
 
     container.register('zuglet:store/storage', Storage);

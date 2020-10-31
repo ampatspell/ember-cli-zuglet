@@ -19,4 +19,9 @@ export default class AuthMethods extends EmberObject {
     return this._method('email');
   }
 
+  @cached()
+  get popup() {
+    return this._method('popup');
+  }
+
 }

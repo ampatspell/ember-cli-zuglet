@@ -6,14 +6,14 @@ export default class EmailAuthMethod extends AuthMethod {
   signIn(email, password) {
     return this.auth._withAuthReturningUser(async auth => {
       let { user } = await auth.signInWithEmailAndPassword(email, password);
-      return user;
+      return { user };
     });
   }
 
   signUp(email, password) {
     return this.auth._withAuthReturningUser(async auth => {
       let { user } = await auth.createUserWithEmailAndPassword(email, password);
-      return user;
+      return { user };
     });
   }
 
