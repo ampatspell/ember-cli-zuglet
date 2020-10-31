@@ -2,14 +2,20 @@ import EmberObject from '@ember/object';
 import { inject as service } from '@ember/service';
 import { objectToJSON, toJSON, load } from 'zuglet/utils';
 import { activate, models } from 'zuglet/decorators';
+import { cached } from 'tracked-toolbox';
 
 export default class Messages extends EmberObject {
 
   @service
   store
 
+  @cached
+  get coll() {
+    return this.store.collection('messages');
+  }
+
   @activate()
-    .content(({ store }) => store.collection('messages').query())
+    .content(({ coll }) => coll.query())
   query
 
   @models()
