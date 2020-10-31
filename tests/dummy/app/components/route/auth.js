@@ -44,6 +44,16 @@ export default class RouteAuthComponent extends Component {
     }
   }
 
+  @action
+  async googleSignIn() {
+    this.error = null;
+    try {
+      await store.auth.methods.popup.google.signIn();
+    } catch(err) {
+      this.error = err;
+    }
+  }
+
   toString() {
     return toString(this);
   }

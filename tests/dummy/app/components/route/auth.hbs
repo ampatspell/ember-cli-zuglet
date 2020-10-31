@@ -1,9 +1,21 @@
 <div class="route-auth">
 
+  {{#if this.error}}
+    <div class="row">
+      <div class="label">Error</div>
+      <div class="row">{{this.error}}</div>
+    </div>
+  {{/if}}
+
   {{#if this.store.auth.user}}
     <div class="row">
       <Json @value={{this.store.auth.user}}/>
     </div>
+    {{#if this.store.auth.user.photoURL}}
+      <div class="row">
+        <img src={{this.store.auth.user.photoURL}} alt="profile pic"/>
+      </div>
+    {{/if}}
   {{else}}
     <div class="row">
       Signed out
@@ -22,11 +34,10 @@
   </div>
 
   <div class="row">
-    {{#if this.error}}
-      <div class="row">
-        {{this.error}}
-      </div>
-    {{/if}}
+    <input type="button" value="Sign in with Google" {{on "click" this.googleSignIn}}/>
+  </div>
+
+  <div class="row">
     <div class="row">
       <Input @type="text" @value={{this.email}} @placeholder="email"/>
     </div>
