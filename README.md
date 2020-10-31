@@ -111,7 +111,7 @@ export default class IndexRoute extends Route {
   }
 
   async load(doc) {
-    await doc.save();
+    return await doc.save();
   }
 
 }
