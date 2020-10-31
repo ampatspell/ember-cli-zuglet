@@ -16,8 +16,7 @@ const define = opts => (_, key) => {
 export const activate = () => {
 
   let opts = {
-    type: 'writable',
-    deps: []
+    type: 'writable'
   };
 
   let extend = () => {
@@ -27,11 +26,6 @@ export const activate = () => {
       opts.type = 'content';
       return extend();
     }
-    curr.deps = (...deps) => {
-      opts.deps = deps;
-      return extend();
-    }
-    curr.dependencies = curr.deps;
     return curr;
   }
 

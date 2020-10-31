@@ -1,60 +1,46 @@
 import BaseActivateProperty from './activate';
-import { getPath } from '../../../util/get-path';
 import { assert } from '@ember/debug';
+import { createCache, getValue } from '@glimmer/tracking/primitives/cache';
 
 export default class ContentActivateProperty extends BaseActivateProperty {
 
   init() {
     super.init(...arguments);
-    this.__deps = {};
   }
 
-  get _deps() {
-    let owner = this.owner;
-    let keys = this.opts.deps;
-    let deps = {};
-    for(let key of keys) {
-      let value = getPath(owner, key);
-      deps[key] = value;
+  get _cache() {
+    let cache = this.__cache;
+    if(!cache) {
+      cache = createCache(() => {
+        let { owner, opts: { value } } = this;
+        if(typeof value === 'function') {
+          return value.call(owner, owner);
+        }
+        return value;
+      });
+      this.__cache = cache;
     }
-    return deps;
-  }
-
-  _snapshotDeps() {
-    this.__deps = this._deps;
-  }
-
-  get _depsChanged() {
-    let current = this.__deps;
-    let next = this._deps;
-    for(let key in next) {
-      if(current[key] !== next[key]) {
-        return true;
-      }
-    }
-    return false;
+    return cache;
   }
 
   get _value() {
-    let value = this.opts.value;
-    if(typeof value === 'function') {
-      value = value.call(this.owner, this.owner);
-    }
-    return value;
+    return getValue(this._cache);
   }
 
   getPropertyValue() {
     let { activator } = this;
     if(!activator) {
-      this._snapshotDeps();
       let value = this._value;
+      this.value = value;
       activator = this.createActivator(value);
       this.activator = activator;
-    } else if(this._depsChanged) {
-      this._snapshotDeps();
+    } else {
       let value = this._value;
-      this.assertActivatorType(activator, value);
-      activator.setValue(value);
+      if(value !== this.value) {
+        this.value = value;
+        this.assertActivatorType(activator, value);
+        activator.setValue(value);
+      }
     }
     return activator.getValue();
   }

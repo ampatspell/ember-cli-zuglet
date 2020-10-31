@@ -21,7 +21,7 @@ export default class RouteContentComponent extends Component {
   @tracked
   name = 'first'
 
-  @activate().content(({ store, name }) => queryForName(store, name)).deps('name')
+  @activate().content(({ store, name }) => queryForName(store, name))
   query
 
   @models('query.content').named('message').mapping(doc => ({ doc }))
