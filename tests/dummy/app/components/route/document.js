@@ -12,6 +12,7 @@ export default class RouteDocumentComponent extends Component {
   store
 
   @activate()
+    .content(({ store }) => store.doc('messages/first').existing())
   doc
 
   @alias('doc.data.name')
@@ -19,7 +20,6 @@ export default class RouteDocumentComponent extends Component {
 
   constructor() {
     super(...arguments);
-    this.doc = this.store.doc('messages/first').existing();
     setGlobal({ component: this });
   }
 

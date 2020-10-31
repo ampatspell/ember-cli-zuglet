@@ -4,14 +4,6 @@ import { setGlobal, toString } from 'zuglet/utils';
 import { root, activate, models } from 'zuglet/decorators';
 import { tracked } from '@glimmer/tracking';
 
-const queryForName = (store, name) => {
-  let ref = store.collection('messages');
-  if(name) {
-    ref = ref.where('name', '==', name);
-  }
-  return ref.query();
-};
-
 @root()
 export default class RouteContentComponent extends Component {
 
@@ -21,10 +13,20 @@ export default class RouteContentComponent extends Component {
   @tracked
   name = 'first'
 
-  @activate().content(({ store, name }) => queryForName(store, name))
+  @activate()
+    .content(({ store, name }) => {
+      let ref = store.collection('messages');
+      if(name) {
+        ref = ref.where('name', '==', name);
+      }
+      return ref.query();
+    })
   query
 
-  @models().source(({ query: { content } }) => content).named('message').mapping(doc => ({ doc }))
+  @models()
+    .source(({ query: { content } }) => content)
+    .named('message')
+    .mapping(doc => ({ doc }))
   models
 
   constructor() {

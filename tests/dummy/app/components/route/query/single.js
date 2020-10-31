@@ -10,11 +10,13 @@ export default class RouteQuerySingleComponent extends Component {
   store
 
   @activate()
+    .content(({ store }) => {
+      return store.collection('messages').where('name', '==', 'first').limit(1).query({ type: 'single' });
+    })
   query
 
   constructor() {
     super(...arguments);
-    this.query = this.store.collection('messages').where('name', '==', 'first').limit(1).query({ type: 'single' });
     setGlobal({ component: this });
   }
 

@@ -9,12 +9,11 @@ export default class RouteQueryArrayComponent extends Component {
   @service
   store
 
-  @activate()
+  @activate().content(({ store }) => store.collection('messages').query())
   query
 
   constructor() {
     super(...arguments);
-    this.query = this.store.collection('messages').query();
     setGlobal({ component: this });
   }
 

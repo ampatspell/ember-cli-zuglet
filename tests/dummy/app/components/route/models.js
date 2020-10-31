@@ -26,7 +26,10 @@ export default class RouteModelsComponent extends Component {
   })
   query
 
-  @models(({ query }) => query.content).named((doc, { modelName }) => doc.data.name === 'first' ? 'message' : modelName).mapping(doc => ({ doc }))
+  @models()
+    .source(({ query }) => query.content)
+    .named((doc, { modelName }) => doc.data.name === 'first' ? 'message' : modelName)
+    .mapping(doc => ({ doc }))
   models
 
   constructor() {
