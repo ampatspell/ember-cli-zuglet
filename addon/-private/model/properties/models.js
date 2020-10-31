@@ -4,6 +4,24 @@ import { getState } from '../state';
 import { getStores } from '../../stores/get-stores';
 import { createCache, getValue } from '@glimmer/tracking/primitives/cache';
 
+class Marker {
+
+  constructor(source, modelName) {
+    this.source = source;
+    this._modelNameCache = createCache(modelName);
+    this.modelName = this._modelName;
+  }
+
+  get _modelName() {
+    return getValue(this._modelNameCache);
+  }
+
+  get hasModelNameChanged() {
+    return this.modelName !== this._modelName;
+  }
+
+}
+
 const marker = Symbol('MODELS');
 
 const setMarker = (model, value) => {
@@ -43,57 +61,42 @@ export default class ModelsProperty extends Property {
 
   //
 
-  modelNameForSource(source) {
-    let { owner, opts: { resolveModelName } } = this;
-    return resolveModelName.call(owner, source, owner);
-  }
-
-  createModel(source, modelName) {
-    let { owner, opts: { mapping } } = this;
-    let props = mapping.call(owner, source, owner);
-    let model = this.stores.models.create(modelName, props);
-    setMarker(model, {
-      source,
-      modelName
-    });
+  createModel(source) {
+    let { owner, opts } = this;
+    let marker = new Marker(source, () => opts.modelName.call(owner, source, owner));
+    let props = opts.mapping.call(owner, source, owner);
+    let model = this.stores.models.create(marker.modelName, props);
+    setMarker(model, marker);
     return model;
   }
 
   //
 
   sourceArrayDidChange(source) {
-    source = A(source);
-
     let current = this.models;
     let removed = A([ ...current ]);
     let added = A();
     let models = A();
 
-    let find = doc => current.find(model => {
-      let marker = getMarker(model);
-      return marker.source === doc;
-    });
-
-    let create = (doc, modelName) => this.createModel(doc, modelName);
-
-    source.forEach(doc => {
-      let model = find(doc);
-      if(model) {
-        let marker = getMarker(model);
-        let modelName = this.modelNameForSource(doc);
-        if(marker.modelName !== modelName) {
-          model = create(doc, modelName);
-          added.pushObject(model);
+    if(source) {
+      let find = doc => current.find(model => getMarker(model).source === doc);
+      source.forEach(doc => {
+        let model = find(doc);
+        if(model) {
+          let marker = getMarker(model);
+          if(marker.hasModelNameChanged) {
+            model = this.createModel(doc);
+            added.pushObject(model);
+          } else {
+            removed.removeObject(model);
+          }
         } else {
-          removed.removeObject(model);
+          model = this.createModel(doc);
+          added.pushObject(model);
         }
-      } else {
-        let modelName = this.modelNameForSource(doc);
-        model = create(doc, modelName);
-        added.pushObject(model);
-      }
-      models.pushObject(model);
-    });
+        models.pushObject(model);
+      });
+    }
 
     if(this.isActivated) {
       this.deactivateValues(removed);
@@ -156,19 +159,19 @@ const normalizeResolveModelName = modelName => {
   return () => modelName;
 }
 
-// @models(({ query }) => query.content).named('animal').mapping(doc => ({ doc }))
+// @models(({ query }) => query.content).named((doc, owner) => 'animal').mapping(doc => ({ doc }))
 export const models = source => {
 
   let opts = {
     source,
-    resolveModelName: null,
+    modelName: null,
     mapping: null
   };
 
   let extend = () => {
     let curr = define(opts);
     curr.named = name => {
-      opts.resolveModelName = normalizeResolveModelName(name);
+      opts.modelName = normalizeResolveModelName(name);
       return extend();
     }
     curr.mapping = fn => {

@@ -14,6 +14,9 @@ export default class RouteModelsComponent extends Component {
   @tracked
   name
 
+  @tracked
+  modelName = 'message'
+
   @activate().content(({ store, name }) => {
     let ref = store.collection('messages');
     if(name) {
@@ -23,7 +26,7 @@ export default class RouteModelsComponent extends Component {
   })
   query
 
-  @models(({ query }) => query.content).named('message').mapping(doc => ({ doc }))
+  @models(({ query }) => query.content).named((doc, { modelName }) => doc.data.name === 'first' ? 'message' : modelName).mapping(doc => ({ doc }))
   models
 
   constructor() {
@@ -36,6 +39,11 @@ export default class RouteModelsComponent extends Component {
     await this.store.collection('messages').doc().new({
       name: 'new message'
     }).save();
+  }
+
+  @action
+  toggleModelName() {
+    this.modelName = this.modelName === 'message' ? 'fancy-message' : 'message';
   }
 
   toString() {
