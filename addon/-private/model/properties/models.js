@@ -2,7 +2,7 @@ import Property, { property } from './property';
 import { A } from '@ember/array';
 import { getState } from '../state';
 import { getStores } from '../../stores/get-stores';
-import { getPath } from '../../util/get-path';
+import { createCache, getValue } from '@glimmer/tracking/primitives/cache';
 
 const marker = Symbol('MODELS');
 
@@ -24,13 +24,21 @@ export default class ModelsProperty extends Property {
     this.stores = getStores(this);
   }
 
-  get _source() {
-    let { owner, opts: { sourceKey } } = this;
-    let source = getPath(owner, sourceKey);
-    if(!source) {
-      return;
+  get _sourceCache() {
+    let cache = this.__sourceCache;
+    if(!cache) {
+      cache = createCache(() => {
+        let { owner, opts: { source } } = this;
+        let value = source.call(owner, owner);
+        return value ? A(value) : null;
+      });
+      this.__sourceCache = cache;
     }
-    return A(source);
+    return cache;
+  }
+
+  get _source() {
+    return getValue(this._sourceCache);
   }
 
   //
@@ -148,11 +156,11 @@ const normalizeResolveModelName = modelName => {
   return () => modelName;
 }
 
-// @models('query.content').named('animal').mapping(doc => ({ doc }))
-export const models = sourceKey => {
+// @models(({ query }) => query.content).named('animal').mapping(doc => ({ doc }))
+export const models = source => {
 
   let opts = {
-    sourceKey,
+    source,
     resolveModelName: null,
     mapping: null
   };

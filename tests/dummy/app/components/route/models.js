@@ -23,7 +23,7 @@ export default class RouteModelsComponent extends Component {
   })
   query
 
-  @models('query.content').named('message').mapping(doc => ({ doc }))
+  @models(({ query }) => query.content).named('message').mapping(doc => ({ doc }))
   models
 
   constructor() {

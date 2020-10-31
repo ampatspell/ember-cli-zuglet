@@ -119,7 +119,6 @@ export default class IndexRoute extends Route {
 
 ## TODO
 
-- [ ] `@models(({ query }) => query.content)`
 - [ ] if query is manually loaded and then activated, doc changes might not make any sense
 - [ ] finalize decorator names
 - [ ] Make it work in FastBoot
