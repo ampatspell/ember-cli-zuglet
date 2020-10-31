@@ -18,7 +18,7 @@ export default class Messages extends EmberObject {
   @activate()
   query
 
-  @models('query.content').named(named).mapping(doc => ({ doc }))
+  @models(({ query }) => query.content).named(named).mapping(doc => ({ doc }))
   models
 
   init() {
