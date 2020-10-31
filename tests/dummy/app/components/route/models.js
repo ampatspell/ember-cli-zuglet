@@ -3,6 +3,7 @@ import { inject as service } from '@ember/service';
 import { setGlobal, toString } from 'zuglet/utils';
 import { root, activate, models } from 'zuglet/decorators';
 import { action } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
 
 @root()
 export default class RouteModelsComponent extends Component {
@@ -10,7 +11,16 @@ export default class RouteModelsComponent extends Component {
   @service
   store
 
-  @activate()
+  @tracked
+  name
+
+  @activate().content(({ store, name }) => {
+    let ref = store.collection('messages');
+    if(name) {
+      ref = ref.where('name', '==', name);
+    }
+    return ref.query();
+  })
   query
 
   @models('query.content').named('message').mapping(doc => ({ doc }))
@@ -18,7 +28,6 @@ export default class RouteModelsComponent extends Component {
 
   constructor() {
     super(...arguments);
-    this.query = this.store.collection('messages').query();
     setGlobal({ component: this });
   }
 
