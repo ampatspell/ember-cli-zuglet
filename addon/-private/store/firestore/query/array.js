@@ -9,6 +9,21 @@ export default class QueryArray extends Query {
     this.content = A([]);
   }
 
+  _onSnapshotRefresh(current, snapshots) {
+    let content = A();
+    snapshots.docs.forEach(snapshot => {
+      let path = snapshot.ref.path;
+      let doc = current.find(doc => doc.path === path);
+      if(doc) {
+        doc._onSnapshot(snapshot);
+      } else {
+        doc = this.store._createDocumentForSnapshot(snapshot);
+      }
+      content.pushObject(doc);
+    });
+    this.content = content;
+  }
+
   _onSnapshotChange(content, change) {
     let { type, oldIndex, newIndex, doc: snapshot } = change;
     if(type === 'added') {
@@ -27,11 +42,19 @@ export default class QueryArray extends Query {
     }
   }
 
-  _onSnapshot(snapshot) {
-    let { content } = this;
+  _onSnapshotChanges(content, snapshot) {
     snapshot.docChanges({ includeMetadataChanges: true }).map(change => {
       this._onSnapshotChange(content, change);
     });
+  }
+
+  _onSnapshot(snapshot, refresh) {
+    let { content } = this;
+    if(refresh) {
+      this._onSnapshotRefresh(content, snapshot);
+    } else {
+      this._onSnapshotChanges(content, snapshot);
+    }
   }
 
   _onLoad(_snapshot) {

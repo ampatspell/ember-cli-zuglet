@@ -61,8 +61,10 @@ export default class Query extends EmberObject {
     let cancel = this._cancel;
     if(!cancel) {
       this.setProperties({ isLoading: true, isError: false, error: null });
+      let refresh = true;
       this._cancel = registerOnSnapshot(this, this.ref._ref.onSnapshot({ includeMetadataChanges: true }, snapshot => {
-        this._onSnapshot(snapshot);
+        this._onSnapshot(snapshot, refresh);
+        refresh = false;
         this.setProperties({ isLoading: false, isLoaded: true })
         this._deferred.resolve(this);
       }, error => {
