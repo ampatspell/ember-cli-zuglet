@@ -7,6 +7,7 @@ import { resolve as load } from './-private/util/resolve';
 import { alive } from './-private/util/alive';
 import { delay } from './-private/util/delay';
 import { getStores } from './-private/stores/get-stores';
+import { isZugletError } from './-private/util/error';
 
 export {
   getStores,
@@ -15,6 +16,7 @@ export {
   toString,
   toPrimitive,
   toJSON,
+  isZugletError,
   load,
   alive,
   delay

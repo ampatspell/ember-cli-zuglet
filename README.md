@@ -57,3 +57,4 @@ module.exports = {
 - [ ] await load/onSnapshot to resolve in FastBoot. Maybe replace onSnapshot with regular loads
 - [ ] shoebox support (?)
 - [ ] @route decorator. make sure resetController is called if model() invokes transitionTo
+- [ ] wrap handled firestore errors in ZugletError
