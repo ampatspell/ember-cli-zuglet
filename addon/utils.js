@@ -6,8 +6,10 @@ import { toJSON } from './-private/util/to-json';
 import { resolve as load } from './-private/util/resolve';
 import { alive } from './-private/util/alive';
 import { delay } from './-private/util/delay';
+import { getStores } from './-private/stores/get-stores';
 
 export {
+  getStores,
   setGlobal,
   objectToJSON,
   toString,

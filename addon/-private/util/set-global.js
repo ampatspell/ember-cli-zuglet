@@ -1,7 +1,9 @@
-export const setGlobal = hash => {
+export const setGlobal = (hash, silent=false) => {
   for(let key in hash) {
     let value = hash[key];
-    console.log(`window.${key} = ${value}`);
+    if(!silent) {
+      console.log(`window.${key} = ${value}`);
+    }
     window[key] = value;
   }
 }

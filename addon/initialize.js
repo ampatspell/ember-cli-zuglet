@@ -1,6 +1,7 @@
 import { assert } from '@ember/debug';
 import { typeOf } from '@ember/utils';
 import { isFastBoot } from './-private/util/fastboot';
+import { setGlobal } from  './-private/util/set-global';
 
 const {
   assign
@@ -80,11 +81,8 @@ export const initialize = (...args) => {
 
   if(opts.development.enabled && environment(app) === 'development') {
     if(typeof window !== 'undefined' && !isFastBoot(store)) {
-      let key = opts.store.identifier;
-      window[key] = store;
-      if(opts.development.logging) {
-        console.log(`window.${key} = ${store}`);
-      }
+      let key = opts.development.export;
+      setGlobal({ [key]: store }, !opts.development.logging);
     }
   }
 

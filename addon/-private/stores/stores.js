@@ -2,6 +2,11 @@ import EmberObject from '@ember/object';
 import { getOwner } from '../util/get-owner';
 import { cached } from '../model/decorators/cached';
 import { tracked } from "@glimmer/tracking"
+import { assert } from '@ember/debug';
+
+const {
+  assign
+} = Object;
 
 export default class Stores extends EmberObject {
 
@@ -31,10 +36,19 @@ export default class Stores extends EmberObject {
   }
 
   createStore(identifier, factory) {
+    let store = this.store(identifier, { optional: true });
+    assert(`store '${identifier}' is already registered`, !store);
     let stores = this;
     factory = this._registerStoreFactory(identifier, factory);
-    let store = factory.create({ stores, identifier });
+    store = factory.create({ stores, identifier });
     this.stores = [ ...this.stores, store ];
+    return store;
+  }
+
+  store(identifier, opts) {
+    let { optional } = assign({ optional: false }, opts);
+    let store = this.stores.find(store => store.identifier === identifier);
+    assert(`store '${identifier}' is not registered`, !!store || optional);
     return store;
   }
 
