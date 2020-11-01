@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "es6",
-    "experimentalDecorators":true
+    "experimentalDecorators": true
   },
   "exclude": [ "node_modules", ".git" ]
 }
