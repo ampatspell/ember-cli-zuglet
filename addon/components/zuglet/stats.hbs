@@ -1,0 +1,40 @@
+<div class="zuglet-stats">
+  {{#if this.showStores}}
+    <div class="section">
+      {{#if this.hasSingleStore}}
+        <div class="models">
+          <div class="model" role="button" {{on "click" (fn this.setGlobal this.firstStore)}}>{{this.firstStore}}</div>
+        </div>
+      {{else}}
+        <div class="label">Stores</div>
+        <div class="models">
+          {{#each this.stores as |model|}}
+            <div class="model" role="button" {{on "click" (fn this.setGlobal model)}}>{{model}}</div>
+          {{else}}
+            <div class="placeholder">No Stores</div>
+          {{/each}}
+        </div>
+      {{/if}}
+    </div>
+  {{/if}}
+  <div class="section">
+    <div class="label">Activated</div>
+    <div class="models">
+      {{#each this.stats.activated as |model|}}
+        <div class="model" role="button" {{on "click" (fn this.setGlobal model)}}>{{model}}</div>
+      {{else}}
+        <div class="placeholder">No activated models</div>
+      {{/each}}
+    </div>
+  </div>
+  <div class="section">
+    <div class="label">onSnapshot</div>
+    <div class="models">
+      {{#each this.stats.snapshots as |model|}}
+        <div class="model" role="button" {{on "click" (fn this.setGlobal model)}}>{{model}}</div>
+      {{else}}
+        <div class="placeholder">No onSnapshot listeners</div>
+      {{/each}}
+    </div>
+  </div>
+</div>

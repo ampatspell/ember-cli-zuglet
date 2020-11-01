@@ -117,6 +117,11 @@ export default class IndexRoute extends Route {
 }
 ```
 
+``` hbs
+// app/templates/application.hbs
+<Zuglet::Stats @stores={{false}}/>
+```
+
 ## TODO
 
 - [ ] finalize decorator names

@@ -1,8 +1,12 @@
 import EmberObject from '@ember/object';
 import { getOwner } from '../util/get-owner';
 import { cached } from '../model/decorators/cached';
+import { tracked } from "@glimmer/tracking"
 
 export default class Stores extends EmberObject {
+
+  @tracked
+  stores = []
 
   @cached()
   get stats() {
@@ -29,7 +33,9 @@ export default class Stores extends EmberObject {
   createStore(identifier, factory) {
     let stores = this;
     factory = this._registerStoreFactory(identifier, factory);
-    return factory.create({ stores, identifier });
+    let store = factory.create({ stores, identifier });
+    this.stores = [ ...this.stores, store ];
+    return store;
   }
 
 }
