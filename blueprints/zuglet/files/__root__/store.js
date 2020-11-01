@@ -1,4 +1,4 @@
-import BaseStore from 'zuglet/store';
+import Store from 'zuglet/store';
 
 const options = {
   firebase: {
@@ -42,7 +42,7 @@ if(!options.firebase.projectId) {
   throw new Error('No firebase config provided in app/store.js');
 }
 
-export default class Store extends BaseStore {
+export default class <%= classifiedPackageName %>Store extends Store {
 
   options = options
 

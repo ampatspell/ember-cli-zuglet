@@ -1,6 +1,6 @@
-import BaseUser from 'zuglet/user';
+import User from 'zuglet/user';
 
-export default class User extends BaseUser {
+export default class <%= classifiedPackageName %>User extends User {
 
   async restore(user) {
     await super.restore(user);
