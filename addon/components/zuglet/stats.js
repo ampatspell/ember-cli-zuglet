@@ -6,6 +6,14 @@ import { getStores } from '../../-private/stores/get-stores';
 
 export default class ZugletStatsComponent extends Component {
 
+  get classNames() {
+    let arr = [ 'zuglet-stats' ];
+    if(this.args.class) {
+      arr.push(this.args.class);
+    }
+    return arr.join(' ');
+  }
+
   get showStores() {
     return this.args.stores !== false;
   }
