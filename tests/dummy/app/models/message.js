@@ -37,13 +37,13 @@ export default class Message extends EmberObject {
     };
   }
 
-  toStringExtension() {
-    return `${this.id}`;
-  }
-
   toJSON() {
     let { serialized } = this;
     return toJSON(this, { serialized });
+  }
+
+  toStringExtension() {
+    return `${this.id}`;
   }
 
 }

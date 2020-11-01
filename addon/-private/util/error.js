@@ -12,7 +12,7 @@ export class ZugletError extends Error {
 
   toJSON() {
     let { serialized } = this;
-    return { type: 'ZugletError', serialized };
+    return { type: 'zuglet-error', serialized };
   }
 
 }
