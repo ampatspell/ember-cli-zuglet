@@ -17,7 +17,7 @@ export default class QuerySingle extends Query {
       if(content && content.path === snapshot.ref.path) {
         content._onSnapshot(snapshot);
       } else {
-        this.content = this.store._createDocumentForSnapshot(snapshot, this);
+        this.content = this._createDocumentForSnapshot(snapshot);
       }
     } else {
       if(content) {

@@ -17,7 +17,7 @@ export default class QueryArray extends Query {
       if(doc) {
         doc._onSnapshot(snapshot);
       } else {
-        doc = this.store._createDocumentForSnapshot(snapshot);
+        doc = this._createDocumentForSnapshot(snapshot);
       }
       content.pushObject(doc);
     });
@@ -27,7 +27,7 @@ export default class QueryArray extends Query {
   _onSnapshotChange(content, change) {
     let { type, oldIndex, newIndex, doc: snapshot } = change;
     if(type === 'added') {
-      let doc = this.store._createDocumentForSnapshot(snapshot, this);
+      let doc = this._createDocumentForSnapshot(snapshot);
       content.insertAt(newIndex, doc);
     } else if(type === 'modified') {
       let existing = content[oldIndex];
@@ -63,7 +63,7 @@ export default class QueryArray extends Query {
       let path = snapshot.ref.path;
       let doc = content.find(doc => doc.path === path);
       if(!doc) {
-        doc = this.store._createDocumentForSnapshot(snapshot, this);
+        doc = this._createDocumentForSnapshot(snapshot);
       } else {
         doc._onSnapshot(snapshot);
       }

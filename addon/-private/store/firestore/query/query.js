@@ -57,6 +57,10 @@ export default class Query extends EmberObject {
 
   //
 
+  _createDocumentForSnapshot(snapshot) {
+    return this.store._createDocumentForSnapshot(snapshot, this);
+  }
+
   _subscribeToOnSnapshot() {
     let cancel = this._cancel;
     if(!cancel) {
