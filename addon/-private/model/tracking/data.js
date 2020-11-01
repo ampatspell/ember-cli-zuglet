@@ -103,11 +103,6 @@ export default class DataManager {
   }
 
   wrap(target) {
-    let ret = proxy => {
-      // console.log('wrap', target, proxy);
-      return proxy;
-    }
-
     if(target instanceof ObjectProxy) {
       return target;
     } else if(target instanceof ArrayProxy) {
@@ -123,7 +118,7 @@ export default class DataManager {
     if(typeof target === 'object') {
       if(Array.isArray(target)) {
         let array = target.map(item => this.wrap(item));
-        return ret(createArrayProxy(this, array));
+        return createArrayProxy(this, array);
       } else if(!this.shouldExpand(target)) {
         return target;
       } else {
@@ -131,7 +126,7 @@ export default class DataManager {
         for(let key in target) {
           object[key] = this.wrap(target[key]);
         }
-        return ret(createObjectProxy(this, object));
+        return createObjectProxy(this, object);
       }
     } else {
       return target;
