@@ -38,6 +38,8 @@ if(!options.firebase.projectId) {
     '',
     ''
   ].join('\n'));
+
+  throw new Error('No firebase config provided in app/store.js');
 }
 
 export default class Store extends BaseStore {

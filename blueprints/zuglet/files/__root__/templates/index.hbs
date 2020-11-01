@@ -1,7 +1,7 @@
 <div>{{this.model}}</div>
 <div>{{this.model.data.message}}</div>
 
-<Zuglet::Stats @stores={{true}}/>
+{{!-- <Zuglet::Stats @stores={{true}}/> --}}
 
 {{!--
 
@@ -18,5 +18,27 @@
       }
     }
   }
+
+--}}
+
+{{!--
+
+// jsconfig.json
+{
+  "compilerOptions": {
+    "target": "es6",
+    "experimentalDecorators":true
+  },
+  "exclude": [ "node_modules", ".git" ]
+}
+
+// .template-lintrc.js
+'use strict';
+module.exports = {
+  extends: 'octane',
+  rules: {
+    'no-index-component-invocation': false
+  }
+};
 
 --}}

@@ -117,6 +117,29 @@ export default class IndexRoute extends Route {
 }
 ```
 
+``` javascript
+// .template-lintrc.js
+'use strict';
+
+module.exports = {
+  extends: 'octane',
+  rules: {
+    'no-index-component-invocation': false
+  }
+};
+```
+
+``` javascript
+// jsconfig.json
+{
+  "compilerOptions": {
+    "target": "es6",
+    "experimentalDecorators":true
+  },
+  "exclude": [ "node_modules", ".git" ]
+}
+```
+
 ``` hbs
 // app/templates/application.hbs
 <Zuglet::Stats @stores={{false}}/>
