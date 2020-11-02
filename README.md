@@ -52,6 +52,7 @@ module.exports = {
 
 ## TODO
 
+- [ ] await load(store.auth) seem to resolve before user is loaded
 - [ ] finalize decorator names
 - [ ] Make it work in FastBoot
 - [ ] await load/onSnapshot to resolve in FastBoot. Maybe replace onSnapshot with regular loads
