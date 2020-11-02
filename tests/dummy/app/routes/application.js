@@ -9,12 +9,13 @@ export default class RouteRoute extends Route {
   @service
   store
 
-  async model() {
+  model() {
+    return this.store.auth;
   }
 
-  async load() {
+  async load(auth) {
     // resolve current user before rendering app
-    await load(this.store.auth);
+    await load(auth);
   }
 
 }

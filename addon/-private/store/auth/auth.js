@@ -107,8 +107,8 @@ export default class Auth extends EmberObject {
 
   //
 
-  _onAuthStateChange(user) {
-    this._restoreUser(user);
+  async _onAuthStateChange(user) {
+    await this._restoreUser(user);
     this._deferred.resolve(this.user);
   }
 
