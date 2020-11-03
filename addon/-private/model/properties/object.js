@@ -1,4 +1,5 @@
 import Property, { property } from './property';
+import { getState } from '../state';
 import DataManager from '../tracking/data';
 import { isServerTimestamp, isTimestamp } from '../../util/object-to-json';
 
@@ -27,7 +28,8 @@ export default class ActivateProperty extends Property {
 
   onDirty() {
     let onDirty = this.opts.onDirty;
-    onDirty && onDirty();
+    let owner = this.owner;
+    onDirty && onDirty.call(owner, owner);
   }
 
   getRaw() {
@@ -44,25 +46,45 @@ export default class ActivateProperty extends Property {
 
 }
 
-let getProperty = (owner, key) => property(owner, key, 'object', {
-  onDirty: () => owner._dataDidChange()
-});
+const getProperty = (owner, key, opts) => property(owner, key, 'object', opts);
 
-export const object = () => (_, key) => {
+const define = (opts) => (_, key) => {
   return {
     get() {
-      return getProperty(this, key).getPropertyValue();
+      return getProperty(this, key, opts).getPropertyValue();
     },
     set(value) {
-      return getProperty(this, key).setPropertyValue(value);
+      return getProperty(this, key, opts).setPropertyValue(value);
     }
   };
+}
+
+export const object = () => {
+
+  let opts = {
+    onDirty: null
+  };
+
+  let extend = () => {
+    let curr = define(opts);
+    curr.onDirty = fn => {
+      opts.onDirty = fn;
+      return extend();
+    }
+    return curr;
+  }
+
+  return extend();
 }
 
 export const raw = objectKey => () => {
   return {
     get() {
-      return getProperty(this, objectKey).getRaw();
+      let property = getState(this).getProperty(objectKey);
+      if(!property) {
+        return;
+      }
+      return property.getRaw();
     }
   };
 }

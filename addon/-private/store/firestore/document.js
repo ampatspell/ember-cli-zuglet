@@ -15,7 +15,7 @@ const {
 
 export default class Document extends EmberObject {
 
-  @object()
+  @object().onDirty(owner => owner._dataDidChange())
   data
 
   @raw('data')
