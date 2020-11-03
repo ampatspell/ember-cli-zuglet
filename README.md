@@ -52,6 +52,7 @@ module.exports = {
 
 ## TODO
 
+- [ ] remove `owner._dataDidChange` from `@object()`
 - [ ] wait for 1st authStateChange after login, logout and do restore only for that
 - [ ] finalize decorator names
 - [ ] Make it work in FastBoot
