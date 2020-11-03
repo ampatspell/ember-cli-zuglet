@@ -58,3 +58,4 @@ module.exports = {
 - [ ] shoebox support (?)
 - [ ] @route decorator. make sure resetController is called if model() invokes transitionTo
 - [ ] wrap handled firestore errors in ZugletError
+- [ ] documentation site to replace existing www.ember-cli-zuglet.com
