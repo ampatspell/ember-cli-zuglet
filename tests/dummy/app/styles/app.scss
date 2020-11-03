@@ -123,6 +123,8 @@ body {
   > .content {
     margin: 10px;
     flex: 1;
+    display: flex;
+    flex-direction: column;
   }
   > .stats {
     margin: 15px 0 0 0;
@@ -167,5 +169,25 @@ body {
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow-x: hidden;
+  }
+}
+
+.route-messages {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  > .sidebar {
+    width: 150px;
+    border-right: 1px solid fade-out(#000, 0.9);
+    > .group {
+      margin-bottom: 15px;
+      > .row {
+        margin-bottom: 5px;
+      }
+    }
+  }
+  > .content {
+    padding-left: 10px;
+    flex: 1;
   }
 }

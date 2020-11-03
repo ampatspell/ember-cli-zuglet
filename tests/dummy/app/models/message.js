@@ -30,6 +30,11 @@ export default class Message extends EmberObject {
 
   //
 
+  async load() {
+  }
+
+  //
+
   get serialized() {
     let { doc } = this;
     return {

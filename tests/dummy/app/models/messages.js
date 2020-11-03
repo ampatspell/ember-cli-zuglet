@@ -39,6 +39,10 @@ export default class Messages extends EmberObject {
     return doc;
   }
 
+  byId(id) {
+    return this.models.find(model => model.id === id);
+  }
+
   get serialized() {
     let { models } = this;
     return {
