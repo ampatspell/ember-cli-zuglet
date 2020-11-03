@@ -29,7 +29,7 @@ const extend = Class => class ActivatingRoute extends Class {
     try {
       let model = await super.model(...arguments);
       this.active = model;
-      if(isFunction(this.load)) {
+      if(!transition.isAborted && isFunction(this.load)) {
         await this.load(model);
       }
       if(transition.isAborted) {
