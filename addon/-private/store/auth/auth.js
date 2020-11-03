@@ -72,12 +72,12 @@ export default class Auth extends EmberObject {
   async _restoreUser(internal, details) {
     let { user } = this;
     if(internal) {
-      if(user && internal.uid === user.user.uid) {
+      if(user && internal.uid === user.uid) {
         await user.restore(internal, details);
       } else {
         user = this._createUser(internal);
         this.user = user;
-        await user.restore(null, details);
+        await user.restore(internal, details);
       }
     } else {
       user = null;

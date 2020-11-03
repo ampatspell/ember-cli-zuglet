@@ -1,47 +1,39 @@
 import EmberObject from '@ember/object';
-import { tracked } from '@glimmer/tracking';
 import { assert } from '@ember/debug';
 import { toJSON } from '../../util/to-json';
+import { tracked } from "@glimmer/tracking";
 
 const {
   assign
 } = Object;
 
+const trackedProperties = [ 'uid', 'email', 'emailVerified', 'photoURL', 'displayName', 'isAnonymous' ];
+
+const updateTrackedProperties = (target, source) => {
+  trackedProperties.forEach(key => {
+    let value = source[key];
+    if(target[key] !== value) {
+      target[key] = value;
+    }
+  });
+}
+
 export default class User extends EmberObject {
 
-  @tracked
-  user
+  @tracked user
 
-  get uid() {
-    return this.user.uid;
-  }
-
-  get email() {
-    return this.user.email;
-  }
-
-  get emailVerified() {
-    return this.user.emailVerified;
-  }
-
-  get photoURL() {
-    return this.user.photoURL;
-  }
-
-  get displayName() {
-    return this.user.displayName;
-  }
-
-  get isAnonymous() {
-    return this.user.isAnonymous;
-  }
+  @tracked uid
+  @tracked email
+  @tracked emailVerified
+  @tracked photoURL
+  @tracked displayName
+  @tracked isAnonymous
 
   //
 
   async restore(user) {
-    if(user) {
-      this.user = user;
-    }
+    updateTrackedProperties(this, user);
+    this.user = user;
   }
 
   //
