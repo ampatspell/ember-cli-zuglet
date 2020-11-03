@@ -20,7 +20,10 @@
     "start": "ember serve",
     "test": "npm-run-all lint:* test:*",
     "test:ember": "ember test",
-    "test:ember-compatibility": "ember try:each"
+    "test:ember-compatibility": "ember try:each",
+    "tags": "git push --follow-tags",
+    "bump": "npm version minor; npm run tags",
+    "patch": "npm version patch; npm run tags"
   },
   "dependencies": {
     "ember-auto-import": "^1.6.0",
