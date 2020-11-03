@@ -18,7 +18,7 @@
     </div>
   {{/if}}
   <div class="section">
-    <div class="label">Activated</div>
+    <div class="label">Activated ({{this.stats.activated.length}})</div>
     <div class="models">
       {{#each this.stats.activated as |model|}}
         <div class="model" role="button" {{on "click" (fn this.setGlobal model)}}>{{model}}</div>
@@ -28,7 +28,7 @@
     </div>
   </div>
   <div class="section">
-    <div class="label">onSnapshot</div>
+    <div class="label">onSnapshot ({{this.stats.snapshots.length}})</div>
     <div class="models">
       {{#each this.stats.snapshots as |model|}}
         <div class="model" role="button" {{on "click" (fn this.setGlobal model)}}>{{model}}</div>
