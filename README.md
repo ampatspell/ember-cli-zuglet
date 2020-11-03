@@ -52,7 +52,6 @@ module.exports = {
 
 ## TODO
 
-- [ ] wait for 1st authStateChange after login, logout and do restore only for that
 - [ ] finalize decorator names
 - [ ] Make it work in FastBoot
 - [ ] await load/onSnapshot to resolve in FastBoot. Maybe replace onSnapshot with regular loads
