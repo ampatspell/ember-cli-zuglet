@@ -3,6 +3,8 @@ import { getOwner } from '../util/get-owner';
 import { cached } from '../model/decorators/cached';
 import { tracked } from "@glimmer/tracking"
 import { assert } from '@ember/debug';
+import { delay } from '../util/delay';
+import { resolve } from '../util/resolve';
 
 const {
   assign
@@ -50,6 +52,18 @@ export default class Stores extends EmberObject {
     let store = this.stores.find(store => store.identifier === identifier);
     assert(`store '${identifier}' is not registered`, !!store || optional);
     return store;
+  }
+
+  async settle() {
+    // Well, this certainly is not the final solution
+    await delay(0);
+    await resolve(this.stats.activated);
+  }
+
+  willDestroy() {
+    this.stores.map(store => store.destroy());
+    this.stats.destroy();
+    super.willDestroy(...arguments);
   }
 
 }

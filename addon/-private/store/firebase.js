@@ -1,7 +1,9 @@
 import firebase from "firebase/app";
 import 'firebase/firestore';
 
-export const initializeApp = (config, name) => firebase.initializeApp(config, name);
+let id = 0;
+
+export const initializeApp = (config, name) => firebase.initializeApp(config, `${name}-${id++}`);
 export const destroyApp = app => app.delete();
 
 export const enablePersistence = async firebase => {

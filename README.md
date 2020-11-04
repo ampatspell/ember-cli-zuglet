@@ -50,12 +50,16 @@ module.exports = {
 <Zuglet::Stats @stores={{false}}/>
 ```
 
+``` bash
+$ node --inspect-brk ./node_modules/.bin/ember serve
+$ chrome://inspect
+```
+
 ## TODO
 
 - [ ] finalize decorator names
-- [ ] Make it work in FastBoot
 - [ ] await load/onSnapshot to resolve in FastBoot. Maybe replace onSnapshot with regular loads
 - [ ] shoebox support (?)
-- [ ] @route decorator. make sure resetController is called if model() invokes transitionTo
+- [ ] @route decorator doesn't deactivate intermediate routes if child route transitions
 - [ ] wrap handled firestore errors in ZugletError
 - [ ] documentation site to replace existing www.ember-cli-zuglet.com
