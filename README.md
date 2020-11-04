@@ -50,6 +50,11 @@ module.exports = {
 <Zuglet::Stats @stores={{false}}/>
 ```
 
+``` bash
+$ node --inspect-brk ./node_modules/.bin/ember serve
+$ chrome://inspect
+```
+
 ## TODO
 
 - [ ] finalize decorator names

@@ -24,8 +24,11 @@ export const isTimestamp = arg => arg instanceof firebase.firestore.Timestamp;
 
 export const isFunction = arg => typeof arg === 'function';
 
-export const isFileList = arg => arg instanceof FileList;
-export const isFile = arg => arg instanceof File;
+const hasFileList = () => ('FileList' in window);
+const hasFile = () => ('File' in window);
+
+export const isFileList = arg => hasFileList() && arg instanceof FileList;
+export const isFile = arg => hasFile() && arg instanceof File;
 export const isPromise = arg => arg && isFunction(arg.then);
 
 export const objectToJSON = value => {

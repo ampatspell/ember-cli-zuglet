@@ -3,6 +3,7 @@ import { getOwner } from '../util/get-owner';
 import { cached } from '../model/decorators/cached';
 import { tracked } from "@glimmer/tracking"
 import { assert } from '@ember/debug';
+import { delay } from '../util/delay';
 
 const {
   assign
@@ -52,9 +53,15 @@ export default class Stores extends EmberObject {
     return store;
   }
 
-  settle() {
-    // fastboot settle
-    return Promise.resolve();
+  async settle() {
+    await delay(1000);
+    console.log(this.stats.snapshots.map(i=>i+""));
+  }
+
+  willDestroy() {
+    this.stores.map(store => store.destroy());
+    this.stats.destroy();
+    super.willDestroy(...arguments);
   }
 
 }

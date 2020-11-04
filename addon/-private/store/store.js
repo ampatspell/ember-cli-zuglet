@@ -1,7 +1,7 @@
 import EmberObject from '@ember/object';
 import { getOwner } from '../util/get-owner';
 import { assert } from '@ember/debug';
-import { initializeApp, enablePersistence } from './firebase';
+import { initializeApp, enablePersistence, destroyApp } from './firebase';
 import { cached } from '../model/decorators/cached';
 import { toJSON } from '../util/to-json';
 import { isFastBoot } from '../util/fastboot';
@@ -196,6 +196,13 @@ export default class Store extends EmberObject {
   toStringExtension() {
     let { projectId } = this;
     return `${projectId}`;
+  }
+
+  //
+
+  willDestroy() {
+    destroyApp(this.firebase);
+    super.willDestroy(...arguments);
   }
 
 }

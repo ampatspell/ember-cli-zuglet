@@ -68,7 +68,8 @@
   },
   "fastbootDependencies": [
     "node-fetch",
-    "xmlhttprequest"
+    "xmlhttprequest",
+    "buffer"
   ],
   "engines": {
     "node": "10.* || >= 12"
