@@ -4,6 +4,7 @@ import { cached } from '../model/decorators/cached';
 import { tracked } from "@glimmer/tracking"
 import { assert } from '@ember/debug';
 import { delay } from '../util/delay';
+import { resolve } from '../util/resolve';
 
 const {
   assign
@@ -54,8 +55,9 @@ export default class Stores extends EmberObject {
   }
 
   async settle() {
-    await delay(1000);
-    console.log(this.stats.snapshots.map(i=>i+""));
+    // Well, this certainly is not the final solution
+    await delay(0);
+    await resolve(this.stats.activated);
   }
 
   willDestroy() {
