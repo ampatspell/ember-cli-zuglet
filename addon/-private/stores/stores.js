@@ -52,4 +52,9 @@ export default class Stores extends EmberObject {
     return store;
   }
 
+  settle() {
+    // fastboot settle
+    return Promise.resolve();
+  }
+
 }
