@@ -4,6 +4,7 @@ import { assert } from '@ember/debug';
 import { initializeApp, enablePersistence } from './firebase';
 import { cached } from '../model/decorators/cached';
 import { toJSON } from '../util/to-json';
+import { isFastBoot } from '../util/fastboot';
 import firebase from "firebase/app";
 
 const {
@@ -62,7 +63,7 @@ export default class Store extends EmberObject {
         host: options.emulators.firestore,
         ssl: false
       });
-    } else if(options.firestore.persistenceEnabled) {
+    } else if(options.firestore.persistenceEnabled && !isFastBoot(this)) {
       this.enablePersistencePromise = enablePersistence(this.firebase);
     }
   }
