@@ -8,6 +8,8 @@ import { defer } from '../../util/defer';
 import { registerOnSnapshot } from '../../stores/stats';
 import { cached } from '../../model/decorators/cached';
 import { randomString } from '../../util/random-string';
+import { Listeners } from '../../util/listeners';
+import { setChangedProperties } from '../../util/properties';
 
 const {
   assign
@@ -34,9 +36,10 @@ export default class Document extends EmberObject {
     let { snapshot, data } = opts;
     delete opts.snapshot;
     super.init(...arguments);
+    this._listeners = new Listeners();
     this._deferred = defer();
     if(snapshot) {
-      this._onSnapshot(snapshot, true);
+      this._onSnapshot(snapshot, { source: 'initial' });
     } else if(data) {
       this.data = data;
       this.isNew = true;
@@ -69,6 +72,16 @@ export default class Document extends EmberObject {
 
   //
 
+  onData(fn) {
+    return this._listeners.register('onData', fn);
+  }
+
+  onDeleted(fn) {
+    return this._listeners.register('onDeleted', fn);
+  }
+
+  //
+
   _dataDidChange() {
     this.isDirty = true;
   }
@@ -84,17 +97,29 @@ export default class Document extends EmberObject {
     return this.token !== token;
   }
 
-  _onSnapshot(snapshot, first) {
+  _onSnapshot(snapshot, opts) {
+    let { source } = opts || {};
     let { exists } = snapshot;
+    let notify;
     if(exists) {
       let data = snapshot.data({ serverTimestamps: 'estimate' });
       if(this._shouldApplySnapshotData(data)) {
         this._setData(data);
+        notify = 'onData';
       }
-    } else if(first && !exists) {
-      this._setData({});
+    } else {
+      if(source === 'initial') {
+        this._setData({});
+      } else if(source === 'subscription') {
+        if(this.exists) {
+          notify = 'onDeleted';
+        }
+      }
     }
-    this.setProperties({ isNew: false, isLoading: false, isLoaded: true, isDirty: false, exists });
+    setChangedProperties(this, { isNew: false, isLoading: false, isLoaded: true, isDirty: false, exists });
+    if(notify) {
+      this._listeners.notify(notify, this);
+    }
   }
 
   //
@@ -105,14 +130,14 @@ export default class Document extends EmberObject {
     if(isLoaded && !force) {
       return this;
     }
-    this.setProperties({ isNew: false, isLoading: true, isError: false, error: null });
+    setChangedProperties(this, { isNew: false, isLoading: true, isError: false, error: null });
     try {
       let snapshot = await this.ref._ref.get();
-      this._onSnapshot(snapshot);
+      this._onSnapshot(snapshot, { source: 'load' });
       this._maybeSubscribeToOnSnapshot();
       this._deferred.resolve(this);
     } catch(error) {
-      this.setProperties({ isLoading: false, isError: true, error });
+      setChangedProperties(this, { isLoading: false, isError: true, error });
       this._deferred.reject(error);
       throw error;
     }
@@ -129,31 +154,31 @@ export default class Document extends EmberObject {
     if(!isDirty && !force) {
       return this;
     }
-    this.setProperties({ isSaving: true, isError: false, error: null });
+    setChangedProperties(this, { isSaving: true, isError: false, error: null });
     try {
       let data = this._data;
       if(token) {
         data._token = this.token;
       }
       await this.ref._ref.set(data, { merge });
-      this.setProperties({ isNew: false, isSaving: false, isDirty: false, exists: true });
+      setChangedProperties(this, { isNew: false, isSaving: false, isDirty: false, exists: true });
       this._maybeSubscribeToOnSnapshot();
       this._deferred.resolve(this);
     } catch(error) {
-      this.setProperties({ isSaving: false, isError: true, error });
+      setChangedProperties(this, { isSaving: false, isError: true, error });
       throw error;
     }
     return this;
   }
 
   async delete() {
-    this.setProperties({ isSaving: true, isError: false, error: null });
+    setChangedProperties(this, { isSaving: true, isError: false, error: null });
     try {
       await this.ref._ref.delete();
-      this.setProperties({ isSaving: false, exists: false });
+      setChangedProperties(this, { isSaving: false, exists: false });
       this._maybeSubscribeToOnSnapshot();
     } catch(error) {
-      this.setProperties({ isSaving: false, isError: true, error });
+      setChangedProperties(this, { isSaving: false, isError: true, error });
       throw error;
     }
     return this;
@@ -165,14 +190,14 @@ export default class Document extends EmberObject {
     let { isLoaded } = this;
 
     if(!isLoaded) {
-      this.setProperties({ isLoading: true, isError: false, error: null });
+      setChangedProperties(this, { isLoading: true, isError: false, error: null });
     }
 
-    this._cancel = registerOnSnapshot(this, this.ref._ref.onSnapshot({ includeMetadataChanges: true }, snapshot => {
-      this._onSnapshot(snapshot);
+    this._cancel = registerOnSnapshot(this, this.ref._ref.onSnapshot({ includeMetadataChanges: false }, snapshot => {
+      this._onSnapshot(snapshot, { source: 'subscription' });
       this._deferred.resolve(this);
     }, error => {
-      this.setProperties({ isLoading: false, isError: true, error });
+      setChangedProperties(this, { isLoading: false, isError: true, error });
       this.store.onSnapshotError(this);
       this._deferred.reject(error);
     }));
@@ -210,7 +235,7 @@ export default class Document extends EmberObject {
   }
 
   _onDeleted() {
-    this.setProperties({ exists: false });
+    setChangedProperties(this, { exists: false });
   }
 
   //
