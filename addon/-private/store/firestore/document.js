@@ -125,8 +125,8 @@ export default class Document extends EmberObject {
 
   async load(opts) {
     let { force } = assign({ force: false }, opts);
-    let { isLoaded } = this;
-    if(isLoaded && !force) {
+    let { isLoaded, isNew } = this;
+    if((isLoaded || isNew) && !force) {
       return this;
     }
     this.setProperties({ isLoading: true, isError: false, error: null });
