@@ -36,14 +36,14 @@ export default class QueryArray extends Query {
         existing = content.find(doc => doc.path === path);
         assert(`existing document not found for path '${path}'`, !!existing);
       }
-      existing._onSnapshot(snapshot);
+      existing._onSnapshot(snapshot, { source: 'subscription' });
     } else if(type === 'removed') {
       content.removeAt(oldIndex);
     }
   }
 
   _onSnapshotChanges(content, snapshot) {
-    snapshot.docChanges({ includeMetadataChanges: true }).map(change => {
+    snapshot.docChanges({ includeMetadataChanges: false }).map(change => {
       this._onSnapshotChange(content, change);
     });
   }

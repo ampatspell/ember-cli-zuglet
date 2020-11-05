@@ -57,7 +57,8 @@ $ chrome://inspect
 
 ## TODO
 
-- [ ] `store.doc('foo/bar').onDeleted(doc => {}).onData(doc => {})`
+- [ ] `store.doc('foo/bar').new({ ok: true }, { live: false })`
+- [ ] `store.doc('foo/bar').existing({ live: false })`
 - [ ] `store.collection('foof').query({ live: false })` causes to load on activate and doesn't start `onSnapshot`
 - [ ] finalize decorator names
 - [ ] await load/onSnapshot to resolve in FastBoot. Maybe replace onSnapshot with regular loads
