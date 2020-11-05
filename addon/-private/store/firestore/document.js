@@ -129,14 +129,14 @@ export default class Document extends EmberObject {
     if(isLoaded && !force) {
       return this;
     }
-    this.setProperties({ isNew: false, isLoading: true, isError: false, error: null });
+    this.setProperties({ isLoading: true, isError: false, error: null });
     try {
       let snapshot = await this.ref._ref.get();
       this._onSnapshot(snapshot, { source: 'load' });
       this._maybeSubscribeToOnSnapshot();
       this._deferred.resolve(this);
     } catch(error) {
-      this.setProperties({ isLoading: false, isError: true, error });
+      this.setProperties({ isNew: false, isLoading: false, isError: true, error });
       this._deferred.reject(error);
       throw error;
     }
