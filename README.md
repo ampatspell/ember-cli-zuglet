@@ -60,9 +60,10 @@ $ chrome://inspect
 - [ ] `store.doc('foo/bar').new({ ok: true }).passive()`
 - [ ] `store.doc('foo/bar').existing().passive()`
 - [ ] `store.collection('foof').query({ type }).passive()` causes to load on activate and doesn't start `onSnapshot`
+- [ ] make all queries and documents passive in fastboot
+- [ ] await load/onSnapshot chains to resolve in fastboot which means await 1st level, check if there is no new loads panding
+- [ ] shoebox support with identifiers for docs and queries
 - [ ] finalize decorator names
-- [ ] await load/onSnapshot to resolve in FastBoot. Maybe replace onSnapshot with regular loads
-- [ ] shoebox support (?)
 - [ ] @route decorator doesn't deactivate intermediate routes if child route transitions
 - [ ] wrap handled firestore errors in ZugletError
 - [ ] documentation site to replace existing www.ember-cli-zuglet.com
