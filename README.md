@@ -57,6 +57,8 @@ $ chrome://inspect
 
 ## TODO
 
+- [ ] `store.doc('foo/bar').onDeleted(doc => {}).onData(doc => {})`
+- [ ] `store.collection('foof').query({ live: false })` causes to load on activate and doesn't start `onSnapshot`
 - [ ] finalize decorator names
 - [ ] await load/onSnapshot to resolve in FastBoot. Maybe replace onSnapshot with regular loads
 - [ ] shoebox support (?)
