@@ -31,6 +31,8 @@ export default class Document extends EmberObject {
   @tracked error = null;
   @tracked exists = undefined;
 
+  _isPassive = false
+
   init(opts) {
     let { snapshot, data } = opts;
     delete opts.snapshot;
@@ -46,6 +48,17 @@ export default class Document extends EmberObject {
     } else {
       this.data = {};
     }
+  }
+
+  //
+
+  get isPassive() {
+    return this._isPassive;
+  }
+
+  passive() {
+    this._isPassive = true;
+    return this;
   }
 
   //
@@ -186,20 +199,22 @@ export default class Document extends EmberObject {
   //
 
   _subscribeToOnSnapshot() {
-    let { isLoaded } = this;
-
-    if(!isLoaded) {
-      this.setProperties({ isLoading: true, isError: false, error: null });
+    if(this.isPassive) {
+      this.load().then(() => {}, err => this.store.onSnapshotError(this, err));
+    } else {
+      let { isLoaded } = this;
+      if(!isLoaded) {
+        this.setProperties({ isLoading: true, isError: false, error: null });
+      }
+      this._cancel = registerOnSnapshot(this, this.ref._ref.onSnapshot({ includeMetadataChanges: false }, snapshot => {
+        this._onSnapshot(snapshot, { source: 'subscription' });
+        this._deferred.resolve(this);
+      }, error => {
+        this.setProperties({ isLoading: false, isError: true, error });
+        this.store.onSnapshotError(this);
+        this._deferred.reject(error);
+      }));
     }
-
-    this._cancel = registerOnSnapshot(this, this.ref._ref.onSnapshot({ includeMetadataChanges: false }, snapshot => {
-      this._onSnapshot(snapshot, { source: 'subscription' });
-      this._deferred.resolve(this);
-    }, error => {
-      this.setProperties({ isLoading: false, isError: true, error });
-      this.store.onSnapshotError(this);
-      this._deferred.reject(error);
-    }));
   }
 
   _shouldSubscribeToOnSnapshot() {

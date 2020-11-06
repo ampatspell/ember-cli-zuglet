@@ -157,8 +157,11 @@ export default class Store extends EmberObject {
 
   //
 
-  onSnapshotError(model) {
-    console.error('onSnapshot', model.string || model.path, model.error && model.error.stack);
+  onSnapshotError(model, err) {
+    err = err || model.error;
+    let stack = (err && err.stack) || err;
+    let path = model.string || model.path;
+    console.error('onSnapshot', path, stack);
   }
 
   //

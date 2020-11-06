@@ -20,10 +20,25 @@ export default class Query extends EmberObject {
   @tracked isError = false;
   @tracked error = null;
 
+  _isPassive = false
+
   init() {
     super.init(...arguments);
     this._deferred = defer();
   }
+
+  //
+
+  get isPassive() {
+    return this._isPassive;
+  }
+
+  passive() {
+    this._isPassive = true;
+    return this;
+  }
+
+  //
 
   get promise() {
     return this._deferred.promise;
@@ -62,20 +77,24 @@ export default class Query extends EmberObject {
   }
 
   _subscribeToOnSnapshot() {
-    let cancel = this._cancel;
-    if(!cancel) {
-      this.setProperties({ isLoading: true, isError: false, error: null });
-      let refresh = true;
-      this._cancel = registerOnSnapshot(this, this.ref._ref.onSnapshot({ includeMetadataChanges: false }, snapshot => {
-        this._onSnapshot(snapshot, refresh);
-        refresh = false;
-        this.setProperties({ isLoading: false, isLoaded: true })
-        this._deferred.resolve(this);
-      }, error => {
-        this.setProperties({ isLoading: false, isError: true, error });
-        this.store.onSnapshotError(this);
-        this._deferred.reject(error);
-      }));
+    if(this.isPassive) {
+      this.load().then(() => {}, err => this.store.onSnapshotError(this, err));
+    } else {
+      let cancel = this._cancel;
+      if(!cancel) {
+        this.setProperties({ isLoading: true, isError: false, error: null });
+        let refresh = true;
+        this._cancel = registerOnSnapshot(this, this.ref._ref.onSnapshot({ includeMetadataChanges: false }, snapshot => {
+          this._onSnapshot(snapshot, refresh);
+          refresh = false;
+          this.setProperties({ isLoading: false, isLoaded: true })
+          this._deferred.resolve(this);
+        }, error => {
+          this.setProperties({ isLoading: false, isError: true, error });
+          this.store.onSnapshotError(this);
+          this._deferred.reject(error);
+        }));
+      }
     }
   }
 
