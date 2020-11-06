@@ -1,6 +1,20 @@
 import { consumeKey, dirtyKey } from './tag';
 import { toString } from '../../util/to-string';
 
+// class Thing {
+//
+//   @state _state
+//   @readable isNew
+//   @readable isLoading
+//
+//   foo() {
+//     // untracked doesn't consume keys
+//     let { isNew, isLoading } = this._state.untracked.getProperties('isNew', 'isLoading');
+//     this._state.setProperties({ isLoading: true, isNew: false });
+//   }
+//
+// }
+
 class StateProperties {
 
   constructor(owner) {
