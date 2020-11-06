@@ -1,6 +1,7 @@
 import { consumeKey, dirtyKey } from './tag';
+import { toString } from '../../util/to-string';
 
-class State {
+class StateProperties {
 
   constructor(owner) {
     this._owner = owner;
@@ -66,21 +67,35 @@ class State {
     return untracked;
   }
 
+  toString() {
+    return toString(this);
+  }
+
 }
 
-export const state = owner => {
-  let instance = new State(owner);
+const marker = Symbol('ZUGLET_STATE');
+
+const getState = owner => {
+  let state = owner[marker];
+  if(!state) {
+    state = new StateProperties(owner);
+    owner[marker] = state;
+  }
+  return state;
+}
+
+export const state = () => {
   return {
     get() {
-      return instance;
+      return getState(this);
     }
   };
 }
 
-export const readable = state => (owner, key, descriptor) => {
+export const readable = (_, key) => {
   return {
     get() {
-      return this[state].get(key);
+      return getState(this).get(key);
     }
   };
 }

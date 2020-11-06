@@ -3,9 +3,7 @@ import { inject as service } from '@ember/service';
 import { setGlobal, toString } from 'zuglet/utils';
 import { root, activate } from 'zuglet/decorators';
 import { getOwner, setOwner } from '@ember/application';
-import { state, readable as _readable } from 'zuglet/-private/model/tracking/state';
-
-const readable = _readable('_state');
+import { state, readable } from 'zuglet/-private/model/tracking/state';
 
 class Thing {
 
@@ -47,6 +45,9 @@ export default class RouteDevComponent extends Component {
 
   @activate().content(owner => new Thing(getOwner(owner)))
   thing
+
+  @activate().content(owner => new Thing(getOwner(owner)))
+  thing2
 
   constructor() {
     super(...arguments);
