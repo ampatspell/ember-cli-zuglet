@@ -57,9 +57,6 @@ $ chrome://inspect
 
 ## TODO
 
-- [ ] `store.doc('foo/bar').new({ ok: true }).passive()`
-- [ ] `store.doc('foo/bar').existing().passive()`
-- [ ] `store.collection('foof').query({ type }).passive()` causes to load on activate and doesn't start `onSnapshot`
 - [ ] make all queries and documents passive in fastboot
 - [ ] await load/onSnapshot chains to resolve in fastboot which means await 1st level, check if there is no new loads panding
 - [ ] shoebox support with identifiers for docs and queries
