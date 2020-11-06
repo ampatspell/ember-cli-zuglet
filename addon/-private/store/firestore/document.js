@@ -31,7 +31,7 @@ export default class Document extends EmberObject {
   @tracked error = null;
   @tracked exists = undefined;
 
-  isPassive = false
+  _isPassive = false
 
   init(opts) {
     let { snapshot, data } = opts;
@@ -52,8 +52,12 @@ export default class Document extends EmberObject {
 
   //
 
+  get isPassive() {
+    return this._isPassive;
+  }
+
   passive() {
-    this.isPassive = true;
+    this._isPassive = true;
     return this;
   }
 
