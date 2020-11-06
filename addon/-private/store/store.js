@@ -178,6 +178,8 @@ export default class Store extends EmberObject {
     window.open(this.dashboard, '_blank');
   }
 
+  //
+
   get serialized() {
     let { identifier, projectId } = this;
     let serialized = {

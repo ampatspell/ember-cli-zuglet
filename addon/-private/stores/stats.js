@@ -1,11 +1,14 @@
 import EmberObject from '@ember/object';
 import { getStores } from './get-stores';
 import { A } from '@ember/array';
+import { isPromise } from '../util/object-to-json';
+import { next } from '../util/runloop';
 
 export default class Stats extends EmberObject {
 
   activated = A();
   snapshots = A();
+  promises = A();
 
   _registerActivated(model) {
     this.activated.pushObject(model);
@@ -18,6 +21,25 @@ export default class Stats extends EmberObject {
   _registerOnSnapshot(model) {
     this.snapshots.pushObject(model);
     return () => this.snapshots.removeObject(model);
+  }
+
+  _registerPromise(promise) {
+    if(isPromise(promise)) {
+      this.promises.pushObject(promise);
+      let done = () => this.promises.removeObject(promise);
+      promise.then(done, done);
+    }
+    return promise;
+  }
+
+  async settle() {
+    await next();
+    let promises = this.promises;
+    if(promises.length === 0) {
+      return;
+    }
+    await Promise.all(promises).then(() => {}, () => {});
+    this.settle();
   }
 
 }
@@ -34,3 +56,5 @@ export const registerOnSnapshot = (model, cancel) => {
     cancel();
   };
 }
+
+export const registerPromise = (model, promise) => getStats(model)._registerPromise(promise);

@@ -1,6 +1,7 @@
 import { activate } from '../properties/activate';
 import { getState } from '../state';
 import { isFunction } from '../../util/object-to-json';
+import { registerPromise } from '../../stores/stats';
 
 const activateRoute = route => {
   if(!route.isActivated) {
@@ -30,7 +31,7 @@ const extend = Class => class ActivatingRoute extends Class {
       let model = await super.model(...arguments);
       this.active = model;
       if(!transition.isAborted && isFunction(this.load)) {
-        await this.load(model);
+        await registerPromise(this, this.load(model));
       }
       if(transition.isAborted) {
         deactivateRoute(this);
