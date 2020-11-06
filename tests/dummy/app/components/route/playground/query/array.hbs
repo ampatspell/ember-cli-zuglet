@@ -1,0 +1,15 @@
+<div class="route-playground-query-array">
+
+  <div class="row">
+    <Json @value={{this.query}}/>
+  </div>
+
+  {{#each this.query.content as |doc|}}
+    <div class="row">
+      <Json @value={{doc}}/>
+    </div>
+  {{else}}
+    <div class="row">Nothing here yet</div>
+  {{/each}}
+
+</div>

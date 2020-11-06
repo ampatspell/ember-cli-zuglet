@@ -1,0 +1,16 @@
+<div class="route-playground-models">
+
+  <div class="row">
+    <Input @value={{this.name}}/>
+    <input type="button" value="Toggle modelName" {{on "click" this.toggleModelName}}/>
+  </div>
+
+  <div class="row">
+    <input type="button" value="Add new message" {{on "click" this.add}}/>
+  </div>
+
+  {{#each this.models as |model|}}
+    <Block::Message @message={{model}}/>
+  {{/each}}
+
+</div>
