@@ -1,6 +1,10 @@
 import { consumeKey, dirtyKey } from './tag';
 import { toString } from '../../util/to-string';
 
+// TODO: figure out if this is really needed
+// if glimmer blows up with double updates on isLoading or something, then it is
+//
+//
 // class Thing {
 //
 //   @state _state
