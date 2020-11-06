@@ -57,7 +57,7 @@ $ chrome://inspect
 
 ## TODO
 
-- [ ] finalize decorator names
+- [ ] add `@model().named('foo').mapping(({ id }) => ({ id }))` decorator
 - [ ] @route decorator doesn't deactivate intermediate routes if child route transitions
 - [ ] documentation site to replace existing www.ember-cli-zuglet.com
 - [ ] add support for cloud messaging
