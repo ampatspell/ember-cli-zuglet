@@ -57,6 +57,7 @@ $ chrome://inspect
 
 ## TODO
 
+- [ ] add `store.transaction()` and `store.batch()`
 - [ ] add `@model().named('foo').mapping(({ id }) => ({ id }))` decorator
 - [ ] @route decorator doesn't deactivate intermediate routes if child route transitions
 - [ ] documentation site to replace existing www.ember-cli-zuglet.com
