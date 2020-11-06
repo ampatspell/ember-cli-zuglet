@@ -9,7 +9,7 @@ export default class RouteDevComponent extends Component {
   @service
   store
 
-  @activate().content(({ store }) => store.doc('messages/first').existing().passive())
+  @activate().content(({ store }) => store.doc('messages/first').existing())
   doc
 
   constructor() {

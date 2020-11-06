@@ -197,23 +197,20 @@ export default class Document extends EmberObject {
   _subscribeToOnSnapshot() {
     if(this.isPassive) {
       this.load().then(() => {}, err => this.store.onSnapshotError(this, err));
-      return;
+    } else {
+      let { isLoaded } = this;
+      if(!isLoaded) {
+        this.setProperties({ isLoading: true, isError: false, error: null });
+      }
+      this._cancel = registerOnSnapshot(this, this.ref._ref.onSnapshot({ includeMetadataChanges: false }, snapshot => {
+        this._onSnapshot(snapshot, { source: 'subscription' });
+        this._deferred.resolve(this);
+      }, error => {
+        this.setProperties({ isLoading: false, isError: true, error });
+        this.store.onSnapshotError(this);
+        this._deferred.reject(error);
+      }));
     }
-
-    let { isLoaded } = this;
-
-    if(!isLoaded) {
-      this.setProperties({ isLoading: true, isError: false, error: null });
-    }
-
-    this._cancel = registerOnSnapshot(this, this.ref._ref.onSnapshot({ includeMetadataChanges: false }, snapshot => {
-      this._onSnapshot(snapshot, { source: 'subscription' });
-      this._deferred.resolve(this);
-    }, error => {
-      this.setProperties({ isLoading: false, isError: true, error });
-      this.store.onSnapshotError(this);
-      this._deferred.reject(error);
-    }));
   }
 
   _shouldSubscribeToOnSnapshot() {
