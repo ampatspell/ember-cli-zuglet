@@ -65,5 +65,6 @@ $ chrome://inspect
 - [ ] shoebox support with identifiers for docs and queries
 - [ ] finalize decorator names
 - [ ] @route decorator doesn't deactivate intermediate routes if child route transitions
+- [ ] add support for cloud messaging
 - [ ] wrap handled firestore errors in ZugletError
 - [ ] documentation site to replace existing www.ember-cli-zuglet.com
