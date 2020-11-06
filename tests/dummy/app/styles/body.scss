@@ -1,0 +1,111 @@
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu+Mono:wght@400;700&display=swap');
+
+$font-family: 'Ubuntu Mono';
+$font-size: 15px;
+$font-size-smaller: 12px;
+
+html {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+  font-family: $font-family;
+  font-size: $font-size;
+  cursor: default;
+  height: 100%;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+@mixin button() {
+  font-family: $font-family;
+  font-size: $font-size;
+  background: fade-out(#000, 0.2);
+  border-radius: 3px;
+  border: none;
+  color: #fff;
+  padding: 5px 9px 5px 9px;
+  outline: none;
+  font-size: 14px;
+  margin: 0;
+}
+
+a,
+a:visited,
+a:active {
+  color: #000;
+}
+
+button,
+input[type="button"] {
+  @include button();
+}
+
+button:disabled,
+input[type="button"]:disabled {
+  color: #999;
+}
+
+input:not([type]),
+input[type="text"],
+input[type="number"],
+input[type="password"] {
+  font-family: $font-family;
+  font-size: $font-size;
+  border-radius: 3px;
+  border: 1px solid #999;
+  padding: 4px 9px 4px 9px;
+  margin: 0;
+  line-height: 1;
+  outline: none;
+}
+
+.input-file {
+  position: relative;
+  width: 300px;
+  height: 24px;
+  > .input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.00000001;
+  }
+  > .button {
+    @include button();
+    user-select: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow-x: hidden;
+  }
+}
+
+.row {
+  > .label {
+    font-weight: 600;
+    margin-bottom: 3px;
+  }
+  margin-bottom: 15px;
+  > .row {
+    margin-bottom: 5px;
+  }
+}
+
+.json {
+  white-space: pre-wrap;
+}
