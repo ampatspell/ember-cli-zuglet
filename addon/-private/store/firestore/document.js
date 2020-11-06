@@ -50,6 +50,8 @@ export default class Document extends EmberObject {
     }
   }
 
+  //
+
   passive() {
     this.isPassive = true;
     return this;
@@ -193,6 +195,11 @@ export default class Document extends EmberObject {
   //
 
   _subscribeToOnSnapshot() {
+    if(this.isPassive) {
+      this.load().then(() => {}, err => this.store.onSnapshotError(this, err));
+      return;
+    }
+
     let { isLoaded } = this;
 
     if(!isLoaded) {
