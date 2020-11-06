@@ -5,6 +5,7 @@ import { toJSON } from '../../../util/to-json';
 import { activate } from '../../../model/properties/activate';
 import { defer } from '../../../util/defer';
 import { registerOnSnapshot } from '../../../stores/stats';
+import { isFastBoot } from '../../../util/fastboot';
 
 const {
   assign
@@ -30,7 +31,7 @@ export default class Query extends EmberObject {
   //
 
   get isPassive() {
-    return this._isPassive;
+    return isFastBoot(this) || this._isPassive;
   }
 
   passive() {
@@ -100,8 +101,10 @@ export default class Query extends EmberObject {
 
   _unsubscribeFromOnSnapshot() {
     let { _cancel } = this;
-    this._cancel = null;
-    _cancel();
+    if(_cancel) {
+      this._cancel = null;
+      _cancel();
+    }
   }
 
   //

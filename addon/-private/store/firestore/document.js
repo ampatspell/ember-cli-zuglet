@@ -9,6 +9,7 @@ import { registerOnSnapshot } from '../../stores/stats';
 import { cached } from '../../model/decorators/cached';
 import { randomString } from '../../util/random-string';
 import { Listeners } from '../../util/listeners';
+import { isFastBoot } from '../../util/fastboot';
 
 const {
   assign
@@ -53,7 +54,7 @@ export default class Document extends EmberObject {
   //
 
   get isPassive() {
-    return this._isPassive;
+    return isFastBoot(this) || this._isPassive;
   }
 
   passive() {
