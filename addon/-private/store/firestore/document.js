@@ -15,6 +15,8 @@ const {
   assign
 } = Object;
 
+export const isDocument = arg => arg instanceof Document;
+
 export default class Document extends EmberObject {
 
   @object().onDirty(owner => owner._dataDidChange())
@@ -137,7 +139,7 @@ export default class Document extends EmberObject {
 
   //
 
-  async load(opts) {
+  async _loadInternal(get, opts) {
     let { force } = assign({ force: false }, opts);
     let { isLoaded, isNew } = this;
     if((isLoaded || isNew) && !force) {
@@ -145,7 +147,7 @@ export default class Document extends EmberObject {
     }
     this.setProperties({ isLoading: true, isError: false, error: null });
     try {
-      let snapshot = await this.ref._ref.get();
+      let snapshot = await get(this.ref._ref);
       this._onSnapshot(snapshot, { source: 'load' });
       this._maybeSubscribeToOnSnapshot();
       this._deferred.resolve(this);
@@ -157,11 +159,15 @@ export default class Document extends EmberObject {
     return this;
   }
 
+  load(opts) {
+    return this._loadInternal(ref => ref.get(), opts);
+  }
+
   reload() {
     return this.load({ force: true });
   }
 
-  async save(opts) {
+  async _saveInternal(set, opts) {
     let { force, merge, token } = assign({ force: false, merge: false, token: false }, opts);
     let { isDirty } = this;
     if(!isDirty && !force) {
@@ -173,7 +179,7 @@ export default class Document extends EmberObject {
       if(token) {
         data._token = this.token;
       }
-      await this.ref._ref.set(data, { merge });
+      await set(this.ref._ref, data, { merge });
       this.setProperties({ isNew: false, isSaving: false, isDirty: false, exists: true });
       this._maybeSubscribeToOnSnapshot();
       this._deferred.resolve(this);
@@ -184,10 +190,14 @@ export default class Document extends EmberObject {
     return this;
   }
 
-  async delete() {
+  save(opts) {
+    return this._saveInternal((ref, data, opts) => ref.set(data, opts), opts);
+  }
+
+  async _deleteInternal(del) {
     this.setProperties({ isSaving: true, isError: false, error: null });
     try {
-      await this.ref._ref.delete();
+      await del(this.ref._ref);
       this.setProperties({ isSaving: false, exists: false });
       this._maybeSubscribeToOnSnapshot();
     } catch(error) {
@@ -195,6 +205,10 @@ export default class Document extends EmberObject {
       throw error;
     }
     return this;
+  }
+
+  delete() {
+    return this._deleteInternal(ref => ref.delete());
   }
 
   //

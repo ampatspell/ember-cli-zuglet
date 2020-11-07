@@ -5,6 +5,8 @@ const {
   assign
 } = Object;
 
+export const isDocumentReference = arg => arg instanceof DocumentReference;
+
 export default class DocumentReference extends Reference {
 
   get id() {
@@ -29,10 +31,10 @@ export default class DocumentReference extends Reference {
     return this.store._createDocumentForReference(this, null);
   }
 
-  async load(opts) {
+  async _loadInternal(get, opts) {
     let { optional } = assign({ optional: false }, opts);
     let { _ref } = this;
-    let snapshot = await _ref.get();
+    let snapshot = await get(_ref);
     if(!snapshot.exists) {
       if(optional) {
         return;
@@ -40,6 +42,10 @@ export default class DocumentReference extends Reference {
       throw documentForRefNotFoundError(_ref);
     }
     return this.store._createDocumentForSnapshot(snapshot);
+  }
+
+  load(opts) {
+    return this._loadInternal(ref => ref.get(), opts);
   }
 
 

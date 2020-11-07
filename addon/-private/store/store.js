@@ -123,11 +123,23 @@ export default class Store extends EmberObject {
     return this._createCollectionReference(ref);
   }
 
+  transaction(cb) {
+    return this.firebase.firestore().runTransaction(async tx => {
+      let transaction = this._createTransaction(tx);
+      return await cb(transaction);
+    });
+  }
+
   get serverTimestamp() {
     return firebase.firestore.FieldValue.serverTimestamp();
   }
 
   //
+
+  _createTransaction(_tx) {
+    let store = this;
+    return getOwner(this).factoryFor('zuglet:store/firestore/transaction').create({ store, _tx });
+  }
 
   _createDocumentWithProperties(props) {
     return getOwner(this).factoryFor('zuglet:store/firestore/document').create(props);
