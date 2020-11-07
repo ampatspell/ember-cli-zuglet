@@ -14,18 +14,6 @@ export default class RouteDevComponent extends Component {
     setGlobal({ component: this });
   }
 
-  async run() {
-    let { store } = this;
-    await store.transaction(async tx => {
-      let doc = await tx.load(store.doc('messages/first'));
-      doc.data.count = doc.data.count || 0;
-      doc.data.count++;
-      await tx.save(doc);
-      let d = store.doc('messages/thing').existing();
-      await tx.delete(d);
-    });
-  }
-
   toString() {
     return toString(this);
   }

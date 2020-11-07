@@ -21,6 +21,7 @@ import QueryArray from 'zuglet/-private/store/firestore/query/array';
 import QuerySingle from 'zuglet/-private/store/firestore/query/single';
 
 import Transaction from 'zuglet/-private/store/firestore/transaction';
+import Batch from 'zuglet/-private/store/firestore/batch';
 
 import Auth from 'zuglet/-private/store/auth/auth';
 import AuthMethods from 'zuglet/-private/store/auth/methods';
@@ -63,6 +64,7 @@ export default {
     container.register('zuglet:store/firestore/query/single', QuerySingle);
 
     container.register('zuglet:store/firestore/transaction', Transaction);
+    container.register('zuglet:store/firestore/batch', Batch);
 
     container.register('zuglet:store/auth', Auth);
     container.register('zuglet:store/auth/methods', AuthMethods);

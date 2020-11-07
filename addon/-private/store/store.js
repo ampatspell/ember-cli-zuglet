@@ -1,11 +1,12 @@
 import EmberObject from '@ember/object';
-import { getOwner } from '../util/get-owner';
 import { assert } from '@ember/debug';
+import firebase from "firebase/app";
 import { initializeApp, enablePersistence, destroyApp } from './firebase';
 import { cached } from '../model/decorators/cached';
+import { getOwner } from '../util/get-owner';
 import { toJSON } from '../util/to-json';
 import { isFastBoot } from '../util/fastboot';
-import firebase from "firebase/app";
+import { isFunction } from '../util/object-to-json';
 
 const {
   assign
@@ -130,11 +131,31 @@ export default class Store extends EmberObject {
     });
   }
 
+  async _batchWithCallback(cb) {
+    let batch = this._createBatch();
+    let result = await cb(batch);
+    await batch.commit();
+    return result;
+  }
+
+  batch(cb) {
+    if(isFunction(cb)) {
+      return this._batchWithCallback(cb);
+    }
+    return this._createBatch();
+  }
+
   get serverTimestamp() {
     return firebase.firestore.FieldValue.serverTimestamp();
   }
 
   //
+
+  _createBatch() {
+    let store = this;
+    let _batch = this.firebase.firestore().batch();
+    return getOwner(this).factoryFor('zuglet:store/firestore/batch').create({ store, _batch });
+  }
 
   _createTransaction(_tx) {
     let store = this;

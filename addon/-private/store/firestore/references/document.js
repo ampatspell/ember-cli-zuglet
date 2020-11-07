@@ -7,6 +7,8 @@ const {
 
 export const isDocumentReference = arg => arg instanceof DocumentReference;
 
+const noop = () => {};
+
 export default class DocumentReference extends Reference {
 
   get id() {
@@ -46,6 +48,14 @@ export default class DocumentReference extends Reference {
 
   load(opts) {
     return this._loadInternal(ref => ref.get(), opts);
+  }
+
+  _batchDelete(batch) {
+    batch.delete(this._ref);
+    return {
+      resolve: noop,
+      reject: noop
+    };
   }
 
 
