@@ -9,6 +9,7 @@ import WritableActivateProperty from 'zuglet/-private/model/properties/activate/
 import ContentActivateProperty from 'zuglet/-private/model/properties/activate/content';
 import ObjectProperty from 'zuglet/-private/model/properties/object';
 import ModelsProperty from 'zuglet/-private/model/properties/models';
+import ModelProperty from 'zuglet/-private/model/properties/model';
 
 import Store from 'zuglet/-private/store/store';
 
@@ -52,6 +53,7 @@ export default {
     container.register('zuglet:properties/activate/content', ContentActivateProperty);
     container.register('zuglet:properties/object', ObjectProperty);
     container.register('zuglet:properties/models', ModelsProperty);
+    container.register('zuglet:properties/model', ModelProperty);
 
     container.register('zuglet:store', Store);
 
