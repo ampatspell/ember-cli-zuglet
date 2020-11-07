@@ -156,13 +156,6 @@ const define = props => (_, key) => {
   };
 }
 
-const normalizeResolveModelName = modelName => {
-  if(typeof modelName === 'function') {
-    return modelName;
-  }
-  return () => modelName;
-}
-
 // @models().source(({ query }) => query.content).named((doc, owner) => 'animal').mapping(doc => ({ doc }))
 export const models = () => {
 
@@ -179,7 +172,11 @@ export const models = () => {
       return extend();
     }
     curr.named = name => {
-      opts.modelName = normalizeResolveModelName(name);
+      if(typeof name === 'function') {
+        opts.modelName = name;
+      } else {
+        opts.modelName = () => name;
+      }
       return extend();
     }
     curr.mapping = fn => {
