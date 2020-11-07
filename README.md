@@ -57,7 +57,8 @@ $ chrome://inspect
 
 ## TODO
 
-- [ ] add `@model().named('foo').mapping(({ id }) => ({ id }))` decorator
+- [ ] `@model` recreate model only if modelName changes. update props only if any has changed
+- [ ] `@models` update mapped props if has changed
 - [ ] add `doc.save({ type: 'update' })`, transaction update, batch update
 - [ ] @route decorator doesn't deactivate intermediate routes if child route transitions
 - [ ] documentation site to replace existing www.ember-cli-zuglet.com
