@@ -15,6 +15,8 @@ const {
   assign
 } = Object;
 
+export const isDocument = arg => arg instanceof Document;
+
 export default class Document extends EmberObject {
 
   @object().onDirty(owner => owner._dataDidChange())
@@ -137,7 +139,7 @@ export default class Document extends EmberObject {
 
   //
 
-  async load(opts) {
+  async _loadInternal(get, opts) {
     let { force } = assign({ force: false }, opts);
     let { isLoaded, isNew } = this;
     if((isLoaded || isNew) && !force) {
@@ -145,7 +147,7 @@ export default class Document extends EmberObject {
     }
     this.setProperties({ isLoading: true, isError: false, error: null });
     try {
-      let snapshot = await this.ref._ref.get();
+      let snapshot = await get(this.ref._ref);
       this._onSnapshot(snapshot, { source: 'load' });
       this._maybeSubscribeToOnSnapshot();
       this._deferred.resolve(this);
@@ -157,44 +159,118 @@ export default class Document extends EmberObject {
     return this;
   }
 
+  load(opts) {
+    return this._loadInternal(ref => ref.get(), opts);
+  }
+
   reload() {
     return this.load({ force: true });
   }
 
-  async save(opts) {
-    let { force, merge, token } = assign({ force: false, merge: false, token: false }, opts);
+  _normalizeSaveOptions(opts) {
+    let { merge, token, force } = assign({ force: false, merge: false, token: false }, opts);
     let { isDirty } = this;
-    if(!isDirty && !force) {
+    let skip = !isDirty && !force;
+    return {
+      skip,
+      merge,
+      token
+    };
+  }
+
+  _saveData(token) {
+    let data = this._data;
+    if(token) {
+      data._token = this.token;
+    }
+    return data;
+  }
+
+  _willSave() {
+    this.setProperties({ isSaving: true, isError: false, error: null });
+  }
+
+  _didSave() {
+    this.setProperties({ isNew: false, isSaving: false, isDirty: false, exists: true });
+    this._maybeSubscribeToOnSnapshot();
+    this._deferred.resolve(this);
+  }
+
+  _saveDidFail(error) {
+    this.setProperties({ isSaving: false, isError: true, error });
+  }
+
+  async _saveInternal(set, opts) {
+    let { skip, merge, token } = this._normalizeSaveOptions(opts);
+    if(skip) {
       return this;
     }
-    this.setProperties({ isSaving: true, isError: false, error: null });
+    this._willSave();
     try {
-      let data = this._data;
-      if(token) {
-        data._token = this.token;
-      }
-      await this.ref._ref.set(data, { merge });
-      this.setProperties({ isNew: false, isSaving: false, isDirty: false, exists: true });
-      this._maybeSubscribeToOnSnapshot();
-      this._deferred.resolve(this);
+      let data = this._saveData(token);
+      await set(this.ref._ref, data, { merge });
+      this._didSave();
     } catch(error) {
-      this.setProperties({ isSaving: false, isError: true, error });
+      this._saveDidFail(error);
       throw error;
     }
     return this;
   }
 
-  async delete() {
+  _batchSave(batch, opts) {
+    let { skip, merge, token } = this._normalizeSaveOptions(opts);
+    if(skip) {
+      return;
+    }
+    this._willSave();
+    let data = this._saveData(token);
+    batch.set(this.ref._ref, data, { merge });
+    return {
+      resolve: () => this._didSave(),
+      reject: err => this._saveDidFail(err)
+    };
+  }
+
+  save(opts) {
+    return this._saveInternal((ref, data, opts) => ref.set(data, opts), opts);
+  }
+
+  _willDelete() {
     this.setProperties({ isSaving: true, isError: false, error: null });
+  }
+
+  _didDelete() {
+    this.setProperties({ isSaving: false, exists: false });
+    this._maybeSubscribeToOnSnapshot();
+  }
+
+  _deleteDidFail(error) {
+    this.setProperties({ isSaving: false, isError: true, error });
+  }
+
+  async _deleteInternal(del) {
+    this._willDelete();
     try {
-      await this.ref._ref.delete();
-      this.setProperties({ isSaving: false, exists: false });
-      this._maybeSubscribeToOnSnapshot();
+      await del(this.ref._ref);
+      this._didDelete();
     } catch(error) {
-      this.setProperties({ isSaving: false, isError: true, error });
+      this._deleteDidFail(error);
       throw error;
     }
     return this;
+  }
+
+  _batchDelete(batch) {
+    this._willDelete();
+    batch.delete(this.ref._ref);
+    return {
+      resolve: () => this._didDelete(),
+      reject: err => this._deleteDidFail(err)
+    }
+  }
+
+  delete() {
+    return this._deleteInternal(ref => ref.delete());
   }
 
   //
