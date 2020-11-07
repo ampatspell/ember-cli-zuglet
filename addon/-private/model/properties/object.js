@@ -3,7 +3,7 @@ import { getState } from '../state';
 import DataManager from '../tracking/data';
 import { isServerTimestamp, isTimestamp } from '../../util/object-to-json';
 
-export default class ActivateProperty extends Property {
+export default class ObjectProperty extends Property {
 
   init() {
     super.init(...arguments);
