@@ -17,13 +17,15 @@ export default class RouteModelsComponent extends Component {
   @tracked
   modelName = 'message'
 
-  @activate().content(({ store, name }) => {
-    let ref = store.collection('messages');
-    if(name) {
-      ref = ref.where('name', '==', name);
-    }
-    return ref.query();
-  })
+  @activate()
+    .mapping(({ name }) => ({ name })) // triggers content recreation
+    .content(({ store }, { name }) => { // create/recreate content
+      let ref = store.collection('messages');
+      if(name) {
+        ref = ref.where('name', '==', name);
+      }
+      return ref.query();
+    })
   query
 
   @models()

@@ -16,14 +16,23 @@ const define = opts => (_, key) => {
 export const activate = () => {
 
   let opts = {
-    type: 'writable'
+    type: 'writable',
+    mapping: undefined
   };
 
   let extend = () => {
     let curr = define(opts);
     curr.content = value => {
-      opts.value = value;
+      if(typeof value === 'function') {
+        opts.value = value;
+      } else {
+        opts.value = () => value;
+      }
       opts.type = 'content';
+      return extend();
+    }
+    curr.mapping = value => {
+      opts.mapping = value;
       return extend();
     }
     return curr;

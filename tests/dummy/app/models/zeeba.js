@@ -7,6 +7,10 @@ export default class Message extends EmberObject {
   @tracked
   id
 
+  mappingDidChange({ id }) {
+    this.id = id;
+  }
+
   get serialized() {
     let { id } = this;
     return { id };

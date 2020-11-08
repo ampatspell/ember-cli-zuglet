@@ -57,7 +57,7 @@ $ chrome://inspect
 
 ## TODO
 
-- [ ] `@model` recreate model only if modelName changes. update props only if any has changed
+- [ ] `.mapping(({ name }) => ({ name }))` could be `.mapping('name')` for `@activate`, `@model`, `@models`
 - [ ] `@models` update mapped props if has changed
 - [ ] add `doc.save({ type: 'update' })`, transaction update, batch update
 - [ ] @route decorator doesn't deactivate intermediate routes if child route transitions

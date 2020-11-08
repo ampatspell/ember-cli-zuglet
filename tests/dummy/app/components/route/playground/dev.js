@@ -13,14 +13,10 @@ export default class RouteDevComponent extends Component {
   @tracked
   id = 'foo'
 
-  @activate().content(({ store, id }) => {
-    let model = store.models.create('zeeba', { id });
-    console.log('activated', model+'');
-    return model;
-  })
-  activated
+  // @model().named('zeeba').mapping(({ id }) => ({ id }))
+  // model
 
-  @model().named('zeeba').mapping(({ id }) => ({ id }))
+  @activate().mapping(({ id }) => ({ id })).content(({ store }, { id }) => store.models.create('zeeba', { id }))
   model
 
   constructor() {
