@@ -1,29 +1,30 @@
 import Property, { property } from './property';
 import { getStores } from '../../stores/get-stores';
 import ObjectActivator from './activate/activators/object';
-import { updated } from '../decorators/updated';
+import { diff, asString, asObject, asIdentity } from '../decorators/diff';
 
 export default class ModelProperty extends Property {
 
-  @updated()
+  @diff(asString)
   _modelName() {
     let { owner, opts } = this;
     return opts.modelName.call(owner, owner);
   }
 
-  @updated()
+  @diff(asObject)
   _props() {
     let { owner, opts } = this;
     return opts.mapping.call(owner, owner);
   }
 
-  @updated()
+  @diff(asIdentity)
   _value(curr) {
     let modelName = this._modelName;
     let props = this._props;
-    let create = () => getStores(this).models.create(modelName.value, props.value);
+    let create = () => getStores(this).models.create(modelName.current, props.current);
     if(curr) {
-      // console.log({ modelName, props});
+      console.log(modelName.current, modelName.updated);
+      console.log(props.current, props.updated);
       // have a marker for existing model to check if modelName differs
       // update props
     }
@@ -37,12 +38,12 @@ export default class ModelProperty extends Property {
   getPropertyValue() {
     let { activator } = this;
     if(!activator) {
-      let { value } = this._value;
+      let { current: value } = this._value;
       this.value = value;
       activator = this._createActivator(value);
       this.activator = activator;
     } else {
-      let { value } = this._value;
+      let { current: value } = this._value;
       if(value !== this.value) {
         this.value = value;
         activator.setValue(value);
