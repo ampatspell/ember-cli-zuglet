@@ -5,6 +5,14 @@ import { diff, asString, asObject, asIdentity } from '../decorators/diff';
 import { isFunction } from '../../util/object-to-json';
 import { assert } from '@ember/debug';
 
+const mappingDidChange = (owner, props, caller) => {
+  assert(
+    `${owner} requires mappingDidChange() because @${caller}().mapping(...) values has changed`,
+    isFunction(owner.mappingDidChange)
+  );
+  owner.mappingDidChange(props);
+};
+
 export default class ModelProperty extends Property {
 
   @diff(asString)
@@ -25,11 +33,7 @@ export default class ModelProperty extends Property {
     let props = this._props;
     if(current && !modelName.updated) {
       if(props.updated) {
-        assert(
-          `${current} requires mappingDidChange method because @model().mapping(...) values has changed`,
-          isFunction(current.mappingDidChange)
-        );
-        current.mappingDidChange(props.current);
+        mappingDidChange(current, props.current, 'model');
       }
       return current;
     }
