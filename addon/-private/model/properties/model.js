@@ -2,6 +2,8 @@ import Property, { property } from './property';
 import { getStores } from '../../stores/get-stores';
 import ObjectActivator from './activate/activators/object';
 import { diff, asString, asObject, asIdentity } from '../decorators/diff';
+import { isFunction } from '../../util/object-to-json';
+import { assert } from '@ember/debug';
 
 export default class ModelProperty extends Property {
 
@@ -18,17 +20,20 @@ export default class ModelProperty extends Property {
   }
 
   @diff(asIdentity)
-  _value(curr) {
+  _value(current) {
     let modelName = this._modelName;
     let props = this._props;
-    let create = () => getStores(this).models.create(modelName.current, props.current);
-    if(curr) {
-      console.log(modelName.current, modelName.updated);
-      console.log(props.current, props.updated);
-      // have a marker for existing model to check if modelName differs
-      // update props
+    if(current && !modelName.updated) {
+      if(props.updated) {
+        assert(
+          `${current} requires mappingDidChange method because @model().mapping(...) values has changed`,
+          isFunction(current.mappingDidChange)
+        );
+        current.mappingDidChange(props.current);
+      }
+      return current;
     }
-    return create();
+    return getStores(this).models.create(modelName.current, props.current);
   }
 
   _createActivator(value) {
