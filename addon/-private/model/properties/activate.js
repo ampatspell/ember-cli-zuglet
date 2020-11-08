@@ -17,7 +17,7 @@ export const activate = () => {
 
   let opts = {
     type: 'writable',
-    mapping: null
+    mapping: undefined
   };
 
   let extend = () => {

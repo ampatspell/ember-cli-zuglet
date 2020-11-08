@@ -11,13 +11,13 @@ export default class ContentActivateProperty extends BaseActivateProperty {
   @diff(asOptionalObject)
   _mapping() {
     let { owner, opts } = this;
-    return opts.mapping.call(owner, owner);
+    return opts.mapping && opts.mapping.call(owner, owner);
   }
 
   @diff()
   _value(current) {
     let mapping = this._mapping;
-    if(current && !mapping.updated) {
+    if(current && !mapping.updated && mapping.current) {
       return current;
     }
     let { owner, opts: { value } } = this;
