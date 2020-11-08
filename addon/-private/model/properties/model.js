@@ -1,28 +1,33 @@
 import Property, { property } from './property';
 import { getStores } from '../../stores/get-stores';
-import { createCache, getValue } from '@glimmer/tracking/primitives/cache';
 import ObjectActivator from './activate/activators/object';
+import { updated } from '../decorators/updated';
 
 export default class ModelProperty extends Property {
 
-  _createModel() {
+  @updated()
+  _modelName() {
     let { owner, opts } = this;
-    let modelName = opts.modelName.call(owner, owner);
-    let props = opts.mapping.call(owner, owner);
-    return getStores(this).models.create(modelName, props);
+    return opts.modelName.call(owner, owner);
   }
 
-  get _cache() {
-    let cache = this.__cache;
-    if(!cache) {
-      cache = createCache(() => this._createModel());
-      this.__cache = cache;
+  @updated()
+  _props() {
+    let { owner, opts } = this;
+    return opts.mapping.call(owner, owner);
+  }
+
+  @updated()
+  _value(curr) {
+    let modelName = this._modelName;
+    let props = this._props;
+    let create = () => getStores(this).models.create(modelName.value, props.value);
+    if(curr) {
+      // console.log({ modelName, props});
+      // have a marker for existing model to check if modelName differs
+      // update props
     }
-    return cache;
-  }
-
-  get _value() {
-    return getValue(this._cache);
+    return create();
   }
 
   _createActivator(value) {
@@ -32,12 +37,12 @@ export default class ModelProperty extends Property {
   getPropertyValue() {
     let { activator } = this;
     if(!activator) {
-      let value = this._value;
+      let { value } = this._value;
       this.value = value;
       activator = this._createActivator(value);
       this.activator = activator;
     } else {
-      let value = this._value;
+      let { value } = this._value;
       if(value !== this.value) {
         this.value = value;
         activator.setValue(value);
