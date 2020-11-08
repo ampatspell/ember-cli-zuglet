@@ -2,6 +2,10 @@ import { getState } from '../state';
 import { createCache, getValue } from '@glimmer/tracking/primitives/cache';
 import { assert } from '@ember/debug';
 
+const {
+  keys
+} = Object;
+
 /*
 
 class Thing {
@@ -32,7 +36,7 @@ export const asString = (prev, curr) => {
 export const asObject = (prev, curr) => {
   assert(`value msut be object not ${curr}`, typeof curr === 'object');
   prev = prev || {};
-  if(Object.keys(prev).length === Object.keys(curr).length) {
+  if(keys(prev).length === keys(curr).length) {
     for(let key in curr) {
       if(prev[key] !== curr[key]) {
         return true;
