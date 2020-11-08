@@ -42,13 +42,12 @@ export default class ModelProperty extends Property {
 
   getPropertyValue() {
     let { activator } = this;
+    let value = this._value.current;
     if(!activator) {
-      let { current: value } = this._value;
       this.value = value;
       activator = this._createActivator(value);
       this.activator = activator;
     } else {
-      let { current: value } = this._value;
       if(value !== this.value) {
         this.value = value;
         activator.setValue(value);
