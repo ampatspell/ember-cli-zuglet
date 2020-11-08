@@ -1,6 +1,6 @@
 import BaseActivateProperty from './activate';
 import { assert } from '@ember/debug';
-import { createCache, getValue } from '@glimmer/tracking/primitives/cache';
+import { diff, asOptionalObject } from '../../decorators/diff';
 
 export default class ContentActivateProperty extends BaseActivateProperty {
 
@@ -8,38 +8,35 @@ export default class ContentActivateProperty extends BaseActivateProperty {
     super.init(...arguments);
   }
 
-  get _cache() {
-    let cache = this.__cache;
-    if(!cache) {
-      cache = createCache(() => {
-        let { owner, opts: { value } } = this;
-        if(typeof value === 'function') {
-          return value.call(owner, owner);
-        }
-        return value;
-      });
-      this.__cache = cache;
-    }
-    return cache;
+  @diff(asOptionalObject)
+  _mapping() {
+    let { owner, opts } = this;
+    return opts.mapping.call(owner, owner);
   }
 
-  get _value() {
-    return getValue(this._cache);
+  @diff()
+  _value(current) {
+    let mapping = this._mapping;
+    if(current && !mapping.updated) {
+      return current;
+    }
+    let { owner, opts: { value } } = this;
+    return value.call(owner, owner, mapping.current);
   }
 
   getPropertyValue() {
     let { activator } = this;
     if(!activator) {
-      let value = this._value;
-      this.value = value;
-      activator = this.createActivator(value);
+      let { current } = this._value;
+      this.value = current;
+      activator = this.createActivator(current);
       this.activator = activator;
     } else {
-      let value = this._value;
-      if(value !== this.value) {
-        this.value = value;
-        this.assertActivatorType(activator, value);
-        activator.setValue(value);
+      let { current } = this._value;
+      if(current !== this.value) {
+        this.value = current;
+        this.assertActivatorType(activator, current);
+        activator.setValue(current);
       }
     }
     return activator.getValue();

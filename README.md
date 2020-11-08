@@ -57,7 +57,6 @@ $ chrome://inspect
 
 ## TODO
 
-- [ ] use `@diff()` for `@activate().content(...)`
 - [ ] `@models` update mapped props if has changed
 - [ ] add `doc.save({ type: 'update' })`, transaction update, batch update
 - [ ] @route decorator doesn't deactivate intermediate routes if child route transitions

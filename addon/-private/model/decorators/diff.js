@@ -46,6 +46,13 @@ export const asObject = (prev, curr) => {
   return false;
 }
 
+export const asOptionalObject = (prev, curr) => {
+  if(curr === undefined) {
+    return prev !== curr;
+  }
+  return asObject(prev, curr);
+}
+
 export const asIdentity = (prev, curr) => prev !== curr;
 
 export const diff = (diff=asIdentity) => (_, key, descriptor) => {
