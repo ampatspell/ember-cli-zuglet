@@ -49,15 +49,16 @@ export const asObject = (prev, curr) => {
 export const asIdentity = (prev, curr) => prev !== curr;
 
 export const diff = (diff=asIdentity) => (_, key, descriptor) => {
+  let getHash = state => state.cache[key];
   return {
     get() {
       let state = getState(this);
-      let hash = state.cache[key];
+      let hash = getHash(state);
       let previous = hash && hash.value;
       let current;
       if(!hash) {
         let cache = createCache(() => {
-          let hash = state.cache[key];
+          let hash = getHash(state);
           return descriptor.value.call(this, hash && hash.value);
         });
         current = getValue(cache);
