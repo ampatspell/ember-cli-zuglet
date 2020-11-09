@@ -21,6 +21,7 @@
     "test": "npm-run-all lint:* test:*",
     "test:ember": "ember test",
     "test:ember-compatibility": "ember try:each",
+    "coverage": "COVERAGE=true ember test && open ./coverage/index.html",
     "tags": "git push --follow-tags",
     "bump": "npm version minor; npm run tags",
     "patch": "npm version patch; npm run tags"
@@ -40,6 +41,7 @@
     "babel-eslint": "^10.1.0",
     "broccoli-asset-rev": "^3.0.0",
     "ember-cli": "~3.22.0",
+    "ember-cli-code-coverage": "^1.0.2",
     "ember-cli-dependency-checker": "^3.2.0",
     "ember-cli-fastboot": "^2.2.3",
     "ember-cli-inject-live-reload": "^2.0.2",
