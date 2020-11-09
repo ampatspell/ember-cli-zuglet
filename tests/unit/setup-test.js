@@ -36,7 +36,7 @@ module('setup', function(hooks) {
     assert.ok(isActivated(this.store));
   });
 
-  test('sign in with email', async function(assert) {
+  test('sign in with email succeeds', async function(assert) {
     await this.store.auth.signOut();
     let { email, password } = credentials.ampatspell;
     let user = await this.store.auth.methods.email.signIn(email, password);
