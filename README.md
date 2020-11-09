@@ -61,7 +61,7 @@ $ chrome://inspect
 
 ``` javascript
 @activate()
-  .mapping(({ id }) => ({ id }))
+  .mapping('id')
   .content(({ store }, { id }) => store.models.create('thing', { id }))
 ```
 

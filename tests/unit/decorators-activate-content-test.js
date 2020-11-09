@@ -27,7 +27,7 @@ module('decorators / @activate / content', function(hooks) {
 
       @activate()
         .mapping(({ mapped }) => ({ mapped }))
-        .content(({ mapped }, { store, base }) => store.models.create('nested', { base, mapped }))
+        .content(({ store, base }, { mapped }) => store.models.create('nested', { base, mapped }))
       model
 
     });
@@ -48,7 +48,7 @@ module('decorators / @activate / content', function(hooks) {
 
       @activate()
         .mapping(({ mapped }) => ({ mapped }))
-        .content(({ mapped }, { store, base }) => store.models.create('nested', { base, mapped }))
+        .content(({ store, base }, { mapped }) => store.models.create('nested', { base, mapped }))
       model
 
     });
@@ -69,7 +69,7 @@ module('decorators / @activate / content', function(hooks) {
 
       @activate()
         .mapping(({ mapped }) => ({ mapped }))
-        .content(({ mapped }, { store, base }) => store.models.create('nested', { base, mapped }))
+        .content(({ store, base }, { mapped }) => store.models.create('nested', { base, mapped }))
       model
 
     });
@@ -123,8 +123,8 @@ module('decorators / @activate / content', function(hooks) {
       mapped = 'duck'
 
       @activate()
-        .mapping('store', 'base', 'mapped')
-        .content(({ store, base, mapped }) => store.models.create('nested', { base, mapped }))
+        .mapping('base', 'mapped')
+        .content(({ store }, { base, mapped }) => store.models.create('nested', { base, mapped }))
       model
 
     });
@@ -133,6 +133,5 @@ module('decorators / @activate / content', function(hooks) {
     assert.strictEqual(model.base, 'zeeba');
     assert.strictEqual(model.mapped, 'duck');
   });
-
 
 });

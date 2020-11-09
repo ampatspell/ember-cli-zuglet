@@ -16,7 +16,7 @@ export default class RouteDevComponent extends Component {
   @model().mapping('id').named('zeeba')
   model
 
-  @activate().mapping('store', 'id').content(({ store, id }) => store.models.create('zeeba', { id }))
+  @activate().mapping('id').content(({ store }, { id }) => store.models.create('zeeba', { id }))
   activate
 
   constructor() {
