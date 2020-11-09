@@ -2,11 +2,13 @@ import { module, test, only, skip } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import { setupStores } from './setup-stores';
 import { setupStore } from './setup-store';
+import { setupHelpers } from './setup-helpers';
 
 export const setupStoreTest = hooks => {
   setupTest(hooks);
   setupStores(hooks);
   setupStore(hooks);
+  setupHelpers(hooks);
 }
 
 const credentials = {

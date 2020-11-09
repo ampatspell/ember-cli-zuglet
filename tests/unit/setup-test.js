@@ -1,5 +1,6 @@
-import { module, test, setupStoreTest, credentials} from '../helpers/setup';
+import { module, test, setupStoreTest, credentials } from '../helpers/setup';
 import { isActivated } from 'zuglet/utils';
+import EmberObject from '@ember/object';
 
 module('setup', function(hooks) {
   setupStoreTest(hooks);
@@ -43,6 +44,20 @@ module('setup', function(hooks) {
     assert.ok(user);
     assert.ok(this.store.auth.user);
     assert.ok(user === this.store.auth.user);
+  });
+
+  test('register model', function(assert) {
+    class Box extends EmberObject {
+      name = 'box'
+    }
+
+    this.registerModel('box', Box);
+    let model = this.store.models.create('box', { ok: true });
+
+    assert.ok(model);
+    assert.ok(model instanceof Box);
+    assert.strictEqual(model.name, 'box');
+    assert.strictEqual(model.ok, true);
   });
 
 });
