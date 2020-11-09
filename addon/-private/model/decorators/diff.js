@@ -28,9 +28,18 @@ class Thing {
 
 */
 
+const isEmpty = value => value === undefined || value === null;
+
 export const asString = (prev, curr) => {
   assert(`value msut be string not ${curr}`, typeof curr === 'string');
   return prev !== curr;
+}
+
+export const asOptionalString = (prev, curr) => {
+  if(isEmpty(curr)) {
+    return isEmpty(prev) !== isEmpty(curr);
+  }
+  return asString(prev, curr);
 }
 
 export const asObject = (prev, curr) => {
@@ -47,8 +56,8 @@ export const asObject = (prev, curr) => {
 }
 
 export const asOptionalObject = (prev, curr) => {
-  if(curr === undefined) {
-    return prev !== curr;
+  if(isEmpty(curr)) {
+    return isEmpty(prev) !== isEmpty(curr);
   }
   return asObject(prev, curr);
 }

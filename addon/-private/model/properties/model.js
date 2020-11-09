@@ -1,7 +1,7 @@
 import Property, { property, normalizeMapping } from './property';
 import { getStores } from '../../stores/get-stores';
 import ObjectActivator from './activate/activators/object';
-import { diff, asString, asObject, asIdentity } from '../decorators/diff';
+import { diff, asOptionalString, asOptionalObject, asIdentity } from '../decorators/diff';
 import { isFunction } from '../../util/object-to-json';
 import { assert } from '@ember/debug';
 
@@ -15,16 +15,18 @@ const mappingDidChange = (owner, props, caller) => {
 
 export default class ModelProperty extends Property {
 
-  @diff(asString)
+  @diff(asOptionalString)
   _modelName() {
     let { owner, opts } = this;
     return opts.modelName.call(owner, owner);
   }
 
-  @diff(asObject)
+  @diff(asOptionalObject)
   _props() {
     let { owner, opts } = this;
-    return opts.mapping.call(owner, owner);
+    if(opts.mapping) {
+      return opts.mapping.call(owner, owner);
+    }
   }
 
   @diff(asIdentity)
@@ -37,7 +39,10 @@ export default class ModelProperty extends Property {
       }
       return current;
     }
-    return getStores(this).models.create(modelName.current, props.current);
+    if(modelName.current) {
+      return getStores(this).models.create(modelName.current, props.current);
+    }
+    return null;
   }
 
   _createActivator(value) {
