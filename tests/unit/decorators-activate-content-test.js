@@ -7,10 +7,17 @@ module('decorators / @activate / content', function(hooks) {
   setupStoreTest(hooks);
 
   hooks.beforeEach(function() {
-    class Nested extends EmberObject {
+    this.registerModel('nested', class Nested extends EmberObject {
+    });
+    this.define = Box => {
+      let { store } = this;
+      this.registerModel('box', Box);
+      return store.models.create('box', { store });
     }
+  });
 
-    class Box extends EmberObject {
+  test('with mapping ignores content prop changes', async function(assert) {
+    let box = this.define(class Box extends EmberObject {
 
       @tracked
       base = 'zeeba'
@@ -22,36 +29,88 @@ module('decorators / @activate / content', function(hooks) {
         .mapping(({ mapped }) => ({ mapped }))
         .content(({ store, base }, { mapped }) => store.models.create('nested', { base, mapped }))
       model
-    }
 
-    this.registerModel('nested', Nested);
-    this.registerModel('box', Box);
-  });
-
-  // @activate without mapping
-  //   recreate on content props change
-  // @activate with mapping
-  //   recreate on mapping chnage
-  //   doesn't recreate on content props change
-
-  test('mapping vs content', async function(assert) {
-    let box = this.store.models.create('box', { store: this.store });
+    });
 
     let model = box.model;
-    assert.ok(model);
-    assert.strictEqual(model.base, 'zeeba');
-    assert.strictEqual(model.mapped, 'duck');
-
+    box.base = 'change';
     assert.ok(box.model === model);
+  });
 
+  test('with mapping recreates on mapped prop change', async function(assert) {
+    let box = this.define(class Box extends EmberObject {
+
+      @tracked
+      base = 'zeeba'
+
+      @tracked
+      mapped = 'duck'
+
+      @activate()
+        .mapping(({ mapped }) => ({ mapped }))
+        .content(({ store, base }, { mapped }) => store.models.create('nested', { base, mapped }))
+      model
+
+    });
+
+    let model = box.model;
+    box.mapped = 'change';
+    assert.ok(box.model !== model);
+  });
+
+  test('with mapping ignores mapped prop ping', async function(assert) {
+    let box = this.define(class Box extends EmberObject {
+
+      @tracked
+      base = 'zeeba'
+
+      @tracked
+      mapped = 'duck'
+
+      @activate()
+        .mapping(({ mapped }) => ({ mapped }))
+        .content(({ store, base }, { mapped }) => store.models.create('nested', { base, mapped }))
+      model
+
+    });
+
+    let model = box.model;
+    box.mapped = 'duck';
+    assert.ok(box.model === model);
+  });
+
+  test('without mapping recreates on content props change', async function(assert) {
+    let box = this.define(class Box extends EmberObject {
+
+      @tracked
+      base = 'zeeba'
+
+      @activate()
+        .content(({ store, base }) => store.models.create('nested', { base }))
+      model
+
+    });
+
+    let model = box.model;
     box.base = 'larry';
+    assert.ok(box.model !== model);
+  });
 
-    assert.ok(box.model === model);
+  test(`without mapping model is recreated on prop ping`, async function(assert) {
+    let box = this.define(class Box extends EmberObject {
 
-    box.mapped = 'foof';
+      @tracked
+      base = 'zeeba'
 
-    let nextModel = box.model;
-    assert.ok(nextModel !== model);
+      @activate()
+        .content(({ store, base }) => store.models.create('nested', { base }))
+      model
+
+    });
+
+    let model = box.model;
+    box.base = 'zeeba';
+    assert.ok(box.model !== model);
   });
 
 });
