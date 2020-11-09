@@ -74,10 +74,10 @@ $ chrome://inspect
 ``` javascript
 @model()
   .named(({ name }) => name)
-  .mapping(({ id }) => ({ id }))
+  .mapping('id')
 ```
 
-* ``
+* if mapping changes, but modelName hasn't changed, `mappingDidChange` is invoked
 
 ### @models
 
@@ -87,6 +87,8 @@ $ chrome://inspect
   .named((doc, owner) => `thing/${doc.data.type}`)
   .mapping((doc, owner) => ({ doc }))
 ```
+
+* models doesn't get updated properties at the moment. there is no `mappingDidChange`
 
 ## TODO
 
