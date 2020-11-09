@@ -92,6 +92,7 @@ $ chrome://inspect
 
 ## TODO
 
+- [ ] look into making all `@tracked` properties into `@dedupedTracked` and expose zuglet `@tracked` which is deduped to get rid of `@activate` mapping and similar helpers
 - [ ] support paths like `@models().source(({ query }) => query.content)` to `@models().source('query.content')`
 - [ ] `.mapping(({ name }) => ({ name }))` could be `.mapping('name')` for `@activate`, `@model`, `@models`
 - [ ] `@models` update mapped props if has changed
