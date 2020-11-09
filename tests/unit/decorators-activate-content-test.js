@@ -27,7 +27,7 @@ module('decorators / @activate / content', function(hooks) {
 
       @activate()
         .mapping(({ mapped }) => ({ mapped }))
-        .content(({ store, base }, { mapped }) => store.models.create('nested', { base, mapped }))
+        .content(({ mapped }, { store, base }) => store.models.create('nested', { base, mapped }))
       model
 
     });
@@ -48,7 +48,7 @@ module('decorators / @activate / content', function(hooks) {
 
       @activate()
         .mapping(({ mapped }) => ({ mapped }))
-        .content(({ store, base }, { mapped }) => store.models.create('nested', { base, mapped }))
+        .content(({ mapped }, { store, base }) => store.models.create('nested', { base, mapped }))
       model
 
     });
@@ -69,7 +69,7 @@ module('decorators / @activate / content', function(hooks) {
 
       @activate()
         .mapping(({ mapped }) => ({ mapped }))
-        .content(({ store, base }, { mapped }) => store.models.create('nested', { base, mapped }))
+        .content(({ mapped }, { store, base }) => store.models.create('nested', { base, mapped }))
       model
 
     });
@@ -112,5 +112,27 @@ module('decorators / @activate / content', function(hooks) {
     box.base = 'zeeba';
     assert.ok(box.model !== model);
   });
+
+  test('mapping can be described as array of prop names', async function(assert) {
+    let box = this.define(class Box extends EmberObject {
+
+      @tracked
+      base = 'zeeba'
+
+      @tracked
+      mapped = 'duck'
+
+      @activate()
+        .mapping('store', 'base', 'mapped')
+        .content(({ store, base, mapped }) => store.models.create('nested', { base, mapped }))
+      model
+
+    });
+
+    let model = box.model;
+    assert.strictEqual(model.base, 'zeeba');
+    assert.strictEqual(model.mapped, 'duck');
+  });
+
 
 });

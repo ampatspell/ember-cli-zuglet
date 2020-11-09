@@ -1,4 +1,4 @@
-import Property, { property } from './property';
+import Property, { property, normalizeMapping } from './property';
 import { getStores } from '../../stores/get-stores';
 import ObjectActivator from './activate/activators/object';
 import { diff, asString, asObject, asIdentity } from '../decorators/diff';
@@ -104,8 +104,8 @@ export const model = () => {
       }
       return extend();
     }
-    curr.mapping = fn => {
-      opts.mapping = fn;
+    curr.mapping = (...args) => {
+      opts.mapping = normalizeMapping(args);
       return extend();
     }
     return curr;

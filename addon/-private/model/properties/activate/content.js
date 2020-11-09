@@ -21,7 +21,11 @@ export default class ContentActivateProperty extends BaseActivateProperty {
       return current;
     }
     let { owner, opts: { value } } = this;
-    return value.call(owner, owner, mapping.current);
+    if(this.opts.mapping) {
+      return value.call(owner, mapping.current, owner);
+    } else {
+      return value.call(owner, owner);
+    }
   }
 
   getPropertyValue() {

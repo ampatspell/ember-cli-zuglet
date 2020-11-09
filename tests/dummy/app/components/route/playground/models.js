@@ -18,8 +18,8 @@ export default class RouteModelsComponent extends Component {
   modelName = 'message'
 
   @activate()
-    .mapping(({ name }) => ({ name })) // triggers content recreation
-    .content(({ store }, { name }) => { // create/recreate content
+    .mapping('name', 'store') // triggers content recreation
+    .content(({ name, store }) => { // create/recreate content
       let ref = store.collection('messages');
       if(name) {
         ref = ref.where('name', '==', name);
