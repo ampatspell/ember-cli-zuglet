@@ -66,7 +66,7 @@ $ chrome://inspect
 ```
 
 * if individual mapping properties hasn't changed, content is not recreated
-* if content 1st arg has changed, content is recreated
+* if owner props has changed, content is recreated
 * there is no `model.mappingDidChange` -- `mapping()` is just to skip content recreation on `@tracked` pings
 
 ### @model
