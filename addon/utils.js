@@ -8,6 +8,7 @@ import { alive } from './-private/util/alive';
 import { delay } from './-private/util/delay';
 import { getStores } from './-private/stores/get-stores';
 import { isZugletError } from './-private/util/error';
+import { activate, isActivated } from './-private/util/activate';
 
 export {
   getStores,
@@ -19,5 +20,7 @@ export {
   isZugletError,
   load,
   alive,
-  delay
+  delay,
+  activate,
+  isActivated
 }

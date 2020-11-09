@@ -1,18 +1,7 @@
 import { module, test, only, skip } from 'qunit';
 import { setupTest } from 'ember-qunit';
+import { setupStores } from './setup-stores';
 import { setupStore } from './setup-store';
-
-test.only = only;
-test.skip = skip;
-
-const setupStores = hooks => {
-  hooks.beforeEach(function() {
-    this.stores = this.owner.lookup('zuglet:stores');
-  });
-  hooks.afterEach(function() {
-    this.stores.destroy();
-  });
-}
 
 export const setupStoreTest = hooks => {
   setupTest(hooks);
@@ -20,7 +9,15 @@ export const setupStoreTest = hooks => {
   setupStore(hooks);
 }
 
+const credentials = {
+  ampatspell: { email: 'ampatspell@gmail.com', password: 'heythere' }
+};
+
+test.only = only;
+test.skip = skip;
+
 export {
   module,
-  test
+  test,
+  credentials
 }
