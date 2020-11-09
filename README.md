@@ -55,6 +55,39 @@ $ node --inspect-brk ./node_modules/.bin/ember serve
 $ chrome://inspect
 ```
 
+## Decorators
+
+### @activate
+
+``` javascript
+@activate()
+  .mapping(({ id }) => ({ id }))
+  .content(({ store }, { id }) => store.models.create('thing', { id }))
+```
+
+* if individual mapping properties hasn't changed, content is not recreated
+* if content 1st arg has changed, content is recreated
+* there is no `model.mappingDidChange` -- `mapping()` is just to skip content recreation on `@tracked` pings
+
+### @model
+
+``` javascript
+@model()
+  .named(({ name }) => name)
+  .mapping(({ id }) => ({ id }))
+```
+
+* ``
+
+### @models
+
+``` javascript
+@models()
+  .source(({ query }) => query.content)
+  .named((doc, owner) => `thing/${doc.data.type}`)
+  .mapping((doc, owner) => ({ doc }))
+```
+
 ## TODO
 
 - [ ] support null `@model` based on `named`
