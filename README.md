@@ -106,6 +106,6 @@ $ chrome://inspect
 - [ ] maybe use own `setProperties` for `@tracked` state props or tracking/state
 - [ ] support paths like `@models().source(({ query }) => query.content)` to `@models().source('query.content')`
 - [ ] add `doc.save({ type: 'update' })`, transaction update, batch update
-- [ ] @route decorator doesn't deactivate intermediate routes if child route transitions
+- [ ] `@route` decorator doesn't deactivate intermediate routes if child route transitions
 - [ ] documentation site to replace existing www.ember-cli-zuglet.com
 - [ ] add support for cloud messaging
