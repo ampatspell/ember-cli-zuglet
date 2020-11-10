@@ -5,7 +5,12 @@
   </div>
 
   <div class="row">
+    <input type="button" {{on "click" this.reload}} value="Reload"/>
+  </div>
+
+  <div class="row">
     <Block::Changes as |Changes|>
+      <Changes.Property @key="doc" @value={{this.doc}}/>
       <Changes.Property @key="doc.data.name" @value={{this.doc.data.name}}/>
     </Block::Changes>
   </div>

@@ -3,6 +3,7 @@ import { inject as service } from '@ember/service';
 import { setGlobal, toString } from 'zuglet/utils';
 import { root, activate } from 'zuglet/decorators';
 import { tracked } from '@glimmer/tracking';
+import { action } from '@ember/object';
 
 @root()
 export default class RouteDevComponent extends Component {
@@ -19,6 +20,12 @@ export default class RouteDevComponent extends Component {
   constructor() {
     super(...arguments);
     setGlobal({ component: this });
+  }
+
+  @action
+  reload() {
+    console.log('reload');
+    this.doc.reload();
   }
 
   toString() {
