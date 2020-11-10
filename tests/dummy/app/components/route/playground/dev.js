@@ -18,7 +18,7 @@ export default class RouteDevComponent extends Component {
   doc
 
   get thing() {
-    return this.doc.data.things && this.doc.data.things[0] && this.doc.data.things[0].name;
+    return this.doc.data?.things?.[0]?.name;
   }
 
   constructor() {
