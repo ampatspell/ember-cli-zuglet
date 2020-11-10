@@ -69,21 +69,15 @@ $ chrome://inspect
 ### @activate
 
 ``` javascript
-@activate()
-  .mapping('id')
-  .content(({ store }, { id }) => store.models.create('thing', { id }))
+@activate().content(({ store, id }) => store.models.create('thing', { id }))
 ```
-
-* if individual mapping properties hasn't changed, content is not recreated
-* if owner props has changed, content is recreated
-* there is no `model.mappingDidChange` -- `mapping()` is just to skip content recreation on `@tracked` pings
 
 ### @model
 
 ``` javascript
 @model()
   .named(({ name }) => name)
-  .mapping('id')
+  .mapping(({ id }) => ({ id }))
 ```
 
 * if mapping changes, but modelName hasn't changed, `mappingDidChange` is invoked
