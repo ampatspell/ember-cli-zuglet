@@ -2,6 +2,7 @@ import { module, test, setupStoreTest } from '../helpers/setup';
 import EmberObject from '@ember/object';
 import { activate } from 'zuglet/decorators';
 import { tracked } from '@glimmer/tracking';
+import { dedupeTracked } from 'tracked-toolbox';
 
 module('decorators / @activate / content', function(hooks) {
   setupStoreTest(hooks);
@@ -16,39 +17,17 @@ module('decorators / @activate / content', function(hooks) {
     }
   });
 
-  test('with mapping ignores content prop changes', async function(assert) {
+  test(`model is recreated if @dedupeTracked is set to the same value`, async function(assert) {
     let box = this.define(class Box extends EmberObject {
 
       @tracked
       base = 'zeeba'
 
-      @tracked
+      @dedupeTracked
       mapped = 'duck'
 
       @activate()
-        .mapping(({ mapped }) => ({ mapped }))
-        .content(({ store, base }, { mapped }) => store.models.create('nested', { base, mapped }))
-      model
-
-    });
-
-    let model = box.model;
-    box.base = 'change';
-    assert.ok(box.model === model);
-  });
-
-  test('with mapping recreates on mapped prop change', async function(assert) {
-    let box = this.define(class Box extends EmberObject {
-
-      @tracked
-      base = 'zeeba'
-
-      @tracked
-      mapped = 'duck'
-
-      @activate()
-        .mapping(({ mapped }) => ({ mapped }))
-        .content(({ store, base }, { mapped }) => store.models.create('nested', { base, mapped }))
+        .content(({ store, base, mapped }) => store.models.create('nested', { base, mapped }))
       model
 
     });
@@ -58,18 +37,17 @@ module('decorators / @activate / content', function(hooks) {
     assert.ok(box.model !== model);
   });
 
-  test('with mapping ignores mapped prop ping', async function(assert) {
+  test(`model is not recreated if @dedupeTracked is set to the same value`, async function(assert) {
     let box = this.define(class Box extends EmberObject {
 
       @tracked
       base = 'zeeba'
 
-      @tracked
+      @dedupeTracked
       mapped = 'duck'
 
       @activate()
-        .mapping(({ mapped }) => ({ mapped }))
-        .content(({ store, base }, { mapped }) => store.models.create('nested', { base, mapped }))
+        .content(({ store, base, mapped }) => store.models.create('nested', { base, mapped }))
       model
 
     });
@@ -79,7 +57,7 @@ module('decorators / @activate / content', function(hooks) {
     assert.ok(box.model === model);
   });
 
-  test('without mapping recreates on content props change', async function(assert) {
+  test(`model is recreated if @tracked property is set to another value`, async function(assert) {
     let box = this.define(class Box extends EmberObject {
 
       @tracked
@@ -96,7 +74,7 @@ module('decorators / @activate / content', function(hooks) {
     assert.ok(box.model !== model);
   });
 
-  test(`without mapping model is recreated on prop ping`, async function(assert) {
+  test(`model is recreated if @tracked property is set to the same value`, async function(assert) {
     let box = this.define(class Box extends EmberObject {
 
       @tracked
@@ -111,27 +89,6 @@ module('decorators / @activate / content', function(hooks) {
     let model = box.model;
     box.base = 'zeeba';
     assert.ok(box.model !== model);
-  });
-
-  test('mapping can be described as array of prop names', async function(assert) {
-    let box = this.define(class Box extends EmberObject {
-
-      @tracked
-      base = 'zeeba'
-
-      @tracked
-      mapped = 'duck'
-
-      @activate()
-        .mapping('base', 'mapped')
-        .content(({ store }, { base, mapped }) => store.models.create('nested', { base, mapped }))
-      model
-
-    });
-
-    let model = box.model;
-    assert.strictEqual(model.base, 'zeeba');
-    assert.strictEqual(model.mapped, 'duck');
   });
 
 });
