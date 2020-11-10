@@ -1,5 +1,5 @@
 import EmberObject from '@ember/object';
-import { objectToJSON, toPrimitive, toJSON } from 'zuglet/utils';
+import { objectToJSON, toJSON } from 'zuglet/utils';
 import { tracked } from '@glimmer/tracking';
 import { alias } from 'macro-decorators';
 

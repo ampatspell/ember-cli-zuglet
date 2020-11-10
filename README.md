@@ -50,6 +50,15 @@ module.exports = {
 <Zuglet::Stats @stores={{false}}/>
 ```
 
+## Other addons
+
+``` bash
+$ ember install tracked-toolbox
+$ ember install macro-decorators
+```
+
+## Debugging
+
 ``` bash
 $ node --inspect-brk ./node_modules/.bin/ember serve
 $ chrome://inspect
@@ -92,7 +101,10 @@ $ chrome://inspect
 
 ## TODO
 
-- [ ] add `@object` update without dirtying properties that hasn't changed
+- [ ] remove `mapping` from `@activate`
+- [ ] add `mappingDidChange` to `@models`
+- [ ] remove support for mapping as string from `@model`
+- [ ] maybe also do partial updates for `doc.data.foo = { ok: true }`-type sets
 - [ ] maybe use own `setProperties` for `@tracked` state props or tracking/state
 - [ ] `@models` update mapped props with `mappingDidChange`
 - [ ] support paths like `@models().source(({ query }) => query.content)` to `@models().source('query.content')`

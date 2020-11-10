@@ -12,6 +12,11 @@ export default class BlockChangesComponent extends Component {
     this.changes = [ ...this.changes, { key, value } ];
   }
 
+  @action
+  clear() {
+    this.changes = [];
+  }
+
   get log() {
     return this.changes.map(({ key, value })=> {
       if(value === undefined) {

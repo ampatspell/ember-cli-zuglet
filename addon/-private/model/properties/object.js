@@ -36,6 +36,10 @@ export default class ObjectProperty extends Property {
     return this.manager.getRaw();
   }
 
+  update(value) {
+    return this.manager.update(value);
+  }
+
   getPropertyValue() {
     return this.manager.getProxy();
   }
@@ -87,4 +91,16 @@ export const raw = objectKey => () => {
       return property.getRaw();
     }
   };
+}
+
+export const update = (objectKey) => (owner, key, descriptor) => {
+  return {
+    value: function(object) {
+      let property = getState(this).getProperty(objectKey);
+      if(!property) {
+        return;
+      }
+      return property.update(object);
+    }
+  }
 }

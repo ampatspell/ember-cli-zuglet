@@ -1,5 +1,8 @@
-<div class="block-changes">
+<div class="block-changes" role="button" {{on "dblclick" this.clear}}>
   <div class="log">{{this.log}}</div>
+  {{#unless this.log}}
+    <div class="placeholder">No events</div>
+  {{/unless}}
   {{yield (hash
     Property=(component 'block/changes/property' onPropertyChange=this.onPropertyChange)
   )}}

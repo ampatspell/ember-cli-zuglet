@@ -1,9 +1,12 @@
 import { toString } from '../../util/to-string';
 import { consumeKey, dirtyKey } from './tag';
 import { propToIndex, ARRAY_GETTERS } from './utils';
+import { A, isArray } from '@ember/array';
+import { assert } from '@ember/debug';
 
 const KEYS = Symbol();
 const ARRAY = Symbol();
+const UPDATE = Symbol('UPDATE');
 
 class ObjectProxy {
 }
@@ -11,8 +14,11 @@ class ObjectProxy {
 class ArrayProxy {
 }
 
+const isProxy = arg => arg instanceof ObjectProxy || arg instanceof ArrayProxy;
+const updateProxy = (proxy, value) => proxy[UPDATE](value);
+
 const createArrayProxy = (property, target) => {
-  return new Proxy(target, {
+  let proxy = new Proxy(target, {
     get: (target, prop) => {
       let idx = propToIndex(prop);
       if(idx === null) {
@@ -53,10 +59,36 @@ const createArrayProxy = (property, target) => {
       return ArrayProxy.prototype;
     }
   });
+
+  let update = (object) => {
+    if(!isArray(object)) {
+      return false;
+    }
+
+    object.forEach((item, idx) => {
+      if(isProxy(proxy[idx])) {
+        if(!updateProxy(proxy[idx], item)) {
+          proxy[idx] = item;
+        }
+      } else {
+        proxy[idx] = item;
+      }
+    });
+
+    if(proxy.length !== object.length) {
+      proxy.length = object.length;
+    }
+
+    return true;
+  }
+
+  Object.defineProperty(proxy, UPDATE, { value: update });
+
+  return proxy;
 }
 
 const createObjectProxy = (property, target) => {
-  return new Proxy(target, {
+  let proxy = new Proxy(target, {
     get: (target, prop) => {
       consumeKey(target, prop);
       return target[prop];
@@ -80,16 +112,55 @@ const createObjectProxy = (property, target) => {
       }
       return true;
     },
+    deleteProperty(target, prop) {
+      if(prop in target) {
+        dirtyKey(target, prop);
+        dirtyKey(target, KEYS);
+        property.dirty();
+        delete target[prop];
+      }
+      return true;
+    },
     getPrototypeOf() {
       return ObjectProxy.prototype;
     }
   });
+
+  let update = (object) => {
+    if(typeof object !== 'object') {
+      return false;
+    }
+    let remove = A(Object.keys(proxy));
+    for(let key in object) {
+      let value = object[key];
+      if(remove.includes(key)) {
+        remove.removeObject(key);
+        let current = proxy[key];
+        if(current !== value) {
+          if(isProxy(proxy[key])) {
+            if(!updateProxy(proxy[key], value)) {
+              proxy[key] = value;
+            }
+          } else {
+            proxy[key] = value;
+          }
+        }
+      } else {
+        proxy[key] = value;
+      }
+    }
+    remove.forEach(key => delete proxy[key]);
+    return true;
+  }
+
+  Object.defineProperty(proxy, UPDATE, { value: update });
+
+  return proxy;
 }
 
 export default class DataManager {
 
   constructor(opts={}) {
-    this.object = null;
     this.proxy = null;
     this.delegate = opts.delegate; // { onDirty(), shouldExpand(value) }
   }
@@ -150,10 +221,7 @@ export default class DataManager {
   getProxy() {
     consumeKey(this, 'proxy');
     let { proxy } = this;
-    if(!proxy) {
-      proxy = this.wrap(this.object);
-      this.proxy = proxy;
-    }
+    assert(`Proxy has not been created yet`, !!proxy);
     return proxy;
   }
 
@@ -176,6 +244,12 @@ export default class DataManager {
       return;
     }
     return this.unwrap(proxy);
+  }
+
+  update(value) {
+    if(!this.proxy || !this.proxy[UPDATE](value)) {
+      this.setValue(value);
+    }
   }
 
   toString() {

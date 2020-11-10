@@ -1,5 +1,5 @@
 import EmberObject from '@ember/object';
-import { object, raw } from '../../model/properties/object';
+import { object, raw, update } from '../../model/properties/object';
 import { tracked } from '@glimmer/tracking';
 import { objectToJSON } from '../../util/object-to-json';
 import { toJSON } from '../../util/to-json';
@@ -42,14 +42,15 @@ export default class Document extends EmberObject {
     super.init(...arguments);
     this._listeners = new Listeners();
     this._deferred = defer();
-    if(snapshot) {
-      this._onSnapshot(snapshot, { source: 'initial' });
-    } else if(data) {
+    if(data) {
       this.data = data;
       this.isNew = true;
       this.isDirty = true;
     } else {
       this.data = {};
+      if(snapshot) {
+        this._onSnapshot(snapshot, { source: 'initial' });
+      }
     }
   }
 
@@ -101,9 +102,12 @@ export default class Document extends EmberObject {
     this.isDirty = true;
   }
 
+  @update('data')
+  __setData
+
   _setData(data) {
     assert('data must be object', data instanceof Object);
-    this.data = data;
+    this.__setData(data);
   }
 
   _shouldApplySnapshotData(data) {
