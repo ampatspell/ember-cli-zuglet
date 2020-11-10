@@ -42,14 +42,15 @@ export default class Document extends EmberObject {
     super.init(...arguments);
     this._listeners = new Listeners();
     this._deferred = defer();
-    if(snapshot) {
-      this._onSnapshot(snapshot, { source: 'initial' });
-    } else if(data) {
+    if(data) {
       this.data = data;
       this.isNew = true;
       this.isDirty = true;
     } else {
       this.data = {};
+      if(snapshot) {
+        this._onSnapshot(snapshot, { source: 'initial' });
+      }
     }
   }
 

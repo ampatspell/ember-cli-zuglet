@@ -2,6 +2,7 @@ import { toString } from '../../util/to-string';
 import { consumeKey, dirtyKey } from './tag';
 import { propToIndex, ARRAY_GETTERS } from './utils';
 import { A, isArray } from '@ember/array';
+import { assert } from '@ember/debug';
 
 const KEYS = Symbol();
 const ARRAY = Symbol();
@@ -160,7 +161,6 @@ const createObjectProxy = (property, target) => {
 export default class DataManager {
 
   constructor(opts={}) {
-    this.object = null;
     this.proxy = null;
     this.delegate = opts.delegate; // { onDirty(), shouldExpand(value) }
   }
@@ -221,10 +221,7 @@ export default class DataManager {
   getProxy() {
     consumeKey(this, 'proxy');
     let { proxy } = this;
-    if(!proxy) {
-      proxy = this.wrap(this.object);
-      this.proxy = proxy;
-    }
+    assert(`Proxy has not been created yet`, !!proxy);
     return proxy;
   }
 
@@ -250,7 +247,7 @@ export default class DataManager {
   }
 
   update(value) {
-    if(!this.proxy[UPDATE](value)) {
+    if(!this.proxy || !this.proxy[UPDATE](value)) {
       this.setValue(value);
     }
   }
