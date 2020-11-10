@@ -3,7 +3,7 @@ import { inject as service } from '@ember/service';
 import { setGlobal, toString } from 'zuglet/utils';
 import { root, activate } from 'zuglet/decorators';
 import { action } from '@ember/object';
-import { dedupeTracked as dedupe } from 'tracked-toolbox';
+import { dedupeTracked } from 'tracked-toolbox';
 
 @root()
 export default class RouteDevComponent extends Component {
@@ -11,7 +11,7 @@ export default class RouteDevComponent extends Component {
   @service
   store
 
-  @dedupe
+  @dedupeTracked
   id = 'first'
 
   @activate().content(({ store, id }) => store.doc(`messages/${id}`).existing())
