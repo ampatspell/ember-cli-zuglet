@@ -24,16 +24,15 @@ module('decorators / @activate / content', function(hooks) {
       base = 'zeeba'
 
       @dedupeTracked
-      mapped = 'duck'
+      deduped = 'duck'
 
-      @activate()
-        .content(({ store, base, mapped }) => store.models.create('nested', { base, mapped }))
+      @activate().content(({ store, base, deduped }) => store.models.create('nested', { base, deduped }))
       model
 
     });
 
     let model = box.model;
-    box.mapped = 'change';
+    box.deduped = 'change';
     assert.ok(box.model !== model);
   });
 
@@ -44,16 +43,15 @@ module('decorators / @activate / content', function(hooks) {
       base = 'zeeba'
 
       @dedupeTracked
-      mapped = 'duck'
+      deduped = 'duck'
 
-      @activate()
-        .content(({ store, base, mapped }) => store.models.create('nested', { base, mapped }))
+      @activate().content(({ store, base, deduped }) => store.models.create('nested', { base, deduped }))
       model
 
     });
 
     let model = box.model;
-    box.mapped = 'duck';
+    box.deduped = 'duck';
     assert.ok(box.model === model);
   });
 
@@ -63,8 +61,7 @@ module('decorators / @activate / content', function(hooks) {
       @tracked
       base = 'zeeba'
 
-      @activate()
-        .content(({ store, base }) => store.models.create('nested', { base }))
+      @activate().content(({ store, base }) => store.models.create('nested', { base }))
       model
 
     });
