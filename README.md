@@ -50,6 +50,15 @@ module.exports = {
 <Zuglet::Stats @stores={{false}}/>
 ```
 
+## Other addons
+
+``` bash
+$ ember install tracked-toolbox
+$ ember install macro-decorators
+```
+
+## Debugging
+
 ``` bash
 $ node --inspect-brk ./node_modules/.bin/ember serve
 $ chrome://inspect
