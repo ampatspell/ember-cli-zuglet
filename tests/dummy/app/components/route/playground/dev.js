@@ -3,7 +3,7 @@ import { inject as service } from '@ember/service';
 import { setGlobal, toString } from 'zuglet/utils';
 import { root, activate } from 'zuglet/decorators';
 import { action } from '@ember/object';
-import { dedupeTracked } from 'tracked-toolbox';
+import { tracked } from '@glimmer/tracking';
 
 @root()
 export default class RouteDevComponent extends Component {
@@ -11,20 +11,11 @@ export default class RouteDevComponent extends Component {
   @service
   store
 
-  @dedupeTracked
-  id = 'first'
-
-  @activate().content(({ store, id }) => {
-    if(!id) {
-      return;
-    }
-    return store.doc(`messages/${id}`).existing();
-  })
+  @tracked
   doc
 
-  get thing() {
-    return this.doc?.data?.things?.[0]?.name;
-  }
+  @activate().content(({ store }) => store.collection('messages').query())
+  query
 
   constructor() {
     super(...arguments);
@@ -32,15 +23,13 @@ export default class RouteDevComponent extends Component {
   }
 
   @action
-  reload() {
-    console.log('reload');
-    this.doc.reload();
-  }
-
-  @action
-  save() {
-    console.log('save');
-    this.doc.save();
+  async add() {
+    let doc = this.store.collection('messages').doc().new({
+      name: 'new'
+    });
+    this.doc = doc;
+    this.query.register(doc);
+    await doc.save();
   }
 
   toString() {

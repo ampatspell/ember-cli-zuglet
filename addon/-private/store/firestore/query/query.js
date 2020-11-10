@@ -16,6 +16,8 @@ export default class Query extends EmberObject {
   @activate()
   content
 
+  registered = []
+
   @tracked isLoading = false;
   @tracked isLoaded = false;
   @tracked isError = false;
@@ -73,7 +75,23 @@ export default class Query extends EmberObject {
 
   //
 
+  register(doc) {
+    let { registered } = this;
+    if(!registered.includes(doc)) {
+      registered.push(doc);
+    }
+  }
+
+  //
+
   _createDocumentForSnapshot(snapshot) {
+    let { registered } = this;
+    let path = snapshot.ref.path;
+    let existing = registered.find(doc => doc.path === path);
+    if(existing) {
+      registered.splice(registered.indexOf(existing), 1);
+      return existing._onReused(this, snapshot, { source: 'subscription' });
+    }
     return this.store._createDocumentForSnapshot(snapshot, this);
   }
 

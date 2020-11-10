@@ -1,20 +1,17 @@
 <div class="route-playground-dev">
 
   <div class="row">
-    <Json @value={{this.doc}}/>
+    {{#each this.query.content as |doc|}}
+      <div class="row">{{doc}}</div>
+    {{/each}}
   </div>
 
   <div class="row">
-    <input type="button" {{on "click" this.reload}} value="Reload"/>
-    <input type="button" {{on "click" this.save}} value="Save"/>
+    {{this.doc}}
   </div>
 
   <div class="row">
-    <Block::Changes as |Changes|>
-      <Changes.Property @key="doc" @value={{this.doc}}/>
-      <Changes.Property @key="doc.data.things" @value={{this.doc.data.things}}/>
-      <Changes.Property @key="doc.data.things.@firstObject.name" @value={{this.thing}}/>
-    </Block::Changes>
+    <input type="button" {{on "click" this.add}} value="Add"/>
   </div>
 
 </div>

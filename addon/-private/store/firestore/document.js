@@ -141,6 +141,13 @@ export default class Document extends EmberObject {
     }
   }
 
+  _onReused(parent, snapshot, opts) {
+    assert(`Document ${this} already have a parent`, !this.parent);
+    this.parent = parent;
+    this._onSnapshot(snapshot, opts);
+    return this;
+  }
+
   //
 
   async _loadInternal(get, opts) {
