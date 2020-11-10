@@ -1,7 +1,7 @@
 import Component from '@glimmer/component';
 import { inject as service } from '@ember/service';
 import { setGlobal, toString } from 'zuglet/utils';
-import { root, activate, model } from 'zuglet/decorators';
+import { root, activate } from 'zuglet/decorators';
 import { tracked } from '@glimmer/tracking';
 
 @root()
