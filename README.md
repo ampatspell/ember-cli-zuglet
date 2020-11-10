@@ -92,6 +92,8 @@ $ chrome://inspect
 
 ## TODO
 
+- [ ] add `@object` update without dirtying properties that hasn't changed
+- [ ] maybe use own `setProperties` for `@tracked` state props or tracking/state
 - [ ] `@models` update mapped props with `mappingDidChange`
 - [ ] support paths like `@models().source(({ query }) => query.content)` to `@models().source('query.content')`
 - [ ] add `doc.save({ type: 'update' })`, transaction update, batch update

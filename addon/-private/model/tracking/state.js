@@ -94,6 +94,7 @@ class StateProperties {
 const marker = Symbol('ZUGLET_STATE');
 
 const getState = owner => {
+  // TODO: use getState(this).cache.state as storage
   let state = owner[marker];
   if(!state) {
     state = new StateProperties(owner);
