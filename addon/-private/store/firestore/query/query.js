@@ -87,7 +87,7 @@ export default class Query extends EmberObject {
 
   //
 
-  _popReusableDocumentForSnapshot(snapshot) {
+  _reusableDocumentForSnapshot(snapshot) {
     let { _reusable } = this;
     if(_reusable) {
       let path = snapshot.ref.path;
@@ -100,7 +100,7 @@ export default class Query extends EmberObject {
   }
 
   _createDocumentForSnapshot(snapshot) {
-    let doc = this._popReusableDocumentForSnapshot(snapshot);
+    let doc = this._reusableDocumentForSnapshot(snapshot);
     if(doc) {
       return doc._onReused(this, snapshot, { source: 'subscription' });
     }
