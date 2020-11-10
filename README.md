@@ -92,10 +92,8 @@ $ chrome://inspect
 
 ## TODO
 
-- [ ] look into making all `@tracked` properties into `@dedupedTracked` and expose zuglet `@tracked` which is deduped to get rid of `@activate` mapping and similar helpers
+- [ ] `@models` update mapped props with `mappingDidChange`
 - [ ] support paths like `@models().source(({ query }) => query.content)` to `@models().source('query.content')`
-- [ ] `.mapping(({ name }) => ({ name }))` could be `.mapping('name')` for `@activate`, `@model`, `@models`
-- [ ] `@models` update mapped props if has changed
 - [ ] add `doc.save({ type: 'update' })`, transaction update, batch update
 - [ ] @route decorator doesn't deactivate intermediate routes if child route transitions
 - [ ] documentation site to replace existing www.ember-cli-zuglet.com
