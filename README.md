@@ -101,6 +101,7 @@ $ chrome://inspect
 
 ## TODO
 
+- [ ] maybe also do partial updates for `doc.data.foo = { ok: true }`-type sets
 - [ ] maybe use own `setProperties` for `@tracked` state props or tracking/state
 - [ ] `@models` update mapped props with `mappingDidChange`
 - [ ] support paths like `@models().source(({ query }) => query.content)` to `@models().source('query.content')`
