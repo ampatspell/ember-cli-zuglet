@@ -1,7 +1,5 @@
 <div class="block-changes">
-  {{#each this.changes as |change|}}
-    <div class="change">{{change.key}}: {{change.value}}</div>
-  {{/each}}
+  <div class="log">{{this.log}}</div>
   {{yield (hash
     Property=(component 'block/changes/property' onPropertyChange=this.onPropertyChange)
   )}}

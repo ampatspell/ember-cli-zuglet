@@ -9,12 +9,18 @@ export default class BlockChangesComponent extends Component {
 
   @action
   onPropertyChange(key, value) {
-    if(value === undefined) {
-      value = '[undefined]';
-    } else if(value === null) {
-      value = '[null]';
-    }
     this.changes = [ ...this.changes, { key, value } ];
+  }
+
+  get log() {
+    return this.changes.map(({ key, value })=> {
+      if(value === undefined) {
+        value = '[undefined]';
+      } else if(value === null) {
+        value = '[null]';
+      }
+      return `${key}: ${value}`;
+    }).join('\n');
   }
 
 }

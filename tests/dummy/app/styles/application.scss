@@ -81,3 +81,9 @@ input[type="password"] {
 .json {
   white-space: pre-wrap;
 }
+
+.block-changes {
+  > .log {
+    white-space: pre-wrap;
+  }
+}
