@@ -1,6 +1,7 @@
 import { toString } from '../../util/to-string';
 import { consumeKey, dirtyKey } from './tag';
 import { propToIndex, ARRAY_GETTERS } from './utils';
+import { A } from '@ember/array';
 
 const KEYS = Symbol();
 const ARRAY = Symbol();
@@ -11,8 +12,10 @@ class ObjectProxy {
 class ArrayProxy {
 }
 
+const isProxy = arg => arg instanceof ObjectProxy || arg instanceof ArrayProxy;
+
 const createArrayProxy = (property, target) => {
-  return new Proxy(target, {
+  let proxy = new Proxy(target, {
     get: (target, prop) => {
       let idx = propToIndex(prop);
       if(idx === null) {
@@ -53,10 +56,14 @@ const createArrayProxy = (property, target) => {
       return ArrayProxy.prototype;
     }
   });
+  proxy.__update = () => {
+    return { replace: true };
+  }
+  return proxy;
 }
 
 const createObjectProxy = (property, target) => {
-  return new Proxy(target, {
+  let proxy = new Proxy(target, {
     get: (target, prop) => {
       consumeKey(target, prop);
       return target[prop];
@@ -80,10 +87,52 @@ const createObjectProxy = (property, target) => {
       }
       return true;
     },
+    deleteProperty(target, prop) {
+      if(prop in target) {
+        dirtyKey(target, prop);
+        dirtyKey(target, KEYS);
+        property.dirty();
+        delete target[prop];
+      }
+      return true;
+    },
     getPrototypeOf() {
       return ObjectProxy.prototype;
     }
   });
+
+  let __update = (object) => {
+    if(typeof object !== 'object') {
+      console.log('false', object);
+      return false;
+    }
+    let remove = A(Object.keys(proxy));
+    for(let key in object) {
+      let value = object[key];
+      if(remove.includes(key)) {
+        remove.removeObject(key);
+        let current = proxy[key];
+        if(current !== value) {
+          if(isProxy(proxy[key])) {
+            if(!proxy[key].__update(value)) {
+              proxy[key] = value;
+            }
+          } else {
+            proxy[key] = value;
+          }
+        }
+      } else {
+        proxy[key] = value;
+      }
+    }
+    remove.forEach(key => delete proxy[key]);
+    console.log('true', object);
+    return true;
+  }
+
+  Object.defineProperty(proxy, '__update', { value: __update });
+
+  return proxy;
 }
 
 export default class DataManager {
@@ -176,6 +225,14 @@ export default class DataManager {
       return;
     }
     return this.unwrap(proxy);
+  }
+
+  update(value) {
+    consumeKey(this, 'raw');
+    consumeKey(this, 'proxy');
+    if(!this.proxy.__update(value)) {
+      this.setValue(value);
+    }
   }
 
   toString() {
