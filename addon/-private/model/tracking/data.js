@@ -5,6 +5,7 @@ import { A } from '@ember/array';
 
 const KEYS = Symbol();
 const ARRAY = Symbol();
+const UPDATE = '__update';
 
 class ObjectProxy {
 }
@@ -13,6 +14,7 @@ class ArrayProxy {
 }
 
 const isProxy = arg => arg instanceof ObjectProxy || arg instanceof ArrayProxy;
+const updateProxy = (proxy, value) => proxy[UPDATE](value);
 
 const createArrayProxy = (property, target) => {
   let proxy = new Proxy(target, {
@@ -101,9 +103,8 @@ const createObjectProxy = (property, target) => {
     }
   });
 
-  let __update = (object) => {
+  let update = (object) => {
     if(typeof object !== 'object') {
-      console.log('false', object);
       return false;
     }
     let remove = A(Object.keys(proxy));
@@ -114,7 +115,7 @@ const createObjectProxy = (property, target) => {
         let current = proxy[key];
         if(current !== value) {
           if(isProxy(proxy[key])) {
-            if(!proxy[key].__update(value)) {
+            if(!updateProxy(proxy[key], value)) {
               proxy[key] = value;
             }
           } else {
@@ -126,11 +127,10 @@ const createObjectProxy = (property, target) => {
       }
     }
     remove.forEach(key => delete proxy[key]);
-    console.log('true', object);
     return true;
   }
 
-  Object.defineProperty(proxy, '__update', { value: __update });
+  Object.defineProperty(proxy, UPDATE, { value: update });
 
   return proxy;
 }
@@ -230,7 +230,7 @@ export default class DataManager {
   update(value) {
     consumeKey(this, 'raw');
     consumeKey(this, 'proxy');
-    if(!this.proxy.__update(value)) {
+    if(!this.proxy[UPDATE](value)) {
       this.setValue(value);
     }
   }
