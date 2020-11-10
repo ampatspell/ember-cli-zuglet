@@ -30,6 +30,7 @@ export default class RouteDevComponent extends Component {
     this.doc = doc;
     this.query.register(doc);
     await doc.save();
+    console.log(this.query.content.find(({ path }) => path === doc.path)+'');
   }
 
   toString() {
