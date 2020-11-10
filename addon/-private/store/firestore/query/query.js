@@ -16,14 +16,13 @@ export default class Query extends EmberObject {
   @activate()
   content
 
-  registered = []
-
   @tracked isLoading = false;
   @tracked isLoaded = false;
   @tracked isError = false;
   @tracked error = null;
 
   _isPassive = false
+  _reusable
 
   init() {
     super.init(...arguments);
@@ -76,21 +75,34 @@ export default class Query extends EmberObject {
   //
 
   register(doc) {
-    let { registered } = this;
-    if(!registered.includes(doc)) {
-      registered.push(doc);
+    let { _reusable } = this;
+    if(!_reusable) {
+      _reusable = [];
+      this._reusable = _reusable;
+    }
+    if(!_reusable.includes(doc)) {
+      _reusable.push(doc);
     }
   }
 
   //
 
+  _popReusableDocumentForSnapshot(snapshot) {
+    let { _reusable } = this;
+    if(_reusable) {
+      let path = snapshot.ref.path;
+      let doc = _reusable.find(doc => doc.path === path);
+      if(doc) {
+        _reusable.splice(_reusable.indexOf(doc), 1);
+      }
+      return doc;
+    }
+  }
+
   _createDocumentForSnapshot(snapshot) {
-    let { registered } = this;
-    let path = snapshot.ref.path;
-    let existing = registered.find(doc => doc.path === path);
-    if(existing) {
-      registered.splice(registered.indexOf(existing), 1);
-      return existing._onReused(this, snapshot, { source: 'subscription' });
+    let doc = this._popReusableDocumentForSnapshot(snapshot);
+    if(doc) {
+      return doc._onReused(this, snapshot, { source: 'subscription' });
     }
     return this.store._createDocumentForSnapshot(snapshot, this);
   }
