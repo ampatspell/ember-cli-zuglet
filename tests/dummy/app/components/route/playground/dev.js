@@ -17,6 +17,10 @@ export default class RouteDevComponent extends Component {
   @activate().content(({ store, id }) => store.doc(`messages/${id}`).existing())
   doc
 
+  get thing() {
+    return this.doc.data.things && this.doc.data.things[0] && this.doc.data.things[0].name;
+  }
+
   constructor() {
     super(...arguments);
     setGlobal({ component: this });
@@ -26,6 +30,12 @@ export default class RouteDevComponent extends Component {
   reload() {
     console.log('reload');
     this.doc.reload();
+  }
+
+  @action
+  save() {
+    console.log('save');
+    this.doc.save();
   }
 
   toString() {

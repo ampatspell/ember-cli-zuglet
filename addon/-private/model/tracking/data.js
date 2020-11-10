@@ -1,11 +1,11 @@
 import { toString } from '../../util/to-string';
 import { consumeKey, dirtyKey } from './tag';
 import { propToIndex, ARRAY_GETTERS } from './utils';
-import { A } from '@ember/array';
+import { A, isArray } from '@ember/array';
 
 const KEYS = Symbol();
 const ARRAY = Symbol();
-const UPDATE = '__update';
+const UPDATE = Symbol('UPDATE');
 
 class ObjectProxy {
 }
@@ -58,9 +58,31 @@ const createArrayProxy = (property, target) => {
       return ArrayProxy.prototype;
     }
   });
-  proxy.__update = () => {
-    return { replace: true };
+
+  let update = (object) => {
+    if(!isArray(object)) {
+      return false;
+    }
+
+    object.forEach((item, idx) => {
+      if(isProxy(proxy[idx])) {
+        if(!updateProxy(proxy[idx], item)) {
+          proxy[idx] = item;
+        }
+      } else {
+        proxy[idx] = item;
+      }
+    });
+
+    if(proxy.length !== object.length) {
+      proxy.length = object.length;
+    }
+
+    return true;
   }
+
+  Object.defineProperty(proxy, UPDATE, { value: update });
+
   return proxy;
 }
 
@@ -228,8 +250,6 @@ export default class DataManager {
   }
 
   update(value) {
-    consumeKey(this, 'raw');
-    consumeKey(this, 'proxy');
     if(!this.proxy[UPDATE](value)) {
       this.setValue(value);
     }

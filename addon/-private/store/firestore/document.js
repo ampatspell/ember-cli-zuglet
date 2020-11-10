@@ -101,14 +101,12 @@ export default class Document extends EmberObject {
     this.isDirty = true;
   }
 
-
   @update('data')
   __setData
 
   _setData(data) {
     assert('data must be object', data instanceof Object);
     this.__setData(data);
-    // this.data = data;
   }
 
   _shouldApplySnapshotData(data) {
