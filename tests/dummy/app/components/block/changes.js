@@ -1,0 +1,20 @@
+import Component from '@glimmer/component';
+import { action } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
+
+export default class BlockChangesComponent extends Component {
+
+  @tracked
+  changes = [];
+
+  @action
+  onPropertyChange(key, value) {
+    if(value === undefined) {
+      value = '[undefined]';
+    } else if(value === null) {
+      value = '[null]';
+    }
+    this.changes = [ ...this.changes, { key, value } ];
+  }
+
+}

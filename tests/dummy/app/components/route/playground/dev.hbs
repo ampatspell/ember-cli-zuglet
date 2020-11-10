@@ -1,11 +1,13 @@
 <div class="route-playground-dev">
 
   <div class="row">
-    <Json @value={{this.model}}/>
+    <Json @value={{this.doc}}/>
   </div>
 
   <div class="row">
-    <Json @value={{this.activate}}/>
+    <Block::Changes as |Changes|>
+      <Changes.Property @key="doc.data.name" @value={{this.doc.data.name}}/>
+    </Block::Changes>
   </div>
 
 </div>
