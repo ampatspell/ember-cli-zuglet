@@ -14,11 +14,16 @@ export default class RouteDevComponent extends Component {
   @dedupeTracked
   id = 'first'
 
-  @activate().content(({ store, id }) => store.doc(`messages/${id}`).existing())
+  @activate().content(({ store, id }) => {
+    if(!id) {
+      return;
+    }
+    return store.doc(`messages/${id}`).existing();
+  })
   doc
 
   get thing() {
-    return this.doc.data?.things?.[0]?.name;
+    return this.doc?.data?.things?.[0]?.name;
   }
 
   constructor() {

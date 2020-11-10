@@ -101,12 +101,11 @@ $ chrome://inspect
 
 ## TODO
 
-- [ ] remove `mapping` from `@activate`
 - [ ] add `mappingDidChange` to `@models`
 - [ ] remove support for mapping as string from `@model`
+- [ ] remove `normalizeMapping`
 - [ ] maybe also do partial updates for `doc.data.foo = { ok: true }`-type sets
 - [ ] maybe use own `setProperties` for `@tracked` state props or tracking/state
-- [ ] `@models` update mapped props with `mappingDidChange`
 - [ ] support paths like `@models().source(({ query }) => query.content)` to `@models().source('query.content')`
 - [ ] add `doc.save({ type: 'update' })`, transaction update, batch update
 - [ ] @route decorator doesn't deactivate intermediate routes if child route transitions
