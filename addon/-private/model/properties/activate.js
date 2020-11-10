@@ -1,4 +1,4 @@
-import { property, normalizeMapping } from './property';
+import { property } from './property';
 
 let getProperty = (owner, key, opts) => property(owner, key, `activate/${opts.type}`, opts);
 
@@ -16,8 +16,7 @@ const define = opts => (_, key) => {
 export const activate = () => {
 
   let opts = {
-    type: 'writable',
-    mapping: undefined
+    type: 'writable'
   };
 
   let extend = () => {
@@ -29,10 +28,6 @@ export const activate = () => {
         opts.value = () => value;
       }
       opts.type = 'content';
-      return extend();
-    }
-    curr.mapping = (...args) => {
-      opts.mapping = normalizeMapping(args);
       return extend();
     }
     return curr;

@@ -1,6 +1,6 @@
 import BaseActivateProperty from './activate';
 import { assert } from '@ember/debug';
-import { diff, asOptionalObject } from '../../decorators/diff';
+import { diff } from '../../decorators/diff';
 
 export default class ContentActivateProperty extends BaseActivateProperty {
 
@@ -8,20 +8,10 @@ export default class ContentActivateProperty extends BaseActivateProperty {
     super.init(...arguments);
   }
 
-  @diff(asOptionalObject)
-  _mapping() {
-    let { owner, opts } = this;
-    return opts.mapping && opts.mapping.call(owner, owner);
-  }
-
   @diff()
-  _value(current) {
-    let mapping = this._mapping;
-    if(current && !mapping.updated && mapping.current) {
-      return current;
-    }
+  _value() {
     let { owner, opts: { value } } = this;
-    return value.call(owner, owner, mapping.current);
+    return value.call(owner, owner);
   }
 
   getPropertyValue() {

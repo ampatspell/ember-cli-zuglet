@@ -104,6 +104,7 @@ $ chrome://inspect
 - [ ] remove `mapping` from `@activate`
 - [ ] add `mappingDidChange` to `@models`
 - [ ] remove support for mapping as string from `@model`
+- [ ] remove `normalizeMapping`
 - [ ] maybe also do partial updates for `doc.data.foo = { ok: true }`-type sets
 - [ ] maybe use own `setProperties` for `@tracked` state props or tracking/state
 - [ ] `@models` update mapped props with `mappingDidChange`
