@@ -3,7 +3,7 @@ import { inject as service } from '@ember/service';
 import { setGlobal, toString } from 'zuglet/utils';
 import { root, activate, models } from 'zuglet/decorators';
 import { action } from '@ember/object';
-import { tracked } from '@glimmer/tracking';
+import { dedupeTracked } from 'tracked-toolbox';
 
 @root()
 export default class RouteModelsComponent extends Component {
@@ -11,15 +11,14 @@ export default class RouteModelsComponent extends Component {
   @service
   store
 
-  @tracked
+  @dedupeTracked
   name
 
-  @tracked
+  @dedupeTracked
   modelName = 'message'
 
   @activate()
-    .mapping('name', 'store') // triggers content recreation
-    .content(({ store }, { name }) => { // create/recreate content
+    .content(({ store, name }) => {
       let ref = store.collection('messages');
       if(name) {
         ref = ref.where('name', '==', name);
