@@ -28,6 +28,12 @@
     overflow-x: hidden;
   }
 
+  @include breakpoint(mobile) {
+    > .aside {
+      display: none;
+    }
+  }
+
   // @include breakpoint(tablet) {
   //   > .content {
   //     code {
