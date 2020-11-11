@@ -14,10 +14,13 @@ export default class RouteDevComponent extends Component {
   @object()
   array
 
+  @tracked
+  id = 'one'
+
   @models()
     .source(({ array }) => array)
     .named(({ type }) => type)
-    .mapping((doc) => ({ doc, id: doc.id }))
+    .mapping((doc, { id }) => ({ doc, id: `${doc.id}:${id}` }))
   models
 
   constructor() {

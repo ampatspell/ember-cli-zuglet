@@ -80,6 +80,7 @@ $ chrome://inspect
   .mapping(({ id }) => ({ id }))
 ```
 
+* if `modelname` changes, model is recreated
 * if `mapping` changes, but `modelName` hasn't changed, `mappingDidChange` is invoked
 * if `model.mappindDidChange` doesn't exist, model is recreated
 * mapping properties are diffed individually
@@ -93,11 +94,13 @@ $ chrome://inspect
   .mapping((doc, owner) => ({ doc }))
 ```
 
-* models doesn't get updated properties at the moment. there is no `mappingDidChange`
+* if `modelname` changes, model is recreated
+* if `mapping` changes, but `modelName` hasn't changed, `mappingDidChange` is invoked
+* if `model.mappindDidChange` doesn't exist, model is recreated
+* mapping properties are diffed individually
 
 ## TODO
 
-- [ ] add `mappingDidChange` to `@models`
 - [ ] maybe also do partial updates for `doc.data.foo = { ok: true }`-type sets
 - [ ] maybe use own `setProperties` for `@tracked` state props or tracking/state
 - [ ] add `doc.save({ type: 'update' })`, transaction update, batch update

@@ -5,6 +5,7 @@ import { getState } from '../state';
 import { getStores } from '../../stores/get-stores';
 import { assert } from '@ember/debug';
 import { diff, asObject, asString } from '../decorators/diff';
+import { isFunction } from '../../util/object-to-json';
 
 class Marker {
 
@@ -90,7 +91,18 @@ export default class ModelsProperty extends Property {
             model = this.createModel(doc);
             added.pushObject(model);
           } else {
-            removed.removeObject(model);
+            let props = marker.props;
+            if(props.updated) {
+              if(isFunction(model.mappingDidChange)) {
+                model.mappingDidChange.call(model, props.current);
+                removed.removeObject(model);
+              } else {
+                model = this.createModel(doc);
+                added.pushObject(model);
+              }
+            } else {
+              removed.removeObject(model);
+            }
           }
         } else {
           model = this.createModel(doc);
