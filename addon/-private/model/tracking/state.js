@@ -1,9 +1,8 @@
 import { consumeKey, dirtyKey } from './tag';
 import { toString } from '../../util/to-string';
+import { getState as _getState } from '../state';
+import { getStats } from '../../stores/stats';
 
-// TODO: figure out if this is really needed
-// if glimmer blows up with double updates on isLoading or something, then it is
-//
 //
 // class Thing {
 //
@@ -91,14 +90,11 @@ class StateProperties {
 
 }
 
-const marker = Symbol('ZUGLET_STATE');
-
 const getState = owner => {
-  // TODO: use getState(this).cache.state as storage
-  let state = owner[marker];
+  let state = _getState(owner).cache.state;
   if(!state) {
     state = new StateProperties(owner);
-    owner[marker] = state;
+    _getState(owner).cache.state = state;
   }
   return state;
 }
@@ -111,9 +107,15 @@ export const state = () => {
   };
 }
 
-export const readable = (_, key) => {
+export const readable = (_, key, descriptor) => {
+  let initializer = descriptor.initializer;
+  let initialized = !initializer;
   return {
     get() {
+      if(!initialized) {
+        initialized = true;
+        getState(this).untracked.set(key, initializer.call(this));
+      }
       return getState(this).get(key);
     }
   };

@@ -1,6 +1,5 @@
 import EmberObject from '@ember/object';
 import { object, raw, update } from '../../model/properties/object';
-import { tracked } from '@glimmer/tracking';
 import { objectToJSON } from '../../util/object-to-json';
 import { toJSON } from '../../util/to-json';
 import { assert } from '@ember/debug';
@@ -10,6 +9,7 @@ import { cached } from '../../model/decorators/cached';
 import { randomString } from '../../util/random-string';
 import { Listeners } from '../../util/listeners';
 import { isFastBoot } from '../../util/fastboot';
+import { state, readable } from '../../model/tracking/state';
 
 const {
   assign
@@ -25,14 +25,15 @@ export default class Document extends EmberObject {
   @raw('data')
   _data
 
-  @tracked isNew = false;
-  @tracked isLoading = false;
-  @tracked isLoaded = false;
-  @tracked isSaving = false;
-  @tracked isDirty = true;
-  @tracked isError = false;
-  @tracked error = null;
-  @tracked exists = undefined;
+  @state _state
+  @readable isNew = false;
+  @readable isLoading = false;
+  @readable isLoaded = false;
+  @readable isSaving = false;
+  @readable isDirty = true;
+  @readable isError = false;
+  @readable error = null;
+  @readable exists = undefined;
 
   _isPassive = false
 
@@ -44,8 +45,7 @@ export default class Document extends EmberObject {
     this._deferred = defer();
     if(data) {
       this.data = data;
-      this.isNew = true;
-      this.isDirty = true;
+      this._state.untracked.setProperties({ isNew: true, isDirty: true });
     } else {
       this.data = {};
       if(snapshot) {
@@ -99,7 +99,7 @@ export default class Document extends EmberObject {
   //
 
   _dataDidChange() {
-    this.isDirty = true;
+    this._state.setProperties({ isDirty: true });
   }
 
   @update('data')
@@ -135,7 +135,7 @@ export default class Document extends EmberObject {
         }
       }
     }
-    this.setProperties({ isNew: false, isLoading: false, isLoaded: true, isDirty: false, exists });
+    this._state.setProperties({ isNew: false, isLoading: false, isLoaded: true, isDirty: false, exists });
     if(notify) {
       this._listeners.notify(notify, this);
     }
@@ -152,18 +152,18 @@ export default class Document extends EmberObject {
 
   async _loadInternal(get, opts) {
     let { force } = assign({ force: false }, opts);
-    let { isLoaded, isNew } = this;
+    let { isLoaded, isNew } = this._state.untracked.getProperties('isLoaded', 'isNew');
     if((isLoaded || isNew) && !force) {
       return this;
     }
-    this.setProperties({ isLoading: true, isError: false, error: null });
+    this._state.setProperties({ isLoading: true, isError: false, error: null });
     try {
       let snapshot = await get(this.ref._ref);
       this._onSnapshot(snapshot, { source: 'load' });
       this._maybeSubscribeToOnSnapshot();
       this._deferred.resolve(this);
     } catch(error) {
-      this.setProperties({ isNew: false, isLoading: false, isError: true, error });
+      this._state.setProperties({ isNew: false, isLoading: false, isError: true, error });
       this._deferred.reject(error);
       throw error;
     }
@@ -180,7 +180,7 @@ export default class Document extends EmberObject {
 
   _normalizeSaveOptions(opts) {
     let { merge, token, force } = assign({ force: false, merge: false, token: false }, opts);
-    let { isDirty } = this;
+    let { isDirty } = this._state.untracked.getProperties('isDirty');
     let skip = !isDirty && !force;
     return {
       skip,
@@ -198,17 +198,17 @@ export default class Document extends EmberObject {
   }
 
   _willSave() {
-    this.setProperties({ isSaving: true, isError: false, error: null });
+    this._state.setProperties({ isSaving: true, isError: false, error: null });
   }
 
   _didSave() {
-    this.setProperties({ isNew: false, isSaving: false, isDirty: false, exists: true });
+    this._state.setProperties({ isNew: false, isSaving: false, isDirty: false, exists: true });
     this._maybeSubscribeToOnSnapshot();
     this._deferred.resolve(this);
   }
 
   _saveDidFail(error) {
-    this.setProperties({ isSaving: false, isError: true, error });
+    this._state.setProperties({ isSaving: false, isError: true, error });
   }
 
   async _saveInternal(set, opts) {
@@ -247,16 +247,16 @@ export default class Document extends EmberObject {
   }
 
   _willDelete() {
-    this.setProperties({ isSaving: true, isError: false, error: null });
+    this._state.setProperties({ isSaving: true, isError: false, error: null });
   }
 
   _didDelete() {
-    this.setProperties({ isSaving: false, exists: false });
+    this._state.setProperties({ isSaving: false, exists: false });
     this._maybeSubscribeToOnSnapshot();
   }
 
   _deleteDidFail(error) {
-    this.setProperties({ isSaving: false, isError: true, error });
+    this._state.setProperties({ isSaving: false, isError: true, error });
   }
 
   async _deleteInternal(del) {
@@ -290,15 +290,15 @@ export default class Document extends EmberObject {
     if(this.isPassive) {
       this.load().then(() => {}, err => this.store.onSnapshotError(this, err));
     } else {
-      let { isLoaded } = this;
+      let { isLoaded } = this._state.untracked.getProperties('isLoaded');
       if(!isLoaded) {
-        this.setProperties({ isLoading: true, isError: false, error: null });
+        this._state.setProperties({ isLoading: true, isError: false, error: null });
       }
       this._cancel = registerOnSnapshot(this, this.ref._ref.onSnapshot({ includeMetadataChanges: false }, snapshot => {
         this._onSnapshot(snapshot, { source: 'subscription' });
         this._deferred.resolve(this);
       }, error => {
-        this.setProperties({ isLoading: false, isError: true, error });
+        this._state.setProperties({ isLoading: false, isError: true, error });
         this.store.onSnapshotError(this);
         this._deferred.reject(error);
       }));
@@ -315,7 +315,7 @@ export default class Document extends EmberObject {
     if(this._cancel) {
       return false;
     }
-    if(this.isNew) {
+    if(this._state.untracked.get('isNew')) {
       return false;
     }
     return true;
@@ -337,7 +337,7 @@ export default class Document extends EmberObject {
   }
 
   _onDeleted() {
-    this.setProperties({ exists: false });
+    this._state.setProperties({ exists: false });
   }
 
   //
