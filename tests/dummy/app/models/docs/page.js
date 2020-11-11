@@ -15,17 +15,14 @@ export default class DocPage extends Page {
     return this.frontmatter?.hidden;
   }
 
-  // preprocessNode(parent, node) {
-  //   if(node.tagName === 'a') {
-  //     node.properties.target = 'top';
-  //   }
-  // }
-
   preprocessNode(parent, node) {
     if(node.tagName === 'a') {
-      if(node.properties.href.startsWith('/')) {
+      let { properties: { href } } = node;
+      if(href.startsWith('/')) {
         node.componentName = 'docs/route';
         node.properties.route = node.properties.href.substr(1);
+      } else {
+        node.properties.target = 'top';
       }
     }
   }

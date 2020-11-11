@@ -1,1 +1,5 @@
-<LinkTo @route={{@node.properties.route}}><Remark::Render::Content @node={{@node}}/></LinkTo>
+{{#if @node.properties.model}}
+  <LinkTo @route={{@node.properties.route}} @model={{@node.properties.model}}><Remark::Render::Content @node={{@node}}/></LinkTo>
+{{else}}
+  <LinkTo @route={{@node.properties.route}}><Remark::Render::Content @node={{@node}}/></LinkTo>
+{{/if}}
