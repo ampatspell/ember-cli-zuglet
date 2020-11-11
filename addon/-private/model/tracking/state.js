@@ -1,9 +1,7 @@
 import { consumeKey, dirtyKey } from './tag';
 import { toString } from '../../util/to-string';
+import { getState as _getState } from '../state';
 
-// TODO: figure out if this is really needed
-// if glimmer blows up with double updates on isLoading or something, then it is
-//
 //
 // class Thing {
 //
@@ -21,9 +19,20 @@ import { toString } from '../../util/to-string';
 
 class StateProperties {
 
-  constructor(owner) {
+  constructor(owner, meta) {
     this._owner = owner;
     this._values = Object.create(null);
+    this._setup(meta);
+  }
+
+  _setup(meta) {
+    let { _values } = this;
+    for(let key in meta) {
+      let { initializer } = meta[key];
+      if(initializer) {
+        _values[key] = initializer();
+      }
+    }
   }
 
   dirty(key) {
@@ -91,14 +100,27 @@ class StateProperties {
 
 }
 
-const marker = Symbol('ZUGLET_STATE');
+const META = new WeakMap();
+
+const getMeta = Class => {
+  let hash = META.get(Class);
+  if(!hash) {
+    hash = Object.create(null);
+    META.set(Class, hash);
+  }
+  return hash;
+}
+
+const setMeta = (Class, key, value) => {
+  let meta = getMeta(Class);
+  meta[key] = value;
+}
 
 const getState = owner => {
-  // TODO: use getState(this).cache.state as storage
-  let state = owner[marker];
+  let state = _getState(owner).cache.state;
   if(!state) {
-    state = new StateProperties(owner);
-    owner[marker] = state;
+    state = new StateProperties(owner, getMeta(owner.constructor.prototype));
+    _getState(owner).cache.state = state;
   }
   return state;
 }
@@ -111,7 +133,9 @@ export const state = () => {
   };
 }
 
-export const readable = (_, key) => {
+export const readable = (prototype, key, descriptor) => {
+  let { initializer } = descriptor;
+  setMeta(prototype, key, { initializer });
   return {
     get() {
       return getState(this).get(key);

@@ -1,11 +1,11 @@
 import EmberObject from '@ember/object';
-import { tracked } from '@glimmer/tracking';
 import { objectToJSON } from '../../../util/object-to-json';
 import { toJSON } from '../../../util/to-json';
 import { activate } from '../../../model/properties/activate';
 import { defer } from '../../../util/defer';
 import { registerOnSnapshot } from '../../../stores/stats';
 import { isFastBoot } from '../../../util/fastboot';
+import { state, readable }  from '../../../model/tracking/state';
 
 const {
   assign
@@ -16,10 +16,11 @@ export default class Query extends EmberObject {
   @activate()
   content
 
-  @tracked isLoading = false;
-  @tracked isLoaded = false;
-  @tracked isError = false;
-  @tracked error = null;
+  @state _state
+  @readable isLoading = false;
+  @readable isLoaded = false;
+  @readable isError = false;
+  @readable error = null;
 
   _isPassive = false
   _reusable
@@ -50,18 +51,18 @@ export default class Query extends EmberObject {
 
   async load(opts) {
     let { force } = assign({ force: false }, opts);
-    let { isLoaded } = this;
+    let { isLoaded } = this._state.untracked.getProperties('isLoaded');
     if(isLoaded && !force) {
       return this;
     }
-    this.setProperties({ isLoading: true, isError: false, error: null });
+    this._state.setProperties({ isLoading: true, isError: false, error: null });
     try {
       let snapshot = await this.ref._ref.get();
       this._onLoad(snapshot);
-      this.setProperties({ isLoading: false, isLoaded: true });
+      this._state.setProperties({ isLoading: false, isLoaded: true });
       this._deferred.resolve(this);
     } catch(error) {
-      this.setProperties({ isLoading: false, isError: true, error });
+      this._state.setProperties({ isLoading: false, isError: true, error });
       this._deferred.reject(error);
       throw error;
     }
@@ -113,15 +114,15 @@ export default class Query extends EmberObject {
     } else {
       let cancel = this._cancel;
       if(!cancel) {
-        this.setProperties({ isLoading: true, isError: false, error: null });
+        this._state.setProperties({ isLoading: true, isError: false, error: null });
         let refresh = true;
         this._cancel = registerOnSnapshot(this, this.ref._ref.onSnapshot({ includeMetadataChanges: false }, snapshot => {
           this._onSnapshot(snapshot, refresh);
           refresh = false;
-          this.setProperties({ isLoading: false, isLoaded: true })
+          this._state.setProperties({ isLoading: false, isLoaded: true })
           this._deferred.resolve(this);
         }, error => {
-          this.setProperties({ isLoading: false, isError: true, error });
+          this._state.setProperties({ isLoading: false, isError: true, error });
           this.store.onSnapshotError(this);
           this._deferred.reject(error);
         }));

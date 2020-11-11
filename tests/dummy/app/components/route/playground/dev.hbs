@@ -1,11 +1,15 @@
 <div class="route-playground-dev">
 
   <div class="row">
-    {{#each this.models as |model|}}
-      <div class="row">
-        <Json @value={{model}}/>
-      </div>
-    {{/each}}
+    <Json @value={{this.doc}}/>
+  </div>
+
+  <div class="row">
+    <Block::Changes as |Changes|>
+      <Changes.Property @key="doc.exists" @value={{this.doc.exists}}/>
+      <Changes.Property @key="doc.isLoading" @value={{this.doc.isLoading}}/>
+      <Changes.Property @key="doc.isLoaded" @value={{this.doc.isLoaded}}/>
+    </Block::Changes>
   </div>
 
 </div>

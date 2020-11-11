@@ -149,7 +149,6 @@ export default class RouteDevComponent extends Component {
 ## TODO
 
 - [ ] maybe also do partial updates for `doc.data.foo = { ok: true }`-type sets
-- [ ] maybe use own `setProperties` for `@tracked` state props or tracking/state
 - [ ] add `doc.save({ type: 'update' })`, transaction update, batch update
 - [ ] `@route` decorator doesn't deactivate intermediate routes if child route transitions
 - [ ] documentation site to replace existing www.ember-cli-zuglet.com
