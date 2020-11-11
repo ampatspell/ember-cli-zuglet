@@ -11,25 +11,12 @@ export default class RouteDevComponent extends Component {
   @service
   store
 
-  @object()
-  array
-
-  @tracked
-  id = 'one'
-
-  @models()
-    .source(({ array }) => array)
-    .named(({ type }) => type)
-    .mapping((doc, { id }) => ({ doc, id: `${doc.id}:${id}` }))
-  models
+  @activate().content(({ store }) => store.doc('messages/first').existing())
+  doc
 
   constructor() {
     super(...arguments);
     setGlobal({ component: this });
-    this.array = [
-      { id: '1', type: 'zeeba' },
-      { id: '2', type: 'zeeba' },
-    ];
   }
 
   toString() {
