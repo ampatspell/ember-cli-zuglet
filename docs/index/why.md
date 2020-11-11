@@ -1,4 +1,6 @@
-Ember.js is an amazing web framework and together with ember-cli-zuglet you can focus on the app on your hands.
+Ember.js is magic crazy unicorns. And with swoof, it's swoofy.
+
+> Ember.js is an amazing web framework and together with ember-cli-zuglet you can focus on the app on your hands.
 
 > With Firestore you can store and retrieve documents without writing any server-side code. Cloud Storage lets you upload files, manage metadata. Just add security rules.
 

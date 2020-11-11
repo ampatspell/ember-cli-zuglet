@@ -66,6 +66,52 @@ $ chrome://inspect
 
 ## Decorators
 
+### @route
+
+``` javascript
+import Route from '@ember/routing/route';
+import { inject as service } from '@ember/service';
+import { route } from 'zuglet/decorators';
+
+@route()
+export default class RouteRoute extends Route {
+
+  @service
+  store
+
+  // is activated when this returns
+  async model() {
+    return this.store.models.create('messages');
+  }
+
+  // right after model is activated
+  // optionally preload data before model() hook resolves
+  async load(model) {
+    await model.load();
+  }
+
+}
+```
+
+### @root
+
+``` javascript
+import Component from '@glimmer/component';
+import { inject as service } from '@ember/service';
+import { root, activate } from 'zuglet/decorators';
+
+@root() // activates on create and deactivates on willDestroy
+export default class RouteDevComponent extends Component {
+
+  @service
+  store
+
+  @activvate().content(({ store }) = store.doc('messages/first').existing()) // this is activated on 1st access
+  doc
+
+}
+```
+
 ### @activate
 
 ``` javascript
