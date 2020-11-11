@@ -106,7 +106,8 @@ export default class RouteDevComponent extends Component {
   @service
   store
 
-  @activvate().content(({ store }) = store.doc('messages/first').existing()) // this is activated on 1st access
+  // this is activated on 1st access
+  @activate().content(({ store }) = store.doc('messages/first').existing())
   doc
 
 }
