@@ -141,6 +141,10 @@ input[type="password"] {
     > .title {
       font-size: $font-size;
       font-weight: 600;
+      > .version {
+        font-weight: 400;
+        font-size: $font-size-smaller;
+      }
     }
     margin-bottom: 15px;
   }

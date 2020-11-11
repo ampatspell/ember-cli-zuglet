@@ -1,6 +1,6 @@
 <div class="block-toc">
   <div class="header">
-    <LinkTo class="title" @route="index">ember-cli-zuglet</LinkTo>
+    <LinkTo class="title" @route="index">{{this.config.name}} <span class="version">v{{this.config.version}}</span></LinkTo>
     <LinkTo @route="docs">Documentation</LinkTo>
   </div>
   <Block::Toc::Pages @page={{@page}}/>

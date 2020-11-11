@@ -25,6 +25,7 @@ module.exports = function(environment) {
         messagingSenderId: "316370319143",
         appId: "1:316370319143:web:1ea76935876b7619"
       },
+      name: 'ember-cli-zuglet',
       version: require('../../../package.json').version
     },
     fastboot: {
