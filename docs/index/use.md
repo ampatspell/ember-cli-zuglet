@@ -18,7 +18,7 @@ doc.data.text = 'To whom it may concern: It is springtime. It is late afternoon.
 await doc.save();
 
 // check out the doc
-doc.serialized // => { id: 'first', isSaved: true, ..., data: { author ...
+doc.serialized // → { id: 'first', isSaved: true, ..., data: { author ...
 ```
 
 ## Load Firestore document
@@ -35,8 +35,8 @@ let query = messages.where('author', 'Kurt Vonnegut').query();
 
 await query.load();
 
-query.content // [ doc, ... ]
-query.isLoaded // => true
+query.content // → [ doc, ... ]
+query.isLoaded // → true
 ```
 
 ## Query single Firestore document
@@ -47,7 +47,7 @@ let query = messages.orderBy('created_at', 'desc').query({ type: 'first' });
 
 await query.load();
 
-query.content // doc
+query.content // → doc
 ```
 
 ## onSnapshot listeners
@@ -76,8 +76,8 @@ let task = store.storage.ref('images/first').put({
 
 await task.promise;
 
-task.percent // => 100
-task.isCompleted // => true
+task.percent // → 100
+task.isCompleted // → true
 ```
 
 ## Firebase Authentication
