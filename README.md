@@ -117,8 +117,10 @@ export default class RouteDevComponent extends Component {
 
 ``` javascript
 @activate()
-  .content(({ store, id }) => store.models.create('thing', { id }))
+  .content(({ store, id }) => store.collection('messages').where('owner', '==', id).query())
 ```
+
+* if content args changes, content is recreated
 
 ### @model
 
