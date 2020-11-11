@@ -25,7 +25,7 @@
   }
   > a {
     display: block;
-    padding: 8px 15px 7px 15px;
+    padding: 5px 10px;
     text-decoration: none;
     &.active {
       background: fade-out(#000, 0.2);
@@ -47,6 +47,7 @@
 .zuglet-stats {
   border-top: 1px solid fade-out(#000, 0.9);
   padding: 10px;
+  font-family: $font-code;
   font-size: $font-size-smaller;
   > .section {
     margin-bottom: 10px;

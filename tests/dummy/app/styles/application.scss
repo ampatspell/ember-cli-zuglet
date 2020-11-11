@@ -1,5 +1,5 @@
 @mixin button() {
-  font-family: $font-family;
+  font-family: $font-code;
   font-size: $font-size;
   background: fade-out(#000, 0.2);
   border-radius: 3px;
@@ -37,7 +37,7 @@ input:not([type]),
 input[type="text"],
 input[type="number"],
 input[type="password"] {
-  font-family: $font-family;
+  font-family: $font-code;
   font-size: $font-size;
   border-radius: 3px;
   border: 1px solid #999;
@@ -85,10 +85,12 @@ input[type="password"] {
 }
 
 .json {
+  font-family: $font-code;
   white-space: pre-wrap;
 }
 
 .block-changes {
+  font-family: $font-code;
   user-select: none;
   > .log {
     white-space: pre-wrap;

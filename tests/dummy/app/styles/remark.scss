@@ -2,7 +2,7 @@
   @import "hljs/index";
   @mixin header-code() {
     > code {
-      font-family: $font-family;
+      font-family: $font-code;
       display: inline-block;
       font-size: 14px;
       padding-left: 5px;
@@ -50,7 +50,7 @@
     margin-top: 15px;
   }
   code {
-    font-family: $font-family;
+    font-family: $font-code;
     display: inline-block;
     font-weight: 600;
   }
