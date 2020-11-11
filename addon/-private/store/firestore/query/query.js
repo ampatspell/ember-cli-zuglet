@@ -1,5 +1,4 @@
 import EmberObject from '@ember/object';
-import { tracked } from '@glimmer/tracking';
 import { objectToJSON } from '../../../util/object-to-json';
 import { toJSON } from '../../../util/to-json';
 import { activate } from '../../../model/properties/activate';

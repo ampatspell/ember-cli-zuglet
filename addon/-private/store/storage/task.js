@@ -3,6 +3,7 @@ import firebase from "firebase/app";
 import { objectToJSON } from '../../util/object-to-json';
 import { tracked } from '@glimmer/tracking';
 import { toJSON } from '../../util/to-json';
+import { state, readable }  from '../../model/tracking/state';
 
 const {
   STATE_CHANGED
@@ -10,13 +11,15 @@ const {
 
 export default class StorageTask extends EmberObject {
 
+  @state _state
+  @readable total = null
+  @readable transferred = null;
+  @readable isRunning = true;
+  @readable isCompleted = false;
+  @readable isError = false;
+  @readable error = null;
+
   @tracked metadata
-  @tracked total = null
-  @tracked transferred = null;
-  @tracked isRunning = true;
-  @tracked isCompleted = false;
-  @tracked isError = false;
-  @tracked error = null;
 
   init() {
     super.init(...arguments);
@@ -35,28 +38,25 @@ export default class StorageTask extends EmberObject {
     let snapshot;
     try {
       snapshot = await task;
-    } catch {
+    } catch(err) {
+      this._onError(err);
       return;
     }
     this._onSnapshot(snapshot);
   }
 
   _onSnapshot(snapshot) {
-    let { metadata, bytesTransferred, totalBytes } = snapshot;
+    let { metadata, bytesTransferred: transferred, totalBytes: total } = snapshot;
     this.metadata = metadata;
-    this.transferred = bytesTransferred;
-    this.total = totalBytes;
+    this._state.setProperties({ transferred, total });
   }
 
   _onError(error) {
-    this.isRunning = false;
-    this.isError = true;
-    this.error = error;
+    this._state.setProperties({ isRunning: false, isError: true, error });
   }
 
   _onCompleted() {
-    this.isRunning = false;
-    this.isCompleted = true;
+    this._state.setProperties({ isRunning: false, isCompleted: true });
     this._cancelObserver();
   }
 
@@ -74,7 +74,8 @@ export default class StorageTask extends EmberObject {
   }
 
   onActivated() {
-    if(!this.isRunning) {
+    let { isRunning } = this._state.untracked.getProperties('isRunning');
+    if(!isRunning) {
       return;
     }
     this._taskObserver = this._task.on(STATE_CHANGED,
