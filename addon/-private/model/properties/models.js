@@ -1,24 +1,30 @@
 import Property, { property } from './property';
+import { setOwner, getOwner } from '@ember/application';
 import { A } from '@ember/array';
 import { getState } from '../state';
 import { getStores } from '../../stores/get-stores';
-import { createCache, getValue } from '@glimmer/tracking/primitives/cache';
 import { assert } from '@ember/debug';
+import { diff, asObject, asString } from '../decorators/diff';
 
 class Marker {
 
-  constructor(source, modelName) {
+  @diff(asString)
+  modelName() {
+    let { owner, source, opts } = this;
+    return opts.modelName.call(owner, source, owner);
+  }
+
+  @diff(asObject)
+  props() {
+    let { owner, source, opts } = this;
+    return opts.mapping.call(owner, source, owner);
+  }
+
+  constructor(owner, source, opts) {
+    setOwner(this, getOwner(owner));
+    this.owner = owner;
     this.source = source;
-    this._modelNameCache = createCache(modelName);
-    this.modelName = this._modelName;
-  }
-
-  get _modelName() {
-    return getValue(this._modelNameCache);
-  }
-
-  get hasModelNameChanged() {
-    return this.modelName !== this._modelName;
+    this.opts = opts;
   }
 
 }
@@ -43,22 +49,12 @@ export default class ModelsProperty extends Property {
     this.stores = getStores(this);
   }
 
-  get _sourceCache() {
+  @diff()
+  _source() {
     assert(`@models().source(fn) is required and must be function`, typeof this.opts.source === 'function');
-    let cache = this.__sourceCache;
-    if(!cache) {
-      cache = createCache(() => {
-        let { owner, opts: { source } } = this;
-        let value = source.call(owner, owner);
-        return value ? A(value) : null;
-      });
-      this.__sourceCache = cache;
-    }
-    return cache;
-  }
-
-  get _source() {
-    return getValue(this._sourceCache);
+    let { owner, opts } = this;
+    let value = opts.source.call(owner, owner);
+    return value ? A(value) : null;
   }
 
   //
@@ -67,10 +63,12 @@ export default class ModelsProperty extends Property {
     let { owner, opts } = this;
     assert(`@models().named(fn) is required and must be string or function`, typeof opts.modelName === 'function');
     assert(`@models().mapping(fn) is required and must be function`, typeof opts.mapping === 'function');
-    let marker = new Marker(source, () => opts.modelName.call(owner, source, owner));
-    let props = opts.mapping.call(owner, source, owner);
-    let model = this.stores.models.create(marker.modelName, props);
+
+    let marker = new Marker(owner, source, opts);
+
+    let model = this.stores.models.create(marker.modelName.current, marker.props.current);
     setMarker(model, marker);
+
     return model;
   }
 
@@ -88,7 +86,7 @@ export default class ModelsProperty extends Property {
         let model = find(doc);
         if(model) {
           let marker = getMarker(model);
-          if(marker.hasModelNameChanged) {
+          if(marker.modelName.updated) {
             model = this.createModel(doc);
             added.pushObject(model);
           } else {
@@ -111,9 +109,13 @@ export default class ModelsProperty extends Property {
   }
 
   sourceDidChange() {
-    let next = this._source;
-    let current = this.source;
+    let {
+      source: current,
+      _source: { current: next }
+    } = this;
+
     this.sourceArrayDidChange(next);
+
     if(next !== current) {
       this.source = next;
     }
