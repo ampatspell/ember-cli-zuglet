@@ -1,5 +1,5 @@
 .route-index {
-  margin: 80px 50px;
+  margin: 80px 50px 33px 50px;
   max-width: 800px;
   @include breakpoint(tablet) {
     margin: 50px 40px;
@@ -44,7 +44,7 @@
           content: '🔥';
         }
         @include breakpoint(non-desktop) {
-          font-size: 24px;
+          margin-bottom: 10px;
         }
       }
       > .header {
