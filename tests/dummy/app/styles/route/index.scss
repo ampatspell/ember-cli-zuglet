@@ -1,6 +1,5 @@
 .route-index {
   margin: 80px 50px;
-  font-size: 18px;
   max-width: 800px;
   @include breakpoint(tablet) {
     margin: 50px 40px;
@@ -18,8 +17,7 @@
   align-items: baseline;
 
   > .aside {
-    font-size: 12px;
-    font-weight: 600;
+    font-size: $font-size-smaller;
     text-transform: uppercase;
     width: 70px;
     opacity: 0.3;
@@ -28,29 +26,22 @@
   > .content {
     flex: 1;
     overflow-x: hidden;
-    code {
-      font-size: 16px;
-    }
   }
 
-  @include breakpoint(tablet) {
-    font-size: 15px;
-    > .content {
-      code {
-        font-size: 14px;
-      }
-    }
-  }
+  // @include breakpoint(tablet) {
+  //   > .content {
+  //     code {
+  //     }
+  //   }
+  // }
 
-  @include breakpoint(mobile) {
-    display: block;
-    font-size: 15px;
-    > .content {
-      code {
-        font-size: 13px;
-      }
-    }
-  }
+  // @include breakpoint(mobile) {
+  //   display: block;
+  //   > .content {
+  //     code {
+  //     }
+  //   }
+  // }
 
   &.header {
     > .content {
@@ -66,7 +57,8 @@
         }
       }
       > .header {
-        font-size: 26px;
+        font-size: $font-size * 2;
+        margin-bottom: 5px;
         > .value {
           font-weight: 600;
         }
@@ -83,7 +75,7 @@
     > .content {
       display: flex;
       flex-direction: row;
-      font-weight: 500;
+      font-weight: 600;
       > a {
         margin-right: 10px;
       }
