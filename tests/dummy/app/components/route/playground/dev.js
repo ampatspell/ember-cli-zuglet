@@ -1,7 +1,7 @@
 import Component from '@glimmer/component';
 import { inject as service } from '@ember/service';
 import { setGlobal, toString } from 'zuglet/utils';
-import { root, activate, model } from 'zuglet/decorators';
+import { root, activate, models, object } from 'zuglet/decorators';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 
@@ -11,18 +11,22 @@ export default class RouteDevComponent extends Component {
   @service
   store
 
-  @tracked
-  name = 'zeeba'
+  @object()
+  array
 
-  @tracked
-  id = 'one'
-
-  @model().named(({ name }) => name).mapping(({ id }) => ({ id }))
-  model
+  @models()
+    .source(({ array }) => array)
+    .named(({ type }) => type)
+    .mapping((doc) => ({ doc, id: doc.id }))
+  models
 
   constructor() {
     super(...arguments);
     setGlobal({ component: this });
+    this.array = [
+      { id: '1', type: 'zeeba' },
+      { id: '2', type: 'zeeba' },
+    ];
   }
 
   toString() {
