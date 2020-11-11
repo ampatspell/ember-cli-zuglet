@@ -2,7 +2,6 @@ import { toString } from '../../util/to-string';
 import { consumeKey, dirtyKey } from './tag';
 import { propToIndex, ARRAY_GETTERS } from './utils';
 import { A, isArray } from '@ember/array';
-import { assert } from '@ember/debug';
 
 const KEYS = Symbol();
 const ARRAY = Symbol();
@@ -220,9 +219,7 @@ export default class DataManager {
 
   getProxy() {
     consumeKey(this, 'proxy');
-    let { proxy } = this;
-    assert(`Proxy has not been created yet`, !!proxy);
-    return proxy;
+    return this.proxy;
   }
 
   setValue(value) {

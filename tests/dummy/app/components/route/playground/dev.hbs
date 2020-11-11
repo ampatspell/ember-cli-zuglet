@@ -1,7 +1,11 @@
 <div class="route-playground-dev">
 
   <div class="row">
-    <Json @value={{this.model}}/>
+    {{#each this.models as |model|}}
+      <div class="row">
+        <Json @value={{model}}/>
+      </div>
+    {{/each}}
   </div>
 
 </div>

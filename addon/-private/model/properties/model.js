@@ -5,14 +5,6 @@ import { diff, asOptionalString, asOptionalObject, asIdentity } from '../decorat
 import { isFunction } from '../../util/object-to-json';
 import { assert } from '@ember/debug';
 
-const mappingDidChange = (owner, props, caller) => {
-  assert(
-    `${owner} requires mappingDidChange() because @${caller}().mapping(...) values has changed`,
-    isFunction(owner.mappingDidChange)
-  );
-  owner.mappingDidChange(props);
-};
-
 export default class ModelProperty extends Property {
 
   @diff(asOptionalString)
