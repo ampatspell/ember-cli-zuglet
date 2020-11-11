@@ -1,7 +1,6 @@
 import { consumeKey, dirtyKey } from './tag';
 import { toString } from '../../util/to-string';
 import { getState as _getState } from '../state';
-import { getStats } from '../../stores/stats';
 
 //
 // class Thing {
@@ -20,9 +19,20 @@ import { getStats } from '../../stores/stats';
 
 class StateProperties {
 
-  constructor(owner) {
+  constructor(owner, meta) {
     this._owner = owner;
     this._values = Object.create(null);
+    this._setup(meta);
+  }
+
+  _setup(meta) {
+    let { _values } = this;
+    for(let key in meta) {
+      let { initializer } = meta[key];
+      if(initializer) {
+        _values[key] = initializer();
+      }
+    }
   }
 
   dirty(key) {
@@ -90,10 +100,26 @@ class StateProperties {
 
 }
 
+const META = new WeakMap();
+
+const getMeta = Class => {
+  let hash = META.get(Class);
+  if(!hash) {
+    hash = Object.create(null);
+    META.set(Class, hash);
+  }
+  return hash;
+}
+
+const setMeta = (Class, key, value) => {
+  let meta = getMeta(Class);
+  meta[key] = value;
+}
+
 const getState = owner => {
   let state = _getState(owner).cache.state;
   if(!state) {
-    state = new StateProperties(owner);
+    state = new StateProperties(owner, getMeta(owner.constructor.prototype));
     _getState(owner).cache.state = state;
   }
   return state;
@@ -107,15 +133,11 @@ export const state = () => {
   };
 }
 
-export const readable = (_, key, descriptor) => {
-  let initializer = descriptor.initializer;
-  let initialized = !initializer;
+export const readable = (prototype, key, descriptor) => {
+  let { initializer } = descriptor;
+  setMeta(prototype, key, { initializer });
   return {
     get() {
-      if(!initialized) {
-        initialized = true;
-        getState(this).untracked.set(key, initializer.call(this));
-      }
       return getState(this).get(key);
     }
   };
