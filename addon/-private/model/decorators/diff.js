@@ -31,7 +31,7 @@ class Thing {
 const isEmpty = value => value === undefined || value === null;
 
 export const asString = (prev, curr) => {
-  assert(`value msut be string not ${curr}`, typeof curr === 'string');
+  assert(`value must be string not ${curr}`, typeof curr === 'string');
   return prev !== curr;
 }
 
@@ -43,7 +43,7 @@ export const asOptionalString = (prev, curr) => {
 }
 
 export const asObject = (prev, curr) => {
-  assert(`value msut be object not ${curr}`, typeof curr === 'object');
+  assert(`value must be object not ${curr}`, typeof curr === 'object');
   prev = prev || {};
   if(keys(prev).length === keys(curr).length) {
     for(let key in curr) {

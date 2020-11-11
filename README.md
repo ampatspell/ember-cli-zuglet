@@ -80,7 +80,9 @@ $ chrome://inspect
   .mapping(({ id }) => ({ id }))
 ```
 
-* if mapping changes, but modelName hasn't changed, `mappingDidChange` is invoked
+* if `mapping` changes, but `modelName` hasn't changed, `mappingDidChange` is invoked
+* if `model.mappindDidChange` doesn't exist, model is recreated
+* mapping properties are diffed individually
 
 ### @models
 

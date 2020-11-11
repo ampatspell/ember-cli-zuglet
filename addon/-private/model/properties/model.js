@@ -33,15 +33,24 @@ export default class ModelProperty extends Property {
   _value(current) {
     let modelName = this._modelName;
     let props = this._props;
+
+    let create = () => getStores(this).models.create(modelName.current, props.current);
+
     if(current && !modelName.updated) {
       if(props.updated) {
-        mappingDidChange(current, props.current, 'model');
+        if(isFunction(current.mappingDidChange)) {
+          current.mappingDidChange.call(current, props.current);
+        } else {
+          return create();
+        }
       }
       return current;
     }
+
     if(modelName.current) {
-      return getStores(this).models.create(modelName.current, props.current);
+      return create();
     }
+
     return null;
   }
 
