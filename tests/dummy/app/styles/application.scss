@@ -15,6 +15,12 @@ a,
 a:visited,
 a:active {
   color: #000;
+  text-decoration: underline;
+  text-decoration-color: fade-out(#000, 0.8);
+  transition: text-decoration-color 0.2s ease-in-out;
+  &:hover {
+    text-decoration-color: fade-out(#000, 0.1);
+  }
 }
 
 button,

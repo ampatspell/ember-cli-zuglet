@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu+Mono:wght@400;700&display=swap');
 
 $font-family: 'Ubuntu Mono';
-$font-size: 15px;
+$font-size: 14px;
 $font-size-smaller: 12px;
 
 html {
@@ -25,16 +25,10 @@ html {
     box-sizing: border-box;
   }
 
+  @import "breakpoints";
   @import "application";
   @import "playground";
-
-  .route-index {
-    padding: 15px;
-    > h1,
-    > p {
-      margin: 0 0 5px 0;
-      padding: 0;
-    }
-  }
+  @import "remark";
+  @import "route/index";
 
 }
