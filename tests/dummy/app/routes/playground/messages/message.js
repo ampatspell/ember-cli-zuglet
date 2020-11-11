@@ -14,9 +14,11 @@ export default class MessagesMessageRoute extends Route {
   }
 
   async load(model) {
-    // await model.load();
-    let loaded = await model.load();
-    if(!loaded) {
+    await model.load();
+  }
+
+  afterModel(model) {
+    if(!model.message) {
       this.transitionTo('playground.messages');
     }
   }
