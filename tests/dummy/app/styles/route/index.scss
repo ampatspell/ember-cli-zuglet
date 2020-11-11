@@ -34,21 +34,6 @@
     }
   }
 
-  // @include breakpoint(tablet) {
-  //   > .content {
-  //     code {
-  //     }
-  //   }
-  // }
-
-  // @include breakpoint(mobile) {
-  //   display: block;
-  //   > .content {
-  //     code {
-  //     }
-  //   }
-  // }
-
   &.header {
     > .content {
       > .fire {
