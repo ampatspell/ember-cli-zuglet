@@ -96,3 +96,61 @@ input[type="password"] {
     white-space: pre-wrap;
   }
 }
+
+.block-master-detail {
+  @include breakpoint(post-tablet) {
+    $w: 200px;
+    > .master {
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: $w;
+      border-right: 1px solid fade-out(#000, 0.95);
+      padding: 30px 20px 20px 25px;
+      overflow-y: scroll;
+    }
+    > .detail {
+      border-left: $w solid rgba(0,0,0,0);
+      padding: 15px 40px 40px 40px;
+    }
+  }
+
+  @include breakpoint(non-desktop) {
+    padding: 15px;
+    @include breakpoint(tablet) {
+      padding: 25px;
+    }
+    > .master {
+      padding-bottom: 25px;
+      margin-bottom: 50px;
+      border-bottom: 1px solid fade-out(#000, 0.95);
+    }
+  }
+}
+
+.block-toc {
+  a {
+    text-decoration: none;
+  }
+  > .header {
+    > a {
+      display: block;
+      font-size: $font-size-smaller;
+    }
+    > .title {
+      font-size: $font-size;
+      font-weight: 600;
+    }
+    margin-bottom: 15px;
+  }
+  > .pages {
+    font-size: $font-size-smaller;
+    > .page {
+      margin-bottom: 15px;
+      .page {
+        margin-left: 8px;
+      }
+    }
+  }
+}

@@ -7,6 +7,12 @@ export default class Router extends EmberRouter {
 }
 
 Router.map(function() {
+
+  this.route('docs', function() {
+    this.route('page', { path: '/*page_id' }, function() {
+    });
+  });
+
   this.route('playground', function() {
     this.route('document');
     this.route('query', function() {
@@ -25,4 +31,5 @@ Router.map(function() {
       });
     });
   });
+
 });
