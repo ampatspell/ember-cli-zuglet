@@ -5,8 +5,8 @@ import { registerPromise } from '../../stores/stats';
 
 const activateRoute = route => {
   if(!route.isActivated) {
-    getState(route).activate(route);
     route.isActivated = true;
+    getState(route).activate(route);
   }
 }
 
@@ -25,7 +25,7 @@ const extend = Class => class ActivatingRoute extends Class {
 
   isActivated = false;
 
-  async model(params, transition) {
+  async model(_, transition) {
     activateRoute(this);
     try {
       let model = await super.model(...arguments);
@@ -43,7 +43,7 @@ const extend = Class => class ActivatingRoute extends Class {
     }
   }
 
-  resetController(controller, isExiting) {
+  resetController(_, isExiting) {
     if(isExiting) {
       deactivateRoute(this);
     }
