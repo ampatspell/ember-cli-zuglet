@@ -116,7 +116,8 @@ export default class RouteDevComponent extends Component {
 ### @activate
 
 ``` javascript
-@activate().content(({ store, id }) => store.models.create('thing', { id }))
+@activate()
+  .content(({ store, id }) => store.models.create('thing', { id }))
 ```
 
 ### @model
