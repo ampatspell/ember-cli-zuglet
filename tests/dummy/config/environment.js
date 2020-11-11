@@ -24,7 +24,8 @@ module.exports = function(environment) {
         storageBucket: "quatsch-38adf.appspot.com",
         messagingSenderId: "316370319143",
         appId: "1:316370319143:web:1ea76935876b7619"
-      }
+      },
+      version: require('../../../package.json').version
     }
   };
 
