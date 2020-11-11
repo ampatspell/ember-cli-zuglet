@@ -1,3 +1,5 @@
+> from zuglet@1
+
 ## Cloud Firestore
 
 * Query, load, save and delete documents

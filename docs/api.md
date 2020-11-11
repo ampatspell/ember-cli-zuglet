@@ -3,6 +3,8 @@ pos: 3
 title: API
 ---
 
+> from zuglet@1
+
 # API Documentation
 
 This section covers all the public API of `ember-cli-zuglet`.

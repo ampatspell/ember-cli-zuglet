@@ -1,3 +1,5 @@
+> from zuglet@1
+
 ``` bash
 $ ember install ember-cli-zuglet
 ```

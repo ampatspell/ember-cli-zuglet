@@ -2,6 +2,8 @@
 pos: 1
 ---
 
+> from zuglet@1
+
 # Install guide
 
 This page guides you through Ember.js app creation, `ember-cli-zuglet` installation and configuration.

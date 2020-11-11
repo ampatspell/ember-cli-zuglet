@@ -3,6 +3,8 @@ title: Initialize
 pos: 0
 ---
 
+> from zuglet@1
+
 # Register & Initialize
 
 ``` javascript
