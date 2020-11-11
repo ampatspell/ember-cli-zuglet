@@ -26,8 +26,8 @@
     "bump": "npm version minor; npm run tags",
     "patch": "npm version patch; npm run tags",
     "client:build": "WITH_FASTBOOT=true npm run build -- --output-path ./firebase/public",
-    "deploy:hosting": "npm run client:build && firebase deploy --only hosting",
-    "deploy:all": "npm run client:build && firebase deploy"
+    "deploy:hosting": "npm run client:build && (cd firebase && firebase deploy --only hosting)",
+    "deploy:all": "npm run client:build && (cd firebase && firebase deploy)"
   },
   "dependencies": {
     "ember-auto-import": "^1.7.0",
