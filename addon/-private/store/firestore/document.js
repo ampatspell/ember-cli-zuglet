@@ -315,7 +315,8 @@ export default class Document extends EmberObject {
     if(this._cancel) {
       return false;
     }
-    if(this._state.untracked.get('isNew')) {
+    let { isNew } = this._state.untracked.getProperties('isNew');
+    if(isNew) {
       return false;
     }
     return true;
