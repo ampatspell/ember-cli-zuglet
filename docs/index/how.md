@@ -1,121 +1,113 @@
-> from zuglet@1
+Let's start with a small example. Suppose you want to build an app which let's you have a list of messages. How imaginative. In this wonderful app each message is a document in messages collection and in app you get to have Messages and Message model for your logic.
 
-## Cloud Firestore
+Also you want to have remotely modified messages beamed to your browser.
 
-* Query, load, save and delete documents
-* Attach Document and Query onSnapshot listeners automatically
-* Stateful documents
+Messages needs to be loaded in a particular route, you want to start onserving Firestore's onSnapshot changes when route is activated and stop when person using your app navigates somewhere else in the app.
 
-## Save Firestore document
+So far so good. Let's start with a route
 
 ``` javascript
-// create new document
-let doc = store.doc('messages/first').new();
+// app/routes/messages.js
+import Route from '@ember/routing/route';
+import { inject as service } from '@ember/service';
+import { route } from 'zuglet/decorators';
 
-// set document.data properties
-doc.data.author = 'Kurt Vonnegut';
-doc.data.text = 'To whom it may concern: It is springtime. It is late afternoon.';
+@route()
+export default class MessagesRoute extends Route {
 
-// save the document
-await doc.save();
+  @service
+  store
 
-// check out the doc
-doc.serialized // → { id: 'first', isSaved: true, ..., data: { author ...
-```
-
-## Load Firestore document
-
-``` javascript
-let doc = await store.doc('message/first').load();
-```
-
-## Query Firestore documents
-
-``` javascript
-let messages = store.collection('message');
-let query = messages.where('author', 'Kurt Vonnegut').query();
-
-await query.load();
-
-query.content // → [ doc, ... ]
-query.isLoaded // → true
-```
-
-## Query single Firestore document
-
-``` javascript
-let messages = store.collection('message');
-let query = messages.orderBy('created_at', 'desc').query({ type: 'first' });
-
-await query.load();
-
-query.content // → doc
-```
-
-## onSnapshot listeners
-
-TODO
-
-## Cloud Storage
-
-* Upload files
-* Manage file metadata
-* Retrieve file download URLs
-
-## Upload a file to Cloud Storage
-
-``` javascript
-let task = store.storage.ref('images/first').put({
-  type: 'data',
-  data: file,
-  metadata: {
-    contentType: file.type,
-    customMetadata: {
-      originalFilename: file.name
-    }
+  async model() {
+    return this.store.models.create('messages');
   }
-});
 
-await task.promise;
+  async load(model) {
+    await model.load();
+  }
 
-task.percent // → 100
-task.isCompleted // → true
+}
 ```
 
-## Firebase Authentication
-
-* Sign-up users
-* Sign-in users
-* Retrieve current user
-* Load related data on authentication events
+Then let's add `Messages` model:
 
 ``` javascript
-let auth = this.store.auth;
-await auth.signOut();
+import EmberObject from '@ember/object';
+import { inject as service } from '@ember/service';
+import { load } from 'zuglet/utils';
+import { activate, models } from 'zuglet/decorators';
+import { cached } from 'tracked-toolbox';
+
+export default class Messages extends EmberObject {
+
+  @service
+  store
+
+  @cached
+  get coll() {
+    return this.store.collection('messages');
+  }
+
+  @activate().content(({ coll }) => coll.orderBy('createdAt', 'desc').query())
+  query
+
+  @models().source(({ query }) => query.content).named(() => 'message').mapping(doc => ({ doc }))
+  models
+
+  async load() {
+    await load(this.query);
+  }
+
+  async add(text) {
+    let { store, coll } = this;
+    let doc = coll.doc().new({
+      text,
+      createdAt: store.serverTimestamp
+    });
+    await doc.save();
+  }
+
+  byId(id) {
+    return this.models.find(model => model.id === id);
+  }
+
+}
 ```
 
 ``` javascript
-let auth = this.store.auth;
-let email = auth.methods.email;
+import EmberObject from '@ember/object';
+import { read, alias } from 'macro-decorators';
 
-let user = await email.signUp(props.email, props.password);
+const data = key => alias(`doc.data.${key}`);
+
+export default class Message extends EmberObject {
+
+  doc
+
+  @reads('doc.id')
+  id
+
+  @data('createdAt')
+  createdAt
+
+  @data('text')
+  text
+
+  async save() {
+    await this.doc.save();
+  }
+
+  async delete() {
+    await this.doc.delete();
+  }
+
+}
 ```
 
-``` javascript
-let auth = this.store.auth;
-let email = auth.methods.email;
-
-let user = await email.signIn(props.email, props.password);
+``` hbs
+{{#each @messages.models as |message|}}
+  <div class="message">
+    {{message.text}}
+  </div>
+{{/each}}
 ```
-
-## Cloud Functions
-
-Lets you call Firebase Cloud Functions.
-
-## Models and Lifecycle Management
-
-TODO
-
-## FastBoot
-
-Server-side rendering with FastBoot is fully supported.
