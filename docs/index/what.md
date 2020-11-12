@@ -1,0 +1,1 @@
+It is an [Ember.js](https://emberjs.com/) addon which provides a complete solution for productive and easy to use integration of [Google Firebase](http://firebase.google.com) services in your [Ember.js](https://emberjs.com/) apps.

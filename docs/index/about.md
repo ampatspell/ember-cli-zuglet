@@ -1,1 +1,0 @@
-It aims to be a complete solution for productive and easy to use integration of Firebase services into your Ember.js apps.
