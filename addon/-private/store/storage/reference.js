@@ -9,7 +9,8 @@ const {
 } = firebase.storage;
 
 const {
-  assign
+  assign,
+  keys
 } = Object;
 
 const stringFormats = {

@@ -93,7 +93,7 @@ export const raw = objectKey => () => {
   };
 }
 
-export const update = (objectKey) => (owner, key, descriptor) => {
+export const update = (objectKey) => () => {
   return {
     value: function(object) {
       let property = getState(this).getProperty(objectKey);

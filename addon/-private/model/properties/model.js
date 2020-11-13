@@ -3,7 +3,6 @@ import { getStores } from '../../stores/get-stores';
 import ObjectActivator from './activate/activators/object';
 import { diff, asOptionalString, asOptionalObject, asIdentity } from '../decorators/diff';
 import { isFunction } from '../../util/object-to-json';
-import { assert } from '@ember/debug';
 
 export default class ModelProperty extends Property {
 

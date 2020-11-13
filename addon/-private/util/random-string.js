@@ -4,7 +4,7 @@ const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789
 
 export const randomString = (len=8) => {
   let string = '';
-  for (let i=0; i<len; i++) {
+  for(let i = 0; i < len; i++) {
     string += possible.charAt(Math.floor(Math.random() * possible.length));
   }
   return string;

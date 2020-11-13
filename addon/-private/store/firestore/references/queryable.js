@@ -1,6 +1,10 @@
 import Reference from './reference';
 import { documentNotFoundError } from '../../../util/error';
 
+const {
+  assign
+} = Object;
+
 export default class QueryableReference extends Reference {
 
   _conditionParameters(name, args) {

@@ -185,7 +185,7 @@ export default class Store extends EmberObject {
     } else if(type === 'first' || type === 'single') {
       return getOwner(this).factoryFor('zuglet:store/firestore/query/single').create({ store, ref });
     }
-    assert(false, `Unsupported type '${type}'`);
+    assert(`Unsupported type '${type}'`, false);
   }
 
   //

@@ -45,11 +45,11 @@ export const objectToJSON = value => {
         value: dateTimeFormatter.format(value)
       };
     } else if(isFile(value)) {
-      let { name, type, size } = value;
+      let { name, type: contentType, size } = value;
       return {
         type: 'file',
         name,
-        type,
+        contentType,
         size
       };
     } else if(isFileList(value)) {
