@@ -157,5 +157,3 @@ export default class RouteDevComponent extends Component {
 - [ ] `@route` decorator doesn't deactivate intermediate routes if child route transitions
 - [ ] documentation site to replace existing www.ember-cli-zuglet.com
 - [ ] add support for cloud messaging
-
-> Test
