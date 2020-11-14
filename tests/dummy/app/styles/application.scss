@@ -47,6 +47,17 @@ input[type="password"] {
   outline: none;
 }
 
+textarea {
+  font-family: $font-code;
+  font-size: $font-size;
+  border-radius: 3px;
+  border: 1px solid #999;
+  padding: 5px;
+  margin: 0;
+  line-height: 1;
+  outline: none;
+}
+
 .input-file {
   position: relative;
   width: 300px;
