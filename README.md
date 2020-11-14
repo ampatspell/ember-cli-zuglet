@@ -149,9 +149,14 @@ export default class RouteDevComponent extends Component {
 * if `model.mappindDidChange` doesn't exist, model is recreated
 * mapping properties are diffed individually
 
+### Textarea
+
+``` hbs
+<textarea {{on "input" this.update}} value={{this.value}}/>
+```
+
 ## TODO
 
-- [ ] figure out what's up with textarea
 - [ ] maybe also do partial updates for `doc.data.foo = { ok: true }`-type sets
 - [ ] add `doc.save({ type: 'update' })`, transaction update, batch update
 - [ ] `@route` decorator doesn't deactivate intermediate routes if child route transitions

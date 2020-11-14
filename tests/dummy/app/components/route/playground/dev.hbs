@@ -1,14 +1,12 @@
 <div class="route-playground-dev">
 
   <div class="row">
-    <Json @value={{this.doc}}/>
+    {{this}}
   </div>
 
   <div class="row">
     <Block::Changes as |Changes|>
-      <Changes.Property @key="doc.exists" @value={{this.doc.exists}}/>
-      <Changes.Property @key="doc.isLoading" @value={{this.doc.isLoading}}/>
-      <Changes.Property @key="doc.isLoaded" @value={{this.doc.isLoaded}}/>
+      <Changes.Property @key="store" @value={{this.store}}/>
     </Block::Changes>
   </div>
 
