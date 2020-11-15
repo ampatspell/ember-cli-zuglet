@@ -35,7 +35,6 @@ module('store / reference', function(hooks) {
       id: 'feathers',
       path: 'feathers'
     });
-    console.log(coll.parent);
     assert.strictEqual(coll.parent, null);
   });
 
@@ -47,6 +46,28 @@ module('store / reference', function(hooks) {
       id: 'yellow',
       path: 'ducks/yellow'
     });
+  });
+
+  test('root doc without path', function(assert) {
+    try {
+      this.store.doc();
+    } catch(err) {
+      assert.strictEqual(err.message, `Assertion Failed: argument must be string not 'undefined'`);
+    }
+  });
+
+  test('root collection without path', function(assert) {
+    try {
+      this.store.collection();
+    } catch(err) {
+      assert.strictEqual(err.message, `Assertion Failed: argument must be string not 'undefined'`);
+    }
+  });
+
+  test('collection doc without path', function(assert) {
+    let doc = this.store.collection('ducks').doc();
+    assert.ok(doc.id);
+    assert.strictEqual(doc.parent.path, 'ducks');
   });
 
   // doc

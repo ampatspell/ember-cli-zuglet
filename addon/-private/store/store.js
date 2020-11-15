@@ -6,7 +6,7 @@ import { cached } from '../model/decorators/cached';
 import { getOwner } from '../util/get-owner';
 import { toJSON } from '../util/to-json';
 import { isFastBoot } from '../util/fastboot';
-import { isFunction } from '../util/object-to-json';
+import { isFunction, isDocumentReference, isCollectionReference } from '../util/object-to-json';
 
 const {
   assign
@@ -94,19 +94,13 @@ export default class Store extends EmberObject {
 
   //
 
-  doc(path) {
-    let ref = path;
-    if(typeof ref === 'string') {
-      ref = this.firebase.firestore().doc(path);
-    }
+  doc(arg) {
+    let ref = this._toDocumentReference(arg);
     return this._createDocumentReference(ref);
   }
 
-  collection(path) {
-    let ref = path;
-    if(typeof ref === 'string') {
-      ref = this.firebase.firestore().collection(path);
-    }
+  collection(arg) {
+    let ref = this._toCollectionReference(arg);
     return this._createCollectionReference(ref);
   }
 
@@ -136,6 +130,24 @@ export default class Store extends EmberObject {
   }
 
   //
+
+  _toDocumentReference(arg) {
+    if(isDocumentReference(arg)) {
+      return arg;
+    } else if(typeof arg === 'string' && !!arg) {
+      return this.firebase.firestore().doc(arg);
+    }
+    assert(`argument must be string not '${arg}'`, false);
+  }
+
+  _toCollectionReference(arg) {
+    if(isCollectionReference(arg)) {
+      return arg;
+    } else if(typeof arg === 'string' && !!arg) {
+      return this.firebase.firestore().collection(arg);
+    }
+    assert(`argument must be string not '${arg}'`, false);
+  }
 
   _createDocumentReference(_ref) {
     let store = this;

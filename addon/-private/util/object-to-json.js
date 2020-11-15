@@ -21,6 +21,8 @@ export const isServerTimestamp = arg => {
 }
 
 export const isTimestamp = arg => arg instanceof firebase.firestore.Timestamp;
+export const isDocumentReference = arg => arg instanceof firebase.firestore.DocumentReference;
+export const isCollectionReference = arg => arg instanceof firebase.firestore.CollectionReference;
 
 export const isFunction = arg => typeof arg === 'function';
 
