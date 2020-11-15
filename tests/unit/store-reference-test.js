@@ -70,6 +70,18 @@ module('store / reference', function(hooks) {
     assert.strictEqual(doc.parent.path, 'ducks');
   });
 
+  test('doc toStringExtension', function(assert) {
+    assert.strictEqual(this.store.doc('ducks/yellow').toStringExtension(), 'ducks/yellow');
+  });
+
+  test('coll toStringExtension', function(assert) {
+    assert.strictEqual(this.store.collection('ducks/yellow/feathers').toStringExtension(), 'ducks/yellow/feathers');
+  });
+
+  test('coll string', function(assert) {
+    assert.strictEqual(this.store.collection('ducks/yellow/feathers').string, 'ducks/yellow/feathers');
+  });
+
   // doc
   //  load
   //  new
