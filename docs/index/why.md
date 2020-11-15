@@ -1,7 +1,7 @@
-Ember.js is magic crazy unicorns. And with swoof, it's swoofy.
+Outline:
 
-> Ember.js is an amazing web framework and together with ember-cli-zuglet you can focus on the app on your hands.
-
-> With Firestore you can store and retrieve documents without writing any server-side code. Cloud Storage lets you upload files, manage metadata. Just add security rules.
-
-> And for cases when you actually want to do something on the server side, use Firebase Cloud Functions.
+* Ember.js is the framework for building modern web applications.
+* Firebase is a perfect service for storing and managing your data.
+* Both are wonderful tools but they lack integration.
+* This is where zuglet comes in.
+* It is an addon which integrates Firebase services into your Ember.js app. Starting from first hello world up to complex Firestore document-based applications.
