@@ -25,7 +25,7 @@ export default class Store extends BaseStore {
 
 ## normalizedOptions `→ Object`
 
-Normalized options with all defaults filled in
+Normalized options with all defaults expanded
 
 ## identifier `→ String`
 
