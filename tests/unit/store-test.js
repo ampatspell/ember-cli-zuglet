@@ -1,4 +1,5 @@
 import { module, test, setupStoreTest } from '../helpers/setup';
+import { isServerTimestamp } from 'zuglet/-private/util/object-to-json';
 
 module('store', function(hooks) {
   setupStoreTest(hooks);
@@ -40,6 +41,35 @@ module('store', function(hooks) {
       this.store.dashboard,
       `https://console.firebase.google.com/u/0/project/${this.projectId}/overview`
     );
+  });
+
+  test('server timestamp', function(assert) {
+    let timestamp = this.store.serverTimestamp;
+    assert.ok(isServerTimestamp(timestamp));
+  });
+
+  test('models exist', function(assert) {
+    let instance = this.store.models;
+    assert.ok(instance);
+    assert.ok(instance === this.store.models);
+  });
+
+  test('auth exist', function(assert) {
+    let instance = this.store.auth;
+    assert.ok(instance);
+    assert.ok(instance === this.store.auth);
+  });
+
+  test('storage exist', function(assert) {
+    let instance = this.store.storage;
+    assert.ok(instance);
+    assert.ok(instance === this.store.storage);
+  });
+
+  test('functions exist', function(assert) {
+    let instance = this.store.functions;
+    assert.ok(instance);
+    assert.ok(instance === this.store.functions);
   });
 
 });
