@@ -1,5 +1,6 @@
 import Reference from './reference';
 import { documentForRefNotFoundError } from '../../../util/error';
+import { cached } from '../../../model/decorators/cached';
 
 const {
   assign
@@ -19,6 +20,14 @@ export default class DocumentReference extends Reference {
     return this._ref.path;
   }
 
+  @cached()
+  get parent() {
+    let ref = this._ref.parent;
+    return this.store.collection(ref);
+  }
+
+  //
+
   collection(path) {
     return this.store.collection(this._ref.collection(path));
   }
@@ -33,6 +42,12 @@ export default class DocumentReference extends Reference {
     return this.store._createDocumentForReference(this, null);
   }
 
+  load(opts) {
+    return this._loadInternal(ref => ref.get(), opts);
+  }
+
+  //
+
   async _loadInternal(get, opts) {
     let { optional } = assign({ optional: false }, opts);
     let { _ref } = this;
@@ -46,10 +61,6 @@ export default class DocumentReference extends Reference {
     return this.store._createDocumentForSnapshot(snapshot);
   }
 
-  load(opts) {
-    return this._loadInternal(ref => ref.get(), opts);
-  }
-
   _batchDelete(batch) {
     batch.delete(this._ref);
     return {
@@ -57,7 +68,6 @@ export default class DocumentReference extends Reference {
       reject: noop
     };
   }
-
 
   //
 
