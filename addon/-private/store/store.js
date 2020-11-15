@@ -42,6 +42,7 @@ const normalizeOptions = options => {
 
 export default class Store extends EmberObject {
 
+  identifier = null
   firebase = null
   enablePersistencePromise = null
 
@@ -93,21 +94,6 @@ export default class Store extends EmberObject {
 
   //
 
-  _createDocumentReference(_ref) {
-    let store = this;
-    return getOwner(this).factoryFor('zuglet:store/firestore/reference/document').create({ store, _ref });
-  }
-
-  _createCollectionReference(_ref) {
-    let store = this;
-    return getOwner(this).factoryFor('zuglet:store/firestore/reference/collection').create({ store, _ref });
-  }
-
-  _createConditionReference(_ref, string) {
-    let store = this;
-    return getOwner(this).factoryFor('zuglet:store/firestore/reference/condition').create({ store, _ref, string });
-  }
-
   doc(path) {
     let ref = path;
     if(typeof ref === 'string') {
@@ -150,6 +136,21 @@ export default class Store extends EmberObject {
   }
 
   //
+
+  _createDocumentReference(_ref) {
+    let store = this;
+    return getOwner(this).factoryFor('zuglet:store/firestore/reference/document').create({ store, _ref });
+  }
+
+  _createCollectionReference(_ref) {
+    let store = this;
+    return getOwner(this).factoryFor('zuglet:store/firestore/reference/collection').create({ store, _ref });
+  }
+
+  _createConditionReference(_ref, string) {
+    let store = this;
+    return getOwner(this).factoryFor('zuglet:store/firestore/reference/condition').create({ store, _ref, string });
+  }
 
   _createBatch() {
     let store = this;
