@@ -31,4 +31,15 @@ module('store', function(hooks) {
     assert.strictEqual(this.store.toStringExtension(), this.projectId);
   });
 
+  test('projectId', function(assert) {
+    assert.strictEqual(this.store.projectId, this.projectId);
+  });
+
+  test('dashboard', function(assert) {
+    assert.strictEqual(
+      this.store.dashboard,
+      `https://console.firebase.google.com/u/0/project/${this.projectId}/overview`
+    );
+  });
+
 });
