@@ -17,3 +17,19 @@ export const replaceCollection = async (ref, docs=[]) => {
     await doc.new(rest).save();
   }));
 }
+
+export const poll = async (cb) => {
+  return new Promise((resolve, reject) => {
+    let timeout = setTimeout(() => {
+      reject(new Error('Timeout'));
+    }, 5000);
+    let next = () => {
+      if(!cb()) {
+        setTimeout(() => next(), 100);
+      }
+      clearInterval(timeout);
+      resolve();
+    }
+    next();
+  });
+}

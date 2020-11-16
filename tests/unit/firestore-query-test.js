@@ -1,5 +1,5 @@
 import { module, test, setupStoreTest } from '../helpers/setup';
-import { replaceCollection } from '../helpers/firestore';
+import { replaceCollection } from '../helpers/util';
 
 module('firestore / query', function(hooks) {
   setupStoreTest(hooks);
