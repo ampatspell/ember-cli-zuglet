@@ -288,8 +288,11 @@ export default class Document extends EmberObject {
 
   _subscribeToOnSnapshot() {
     if(this.isPassive) {
-      this._deferred = defer();
-      this.load().then(() => {}, err => this.store.onSnapshotError(this, err));
+      let { isLoaded } = this._state.untracked.getProperties('isLoaded');
+      if(!isLoaded) {
+        this._deferred = defer();
+        this.load().then(() => {}, err => this.store.onSnapshotError(this, err));
+      }
     } else {
       let { isLoaded } = this._state.untracked.getProperties('isLoaded');
       if(!isLoaded) {
