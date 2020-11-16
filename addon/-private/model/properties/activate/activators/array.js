@@ -10,6 +10,7 @@ export default class ArrayActivator {
     this.property = property;
     this.value = A(value);
     this._observer = null;
+    this.isActivated = false;
     this.activate();
   }
 
@@ -54,10 +55,23 @@ export default class ArrayActivator {
     if(!this.property.isActivated) {
       return;
     }
+
+    if(this.isActivated) {
+      return;
+    }
+
+    this.isActivated = true;
+
     this.activateValues(models || this.value);
   }
 
   deactivate(models) {
+    if(!this.isActivated) {
+      return;
+    }
+
+    this.isActivated = false;
+
     this.deactivateValues(models || this.value);
   }
 
