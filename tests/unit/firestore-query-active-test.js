@@ -7,7 +7,7 @@ module('firestore / query / active', function(hooks) {
   hooks.beforeEach(function() {
   });
 
-  test('load and activate', async function(assert) {
+  test('array load and activate', async function(assert) {
     let ref = this.store.collection('ducks');
     await replaceCollection(ref, [
       { _id: 'yellow', name: 'yellow' },
@@ -88,6 +88,46 @@ module('firestore / query / active', function(hooks) {
     assert.strictEqual(query.isLoaded, true);
 
     assert.deepEqual(query.content.map(doc => doc.id), [ 'yellow' ]);
+  });
+
+  test('single load and activate', async function(assert) {
+    let ref = this.store.collection('ducks');
+    await replaceCollection(ref, [
+      { _id: 'yellow', name: 'yellow' }
+    ]);
+
+    let query = ref.orderBy('name', 'asc').limit(1).query({ type: 'single' });
+
+    await query.load();
+    assert.strictEqual(query.content.id, 'yellow');
+
+    await saveCollection(ref, [
+      { _id: 'red', name: 'red' }
+    ]);
+
+    this.activate(query);
+    await query.promise;
+
+    assert.strictEqual(query.content.id, 'red');
+
+    await saveCollection(ref, [
+      { _id: 'green', name: 'green' }
+    ]);
+
+    await poll(() => query.content.id === 'green');
+    assert.strictEqual(query.content.id, 'green');
+
+    await saveCollection(ref, [
+      { _id: 'green', name: 'green #2' }
+    ]);
+
+    await poll(() => query.content.data.name === 'green #2');
+    assert.strictEqual(query.content.data.name, 'green #2');
+
+    await replaceCollection(ref, []);
+
+    await poll(() => !query.content);
+    assert.strictEqual(query.content, null);
   });
 
 });

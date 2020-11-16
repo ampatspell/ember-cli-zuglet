@@ -50,6 +50,13 @@ export default class QueryArray extends Query {
       }
       existing._onSnapshot(snapshot, { source: 'subscription' });
     } else if(type === 'removed') {
+      let existing = content[oldIndex];
+      if(existing) {
+        existing._onDeleted();
+      } else {
+        // TODO: figure out if here oldIndex can also be wrong or -1
+        console.warn(`existing doc not found for index ${oldIndex} in query array onSnapshotChange with 'removed' type`);
+      }
       content.removeAt(oldIndex);
     }
   }
