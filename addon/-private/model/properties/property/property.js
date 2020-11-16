@@ -1,5 +1,4 @@
 import EmberObject from '@ember/object';
-import { toPrimitive } from '../../../util/to-primitive';
 import { getState } from '../../state';
 
 export default class Property extends EmberObject {
@@ -39,10 +38,6 @@ export default class Property extends EmberObject {
   }
 
   onDeactivated() {
-  }
-
-  toStringExtension() {
-    return `${toPrimitive(this.owner)}.${this.key}`;
   }
 
 }
