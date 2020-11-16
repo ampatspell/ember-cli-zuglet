@@ -9,6 +9,7 @@ import { delay } from './-private/util/delay';
 import { getStores } from './-private/stores/get-stores';
 import { isZugletError } from './-private/util/error';
 import { activate, isActivated } from './-private/util/activate';
+import { defer } from './-private/util/defer';
 
 export {
   getStores,
@@ -22,5 +23,6 @@ export {
   alive,
   delay,
   activate,
-  isActivated
+  isActivated,
+  defer
 }
