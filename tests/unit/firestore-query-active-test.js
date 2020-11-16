@@ -51,4 +51,26 @@ module('firestore / query / active', function(hooks) {
     assert.deepEqual(query.content.map(doc => doc.id), [ 'green', 'orange', 'red', 'yellow' ]);
   });
 
+  test.only('reuse registered', async function(assert) {
+    let ref = this.store.collection('ducks');
+    await replaceCollection(ref, [
+      { _id: 'yellow', name: 'yellow' },
+      { _id: 'green', name: 'green' }
+    ]);
+
+    let query = ref.orderBy('name', 'asc').query();
+    this.activate(query);
+    await query.promise;
+
+    assert.deepEqual(query.content.map(doc => doc.id), [ 'green', 'yellow' ]);
+
+    let doc = ref.doc('red').new({ name: 'red' });
+    query.register(doc);
+
+    await doc.save();
+
+    assert.ok(query.content.includes(doc));
+    assert.ok(query._reusable.indexOf(doc) === -1);
+  });
+
 });
