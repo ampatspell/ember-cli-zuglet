@@ -154,11 +154,3 @@ export default class RouteDevComponent extends Component {
 ``` hbs
 <textarea {{on "input" this.update}} value={{this.value}}/>
 ```
-
-## TODO
-
-- [ ] maybe also do partial updates for `doc.data.foo = { ok: true }`-type sets
-- [ ] add `doc.save({ type: 'update' })`, transaction update, batch update
-- [ ] `@route` decorator doesn't deactivate intermediate routes if child route transitions
-- [ ] documentation site to replace existing www.ember-cli-zuglet.com
-- [ ] add support for cloud messaging
