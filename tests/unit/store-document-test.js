@@ -151,4 +151,69 @@ module('store / document', function(hooks) {
     assert.strictEqual(doc.isPassive, true);
   });
 
+  test('delete document', async function(assert) {
+    let ref = this.store.doc('ducks/yellow');
+    await ref.new({ name: 'yellow' }).save();
+
+    let doc = await ref.load();
+
+    let promise = doc.delete();
+    assert.deepEqual(doc.serialized, {
+      id: 'yellow',
+      path: 'ducks/yellow',
+      exists: true,
+      isNew: false,
+      isDirty: false,
+      isLoaded: true,
+      isLoading: false,
+      isSaving: true,
+      isError: false,
+      error: null,
+      data: {
+        name: 'yellow'
+      }
+    });
+    await promise;
+
+    assert.deepEqual(doc.serialized, {
+      id: 'yellow',
+      path: 'ducks/yellow',
+      exists: false,
+      isNew: false,
+      isDirty: false,
+      isLoaded: true,
+      isLoading: false,
+      isSaving: false,
+      isError: false,
+      error: null,
+      data: {
+        name: 'yellow'
+      }
+    });
+  });
+
+  test(`load and reload`, async function(assert) {
+    let ref = this.store.doc('ducks/yellow');
+    await ref.new({ name: 'yellow' }).save();
+
+    let doc = await ref.load();
+    assert.strictEqual(doc.isLoaded, true);
+    assert.strictEqual(doc.isLoading, false);
+
+    let promise = doc.load();
+    assert.strictEqual(doc.isLoading, false);
+    await promise;
+    assert.strictEqual(doc.isLoading, false);
+    assert.strictEqual(doc.exists, true);
+
+    await ref.delete();
+
+    promise = doc.reload();
+    assert.strictEqual(doc.isLoading, true);
+    await promise;
+    assert.strictEqual(doc.isLoading, false);
+    assert.strictEqual(doc.exists, false);
+    assert.deepEqual(doc.data, { name: 'yellow' });
+  });
+
 });
