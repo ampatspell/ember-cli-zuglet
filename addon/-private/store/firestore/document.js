@@ -294,6 +294,7 @@ export default class Document extends EmberObject {
       if(!isLoaded) {
         this._state.setProperties({ isLoading: true, isError: false, error: null });
       }
+      this._deferred = defer();
       this._cancel = registerOnSnapshot(this, this.ref._ref.onSnapshot({ includeMetadataChanges: false }, snapshot => {
         this._onSnapshot(snapshot, { source: 'subscription' });
         this._deferred.resolve(this);
