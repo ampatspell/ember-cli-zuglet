@@ -202,7 +202,7 @@ export default class Document extends EmberObject {
   }
 
   _didSave() {
-    this._state.setProperties({ isNew: false, isSaving: false, isDirty: false, exists: true });
+    this._state.setProperties({ isNew: false, isLoaded: true, isSaving: false, isDirty: false, exists: true });
     this._maybeSubscribeToOnSnapshot();
     this._deferred.resolve(this);
   }

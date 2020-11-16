@@ -46,6 +46,10 @@ export default class DocumentReference extends Reference {
     return this._loadInternal(ref => ref.get(), opts);
   }
 
+  async delete() {
+    await this._ref.delete();
+  }
+
   //
 
   async _loadInternal(get, opts) {
