@@ -101,14 +101,17 @@ module('firestore / reference', function(hooks) {
     assert.strictEqual(doc, undefined);
   });
 
-  // doc
-  //  load
-  //  new
-  //  existing
-  // queryable
-  //  conditions
-  //  query
-  //  load
-  //  first
+  test('toJSON', function(assert) {
+    let ref = this.store.doc('ducks/yellow');
+    let json = ref.toJSON();
+    assert.deepEqual(json, {
+      instance: json.instance,
+      serialized: {
+        id: 'yellow',
+        path: 'ducks/yellow'
+      }
+    });
+    assert.ok(json.instance.startsWith('DocumentReference::ember'));
+  });
 
 });
