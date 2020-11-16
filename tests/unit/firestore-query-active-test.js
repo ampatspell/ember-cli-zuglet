@@ -73,4 +73,21 @@ module('firestore / query / active', function(hooks) {
     assert.ok(query._reusable.indexOf(doc) === -1);
   });
 
+  test('passive', async function(assert) {
+    let ref = this.store.collection('ducks');
+    await replaceCollection(ref, [
+      { _id: 'yellow', name: 'yellow' }
+    ]);
+
+    let query = ref.orderBy('name', 'asc').query().passive();
+    assert.strictEqual(query.isLoading, false);
+    this.activate(query);
+    assert.strictEqual(query.isLoading, true);
+    await query.promise;
+    assert.strictEqual(query.isLoading, false);
+    assert.strictEqual(query.isLoaded, true);
+
+    assert.deepEqual(query.content.map(doc => doc.id), [ 'yellow' ]);
+  });
+
 });
