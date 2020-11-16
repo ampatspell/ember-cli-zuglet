@@ -111,5 +111,13 @@ module('firestore / query', function(hooks) {
     assert.strictEqual(string, 'ducks.orderBy(name, asc).limit(1)');
   });
 
+  test('passive', function(assert) {
+    let ref = this.store.collection('ducks');
+    let query = ref.orderBy('name', 'asc').query();
+    assert.strictEqual(query.isPassive, false);
+    let ret = query.passive();
+    assert.ok(query === ret);
+    assert.strictEqual(query.isPassive, true);
+  });
 
 });
