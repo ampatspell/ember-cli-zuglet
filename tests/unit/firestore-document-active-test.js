@@ -1,4 +1,5 @@
 import { module, test, setupStoreTest } from '../helpers/setup';
+import { defer } from 'zuglet/utils';
 
 module('firestore / document / active', function(hooks) {
   setupStoreTest(hooks);
@@ -67,6 +68,37 @@ module('firestore / document / active', function(hooks) {
 
     assert.strictEqual(doc.isLoading, false);
     assert.strictEqual(doc.isLoaded, false);
+  });
+
+  test('on data', async function(assert) {
+    let ref = this.store.doc('ducks/yellow');
+    await ref.save({ name: 'yellow' });
+
+    let doc = await ref.existing();
+    let deferred = defer();
+    doc.onData(() => {
+      assert.deepEqual(doc.data, { name: 'yellow' });
+      deferred.resolve();
+    });
+
+    this.activate(doc);
+    await deferred.promise;
+  });
+
+  test('on delete', async function(assert) {
+    let ref = this.store.doc('ducks/yellow');
+    await ref.save({ name: 'yellow' });
+
+    let doc = await ref.existing();
+    let deferred = defer();
+    doc.onDeleted(() => {
+      assert.ok(true);
+      deferred.resolve();
+    });
+
+    this.activate(doc);
+    await ref.delete();
+    await deferred.promise;
   });
 
 });
