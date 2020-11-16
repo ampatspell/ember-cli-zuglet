@@ -87,6 +87,49 @@ module('firestore / query', function(hooks) {
     });
   });
 
+  test('reload single', async function(assert) {
+    let ref = this.store.collection('ducks');
+    await replaceCollection(ref, [
+      { _id: 'yellow', name: 'yellow' },
+      { _id: 'green', name: 'green' }
+    ]);
+
+    let query = ref.orderBy('name', 'asc').limit(1).query({ type: 'single' });
+
+    await query.load();
+    assert.strictEqual(query.content.id, 'green');
+
+    await ref.doc('green').delete();
+
+    await query.load();
+    assert.strictEqual(query.content.id, 'green');
+
+    await query.reload();
+    assert.strictEqual(query.content.id, 'yellow');
+  });
+
+  test('reload array', async function(assert) {
+    let ref = this.store.collection('ducks');
+    await replaceCollection(ref, [
+      { _id: 'yellow', name: 'yellow' },
+      { _id: 'green', name: 'green' }
+    ]);
+
+    let query = ref.orderBy('name', 'asc').query();
+
+    await query.load();
+    assert.deepEqual(query.content.map(doc => doc.id), [ 'green', 'yellow' ]);
+
+    await ref.doc('green').delete();
+    await ref.doc('blue').save({ name: 'blue' });
+
+    await query.load();
+    assert.deepEqual(query.content.map(doc => doc.id), [ 'green', 'yellow' ]);
+
+    await query.reload();
+    assert.deepEqual(query.content.map(doc => doc.id), [ 'blue', 'yellow' ]);
+  });
+
   test('toJSON', function(assert) {
     let ref = this.store.collection('ducks');
     let query = ref.orderBy('name', 'asc').limit(1).query({ type: 'single' });
