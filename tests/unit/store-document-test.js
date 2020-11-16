@@ -216,4 +216,34 @@ module('store / document', function(hooks) {
     assert.deepEqual(doc.data, { name: 'yellow' });
   });
 
+  test('save with token', async function(assert) {
+    let ref = this.store.doc('ducks/yellow');
+    await ref.delete();
+
+    let doc = ref.new({ name: 'yellow' });
+    await doc.save({ token: true });
+
+    assert.ok(doc.token);
+
+    let data = await ref.data();
+    assert.deepEqual(data, {
+      _token: doc.token,
+      name: 'yellow',
+    });
+
+    await ref.save({ name: 'green' }, { merge: true });
+
+    await doc.reload();
+    assert.deepEqual(doc.data, {
+      name: 'yellow'
+    });
+
+    await ref.save({ name: 'green', _token: 'another' }, { merge: true });
+
+    await doc.reload();
+    assert.deepEqual(doc.data, {
+      name: 'green'
+    });
+  });
+
 });
