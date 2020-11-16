@@ -1,6 +1,6 @@
 import { module, test, setupStoreTest } from '../helpers/setup';
 
-module('store / reference', function(hooks) {
+module('firestore / reference', function(hooks) {
   setupStoreTest(hooks);
 
   test(`doc with path`, function(assert) {
@@ -80,6 +80,25 @@ module('store / reference', function(hooks) {
 
   test('coll string', function(assert) {
     assert.strictEqual(this.store.collection('ducks/yellow/feathers').string, 'ducks/yellow/feathers');
+  });
+
+  test('missing doc load', async function(assert) {
+    let ref = this.store.doc('ducks/yellow');
+    await ref.delete();
+
+    try {
+      await ref.load();
+    } catch(err) {
+      assert.strictEqual(err.message, `Document 'ducks/yellow' missing`);
+      assert.strictEqual(err.code, `zuglet/document/missing`);
+    }
+  });
+
+  test('missing optional doc load', async function(assert) {
+    let ref = this.store.doc('ducks/yellow');
+    await ref.delete();
+    let doc = await ref.load({ optional: true });
+    assert.strictEqual(doc, undefined);
   });
 
   // doc

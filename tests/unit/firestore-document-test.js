@@ -1,6 +1,6 @@
 import { module, test, setupStoreTest } from '../helpers/setup';
 
-module('store / document', function(hooks) {
+module('firestore / document', function(hooks) {
   setupStoreTest(hooks);
 
   test(`create new document state`, function(assert) {
@@ -43,7 +43,7 @@ module('store / document', function(hooks) {
     });
   });
 
-  test('load missing required document', async function(assert) {
+  test('load missing document', async function(assert) {
     let ref = this.store.doc('ducks/yellow');
     await ref.delete();
     let doc = await ref.existing().load();
