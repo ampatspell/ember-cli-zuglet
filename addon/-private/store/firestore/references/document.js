@@ -50,6 +50,17 @@ export default class DocumentReference extends Reference {
     await this._ref.delete();
   }
 
+  async data() {
+    let snapshot = await this._ref.get();
+    return snapshot.data();
+  }
+
+  async save(data, opts) {
+    let { merge } = assign({ merge: false }, opts);
+    let r = await this._ref.set(data, { merge });
+    console.log(r);
+  }
+
   //
 
   async _loadInternal(get, opts) {
