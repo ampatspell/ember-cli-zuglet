@@ -1,5 +1,5 @@
 import { module, test, setupStoreTest } from '../helpers/setup';
-import { replaceCollection, poll } from '../helpers/util';
+import { replaceCollection, saveCollection, poll } from '../helpers/util';
 
 module('firestore / query / active', function(hooks) {
   setupStoreTest(hooks);
@@ -38,6 +38,17 @@ module('firestore / query / active', function(hooks) {
     await poll(() => query.content.length === 2);
 
     assert.deepEqual(query.content.map(doc => doc.id), [ 'green', 'yellow' ]);
+
+    await saveCollection(ref, [
+      { _id: 'yellow', name: 'yellow #2' },
+      { _id: 'orange', name: 'orange'},
+      { _id: 'green', name: 'green' },
+      { _id: 'red', name: 'red' }
+    ]);
+
+    await poll(() => query.content.length === 4);
+
+    assert.deepEqual(query.content.map(doc => doc.id), [ 'green', 'orange', 'red', 'yellow' ]);
   });
 
 });

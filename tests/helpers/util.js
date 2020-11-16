@@ -1,21 +1,22 @@
-export const replaceCollection = async (ref, docs=[]) => {
+export const saveCollection = async (ref, docs=[]) => {
   let { store } = ref;
-  let existing = await ref.load();
-
-  await store.batch(batch => {
-    existing.map(doc => batch.delete(doc));
-  });
-
-  await Promise.all(docs.map(async data => {
+  await store.batch(batch => docs.map(data => {
     let { _id, ...rest } = data;
     let doc;
     if(_id) {
       doc = ref.doc(_id);
     } else {
-      doc = ref.doc()
+      doc = ref.doc();
     }
-    await doc.new(rest).save();
+    batch.save(doc.new(rest));
   }));
+}
+
+export const replaceCollection = async (ref, docs=[]) => {
+  let { store } = ref;
+  let existing = await ref.load();
+  await store.batch(batch => existing.map(doc => batch.delete(doc)));
+  await saveCollection(ref, docs);
 }
 
 export const poll = async (cb) => {
