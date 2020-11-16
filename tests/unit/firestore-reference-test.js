@@ -1,4 +1,5 @@
 import { module, test, setupStoreTest } from '../helpers/setup';
+import { replaceCollection } from '../helpers/util';
 
 module('firestore / reference', function(hooks) {
   setupStoreTest(hooks);
@@ -124,6 +125,48 @@ module('firestore / reference', function(hooks) {
     assert.deepEqual(ref.serialized, {
       string: 'ducks.where(name, ==, yellow).limit(1)'
     });
+  });
+
+  test('query load', async function(assert) {
+    let ref = this.store.collection('ducks');
+    await replaceCollection(ref, [
+      { _id: 'yellow', name: 'yellow' },
+      { _id: 'green', name: 'green' },
+    ]);
+    let coll = ref.orderBy('name', 'asc');
+    let docs = await coll.load();
+    assert.deepEqual(docs.map(doc => doc.id), [ 'green', 'yellow' ]);
+  });
+
+  test('query first', async function(assert) {
+    let ref = this.store.collection('ducks');
+    await replaceCollection(ref, [
+      { _id: 'yellow', name: 'yellow' },
+      { _id: 'green', name: 'green' },
+    ]);
+    let coll = ref.orderBy('name', 'asc').limit(1);
+    let doc = await coll.first();
+    assert.strictEqual(doc.id, 'green');
+  });
+
+  test('query first missing', async function(assert) {
+    let ref = this.store.collection('ducks');
+    await replaceCollection(ref);
+    let coll = ref.where('name', '==', 'red').limit(1);
+    try {
+      await coll.first();
+    } catch(err) {
+      assert.equal(err.message, 'Document missing');
+      assert.equal(err.code, 'zuglet/document/missing');
+    }
+  });
+
+  test('query first missing optional', async function(assert) {
+    let ref = this.store.collection('ducks');
+    await replaceCollection(ref);
+    let coll = ref.where('name', '==', 'red').limit(1);
+    let doc = await coll.first({ optional: true });
+    assert.strictEqual(doc, undefined);
   });
 
 });
