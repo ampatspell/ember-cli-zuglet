@@ -157,6 +157,7 @@ export default class RouteDevComponent extends Component {
 
 ## TODO
 
+- [ ] query array `onSnapshotChange` added blows up when underlying array has changed. `{ type: 'added' }` `insertAt` out of range
 - [ ] maybe also do partial updates for `doc.data.foo = { ok: true }`-type sets
 - [ ] add `doc.save({ type: 'update' })`, transaction update, batch update
 - [ ] `@route` decorator doesn't deactivate intermediate routes if child route transitions
