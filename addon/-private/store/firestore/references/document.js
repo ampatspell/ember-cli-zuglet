@@ -48,6 +48,7 @@ export default class DocumentReference extends Reference {
 
   async delete() {
     await this._ref.delete();
+    return this;
   }
 
   async data() {
@@ -57,8 +58,8 @@ export default class DocumentReference extends Reference {
 
   async save(data, opts) {
     let { merge } = assign({ merge: false }, opts);
-    let r = await this._ref.set(data, { merge });
-    console.log(r);
+    await this._ref.set(data, { merge });
+    return this;
   }
 
   //
