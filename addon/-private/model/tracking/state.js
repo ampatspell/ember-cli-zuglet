@@ -102,24 +102,40 @@ class StateProperties {
 
 const META = new WeakMap();
 
-const getMeta = Class => {
-  let hash = META.get(Class);
-  if(!hash) {
+const getMeta = (prototype, create=true) => {
+  let hash = META.get(prototype);
+  if(!hash && create) {
     hash = Object.create(null);
-    META.set(Class, hash);
+    META.set(prototype, hash);
   }
   return hash;
 }
 
-const setMeta = (Class, key, value) => {
-  let meta = getMeta(Class);
+const getMetaChain = prototype => {
+  let chain = Object.create(null);
+  while(prototype) {
+    let meta = getMeta(prototype, false);
+    if(meta) {
+      for(let key in meta) {
+        if(!chain[key]) {
+          chain[key] = meta[key];
+        }
+      }
+    }
+    prototype = prototype.__proto__;
+  }
+  return chain;
+}
+
+const setMeta = (prototype, key, value) => {
+  let meta = getMeta(prototype);
   meta[key] = value;
 }
 
 const getState = owner => {
   let state = _getState(owner).cache.state;
   if(!state) {
-    state = new StateProperties(owner, getMeta(owner.constructor.prototype));
+    state = new StateProperties(owner, getMetaChain(owner.constructor.prototype));
     _getState(owner).cache.state = state;
   }
   return state;
