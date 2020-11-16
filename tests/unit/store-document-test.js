@@ -246,4 +246,55 @@ module('store / document', function(hooks) {
     });
   });
 
+  test('save pristine', async function(assert) {
+    let ref = this.store.doc('ducks/yellow');
+    let doc = ref.new({ name: 'yellow' });
+
+    await doc.save();
+
+    await ref.save({ name: 'green' }, { merge: true });
+
+    await doc.save();
+
+    let data = await ref.data();
+    assert.deepEqual(data, {
+      name: 'green'
+    });
+
+    await doc.save({ force: true });
+
+    data = await ref.data();
+    assert.deepEqual(data, {
+      name: 'yellow'
+    });
+  });
+
+  test('toJSON', function(assert) {
+    let doc = this.store.doc('ducks/yellow').new();
+    let json = doc.toJSON();
+    assert.deepEqual(json, {
+      instance: json.instance,
+      serialized: {
+        id: 'yellow',
+        path: 'ducks/yellow',
+        exists: undefined,
+        isNew: true,
+        isDirty: true,
+        isLoaded: false,
+        isLoading: false,
+        isSaving: false,
+        isError: false,
+        error: null,
+        data: {
+        }
+      }
+    });
+    assert.ok(json.instance.startsWith('Document::ember'));
+  });
+
+  test('toStringExtension', function(assert) {
+    let doc = this.store.doc('ducks/yellow').new();
+    assert.strictEqual(doc.toStringExtension(), 'ducks/yellow');
+  });
+
 });
