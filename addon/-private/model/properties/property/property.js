@@ -15,14 +15,6 @@ export default class Property extends EmberObject {
 
   //
 
-  notifyPropertyChange(key) {
-    let path = this.key;
-    if(key) {
-      path = `${path}.${key}`;
-    }
-    this.owner.notifyPropertyChange(path);
-  }
-
   activateValue(value) {
     if(value) {
       let state = getState(value);
