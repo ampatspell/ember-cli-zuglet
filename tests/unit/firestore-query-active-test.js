@@ -51,7 +51,7 @@ module('firestore / query / active', function(hooks) {
     assert.deepEqual(query.content.map(doc => doc.id), [ 'green', 'orange', 'red', 'yellow' ]);
   });
 
-  test.only('reuse registered', async function(assert) {
+  test('reuse registered', async function(assert) {
     let ref = this.store.collection('ducks');
     await replaceCollection(ref, [
       { _id: 'yellow', name: 'yellow' },
