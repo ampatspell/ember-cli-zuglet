@@ -1,5 +1,4 @@
 import BaseActivateProperty from './activate';
-import { assert } from '@ember/debug';
 import { diff } from '../../decorators/diff';
 
 export default class ContentActivateProperty extends BaseActivateProperty {
@@ -30,10 +29,6 @@ export default class ContentActivateProperty extends BaseActivateProperty {
       }
     }
     return activator.getValue();
-  }
-
-  setPropertyValue() {
-    assert(`@activate().content(...) is read-only`, false);
   }
 
 }
