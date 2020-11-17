@@ -2,7 +2,7 @@ import EmberObject from '@ember/object';
 import { assert } from '@ember/debug';
 import firebase from "firebase/app";
 import { initializeApp, enablePersistence, destroyApp } from './firebase';
-import { cached } from '../model/decorators/cached';
+import { cached, getCached } from '../model/decorators/cached';
 import { getOwner } from '../util/get-owner';
 import { toJSON } from '../util/to-json';
 import { isFastBoot } from '../util/fastboot';
@@ -253,6 +253,7 @@ export default class Store extends EmberObject {
   //
 
   willDestroy() {
+    getCached(this, 'auth')?.destroy();
     destroyApp(this.firebase);
     super.willDestroy(...arguments);
   }
