@@ -94,8 +94,8 @@ export default class StorageReference extends EmberObject {
 
   //
 
-  _put(opts={}) {
-    let { type, data, format, metadata } = opts;
+  _put(opts) {
+    let { type, data, format, metadata } = assign({ type: 'data' }, opts);
     assert(`opts.metadata must be object`, typeof metadata === 'object');
     let _task;
     if(type === 'string') {
