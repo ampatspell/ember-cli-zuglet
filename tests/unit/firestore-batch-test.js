@@ -51,6 +51,20 @@ module('firestore / batch', function(hooks) {
     assert.deepEqual(data, { name: 'yellow' });
   });
 
+  test('save doc skips non-dirty', async function(assert) {
+    let coll = this.store.collection('ducks');
+    await replaceCollection(coll, []);
+
+    let doc = coll.doc('yellow').new({ name: 'yellow' });
+    await doc.save();
+
+    await this.store.batch(batch => {
+      let ret = batch.save(doc);
+      assert.ok(ret === doc);
+      assert.strictEqual(doc.isSaving, false);
+    });
+  });
+
   test('delete doc', async function(assert) {
     let coll = this.store.collection('ducks');
     await replaceCollection(coll, [

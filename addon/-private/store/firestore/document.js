@@ -17,6 +17,8 @@ const {
 
 export const isDocument = arg => arg instanceof Document;
 
+const noop = () => {};
+
 export default class Document extends EmberObject {
 
   @object().onDirty(owner => owner._dataDidChange())
@@ -231,7 +233,10 @@ export default class Document extends EmberObject {
   _batchSave(batch, opts) {
     let { skip, merge, token } = this._normalizeSaveOptions(opts);
     if(skip) {
-      return;
+      return {
+        resolve: noop,
+        reject: noop
+      };
     }
     this._willSave();
     let data = this._saveData(token);
