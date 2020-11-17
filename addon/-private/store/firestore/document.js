@@ -4,7 +4,7 @@ import { objectToJSON } from '../../util/object-to-json';
 import { toJSON } from '../../util/to-json';
 import { assert } from '@ember/debug';
 import { defer } from '../../util/defer';
-import { registerOnSnapshot, registerPromise } from '../../stores/stats';
+import { registerObserver, registerPromise } from '../../stores/stats';
 import { cached } from '../../model/decorators/cached';
 import { randomString } from '../../util/random-string';
 import { Listeners } from '../../util/listeners';
@@ -291,7 +291,7 @@ export default class Document extends EmberObject {
       let { isLoaded } = this._state.untracked.getProperties('isLoaded');
       if(!isLoaded) {
         this._deferred = defer();
-        this.load().then(() => {}, err => this.store.onSnapshotError(this, err));
+        this.load().then(() => {}, err => this.store.onObserverError(this, err));
       }
     } else {
       let { isLoaded } = this._state.untracked.getProperties('isLoaded');
@@ -299,12 +299,12 @@ export default class Document extends EmberObject {
         this._state.setProperties({ isLoading: true, isError: false, error: null });
       }
       this._deferred = defer();
-      this._cancel = registerOnSnapshot(this, this.ref._ref.onSnapshot({ includeMetadataChanges: false }, snapshot => {
+      this._cancel = registerObserver(this, this.ref._ref.onSnapshot({ includeMetadataChanges: false }, snapshot => {
         this._onSnapshot(snapshot, { source: 'subscription' });
         this._deferred.resolve(this);
       }, error => {
         this._state.setProperties({ isLoading: false, isError: true, error });
-        this.store.onSnapshotError(this);
+        this.store.onObserverError(this);
         this._deferred.reject(error);
       }));
     }

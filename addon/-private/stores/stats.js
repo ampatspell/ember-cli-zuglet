@@ -7,7 +7,7 @@ import { next } from '../util/runloop';
 export default class Stats extends EmberObject {
 
   activated = A();
-  snapshots = A();
+  observers = A();
   promises = A();
 
   _registerActivated(model) {
@@ -18,9 +18,9 @@ export default class Stats extends EmberObject {
     this.activated.removeObject(model);
   }
 
-  _registerOnSnapshot(model) {
-    this.snapshots.pushObject(model);
-    return () => this.snapshots.removeObject(model);
+  _registerObserver(model) {
+    this.observers.pushObject(model);
+    return () => this.observers.removeObject(model);
   }
 
   _registerPromise(model, label, promise) {
@@ -37,8 +37,8 @@ export default class Stats extends EmberObject {
     return this.promises.length > 0;
   }
 
-  get hasSnapshots() {
-    return this.snapshots.length > 0;
+  get hasObservers() {
+    return this.observers.length > 0;
   }
 
   async settle() {
@@ -58,10 +58,10 @@ export const getStats = owner => getStores(owner).stats;
 export const registerActivated = model => getStats(model)._registerActivated(model);
 export const unregisterActivated = model => getStats(model)._unregisterActivated(model);
 
-export const registerOnSnapshot = (model, cancel) => {
-  let snapshot = getStats(model)._registerOnSnapshot(model);
+export const registerObserver = (model, cancel) => {
+  let observer = getStats(model)._registerObserver(model);
   return () => {
-    snapshot();
+    observer();
     cancel();
   };
 }

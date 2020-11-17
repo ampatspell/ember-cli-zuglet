@@ -51,7 +51,7 @@ Unique `Store` identifier which can be used to distinguish multiple stores.
 
 ## serverTimestamp `→ firestore.FieldValue`
 
-## onSnapshotError(model, error)
+## onObserverError(model, error)
 
 ## projectId `→ String`
 

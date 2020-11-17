@@ -8,7 +8,7 @@ import { root } from '../../model/decorators/root';
 import { cached } from '../../model/decorators/cached';
 import { getState } from '../../model/state';
 import { toJSON } from '../../util/to-json';
-import { registerOnSnapshot, registerPromise } from '../../stores/stats';
+import { registerObserver, registerPromise } from '../../stores/stats';
 
 @root()
 export default class Auth extends EmberObject {
@@ -114,7 +114,11 @@ export default class Auth extends EmberObject {
   }
 
   onActivated() {
-    this._cancel = registerOnSnapshot(this, this._auth.onAuthStateChanged(user => this._onAuthStateChange(user)));
+    this._cancel = registerObserver(this, this._auth.onAuthStateChanged(user => {
+      this._onAuthStateChange(user);
+    }, err => {
+      this.store.onObserverError(this, err);
+    }));
   }
 
   onDeactivated() {
