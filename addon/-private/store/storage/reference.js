@@ -2,6 +2,7 @@ import EmberObject from '@ember/object';
 import { assert } from '@ember/debug';
 import { getOwner } from '../../util/get-owner';
 import { toJSON } from '../../util/to-json';
+import { registerPromise } from '../../stores/stats';
 import firebase from "firebase/app";
 
 const {
@@ -37,11 +38,11 @@ export default class StorageReference extends EmberObject {
   //
 
   async url() {
-    return await this._ref.getDownloadURL();
+    return await registerPromise(this, 'url', this._ref.getDownloadURL());
   }
 
   async metadata() {
-    let metadata = await this._ref.getMetadata();
+    let metadata = await registerPromise(this, 'metadata', this._ref.getMetadata());
     let date = key => {
       let value = metadata[key];
       return value && new Date(value);
@@ -55,14 +56,14 @@ export default class StorageReference extends EmberObject {
   }
 
   async update(metadata) {
-    await this._ref.updateMetadata(metadata);
+    await registerPromise(this, 'update', this._ref.updateMetadata(metadata));
     return this;
   }
 
   //
 
   async delete() {
-    await this._ref.delete();
+    await registerPromise(this, 'delete', this._ref.delete());
     return this;
   }
 

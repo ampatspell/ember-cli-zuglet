@@ -7,6 +7,7 @@ import { getOwner } from '../util/get-owner';
 import { toJSON } from '../util/to-json';
 import { isFastBoot } from '../util/fastboot';
 import { isFunction, isDocumentReference, isCollectionReference } from '../util/object-to-json';
+import { registerPromise } from '../stores/stats';
 
 const {
   assign
@@ -66,7 +67,7 @@ export default class Store extends EmberObject {
         ssl: false
       });
     } else if(options.firestore.persistenceEnabled && !isFastBoot(this)) {
-      this.enablePersistencePromise = enablePersistence(this.firebase);
+      this.enablePersistencePromise = registerPromise(this, 'enable-persistence', enablePersistence(this.firebase));
     }
   }
 
@@ -105,10 +106,10 @@ export default class Store extends EmberObject {
   }
 
   transaction(cb) {
-    return this.firebase.firestore().runTransaction(async tx => {
+    return registerPromise(this, 'transaction', this.firebase.firestore().runTransaction(async tx => {
       let transaction = this._createTransaction(tx);
       return await cb(transaction);
-    });
+    }));
   }
 
   async _batchWithCallback(cb) {

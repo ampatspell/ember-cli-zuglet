@@ -37,4 +37,14 @@
       {{/each}}
     </div>
   </div>
+  <div class="section">
+    <div class="label">promises ({{this.stats.promises.length}})</div>
+    <div class="models">
+      {{#each this.stats.promises as |promise|}}
+        <div class="model" role="button" {{on "click" (fn this.setGlobal promise.stats.model)}}>{{promise.stats.label}} : {{promise.stats.model}}</div>
+      {{else}}
+        <div class="placeholder">No promises</div>
+      {{/each}}
+    </div>
+  </div>
 </div>

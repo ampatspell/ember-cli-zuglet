@@ -1,6 +1,7 @@
 import EmberObject from '@ember/object';
 import { isDocument } from './document';
 import { isDocumentReference } from './references/document';
+import { registerPromise } from '../../stores/stats';
 import { assert } from '@ember/debug';
 
 export default class Batch extends EmberObject {
@@ -11,7 +12,7 @@ export default class Batch extends EmberObject {
 
   async commit() {
     try {
-      await this._batch.commit();
+      await registerPromise(this, 'commit', this._batch.commit());
       this._callbacks.forEach(hash => hash.resolve());
     } catch(err) {
       this._callbacks.forEach(hash => hash.reject(err));
