@@ -9,7 +9,7 @@ export default class Storage extends EmberObject {
     return this.store.firebase.storage();
   }
 
-  get storageBucket() {
+  get bucket() {
     return this._storage.app.options.storageBucket;
   }
 
@@ -31,9 +31,9 @@ export default class Storage extends EmberObject {
   }
 
   get serialized() {
-    let { storageBucket } = this;
+    let { bucket } = this;
     return {
-      storageBucket
+      bucket
     };
   }
 
@@ -43,7 +43,7 @@ export default class Storage extends EmberObject {
   }
 
   toStringExtension() {
-    return `${this.storageBucket}`;
+    return `${this.bucket}`;
   }
 
 }

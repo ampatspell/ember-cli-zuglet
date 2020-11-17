@@ -41,30 +41,55 @@ export default class StorageReference extends EmberObject {
     return await registerPromise(this, 'url', this._ref.getDownloadURL());
   }
 
-  async metadata() {
-    let metadata = await registerPromise(this, 'metadata', this._ref.getMetadata());
-    let date = key => {
-      let value = metadata[key];
-      return value && new Date(value);
+  async _metadata(opts) {
+    let { optional } = assign({ optional: false }, opts);
+    try {
+      return await registerPromise(this, 'metadata', this._ref.getMetadata());
+    } catch(err) {
+      if(err.code === 'storage/object-not-found' && optional) {
+        return;
+      }
+      throw err;
     }
-    let timeCreated = date('timeCreated');
-    let updated = date('updated');
-    return assign({}, metadata, {
-      timeCreated,
-      updated
-    });
+  }
+
+  async metadata(opts) {
+    let metadata = await this._metadata(opts);
+    if(!metadata) {
+      return;
+    }
+    let date = value => value && new Date(value);
+    let hash = {};
+    for(let key in metadata) {
+      let value = metadata[key];
+      if([ 'timeCreated', 'updated' ].includes(key)) {
+        hash[key] = date(value);
+      } else {
+        hash[key] = value;
+      }
+    }
+    return hash;
   }
 
   async update(metadata) {
     await registerPromise(this, 'update', this._ref.updateMetadata(metadata));
-    return this;
   }
 
-  //
+  async delete(opts) {
+    let { optional } = assign({ optional: false }, opts);
+    try {
+      await registerPromise(this, 'delete', this._ref.delete());
+    } catch(err) {
+      if(err.code === 'storage/object-not-found' && optional) {
+        return false;
+      }
+      throw err;
+    }
+    return true;
+  }
 
-  async delete() {
-    await registerPromise(this, 'delete', this._ref.delete());
-    return this;
+  put(opts) {
+    return getOwner(this).factoryFor('zuglet:store/storage/task').create(this._put(opts));
   }
 
   //
@@ -84,10 +109,6 @@ export default class StorageReference extends EmberObject {
     }
     let ref = this;
     return { ref, type, data, _task, metadata };
-  }
-
-  put(opts) {
-    return getOwner(this).factoryFor('zuglet:store/storage/task').create(this._put(opts));
   }
 
   //
