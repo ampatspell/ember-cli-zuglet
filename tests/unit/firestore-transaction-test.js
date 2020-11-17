@@ -57,7 +57,7 @@ module('firestore / transaction', function(hooks) {
     ]);
 
     await this.store.transaction(async tx => {
-      tx.delete(coll.doc('yellow'));
+      await tx.delete(coll.doc('yellow'));
     });
 
     let doc = await coll.doc('yellow').load({ optional: true });
@@ -72,7 +72,8 @@ module('firestore / transaction', function(hooks) {
 
     await this.store.transaction(async tx => {
       let doc = await tx.load(coll.doc('yellow'));
-      tx.delete(doc);
+      await tx.delete(doc);
+      assert.strictEqual(doc.exists, false);
     });
 
     let doc = await coll.doc('yellow').load({ optional: true });
