@@ -52,5 +52,6 @@ export const setupStore = (hooks, identifier='test') => {
     }
     assert.ok(!stats.hasPromises, message());
     this.__cancelStoreActivation();
+    // TODO: @ampatspell assert there are no onSnapshot listeners after store is deactivated and this.activations are done
   });
 }
