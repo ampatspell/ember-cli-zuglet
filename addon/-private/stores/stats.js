@@ -37,6 +37,10 @@ export default class Stats extends EmberObject {
     return this.promises.length > 0;
   }
 
+  get hasSnapshots() {
+    return this.snapshots.length > 0;
+  }
+
   async settle() {
     await next();
     let promises = this.promises;
