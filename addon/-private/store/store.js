@@ -204,10 +204,10 @@ export default class Store extends EmberObject {
 
   //
 
-  onSnapshotError(model, err) {
+  onObserverError(model, err) {
     err = err || model.error;
     let stack = (err && err.stack) || err;
-    let path = model.string || model.path;
+    let path = model.string || model.path || String(model);
     console.error('onSnapshot', path, stack);
   }
 
