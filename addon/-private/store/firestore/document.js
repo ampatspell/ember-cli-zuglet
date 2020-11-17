@@ -130,7 +130,7 @@ export default class Document extends EmberObject {
       if(source === 'initial') {
         this._setData({});
       } else if(source === 'subscription') {
-        if(this.exists) {
+        if(this.exists !== false) {
           notify = 'onDeleted';
         }
       }
