@@ -2,13 +2,14 @@ import Store from 'zuglet/store';
 import envionment from './config/environment';
 
 let { dummy: { firebase } } = envionment;
+let persistenceEnabled = envionment.environment !== 'test';
 
 export default class DummyStore extends Store {
 
   options = {
     firebase,
     firestore: {
-      persistenceEnabled: true
+      persistenceEnabled
     },
     auth: {
       user: 'user'
@@ -25,4 +26,3 @@ export default class DummyStore extends Store {
   }
 
 }
-

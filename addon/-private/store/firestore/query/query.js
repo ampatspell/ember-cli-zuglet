@@ -3,7 +3,7 @@ import { objectToJSON } from '../../../util/object-to-json';
 import { toJSON } from '../../../util/to-json';
 import { activate } from '../../../model/properties/activate';
 import { defer } from '../../../util/defer';
-import { registerOnSnapshot } from '../../../stores/stats';
+import { registerOnSnapshot, registerPromise } from '../../../stores/stats';
 import { isFastBoot } from '../../../util/fastboot';
 import { state, readable }  from '../../../model/tracking/state';
 
@@ -57,7 +57,7 @@ export default class Query extends EmberObject {
     }
     this._state.setProperties({ isLoading: true, isError: false, error: null });
     try {
-      let snapshot = await this.ref._ref.get();
+      let snapshot = await registerPromise(this, 'load', this.ref._ref.get());
       this._onLoad(snapshot);
       this._state.setProperties({ isLoading: false, isLoaded: true });
       this._deferred.resolve(this);

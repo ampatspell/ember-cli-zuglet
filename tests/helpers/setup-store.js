@@ -1,6 +1,7 @@
 import Store from 'zuglet/store';
 import User from 'zuglet/user';
 import { activate, load } from 'zuglet/utils';
+import { getStats } from 'zuglet/-private/stores/stats';
 import environment from '../../config/environment';
 
 let {
@@ -37,7 +38,20 @@ export const setupStore = (hooks, identifier='test') => {
     this.__cancelStoreActivation = activate(this.store);
     await this.store.load();
   });
-  hooks.afterEach(function() {
+  hooks.afterEach(function(assert) {
+    let stats = getStats(this.store);
+    let message = () => {
+      let len = stats.promises.length;
+      if(len === 0) {
+        return 'no dangling promises';
+      } else if(len === 1) {
+        return '1 dangling promise';
+      } else {
+        return `${len} dangling promises`;
+      }
+    }
+    assert.ok(!stats.hasPromises, message());
     this.__cancelStoreActivation();
+    // TODO: @ampatspell assert there are no onSnapshot listeners after store is deactivated and this.activations are done
   });
 }

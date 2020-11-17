@@ -1,5 +1,6 @@
 import Reference from './reference';
 import { documentNotFoundError } from '../../../util/error';
+import { registerPromise } from '../../../stores/stats';
 
 const {
   assign
@@ -66,13 +67,13 @@ export default class QueryableReference extends Reference {
   }
 
   async load() {
-    let snapshot = await this._ref.get();
+    let snapshot = await registerPromise(this, 'load', this._ref.get());
     return snapshot.docs.map(doc => this.store._createDocumentForSnapshot(doc));
   }
 
   async first(opts) {
     let { optional } = assign({ optional: false }, opts);
-    let snapshot = await this._ref.get();
+    let snapshot = await registerPromise(this, 'first', this._ref.get());
     if(snapshot.docs.length > 1) {
       console.warn(`${this.string} yields more than 1 document`);
     }
