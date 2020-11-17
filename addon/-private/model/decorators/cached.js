@@ -14,3 +14,12 @@ export const cached = () => (_, key, descriptor) => {
     }
   };
 }
+
+export const getCached = (owner, key) => {
+  let state = getState(owner);
+  let cache = state.cache[key];
+  if(!cache) {
+    return;
+  }
+  return getValue(cache);
+}
