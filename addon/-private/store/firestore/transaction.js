@@ -19,7 +19,7 @@ export default class Transaction extends EmberObject {
   }
 
   delete(arg) {
-    assert(`argument must be Document not '${arg}'`, isDocument(arg));
+    assert(`argument must be Document not '${arg}'`, isDocument(arg) || isDocumentReference(arg));
     return arg._deleteInternal(ref => this._tx.delete(ref));
   }
 

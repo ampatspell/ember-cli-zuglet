@@ -77,6 +77,10 @@ export default class DocumentReference extends Reference {
     return this.store._createDocumentForSnapshot(snapshot);
   }
 
+  async _deleteInternal(del) {
+    await del(this._ref);
+  }
+
   _batchDelete(batch) {
     batch.delete(this._ref);
     return {
