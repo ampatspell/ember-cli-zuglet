@@ -23,13 +23,18 @@ export default class Stats extends EmberObject {
     return () => this.snapshots.removeObject(model);
   }
 
-  _registerPromise(promise) {
+  _registerPromise(model, label, promise) {
     if(isPromise(promise)) {
+      promise.stats = { model, label };
       this.promises.pushObject(promise);
       let done = () => this.promises.removeObject(promise);
       promise.then(done, done);
     }
     return promise;
+  }
+
+  get hasPromises() {
+    return this.promises.length > 0;
   }
 
   async settle() {
@@ -57,4 +62,4 @@ export const registerOnSnapshot = (model, cancel) => {
   };
 }
 
-export const registerPromise = (model, promise) => getStats(model)._registerPromise(promise);
+export const registerPromise = (model, label, promise) => getStats(model)._registerPromise(model, label, promise);

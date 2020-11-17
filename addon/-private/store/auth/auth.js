@@ -8,6 +8,7 @@ import { root } from '../../model/decorators/root';
 import { cached } from '../../model/decorators/cached';
 import { getState } from '../../model/state';
 import { toJSON } from '../../util/to-json';
+import { registerOnSnapshot, registerPromise } from '../../stores/stats';
 
 @root()
 export default class Auth extends EmberObject {
@@ -28,7 +29,7 @@ export default class Auth extends EmberObject {
 
   async signOut() {
     await this._withAuthReturningUser(async auth => {
-      await auth.signOut();
+      await registerPromise(this, 'sign-out', auth.signOut());
       return null;
     });
   }
@@ -77,7 +78,7 @@ export default class Auth extends EmberObject {
       } else {
         user = this._createUser(internal);
         this.user = user;
-        await user.restore(internal, details);
+        await registerPromise(this, 'restore', user.restore(internal, details));
       }
     } else {
       user = null;
@@ -92,7 +93,7 @@ export default class Auth extends EmberObject {
       return;
     }
     await this._withAuthReturningUser(async () => {
-      await internal.delete();
+      await registerPromise(this, 'delete', internal.delete());
       return null;
     });
   }
@@ -113,7 +114,7 @@ export default class Auth extends EmberObject {
   }
 
   onActivated() {
-    this._cancel = this._auth.onAuthStateChanged(user => this._onAuthStateChange(user));
+    this._cancel = registerOnSnapshot(this, this._auth.onAuthStateChanged(user => this._onAuthStateChange(user)));
   }
 
   onDeactivated() {

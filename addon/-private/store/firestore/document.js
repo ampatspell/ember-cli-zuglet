@@ -4,7 +4,7 @@ import { objectToJSON } from '../../util/object-to-json';
 import { toJSON } from '../../util/to-json';
 import { assert } from '@ember/debug';
 import { defer } from '../../util/defer';
-import { registerOnSnapshot } from '../../stores/stats';
+import { registerOnSnapshot, registerPromise } from '../../stores/stats';
 import { cached } from '../../model/decorators/cached';
 import { randomString } from '../../util/random-string';
 import { Listeners } from '../../util/listeners';
@@ -158,7 +158,7 @@ export default class Document extends EmberObject {
     }
     this._state.setProperties({ isLoading: true, isError: false, error: null });
     try {
-      let snapshot = await get(this.ref._ref);
+      let snapshot = await registerPromise(this, 'load', get(this.ref._ref));
       this._onSnapshot(snapshot, { source: 'load' });
       this._maybeSubscribeToOnSnapshot();
       this._deferred.resolve(this);
@@ -219,7 +219,7 @@ export default class Document extends EmberObject {
     this._willSave();
     try {
       let data = this._saveData(token);
-      await set(this.ref._ref, data, { merge });
+      await registerPromise(this, 'save', set(this.ref._ref, data, { merge }));
       this._didSave();
     } catch(error) {
       this._saveDidFail(error);
@@ -262,7 +262,7 @@ export default class Document extends EmberObject {
   async _deleteInternal(del) {
     this._willDelete();
     try {
-      await del(this.ref._ref);
+      await registerPromise(this, 'delete', del(this.ref._ref));
       this._didDelete();
     } catch(error) {
       this._deleteDidFail(error);

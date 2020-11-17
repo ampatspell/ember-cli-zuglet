@@ -2,6 +2,7 @@ import EmberObject from '@ember/object';
 import { assert } from '@ember/debug';
 import { toJSON } from '../../util/to-json';
 import { tracked } from "@glimmer/tracking";
+import { registerPromise } from '../../stores/stats';
 
 const {
   assign
@@ -49,9 +50,9 @@ export default class User extends EmberObject {
   async token(opts) {
     let { type, refresh } = assign({ type: 'string', refresh: false }, opts);
     if(type === 'string') {
-      return await this.user.getIdToken(refresh);
+      return await registerPromise(this, 'token', this.user.getIdToken(refresh));
     } else if(type === 'json') {
-      return await this.user.getIdTokenResult(refresh);
+      return await registerPromise(this, 'token', this.user.getIdTokenResult(refresh));
     } else {
       assert('Unsupported token type', false);
     }
@@ -62,7 +63,7 @@ export default class User extends EmberObject {
     assert(`Unsupported method '${_method}'`, method);
     let credential = method.credential(...args);
     return await this.store.auth._withAuthReturningUser(async () => {
-      let { user } = await this.user.linkWithCredential(credential);
+      let { user } = await registerPromise(this, 'link', this.user.linkWithCredential(credential));
       return { user };
     });
   }

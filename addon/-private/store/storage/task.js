@@ -4,6 +4,7 @@ import { objectToJSON } from '../../util/object-to-json';
 import { tracked } from '@glimmer/tracking';
 import { toJSON } from '../../util/to-json';
 import { state, readable }  from '../../model/tracking/state';
+import { registerOnSnapshot, registerPromise } from '../../stores/stats';
 
 const {
   STATE_CHANGED
@@ -37,7 +38,7 @@ export default class StorageTask extends EmberObject {
   async _await(task) {
     let snapshot;
     try {
-      snapshot = await task;
+      snapshot = await registerPromise(this, 'task', task);
     } catch(err) {
       this._onError(err);
       return;
@@ -78,11 +79,11 @@ export default class StorageTask extends EmberObject {
     if(!isRunning) {
       return;
     }
-    this._taskObserver = this._task.on(STATE_CHANGED,
+    this._taskObserver = registerOnSnapshot(this, this._task.on(STATE_CHANGED,
       snapshot => this._onSnapshot(snapshot),
       err => this._onError(err),
       (...args) => this._onCompleted(args)
-    );
+    ));
   }
 
   onDeactivated() {

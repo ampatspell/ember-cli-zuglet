@@ -1,6 +1,7 @@
 import Reference from './reference';
 import { documentForRefNotFoundError } from '../../../util/error';
 import { cached } from '../../../model/decorators/cached';
+import { registerPromise } from '../../../stores/stats';
 
 const {
   assign
@@ -47,18 +48,18 @@ export default class DocumentReference extends Reference {
   }
 
   async delete() {
-    await this._ref.delete();
+    await registerPromise(this, 'delete', this._ref.delete());
     return this;
   }
 
   async data() {
-    let snapshot = await this._ref.get();
+    let snapshot = await registerPromise(this, 'data', this._ref.get());
     return snapshot.data();
   }
 
   async save(data, opts) {
     let { merge } = assign({ merge: false }, opts);
-    await this._ref.set(data, { merge });
+    await registerPromise(this, 'save', this._ref.set(data, { merge }));
     return this;
   }
 
@@ -67,7 +68,7 @@ export default class DocumentReference extends Reference {
   async _loadInternal(get, opts) {
     let { optional } = assign({ optional: false }, opts);
     let { _ref } = this;
-    let snapshot = await get(_ref);
+    let snapshot = await registerPromise(this, 'load', get(_ref));
     if(!snapshot.exists) {
       if(optional) {
         return;
@@ -78,7 +79,7 @@ export default class DocumentReference extends Reference {
   }
 
   async _deleteInternal(del) {
-    await del(this._ref);
+    await registerPromise(this, 'delete', del(this._ref));
   }
 
   _batchDelete(batch) {

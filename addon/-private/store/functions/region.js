@@ -1,5 +1,6 @@
 import EmberObject from '@ember/object';
 import { toJSON } from '../../util/to-json';
+import { registerPromise } from '../../stores/stats';
 
 export default class FunctionsRegion extends EmberObject {
 
@@ -11,7 +12,7 @@ export default class FunctionsRegion extends EmberObject {
 
   async call(name, props) {
     let callable = this._region.httpsCallable(name);
-    let result = await callable(props);
+    let result = await registerPromise(this, 'call', callable(props));
     return result;
   }
 
