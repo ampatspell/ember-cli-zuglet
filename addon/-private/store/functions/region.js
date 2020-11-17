@@ -4,7 +4,7 @@ import { registerPromise } from '../../stores/stats';
 
 export default class FunctionsRegion extends EmberObject {
 
-  get region() {
+  get identifier() {
     return this._region.region;
   }
 
@@ -19,9 +19,9 @@ export default class FunctionsRegion extends EmberObject {
   //
 
   get serialized() {
-    let { region } = this;
+    let { identifier } = this;
     return {
-      region
+      identifier
     };
   }
 
@@ -31,7 +31,7 @@ export default class FunctionsRegion extends EmberObject {
   }
 
   toStringExtension() {
-    return `${this.region}`;
+    return `${this.identifier}`;
   }
 
 }
