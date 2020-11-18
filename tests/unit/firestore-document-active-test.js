@@ -101,4 +101,33 @@ module('firestore / document / active', function(hooks) {
     await deferred.promise;
   });
 
+  test('listener cancel', async function(assert) {
+    let ref = this.store.doc('ducks/yellow');
+    await ref.save({ name: 'yellow' });
+
+    let doc = await ref.existing();
+
+    let invocations = 0;
+    let cancel = doc.onData(() => {
+      invocations++;
+    });
+
+    this.activate(doc);
+    await doc.promise;
+
+    let snapshot;
+
+    snapshot = invocations;
+    await doc.reload();
+    assert.ok(snapshot !== invocations);
+
+    assert.ok(cancel());
+
+    snapshot = invocations;
+    await doc.reload();
+    assert.ok(snapshot === invocations);
+
+    assert.ok(!cancel());
+  });
+
 });

@@ -1,4 +1,4 @@
-import { objectToJSON, isFunction } from './object-to-json';
+import { isFunction } from './object-to-json';
 
 const {
   assign
@@ -7,7 +7,10 @@ const {
 export class ZugletError extends Error {
 
   get serialized() {
-    return objectToJSON(this);
+    return Object.getOwnPropertyNames(this).reduce((hash, key) => {
+      hash[key] = this[key];
+      return hash;
+    }, {});
   }
 
   toJSON() {

@@ -1,9 +1,6 @@
 import { getState } from '../model/state';
 
 class Activator {
-  toString() {
-    return `<utils::activate>`;
-  }
 }
 
 let activator = new Activator();
