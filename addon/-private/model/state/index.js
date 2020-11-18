@@ -1,4 +1,5 @@
 import { getOwner } from '../../util/get-owner';
+import { assert } from '@ember/debug';
 
 const marker = Symbol('ZUGLET');
 
@@ -15,9 +16,7 @@ const createState = owner => {
 }
 
 export const getState = (owner, create=true) => {
-  if(!owner) {
-    return;
-  }
+  assert(`owner is required`, !!owner);
 
   let state = owner[marker];
   if(!state && create) {
