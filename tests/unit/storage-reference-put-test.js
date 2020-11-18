@@ -102,4 +102,20 @@ module('storage / reference / put', function(hooks) {
     assert.strictEqual(body, 'hey there blob');
   });
 
+  test('put blows up for unsupported type', async function(assert) {
+    let ref = this.storage.ref('hello');
+    try {
+      ref.put({
+        type: 'ducky',
+        data: 'hey',
+        metadata: {
+          contentType: 'text/plain'
+        }
+      });
+      assert.ok(false);
+    } catch(err) {
+      assert.strictEqual(err.message, `Assertion Failed: opts.type must be 'string' or 'data'`);
+    }
+  });
+
 });

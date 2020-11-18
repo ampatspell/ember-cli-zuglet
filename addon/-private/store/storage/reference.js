@@ -105,7 +105,7 @@ export default class StorageReference extends EmberObject {
     } else if(type === 'data') {
       _task = registerPromise(this, 'put', this._ref.put(data, metadata));
     } else {
-      assert(`opts.type must be string or data`, false);
+      assert(`opts.type must be 'string' or 'data'`, false);
     }
     let ref = this;
     return { ref, type, data, _task, metadata };
