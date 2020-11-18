@@ -53,8 +53,7 @@ export default class StorageReference extends EmberObject {
     }
   }
 
-  async metadata(opts) {
-    let metadata = await this._metadata(opts);
+  _normalizeMetadata(metadata) {
     if(!metadata) {
       return;
     }
@@ -69,6 +68,11 @@ export default class StorageReference extends EmberObject {
       }
     }
     return hash;
+  }
+
+  async metadata(opts) {
+    let metadata = await this._metadata(opts);
+    return this._normalizeMetadata(metadata);
   }
 
   async update(metadata) {

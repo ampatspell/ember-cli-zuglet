@@ -48,7 +48,7 @@ export default class StorageTask extends EmberObject {
 
   _onSnapshot(snapshot) {
     let { metadata, bytesTransferred: transferred, totalBytes: total } = snapshot;
-    this.metadata = metadata;
+    this.metadata = this.ref._normalizeMetadata(metadata);
     this._state.setProperties({ transferred, total });
   }
 
