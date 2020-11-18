@@ -4,6 +4,7 @@ import { registerPromise } from '../../../../stores/stats';
 
 export default class PopupGoogleAuthMethod extends EmberObject {
 
+  /* istanbul ignore next */
   signIn(scopes) {
     scopes = scopes || [ 'profile', 'email' ];
     return this.auth._withAuthReturningUser(async auth => {

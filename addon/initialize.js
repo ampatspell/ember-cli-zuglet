@@ -80,7 +80,7 @@ export const initialize = (...args) => {
   }
 
   if(opts.development.enabled && environment(app) === 'development') {
-    if(typeof window !== 'undefined' && !isFastBoot(store)) {
+    if(!isFastBoot(store)) {
       let key = opts.development.export;
       setGlobal({ [key]: store }, !opts.development.logging);
     }
