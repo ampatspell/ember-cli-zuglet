@@ -10,6 +10,11 @@ const {
   STATE_CHANGED
 } = firebase.storage.TaskEvent;
 
+const calculateProgress = (total, transferred) => {
+  let value = transferred / total * 100;
+  return Math.round((value + Number.EPSILON) * 10) / 10;
+};
+
 export default class StorageTask extends EmberObject {
 
   @state _state
@@ -19,20 +24,13 @@ export default class StorageTask extends EmberObject {
   @readable isCompleted = false;
   @readable isError = false;
   @readable error = null;
+  @readable progress = 0;
 
   @tracked metadata
 
   init() {
     super.init(...arguments);
     this._await(this._task);
-  }
-
-  get progress() {
-    let { total, transferred } = this;
-    if(total === null || transferred === null) {
-      return 0;
-    }
-    return Math.floor(transferred / total * 100);
   }
 
   async _await(task) {
@@ -50,7 +48,8 @@ export default class StorageTask extends EmberObject {
   _onSnapshot(snapshot) {
     let { metadata, bytesTransferred: transferred, totalBytes: total } = snapshot;
     this.metadata = this.ref._normalizeMetadata(metadata);
-    this._state.setProperties({ transferred, total });
+    let progress = calculateProgress(total, transferred);
+    this._state.setProperties({ transferred, total, progress });
   }
 
   _onError(error) {
