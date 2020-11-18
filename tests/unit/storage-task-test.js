@@ -41,9 +41,9 @@ module('storage / task', function(hooks) {
     assert.deepEqual(serialized, {
       data: 'hey task',
       error: null,
-      isCompleted: false,
+      isCompleted: true,
       isError: false,
-      isRunning: true,
+      isRunning: false,
       metadata: {
         bucket: metadata.bucket,
         cacheControl: undefined,
@@ -124,10 +124,34 @@ module('storage / task', function(hooks) {
       }
     });
 
+    assert.ok(!task._taskObserver);
+
     this.activate(task);
 
     assert.ok(task._taskObserver);
+
     await task.promise;
+
+    assert.ok(!task._taskObserver);
+  });
+
+  test('activate after task is done', async function(assert) {
+    let ref = this.storage.ref('hello');
+    let task = ref.put({
+      type: 'string',
+      format: 'raw',
+      data: 'hey task',
+      metadata: {
+        contentType: 'text/plain'
+      }
+    });
+
+    await task.promise;
+
+    assert.ok(!task._taskObserver);
+
+    this.activate(task);
+
     assert.ok(!task._taskObserver);
   });
 

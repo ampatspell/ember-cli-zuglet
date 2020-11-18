@@ -44,6 +44,7 @@ export default class StorageTask extends EmberObject {
       return;
     }
     this._onSnapshot(snapshot);
+    this._onCompleted();
   }
 
   _onSnapshot(snapshot) {
@@ -82,7 +83,7 @@ export default class StorageTask extends EmberObject {
     this._taskObserver = registerObserver(this, this._task.on(STATE_CHANGED,
       snapshot => this._onSnapshot(snapshot),
       err => this._onError(err),
-      (...args) => this._onCompleted(args)
+      () => this._onCompleted()
     ));
   }
 
