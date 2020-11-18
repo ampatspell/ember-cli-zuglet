@@ -101,9 +101,9 @@ export default class StorageReference extends EmberObject {
     if(type === 'string') {
       let format_ = stringFormats[format];
       assert(`opts.format can be one of the following [ ${keys(stringFormats).join(', ')} ]`, format_);
-      _task = this._ref.putString(data, format_, metadata);
+      _task = registerPromise(this, 'put', this._ref.putString(data, format_, metadata));
     } else if(type === 'data') {
-      _task = this._ref.put(data, metadata);
+      _task = registerPromise(this, 'put', this._ref.put(data, metadata));
     } else {
       assert(`opts.type must be string or data`, false);
     }
