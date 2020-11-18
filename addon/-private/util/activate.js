@@ -1,11 +1,14 @@
 import { getState } from '../model/state';
 
 class Activator {
+  toString() {
+    return `<Activator>`;
+  }
 }
 
-let activator = new Activator();
+let _activator = new Activator();
 
-export const activate = model => {
+export const activate = (model, activator=_activator) => {
   let state = getState(model);
   state.activate(activator);
   return () => {

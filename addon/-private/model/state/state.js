@@ -54,7 +54,6 @@ export default class State extends EmberObject {
 
   activate(activator) {
     assert(`activator is requied`, !!activator);
-    assert(`activator ${activator} already has activated ${this.owner}`, !this.activators.has(activator));
 
     let { activators } = this;
     activators.add(activator);
@@ -66,7 +65,6 @@ export default class State extends EmberObject {
 
   deactivate(activator) {
     assert(`activator is requied`, !!activator);
-    assert(`activator ${activator} hasn't activated ${this.owner}`, this.activators.has(activator));
 
     let { activators } = this;
     activators.delete(activator);
