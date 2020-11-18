@@ -23,10 +23,6 @@ export default class Activators {
 
   activators = A();
 
-  has(object) {
-    return !!this._find(object);
-  }
-
   _find(object) {
     return this.activators.find(activator => activator.object === object);
   }
