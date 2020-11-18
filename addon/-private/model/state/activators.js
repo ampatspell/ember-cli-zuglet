@@ -1,4 +1,5 @@
 import { A } from '@ember/array';
+import { assert } from '@ember/debug';
 
 class Activator {
 
@@ -20,9 +21,7 @@ class Activator {
 
 export default class Activators {
 
-  constructor() {
-    this.activators = A();
-  }
+  activators = A();
 
   has(object) {
     return !!this._find(object);
@@ -44,12 +43,9 @@ export default class Activators {
 
   delete(object) {
     let activator = this._find(object);
-    if(activator) {
-      if(activator.dec()) {
-        this.activators.removeObject(activator);
-      }
-    } else {
-      throw new Error(`Activator not found for object ${object}`);
+    assert(`Activator not found for object ${object}`, !!activator);
+    if(activator.dec()) {
+      this.activators.removeObject(activator);
     }
   }
 
