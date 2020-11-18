@@ -1,4 +1,6 @@
 import { property } from './property';
+import { isFunction } from '../../util/object-to-json';
+import { assert } from '@ember/debug';
 
 let getProperty = (owner, key, opts) => property(owner, key, `activate/${opts.type}`, opts);
 
@@ -30,11 +32,8 @@ export const activate = () => {
   let extend = () => {
     let curr = define(opts);
     curr.content = value => {
-      if(typeof value === 'function') {
-        opts.value = value;
-      } else {
-        opts.value = () => value;
-      }
+      assert(`@activate().contnet(fn) must be function not '${value}'`, isFunction(value));
+      opts.value = value;
       opts.type = 'content';
       return extend();
     }

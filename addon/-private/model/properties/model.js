@@ -3,6 +3,7 @@ import { getStores } from '../../stores/get-stores';
 import ObjectActivator from './activate/activators/object';
 import { diff, asOptionalString, asOptionalObject, asIdentity } from '../decorators/diff';
 import { isFunction } from '../../util/object-to-json';
+import { assert } from '@ember/debug';
 
 export default class ModelProperty extends Property {
 
@@ -102,14 +103,15 @@ export const model = () => {
   let extend = () => {
     let curr = define(opts);
     curr.named = name => {
-      if(typeof name !== 'function') {
-        opts.modelName = () => name;
-      } else {
+      if(isFunction(name)) {
         opts.modelName = name;
+      } else {
+        opts.modelName = () => name;
       }
       return extend();
     }
     curr.mapping = mapping => {
+      assert(`@model().mapping(fn) must be function not '${mapping}'`, isFunction(mapping));
       opts.mapping = mapping;
       return extend();
     }

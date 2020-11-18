@@ -1,7 +1,8 @@
 import Property, { property } from './property';
 import { getState } from '../state';
 import DataManager from '../tracking/data';
-import { isServerTimestamp, isTimestamp } from '../../util/object-to-json';
+import { isServerTimestamp, isTimestamp, isFunction } from '../../util/object-to-json';
+import { assert } from '@ember/debug';
 
 export default class ObjectProperty extends Property {
 
@@ -72,6 +73,7 @@ export const object = () => {
   let extend = () => {
     let curr = define(opts);
     curr.onDirty = fn => {
+      assert(`@object().onDirty(fn) must be function not '${fn}'`, isFunction(fn));
       opts.onDirty = fn;
       return extend();
     }

@@ -52,7 +52,7 @@ export default class ModelsProperty extends Property {
 
   @diff()
   _source() {
-    assert(`@models().source(fn) is required and must be function`, typeof this.opts.source === 'function');
+    assert(`@models().source(fn) is required`, !!this.opts.source);
     let { owner, opts } = this;
     let value = opts.source.call(owner, owner);
     return value ? A(value) : null;
@@ -62,8 +62,8 @@ export default class ModelsProperty extends Property {
 
   createModel(source) {
     let { owner, opts } = this;
-    assert(`@models().named(fn) is required and must be string or function`, typeof opts.modelName === 'function');
-    assert(`@models().mapping(fn) is required and must be function`, typeof opts.mapping === 'function');
+    assert(`@models().named(fn) is required`, !!opts.modelName);
+    assert(`@models().mapping(fn) is required`, !!opts.mapping);
 
     let marker = new Marker(owner, source, opts);
 
@@ -182,11 +182,12 @@ export const models = () => {
   let extend = () => {
     let curr = define(opts);
     curr.source = source => {
+      assert(`@models().source(fn) must be function not '${source}'`, isFunction(source));
       opts.source = source;
       return extend();
     }
     curr.named = name => {
-      if(typeof name === 'function') {
+      if(isFunction(name)) {
         opts.modelName = name;
       } else {
         opts.modelName = () => name;
@@ -194,6 +195,7 @@ export const models = () => {
       return extend();
     }
     curr.mapping = fn => {
+      assert(`@models().mapping(fn) must be function not '${fn}'`, isFunction(fn));
       opts.mapping = fn;
       return extend();
     }
