@@ -6,6 +6,7 @@ import { next } from 'zuglet/-private/util/runloop';
 import { resolve } from 'zuglet/-private/util/resolve';
 import { toPrimitive } from 'zuglet/-private/util/to-primitive';
 import { toString } from 'zuglet/-private/util/to-string';
+import { assert as zugletAssert, isZugletError } from 'zuglet/-private/util/error';
 
 module('util', function(hooks) {
   setupStoreTest(hooks);
@@ -61,6 +62,28 @@ module('util', function(hooks) {
           stack: err.stack
         }
       });
+    }
+  });
+
+  test('assert', async function(assert) {
+    try {
+      zugletAssert('fake one', false);
+      assert.ok(false);
+    } catch(err) {
+      assert.strictEqual(isZugletError(err), true);
+      assert.strictEqual(err.code, 'zuglet/assert');
+      assert.strictEqual(err.message, 'fake one');
+    }
+  });
+
+  test('assert with message function', async function(assert) {
+    try {
+      zugletAssert(() => 'fake one', false);
+      assert.ok(false);
+    } catch(err) {
+      assert.strictEqual(isZugletError(err), true);
+      assert.strictEqual(err.code, 'zuglet/assert');
+      assert.strictEqual(err.message, 'fake one');
     }
   });
 
