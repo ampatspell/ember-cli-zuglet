@@ -9,6 +9,7 @@ import { cached } from '../../model/decorators/cached';
 import { getState } from '../../model/state';
 import { toJSON } from '../../util/to-json';
 import { registerObserver, registerPromise } from '../../stores/stats';
+import { assert } from '@ember/debug';
 
 @root()
 export default class Auth extends EmberObject {
@@ -89,9 +90,7 @@ export default class Auth extends EmberObject {
 
   async _deleteUser(user) {
     let internal = user.user;
-    if(!internal) {
-      return;
-    }
+    assert(`user.user must exist`, !!internal);
     await this._withAuthReturningUser(async () => {
       await registerPromise(this, 'delete', internal.delete());
       return null;
@@ -114,6 +113,7 @@ export default class Auth extends EmberObject {
   }
 
   onActivated() {
+    this._deferred = defer();
     this._cancel = registerObserver(this, this._auth.onAuthStateChanged(user => {
       this._onAuthStateChange(user);
     }, err => {
@@ -121,10 +121,16 @@ export default class Auth extends EmberObject {
     }));
   }
 
+  _cancelObserver() {
+    let { _cancel } = this;
+    if(_cancel) {
+      _cancel();
+      this._cancel = null;
+    }
+  }
+
   onDeactivated() {
-    this._cancel();
-    this._cancel = null;
-    this._deferred = defer();
+    this._cancelObserver();
   }
 
   //

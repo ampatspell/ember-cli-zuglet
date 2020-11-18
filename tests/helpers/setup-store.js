@@ -12,6 +12,14 @@ let {
 } = environment;
 
 class TestUser extends User {
+
+  restored = 0;
+
+  async restore() {
+    await super.restore(...arguments);
+    this.restored++;
+  }
+
 }
 
 class TestStore extends Store {

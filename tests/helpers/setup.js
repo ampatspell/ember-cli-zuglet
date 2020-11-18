@@ -10,7 +10,8 @@ export const setupStoreTest = hooks => {
 }
 
 const credentials = {
-  ampatspell: { email: 'ampatspell@gmail.com', password: 'heythere' }
+  ampatspell: { email: 'ampatspell@gmail.com', password: 'heythere' },                   // should exist
+  zeeba:      { email: 'zeeba@gmail.com', password: 'R3allyS3cUr3Pas$wooooorrrd.kinda' } // should not exist
 };
 
 test.only = only;
