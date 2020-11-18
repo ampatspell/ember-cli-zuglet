@@ -4,7 +4,7 @@ import { activate } from 'zuglet/decorators';
 import { tracked } from '@glimmer/tracking';
 import { dedupeTracked } from 'tracked-toolbox';
 
-module('decorators / @activate / content', function(hooks) {
+module('decorators / @activate / content / object', function(hooks) {
   setupStoreTest(hooks);
 
   hooks.beforeEach(function() {
@@ -16,6 +16,9 @@ module('decorators / @activate / content', function(hooks) {
       return store.models.create('box', { store });
     }
   });
+
+  // TODO: needs tests for activate/deactivate
+  // TODO: needs tests for array
 
   test(`model is recreated if @dedupeTracked is set to the same value`, async function(assert) {
     let box = this.define(class Box extends EmberObject {
