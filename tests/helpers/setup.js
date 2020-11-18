@@ -9,10 +9,12 @@ export const setupStoreTest = hooks => {
   setupHelpers(hooks);
 }
 
-export const setupRrenderingStoreTest = hooks => {
+export const setupRenderingStoreTest = (hooks, setup=true) => {
   setupRenderingTest(hooks);
-  setupStore(hooks);
-  setupHelpers(hooks);
+  if(setup) {
+    setupStore(hooks);
+    setupHelpers(hooks);
+  }
 }
 
 const credentials = {
