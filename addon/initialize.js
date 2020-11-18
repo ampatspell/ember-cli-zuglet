@@ -8,7 +8,7 @@ const {
 } = Object;
 
 const normalizeStore = store => {
-  store = assign({ identifier: 'store', factory: null }, store || {});
+  store = assign({ identifier: 'store', factory: null }, store);
   assert(`opts.store.identifier is required`, typeof store.identifier === 'string');
   assert(`opts.store.factory is required`, !!store.factory);
   return store;
