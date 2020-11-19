@@ -1,6 +1,6 @@
 import Property, { property } from './property';
 import { setOwner, getOwner } from '@ember/application';
-import { A } from '@ember/array';
+import { A, isArray } from '@ember/array';
 import { getState } from '../state';
 import { getStores } from '../../stores/get-stores';
 import { assert } from '@ember/debug';
@@ -81,7 +81,7 @@ export default class ModelsProperty extends Property {
     let added = A();
     let models = A();
 
-    if(source) {
+    if(isArray(source)) {
       let find = doc => current.find(model => getMarker(model).source === doc);
       source.forEach(doc => {
         let model = find(doc);
