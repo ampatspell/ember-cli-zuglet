@@ -3,6 +3,7 @@ import User from 'zuglet/user';
 import { activate, load } from 'zuglet/utils';
 import { getStats } from 'zuglet/-private/stores/stats';
 import { next } from 'zuglet/-private/util/runloop';
+import { A } from '@ember/array';
 import environment from '../../config/environment';
 
 let {
@@ -54,9 +55,14 @@ export const setupStore = (hooks, identifier='test') => {
     this.stores = this.owner.lookup('zuglet:stores');
     this.owner.register('model:test-user', TestUser);
     this.store = this.stores.createStore(identifier, TestStore);
-    this.activations = [];
+    this.activations = A();
     this.activate = model => {
-      this.activations.push(activate(model));
+      let cancel = activate(model);
+      this.activations.push(cancel);
+      return () => {
+        cancel();
+        this.activations.removeObject(cancel);
+      }
     }
     this.activate(this.store);
     await this.store.load();

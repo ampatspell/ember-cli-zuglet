@@ -2,6 +2,7 @@ import { module, test, setupStoreTest } from '../helpers/setup';
 import EmberObject from '@ember/object';
 import { activate } from 'zuglet/decorators';
 import { tracked } from '@glimmer/tracking';
+import { isActivated } from 'zuglet/utils';
 import { dedupeTracked } from 'tracked-toolbox';
 
 module('decorators / @activate / content / object', function(hooks) {
@@ -17,8 +18,79 @@ module('decorators / @activate / content / object', function(hooks) {
     }
   });
 
-  // TODO: needs tests for activate/deactivate
-  // TODO: needs tests for array
+  test('initial content is activated and deactivated on recreate', async function(assert) {
+    let box = this.define(class Box extends EmberObject {
+
+      @tracked
+      base = 'zeeba'
+
+      @activate().content(({ store, base }) => store.models.create('nested', { base }))
+      model
+
+    });
+
+    this.activate(box);
+
+    let first = box.model;
+    assert.ok(isActivated(first));
+
+    box.base = 'larry';
+
+    let second = box.model;
+    assert.ok(second !== first);
+    assert.ok(isActivated(second));
+    assert.ok(!isActivated(first));
+  });
+
+  test('content is replaced and then activated', async function(assert) {
+    let box = this.define(class Box extends EmberObject {
+
+      @tracked
+      base = 'zeeba'
+
+      @activate().content(({ store, base }) => store.models.create('nested', { base }))
+      model
+
+    });
+
+    let first = box.model;
+    assert.ok(!isActivated(first));
+
+    box.base = 'larry';
+    this.activate(box);
+
+    let second = box.model;
+    assert.ok(second !== first);
+    assert.ok(isActivated(second));
+    assert.ok(!isActivated(first));
+  });
+
+  test('content is activated when parent is and deactivated when parent is', async function(assert) {
+    let box = this.define(class Box extends EmberObject {
+
+      @tracked
+      base = 'zeeba'
+
+      @activate().content(({ store, base }) => store.models.create('nested', { base }))
+      model
+
+    });
+
+    let first = box.model;
+    assert.ok(!isActivated(first));
+
+    let cancel = this.activate(box);
+
+    let second = box.model;
+    assert.ok(second === first);
+    assert.ok(isActivated(first));
+
+    cancel();
+
+    let third = box.model;
+    assert.ok(first === third);
+    assert.ok(!isActivated(first));
+  });
 
   test(`model is recreated if @dedupeTracked is set to the same value`, async function(assert) {
     let box = this.define(class Box extends EmberObject {
