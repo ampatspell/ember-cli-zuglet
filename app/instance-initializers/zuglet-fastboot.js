@@ -4,11 +4,9 @@ export default {
   name: 'zuglet:fastboot',
   initialize(app) {
     let { fastboot, isFastBoot } = lookupFastBoot(app);
-    if(!fastboot) {
-      return;
-    }
-    let stores = app.lookup('zuglet:stores');
+    /* istanbul ignore next */
     if(isFastBoot) {
+      let stores = app.lookup('zuglet:stores');
       fastboot.deferRendering(stores.settle());
     }
   }

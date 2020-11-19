@@ -3,7 +3,7 @@ import EmberObject from '@ember/object';
 import { models, activate } from 'zuglet/decorators';
 import { isActivated, load } from 'zuglet/utils';
 import { dedupeTracked } from 'tracked-toolbox';
-import { replaceCollection } from '../helpers/util';
+import { replaceCollection, poll } from '../helpers/util';
 
 module('decorators / @models', function(hooks) {
   setupStoreTest(hooks);
@@ -80,6 +80,7 @@ module('decorators / @models', function(hooks) {
     let duck = box.models[0];
 
     await ref.doc('1').save({ type: 'hamster' }, { merge: true });
+    await poll(() => box.query.content[0].data.type === 'hamster');
 
     assert.ok(box.models);
     assert.deepEqual(this.created, [ 'duck', 'duck', 'duck', 'hamster' ]);
