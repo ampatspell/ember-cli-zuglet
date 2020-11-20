@@ -3,6 +3,7 @@ import { getState } from '../state';
 import DataManager from '../tracking/data';
 import { assert } from '@ember/debug';
 import {
+  isDate,
   isServerTimestamp,
   isTimestamp,
   isFunction,
@@ -23,7 +24,7 @@ export default class ObjectProperty extends Property {
   }
 
   shouldExpandValue(value) {
-    if(value instanceof Date) {
+    if(isDate(value)) {
       return false;
     } else if(isTimestamp(value)) {
       return false;

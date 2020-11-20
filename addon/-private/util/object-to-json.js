@@ -2,7 +2,7 @@ import firebase from "firebase/app";
 
 import { isArray } from '@ember/array';
 
-let dateTimeFormatter = new Intl.DateTimeFormat('default', {
+let _dateTimeFormatter = new Intl.DateTimeFormat('default', {
   year: 'numeric',
   month: 'numeric',
   day: 'numeric',
@@ -11,6 +11,8 @@ let dateTimeFormatter = new Intl.DateTimeFormat('default', {
   seconds: 'numeric',
   timeZoneName: 'short'
 });
+
+const formatDate = value => _dateTimeFormatter.format(value);
 
 let _serverTimestamp;
 export const isServerTimestamp = arg => {
@@ -30,6 +32,7 @@ export const isFunction = arg => typeof arg === 'function';
 const hasFileList = () => ('FileList' in window);
 const hasFile = () => ('File' in window);
 
+export const isDate = arg => arg instanceof Date;
 export const isFileList = arg => hasFileList() && arg instanceof FileList;
 export const isFile = arg => hasFile() && arg instanceof File;
 export const isPromise = arg => arg && isFunction(arg.then);
@@ -41,7 +44,7 @@ export const objectToJSON = value => {
     } else if(isTimestamp(value)) {
       return {
         type: 'timestamp',
-        value: dateTimeFormatter.format(value.toDate())
+        value: formatDate(value.toDate())
       };
     } else if(isGeoPoint(value)) {
       let json = value.toJSON();
@@ -53,10 +56,10 @@ export const objectToJSON = value => {
       return value.toJSON();
     } else if(isArray(value)) {
       return value.map(item => objectToJSON(item));
-    } else if(value instanceof Date) {
+    } else if(isDate(value)) {
       return {
         type: 'date',
-        value: dateTimeFormatter.format(value)
+        value: formatDate(value)
       };
     } else if(isFile(value)) {
       let { name, type: contentType, size } = value;
