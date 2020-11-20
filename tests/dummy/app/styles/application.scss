@@ -84,6 +84,9 @@
 .block-toc {
   a {
     text-decoration: none;
+    &.active {
+      font-weight: 600;
+    }
   }
   > .header {
     > a {
