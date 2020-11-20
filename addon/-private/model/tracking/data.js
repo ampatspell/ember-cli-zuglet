@@ -2,6 +2,7 @@ import { toString } from '../../util/to-string';
 import { consumeKey, dirtyKey } from './tag';
 import { propToIndex, ARRAY_GETTERS } from './utils';
 import { A, isArray } from '@ember/array';
+import { assert } from '@ember/debug';
 
 const KEYS = Symbol();
 const ARRAY = Symbol();
@@ -159,7 +160,8 @@ const createObjectProxy = (property, target) => {
 
 export default class DataManager {
 
-  constructor(opts={}) {
+  constructor(opts) {
+    assert(`opts must be object`, typeof opts === 'object');
     this.proxy = null;
     this.delegate = opts.delegate; // { onDirty(), shouldExpand(value) }
   }
