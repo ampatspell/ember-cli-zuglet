@@ -37,6 +37,11 @@ export const objectToJSON = value => {
   if(typeof value === 'object') {
     if(value === null) {
       return value;
+    } else if(isTimestamp(value)) {
+      return {
+        type: 'timestamp',
+        value: dateTimeFormatter.format(value.toDate())
+      };
     } else if(isFunction(value.toJSON)) {
       return value.toJSON();
     } else if(isArray(value)) {
@@ -57,11 +62,6 @@ export const objectToJSON = value => {
     } else if(isFileList(value)) {
       let files = [ ...value ];
       return files.map(file => objectToJSON(file));
-    } else if(isTimestamp(value)) {
-      return {
-        type: 'timestamp',
-        value: dateTimeFormatter.format(value.toDate())
-      };
     } else if(isServerTimestamp(value)) {
       return {
         type: 'server-timestamp',
