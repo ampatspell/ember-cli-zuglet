@@ -1,8 +1,14 @@
 import Property, { property } from './property';
 import { getState } from '../state';
 import DataManager from '../tracking/data';
-import { isServerTimestamp, isTimestamp, isFunction } from '../../util/object-to-json';
 import { assert } from '@ember/debug';
+import {
+  isServerTimestamp,
+  isTimestamp,
+  isFunction,
+  isDocumentReference,
+  isGeoPoint
+} from '../../util/object-to-json';
 
 export default class ObjectProperty extends Property {
 
@@ -22,6 +28,10 @@ export default class ObjectProperty extends Property {
     } else if(isTimestamp(value)) {
       return false;
     } else if(isServerTimestamp(value)) {
+      return false;
+    } else if(isDocumentReference(value)) {
+      return false;
+    } else if(isGeoPoint(value)) {
       return false;
     }
     return true;
