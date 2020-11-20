@@ -20,9 +20,9 @@ api
       array +
     batch +
     transaction +
-  storage
-    reference
-    task
+  storage +
+    reference +
+    task +
   auth
     user
     methods
