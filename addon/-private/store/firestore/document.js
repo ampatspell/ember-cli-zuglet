@@ -309,7 +309,7 @@ export default class Document extends EmberObject {
         this._deferred.resolve(this);
       }, error => {
         this._state.setProperties({ isLoading: false, isError: true, error });
-        this.store.onObserverError(this);
+        this.store.onObserverError(this, error);
         this._deferred.reject(error);
       }));
     }

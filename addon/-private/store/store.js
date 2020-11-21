@@ -217,12 +217,12 @@ export default class Store extends EmberObject {
     return this.firebase.options.projectId;
   }
 
-  get dashboard() {
+  get dashboardURL() {
     return `https://console.firebase.google.com/u/0/project/${this.projectId}/overview`;
   }
 
   openDashboard() {
-    window.open(this.dashboard, '_blank');
+    window.open(this.dashboardURL, '_blank');
   }
 
   //

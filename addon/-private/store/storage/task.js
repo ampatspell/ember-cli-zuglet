@@ -54,6 +54,7 @@ export default class StorageTask extends EmberObject {
 
   _onError(error) {
     this._state.setProperties({ isRunning: false, isError: true, error });
+    this.store.onObserverError(this, error);
   }
 
   _onCompleted() {
