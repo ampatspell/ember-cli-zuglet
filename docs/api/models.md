@@ -5,7 +5,7 @@ pos: 2
 
 # Models
 
-Models are simple wrapper around Ember's `getOwner(this).getFactory(…)`
+A simple wrapper around Ember's `getOwner(this).getFactory(…)` which works only with `model:…` registrations.
 
 ``` javascript
 let models = store.models;
