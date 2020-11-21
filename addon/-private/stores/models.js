@@ -2,6 +2,7 @@ import EmberObject from '@ember/object';
 import { dasherize } from '@ember/string';
 import { assert } from '@ember/debug';
 import { getOwner } from '../util/get-owner';
+import { isFunction } from '../util/object-to-json';
 
 export default class Models extends EmberObject {
 
@@ -34,9 +35,12 @@ export default class Models extends EmberObject {
     return !!this.factoryFor(name, { optional: true });
   }
 
-  create(name, props) {
+  create(name, ...args) {
     let factory = this.factoryFor(name);
-    return factory.create(props);
+    if(isFunction(factory.class.create)) {
+      return factory.create(...args);
+    }
+    return new factory.class(getOwner(this).ownerInjection(), ...args);
   }
 
 }
