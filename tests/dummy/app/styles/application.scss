@@ -51,7 +51,7 @@
 
 .block-master-detail {
   @include breakpoint(post-tablet) {
-    $w: 200px;
+    $w: 210px;
     > .master {
       position: fixed;
       top: 0;
