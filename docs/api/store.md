@@ -17,11 +17,44 @@ export default class Store extends BaseStore {
 
 ## options
 
-* firebase
-* firestore
-* auth
-* functions
-* emulators
+Override to provide Firebase SDK and `ember-cli-zuglet` configuration:
+
+``` javascript
+options = {
+
+  // required
+  firebase: {
+    apiKey: '…',
+    authDomain: '…',
+    databaseURL: '…',
+    projectId: '…',
+    storageBucket: '…',
+    messagingSenderId: '…',
+    appId: '…'
+  },
+
+  firestore: {
+    persistenceEnabled: true // defaults to `false`
+  },
+
+  auth: {
+    user: 'user' // defaults to null
+  },
+
+  functions: {
+    region: null // defaults to null
+  },
+
+  // defaults to no emulators configured
+  emulators: {
+    host: 'localhost',
+    auth: 9099,
+    firestore: 8080,
+    functions: 5001
+  }
+
+}
+```
 
 ## normalizedOptions `→ Object`
 
@@ -29,7 +62,7 @@ Normalized options with all defaults expanded
 
 ## identifier `→ String`
 
-Unique `Store` identifier which can be used to distinguish multiple stores.
+Unique `Store` identifier which can be used to distinguish multiple stores in runtime.
 
 ## models `→ Models`
 

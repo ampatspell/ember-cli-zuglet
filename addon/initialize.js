@@ -79,11 +79,9 @@ export const initialize = (...args) => {
     app.register(fullName, store, { instantiate: false });
   }
 
-  if(opts.development.enabled && environment(app) === 'development') {
-    if(!isFastBoot(store)) {
-      let key = opts.development.export;
-      setGlobal({ [key]: store }, !opts.development.logging);
-    }
+  if(opts.development.enabled && environment(app) === 'development' && !isFastBoot(store)) {
+    let key = opts.development.export;
+    setGlobal({ [key]: store }, !opts.development.logging);
   }
 
   return store;
