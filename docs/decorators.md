@@ -5,6 +5,8 @@ pos: 3
 
 # Decorators
 
+Decorators can be used to build overall architecture for apps built using `ember-cli-zuglet`.
+
 ## Exports
 
 ``` javascript
