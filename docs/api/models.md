@@ -5,12 +5,57 @@ pos: 2
 
 # Models
 
+Models are simple wrapper around Ember's `getOwner(this).getFactory(…)`
+
 ``` javascript
 let models = store.models;
 ```
 
-## registerFactory(name, factory)
+## create(name, props) `→ instance`
 
-## factoryFor(name, opts)
+Creates a new model instance for given factory name and properties.
 
-## create(name, props)
+### EmberObject
+
+``` javascript
+// app/models/message.js
+export default class Message extends EmberObject {
+}
+```
+
+``` javascript
+let model = models.create('message', { from: 'larry', to: 'zeeba' });
+model.from // → 'larry'
+model.to // → 'zeeba'
+```
+
+### Plain ES6 Class
+
+``` javascript
+// app/models/message.js
+export default class Message {
+  constructor(injection, from, to) {
+    Object.assign(this, injection); // getOwner(this).ownerInjection()
+    this.from = from;
+    this.to = to;
+  }
+}
+```
+
+``` javascript
+let model = models.create('message', 'larry', 'zeeba');
+model.from // → 'larry'
+model.to // → 'zeeba'
+```
+
+## factoryFor(name, { optional }) `→ factory or undefined`
+
+* `optional` → boolean, defaults to false
+
+Lookups model factory for name.
+
+If `optional` is false and factory is not registered, assertation error is thrown.
+
+## registerFactory(name, factory) `→ undefined`
+
+Registers model factory
