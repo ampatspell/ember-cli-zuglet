@@ -58,7 +58,3 @@ Unique `Store` identifier which can be used to distinguish multiple stores.
 ## dashboard `→ String`
 
 ## openDashboard()
-
-## serialized `→ Object`
-
-## toJSON() `→ Object`

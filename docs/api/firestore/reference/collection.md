@@ -14,5 +14,3 @@ pos: 3
 ## doc(path)
 
 ## string
-
-## serialized

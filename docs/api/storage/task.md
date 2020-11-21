@@ -21,7 +21,3 @@ pos: 1
 ## metadata
 
 ## promise
-
-## serialized
-
-## toJSON()

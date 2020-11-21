@@ -40,7 +40,3 @@ pos: 1
 ## save(opts)
 
 ## delete()
-
-## serialized
-
-## toJSON()

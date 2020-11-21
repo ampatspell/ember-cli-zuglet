@@ -29,7 +29,3 @@ pos: 2
 ## register(doc)
 
 ## string
-
-## serialized
-
-## toJSON()

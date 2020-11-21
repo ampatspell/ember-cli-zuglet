@@ -20,7 +20,3 @@ pos: 0
 ## delete(opts)
 
 ## put(opts)
-
-## serialized
-
-## toJSON()

@@ -24,12 +24,12 @@ api
     reference +
     task +
   auth
-    user
-    methods
-      anonymous
-      email
-      popup
-        google
+    user +
+    methods +
+      anonymous +
+      email +
+      popup +
+        google +
   functions
     region
   stores

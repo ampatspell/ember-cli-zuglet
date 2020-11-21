@@ -24,5 +24,3 @@ pos: 1
 ## data()
 
 ## save(data, opts)
-
-## serialized
