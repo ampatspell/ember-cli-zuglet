@@ -36,9 +36,9 @@ module('store', function(hooks) {
     assert.strictEqual(this.store.projectId, this.projectId);
   });
 
-  test('dashboard', function(assert) {
+  test('dashboardURL', function(assert) {
     assert.strictEqual(
-      this.store.dashboard,
+      this.store.dashboardURL,
       `https://console.firebase.google.com/u/0/project/${this.projectId}/overview`
     );
   });
