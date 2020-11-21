@@ -5,24 +5,59 @@ pos: 2
 
 # Queryable Reference `extends Reference`
 
-## where()
+Base reference class for both `Collection` and `Queryable` references.
 
-## orderBy()
+``` javascript
+let ref = store.collection('messages').where('owner', '==', 'zeeba').limit(1);
+let query = ref.query();
+await query.load();
+```
 
-## limit()
+## conditions
 
-## limitToLast()
+* `where()`
+* `orderBy()`
+* `limit(value)`
+* `limitToLast()`
+* `startAt()`
+* `startAfter()`
+* `endAt()`
+* `endBefore()`
 
-## startAt()
+See [Firestore CollectionReference](https://firebase.google.com/docs/reference/js/firebase.firestore.CollectionReference) docs for more info.
 
-## startAfter()
+## query({ type }) `→ Query`
 
-## endAt()
+Creates a `array` or `first` [Query](api/firestore/query):
 
-## endBefore()
+* `type` → defaults to `'array'`
 
-## query(opts)
+``` javascript
+let array = store.collection('messages').query();
+let first = store.collection('messages').query({ type: 'first' });
+```
 
-## load()
+## async load() `→ Array<Document>`
 
-## first(opts)
+Loads documents matching given query
+
+``` javascript
+let docs = await store.collection('messsages').where('owner', '==', 'zeeba').load();
+docs.length // → 5
+docs[0].data.owner // → 'zeeba'
+```
+
+## first({ optional })
+
+* `optional` → boolean, defaults to `false`
+
+Loads first document matching given query.
+
+``` javascript
+let doc = await store.collection('messsages').where('owner', '==', 'zeeba').limit(1).first({ optional: true });
+doc.data.owner // → 'zeeba'
+```
+
+If query returns no results and optional is:
+* `true` → undefined is returned
+* `false` → document not found error is thrown
