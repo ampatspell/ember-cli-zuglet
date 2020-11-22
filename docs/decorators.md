@@ -5,7 +5,7 @@ pos: 3
 
 # Decorators
 
-Decorators can be used to build overall architecture for apps built using `ember-cli-zuglet`.
+Decorators are used to compose overall architecture for apps built using `ember-cli-zuglet`.
 
 ## Exports
 
