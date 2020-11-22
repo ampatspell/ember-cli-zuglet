@@ -5,4 +5,11 @@ pos: 0
 
 # Anonymous
 
-## signIn()
+## async signIn() `→ User`
+
+Sign-in anonymously
+
+``` javascript
+let user = await store.auth.methods.anonymous.signIn();
+store.auth.user === user // → true
+```

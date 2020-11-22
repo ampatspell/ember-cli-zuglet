@@ -5,10 +5,25 @@ pos: 1
 
 # Email
 
-## signIn(email, password)
+## async signIn(email, password) `→ User`
 
-## signUp(email, password)
+Sign-in using email and password
 
-## credential(email, password)
+``` javascript
+let user = await store.auth.methods.email.signIn(email, password);
+store.auth.user === user // → true
+```
 
-## sendPasswordReset(email, opts)
+## async signUp(email, password) `→ User`
+
+Sign up with user and password
+
+``` javascript
+let user = await store.auth.methods.email.signUp(email, password);
+```
+
+## async sendPasswordReset(email, opts) `→ undefined`
+
+``` javascript
+await store.auth.methods.email.sendPasswordReset(email);
+```

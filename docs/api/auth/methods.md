@@ -7,6 +7,12 @@ pos: 1
 
 ## anonymous
 
+anonymous accounts
+
 ## email
 
+email-based accounts
+
 ## popup
+
+popup-based sign-in
