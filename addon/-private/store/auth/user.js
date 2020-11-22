@@ -1,4 +1,4 @@
-import EmberObject from '@ember/object';
+import EmberObject, { get } from '@ember/object';
 import { assert } from '@ember/debug';
 import { toJSON } from '../../util/to-json';
 import { tracked } from "@glimmer/tracking";
@@ -59,7 +59,7 @@ export default class User extends EmberObject {
   }
 
   async link(_method, ...args) {
-    let method = this.store.auth.methods[_method];
+    let method = get(this.store.auth.methods, _method);
     assert(`Unsupported method '${_method}'`, method);
     let credential = method.credential(...args);
     return await this.store.auth._withAuthReturningUser(async () => {
