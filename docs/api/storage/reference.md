@@ -66,7 +66,24 @@ Fetches all file metadata
 ``` javascript
 let ref = store.storage.ref('hello');
 let metadata = await ref.metadata();
-metadata // → { type: 'file', size: 81001, … }
+// → {
+//   bucket: "<project-id>.appspot.com"
+//   cacheControl: undefined
+//   contentDisposition: "inline; filename*=utf-8''hello"
+//   contentEncoding: "identity"
+//   contentLanguage: undefined
+//   contentType: "text/plain"
+//   customMetadata: undefined
+//   fullPath: "hello"
+//   generation: "1605998945217023"
+//   md5Hash: "8nqpBnIWx8XqWZtAgIQHOA=="
+//   metageneration: "1"
+//   name: "hello"
+//   size: 8
+//   timeCreated: Date
+//   type: "file"
+//   updated: Date
+// }
 ```
 
 ## update(metadata)
