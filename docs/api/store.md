@@ -15,6 +15,8 @@ export default class Store extends BaseStore {
 }
 ```
 
+Store has `@root` decorator.
+
 ## options `→ Object`
 
 Override to provide Firebase SDK and `ember-cli-zuglet` configuration:

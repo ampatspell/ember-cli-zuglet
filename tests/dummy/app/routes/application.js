@@ -9,13 +9,11 @@ export default class RouteRoute extends Route {
   store
 
   model() {
-    // activate store which is @root()
-    return this.store;
   }
 
-  async load(store) {
+  async load() {
     // resolve current user before rendering app
-    await store.load();
+    await this.store.load();
   }
 
 }
