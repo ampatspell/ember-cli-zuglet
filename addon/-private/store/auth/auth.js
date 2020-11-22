@@ -4,14 +4,11 @@ import { defer } from '../../util/defer';
 import { activate } from '../../model/properties/activate';
 import { getOwner } from '../../util/get-owner';
 import { objectToJSON } from '../../util/object-to-json';
-import { root } from '../../model/decorators/root';
 import { cached } from '../../model/decorators/cached';
-import { getState } from '../../model/state';
 import { toJSON } from '../../util/to-json';
 import { registerObserver, registerPromise } from '../../stores/stats';
 import { assert } from '@ember/debug';
 
-@root()
 export default class Auth extends EmberObject {
 
   @activate()
@@ -20,7 +17,6 @@ export default class Auth extends EmberObject {
   init() {
     super.init(...arguments);
     this._maybeSetupEmulator();
-    getState(this); // auto activate self
     this._deferred = defer();
   }
 

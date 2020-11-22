@@ -8,6 +8,8 @@ import { toJSON } from '../util/to-json';
 import { isFastBoot } from '../util/fastboot';
 import { isFunction, isDocumentReference, isCollectionReference } from '../util/object-to-json';
 import { registerPromise } from '../stores/stats';
+import { root } from '../model/decorators/root';
+import { activate } from '../model/properties/activate';
 
 const {
   assign
@@ -41,6 +43,7 @@ const normalizeOptions = options => {
   };
 }
 
+@root()
 export default class Store extends EmberObject {
 
   identifier = null
@@ -75,11 +78,10 @@ export default class Store extends EmberObject {
     return this.stores.models;
   }
 
-  @cached()
-  get auth() {
-    let store = this;
-    return getOwner(this).factoryFor('zuglet:store/auth').create({ store });
-  }
+  @activate().content(store => {
+    return getOwner(store).factoryFor('zuglet:store/auth').create({ store });
+  })
+  auth
 
   @cached()
   get storage() {

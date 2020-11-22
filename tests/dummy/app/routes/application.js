@@ -1,7 +1,6 @@
 import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
 import { route } from 'zuglet/decorators';
-import { load } from 'zuglet/utils';
 
 @route()
 export default class RouteRoute extends Route {
@@ -10,12 +9,13 @@ export default class RouteRoute extends Route {
   store
 
   model() {
-    return this.store.auth;
+    // activate store which is @root()
+    return this.store;
   }
 
-  async load(auth) {
+  async load(store) {
     // resolve current user before rendering app
-    await load(auth);
+    await store.load();
   }
 
 }

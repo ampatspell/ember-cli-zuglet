@@ -1,4 +1,5 @@
 import Store from 'zuglet/store';
+import { load } from 'zuglet/utils';
 import envionment from './config/environment';
 
 let { dummy: { firebase } } = envionment;
@@ -23,6 +24,10 @@ export default class DummyStore extends Store {
       // firestore: 8080,
       // functions: 5001
     }
+  }
+
+  async load() {
+    await load(this.auth);
   }
 
 }
