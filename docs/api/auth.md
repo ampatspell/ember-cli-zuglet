@@ -5,9 +5,9 @@ pos: 5
 
 # Auth
 
-## user
+## user `→ User or null`
 
-## promise
+## promise `→ Promise<User | null>`
 
 ## signOut()
 
