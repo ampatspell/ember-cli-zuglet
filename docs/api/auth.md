@@ -9,6 +9,8 @@ pos: 5
 let auth = store.auth;
 ```
 
+Auth is activated on first access from store.
+
 ## user `→ User or null`
 
 Currently signed in user.

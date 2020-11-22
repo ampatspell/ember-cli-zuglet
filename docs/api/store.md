@@ -15,7 +15,7 @@ export default class Store extends BaseStore {
 }
 ```
 
-Store has `@root` decorator.
+Store has `@root` decorator applied which activates Store instances on first access.
 
 ## options `→ Object`
 
