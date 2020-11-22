@@ -11,7 +11,7 @@ A simple wrapper around Ember's `getOwner(this).getFactory(…)` which works onl
 let models = store.models;
 ```
 
-## create(name, props) `→ instance`
+## create(name, ...args) `→ instance`
 
 Creates a new model instance for given factory name and properties.
 
