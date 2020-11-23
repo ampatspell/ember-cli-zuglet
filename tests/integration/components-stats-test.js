@@ -31,8 +31,9 @@ module('components / stats', function(hooks) {
     }
     {
       let section = sectionInfo(sections[1]);
-      assert.strictEqual(section.label, 'Activated (0)');
-      assert.strictEqual(section.models.length, 0);
+      assert.strictEqual(section.label, 'Activated (1)');
+      assert.strictEqual(section.models.length, 1);
+      assert.ok(section.models[0].startsWith('<dummy@zuglet:store/'));
     }
   });
 
