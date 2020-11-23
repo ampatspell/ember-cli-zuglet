@@ -24,22 +24,11 @@ export default class QueryArray extends Query {
     this.content = content;
   }
 
-  // TODO: this seems to be Firestore bug
-  _resolveMissingIndex(snapshot, query) {
-    let path = snapshot.ref.path;
-    let docs = query.docs;
-    let doc = docs.find(doc => doc.ref.path === path);
-    assert(`document '${path}' was not found in query.docs`, doc);
-    return docs.indexOf(doc);
-  }
-
-  _onSnapshotChange(content, change, query) {
+  _onSnapshotChange(content, change) {
     let { type, oldIndex, newIndex, doc: snapshot } = change;
     if(type === 'added') {
       let doc = this._createDocumentForSnapshot(snapshot);
-      if(newIndex === -1) {
-        newIndex = this._resolveMissingIndex(snapshot, query);
-      }
+      assert(`invalid snapshot change newIndex ${newIndex} for added`, newIndex !== -1);
       content.insertAt(newIndex, doc);
     } else if(type === 'modified') {
       let existing = content[oldIndex];
@@ -63,7 +52,7 @@ export default class QueryArray extends Query {
 
   _onSnapshotChanges(content, snapshot) {
     snapshot.docChanges({ includeMetadataChanges: false }).map(change => {
-      this._onSnapshotChange(content, change, snapshot);
+      this._onSnapshotChange(content, change);
     });
   }
 
