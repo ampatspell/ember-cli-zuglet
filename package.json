@@ -5,9 +5,12 @@
   "keywords": [
     "ember-addon"
   ],
-  "repository": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ampatspell/zuglet-next.git"
+  },
   "license": "MIT",
-  "author": "",
+  "author": "Arnis Vuskans <ampatspell@gmail.com> (http://www.amateurinmotion.com/)",
   "directories": {
     "doc": "doc",
     "test": "tests"
