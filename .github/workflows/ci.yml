@@ -3,10 +3,12 @@ name: CI
 on:
   push:
     branches: [ master ]
+    paths-ignore:
+      - 'docs/**'
   pull_request:
     branches: [ master ]
-  workflow_dispatch:
-
+    paths-ignore:
+      - 'docs/**'
 jobs:
   build:
     runs-on: ubuntu-latest
