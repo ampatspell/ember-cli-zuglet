@@ -68,6 +68,7 @@
     "eslint": "^7.14.0",
     "eslint-plugin-ember": "^9.6.0",
     "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
     "fastboot": "^3.1.2",
     "loader.js": "^4.7.0",
     "macro-decorators": "^0.1.2",
