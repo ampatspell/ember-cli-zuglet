@@ -12,15 +12,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GPR_TOKEN }}
       - uses: actions/setup-node@v1
         with:
           node-version: '14.x'
-      - name: Private repos
-        run: |
-          git config --global --unset-all url."https://${{ secrets.PRIVATE_REPO_TOKEN }}:x-oauth-basic@github.com/".insteadOf || true
-          git config --global --unset-all url."https://${{ secrets.PRIVATE_REPO_TOKEN }}:x-oauth-basic@github.com".insteadOf || true
-          git config --global --add url."https://${{ secrets.PRIVATE_REPO_TOKEN }}:x-oauth-basic@github.com/".insteadOf "https://github.com/"
-          git config --global --add url."https://${{ secrets.PRIVATE_REPO_TOKEN }}:x-oauth-basic@github.com/".insteadOf "git@github.com:"
-          git config --global --add url."https://${{ secrets.PRIVATE_REPO_TOKEN }}:x-oauth-basic@github.com".insteadOf "ssh://git@github.com"
       - run: npm install
       - run: npm run test
