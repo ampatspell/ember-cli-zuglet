@@ -64,7 +64,7 @@ export default class RouteStorageComponent extends Component {
       let metadata = await this.store.storage.ref('hello').metadata();
       this.metadata = metadata;
     } catch(err) {
-      this.metadata = metadata;
+      this.metadata = err;
     }
   }
 

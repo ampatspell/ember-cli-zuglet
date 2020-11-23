@@ -16,5 +16,4 @@ jobs:
         with:
           node-version: '14.x'
       - run: npm install
-      - run: npm run test:ember
-      - run: npm run test:ember-compatibility
+      - run: npm run test
