@@ -1,10 +1,8 @@
-Let's start with a small example. Suppose you want to build an app which let's you have a list of messages. How imaginative. In this wonderful app each message is a document in messages collection and in app you get to have Messages and Message model for your logic.
+Let's look at a not that small example.
 
-Also you want to have remotely modified messages beamed to your browser.
+Suppose you want to build an app which lets you have a list of messages. In Firestore each message is a document in `messages` collection and in app you want to have `Messages` and `Message` models for logic. Also you want to have remotely modified messages streamed to your browser by using Firestore's `onSnapshot` observer but only when people access `/messages` routes.
 
-Messages needs to be loaded in a particular route, you want to start onserving Firestore's onSnapshot changes when route is activated and stop when person using your app navigates somewhere else in the app.
-
-So far so good. Let's start with a route
+So, let's start with a route that creates `messages` model which will be responsible for subscription to `onSnapshot` observer:
 
 ``` javascript
 // app/routes/messages.js
@@ -32,6 +30,7 @@ export default class MessagesRoute extends Route {
 Then let's add `Messages` model:
 
 ``` javascript
+// app/models/messages.js
 import EmberObject from '@ember/object';
 import { inject as service } from '@ember/service';
 import { load } from 'zuglet/utils';
@@ -74,7 +73,12 @@ export default class Messages extends EmberObject {
 }
 ```
 
+Each model in `messages.models` array is a `Message` model that encapsulates Firestore document and provides app interface to that.
+
+Let's create that too:
+
 ``` javascript
+// app/models/message.js
 import EmberObject from '@ember/object';
 import { read, alias } from 'macro-decorators';
 
@@ -103,6 +107,10 @@ export default class Message extends EmberObject {
 
 }
 ```
+
+And we're done with models.
+
+Render `messages.models` array, do `mesage` property edits, `message.save()`. Everything works as you would expect.
 
 ``` hbs
 {{#each @messages.models as |message|}}

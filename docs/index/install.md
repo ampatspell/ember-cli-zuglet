@@ -1,4 +1,4 @@
-> Not yet published on npm
+> ember-cli-zuglet is not yet published on npm
 
 ``` diff
 "devDependencies": {
