@@ -31,4 +31,8 @@
 /bower.json.ember-try
 /package.json.ember-try
 
+/coverage/
+/docs/
 /firebase/
+/.github/
+/server/
