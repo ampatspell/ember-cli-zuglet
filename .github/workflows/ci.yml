@@ -26,6 +26,6 @@ jobs:
         with:
           node-version: '14.x'
       - name: NPM Install
-        run: npm ci
+        run: npm install --no-package-lock
       - name: Test
         run: npm run test
