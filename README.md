@@ -9,12 +9,14 @@ ember-cli-zuglet@^2.0.0 is a complete rewrite for Ember.js Octane.
 
 Open source apps built using ember-cli-zuglet:
 
-* [kaste](https://github.com/ampatspell/kaste) (v2.x)
-* [dzeja](https://github.com/ampatspell/dzeja) (v2.x)f
-* [tiny](http://github.com/ampatspell/tiny) (v1.x)
-* [bain ×](https://getbain.com/) (v1.x)
-* [index65](https://github.com/ampatspell/index65) (v1.x)
-* [ohne-zeit](https://github.com/ampatspell/ohne-zeit) (v1.x)
+* [kaste](https://github.com/ampatspell/kaste)
+* [dzeja](https://github.com/ampatspell/dzeja)
+
+* Pre-octane Ember.js & ember-cli-zuglet v1.x
+  * [tiny](http://github.com/ampatspell/tiny)
+  * [bain ×](https://getbain.com/)
+  * [index65](https://github.com/ampatspell/index65)
+  * [ohne-zeit](https://github.com/ampatspell/ohne-zeit)
 
 ## Install
 
