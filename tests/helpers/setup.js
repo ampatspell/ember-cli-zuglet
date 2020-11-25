@@ -18,7 +18,7 @@ export const setupRenderingStoreTest = (hooks, setup=true) => {
 }
 
 const credentials = {
-  ampatspell: { email: 'ampatspell@gmail.com', password: 'heythere' },                   // should exist
+  ampatspell: { email: 'ampatspell@gmail.com', password: 'hello-world' },                // should exist
   zeeba:      { email: 'zeeba@gmail.com', password: 'R3allyS3cUr3Pas$wooooorrrd.kinda' } // should not exist
 };
 

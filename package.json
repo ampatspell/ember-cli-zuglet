@@ -38,9 +38,10 @@
     "bump": "npm version minor; npm run tags",
     "patch": "npm version patch; npm run tags",
     "client:build": "WITH_FASTBOOT=true npm run build -- --output-path ./firebase/public",
-    "deploy:hosting": "npm run client:build && (cd firebase && firebase deploy --only hosting)",
-    "deploy:all": "npm run client:build && (cd firebase && firebase deploy)",
-    "deploy:travis": "(cd firebase && firebase deploy --except hosting --project ember-cli-zuglet-travis)"
+    "deploy:hosting": "npm run client:build && (cd firebase && firebase deploy --only hosting --project ember-cli-zuglet)",
+    "deploy:all": "npm run client:build && (cd firebase && firebase deploy --project ember-cli-zuglet)",
+    "deploy:rules": "(cd firebase && firebase deploy --only firestore,storage --project ember-cli-zuglet && firebase deploy --only firestore,storage --project ember-cli-zuglet-travis)",
+    "deploy:functions": "(cd firebase && firebase deploy --only functions --project ember-cli-zuglet && firebase deploy --only functions --project ember-cli-zuglet-travis)"
   },
   "dependencies": {
     "ember-auto-import": "^1.7.0",

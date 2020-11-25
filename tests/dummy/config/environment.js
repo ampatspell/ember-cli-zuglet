@@ -17,13 +17,13 @@ module.exports = function(environment) {
     },
     dummy: {
       firebase: {
-        apiKey: "AIzaSyDwCGLTmvKCiCxIO9msehKyULJ_rilnEvw",
-        authDomain: "quatsch-38adf.firebaseapp.com",
-        databaseURL: "https://quatsch-38adf.firebaseio.com",
-        projectId: "quatsch-38adf",
-        storageBucket: "quatsch-38adf.appspot.com",
-        messagingSenderId: "316370319143",
-        appId: "1:316370319143:web:1ea76935876b7619"
+        apiKey: "AIzaSyDlYqLJJYWK7cdYBAtkZR5efA8HoYvcd6I",
+        authDomain: "ember-cli-zuglet.firebaseapp.com",
+        databaseURL: "https://ember-cli-zuglet.firebaseio.com",
+        projectId: "ember-cli-zuglet",
+        storageBucket: "ember-cli-zuglet.appspot.com",
+        messagingSenderId: "337740781111",
+        appId: "1:337740781111:web:d599271545ea7f2ff751b2"
       },
       name: 'ember-cli-zuglet',
       version: require('../../../package.json').version
@@ -33,28 +33,34 @@ module.exports = function(environment) {
     }
   };
 
+  if(process.env.CI) {
+    ENV.dummy.firebase = {
+      apiKey: "AIzaSyDoUTp48KAjzcRLRhf1AofFdrsHI6KujHw",
+      authDomain: "ember-cli-zuglet-travis.firebaseapp.com",
+      databaseURL: "https://ember-cli-zuglet-travis.firebaseio.com",
+      projectId: "ember-cli-zuglet-travis",
+      storageBucket: "ember-cli-zuglet-travis.appspot.com",
+      messagingSenderId: "1053333094712",
+      appId: "1:1053333094712:web:8e2aa84a201069524581cd"
+    };
+  }
+
+  console.log('Project:', ENV.dummy.firebase.projectId);
+
   if (environment === 'development') {
-    // ENV.APP.LOG_RESOLVER = true;
-    // ENV.APP.LOG_ACTIVE_GENERATION = true;
-    // ENV.APP.LOG_TRANSITIONS = true;
-    // ENV.APP.LOG_TRANSITIONS_INTERNAL = true;
-    // ENV.APP.LOG_VIEW_LOOKUPS = true;
+    //
   }
 
   if (environment === 'test') {
-    // Testem prefers this...
     ENV.locationType = 'none';
-
-    // keep test console output quieter
     ENV.APP.LOG_ACTIVE_GENERATION = false;
     ENV.APP.LOG_VIEW_LOOKUPS = false;
-
     ENV.APP.rootElement = '#ember-testing';
     ENV.APP.autoboot = false;
   }
 
   if (environment === 'production') {
-    // here you can enable a production-specific feature
+    //
   }
 
   return ENV;

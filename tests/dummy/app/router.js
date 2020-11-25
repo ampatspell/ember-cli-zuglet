@@ -1,9 +1,38 @@
 import EmberRouterScroll from 'ember-router-scroll';
 import config from 'dummy/config/environment';
+import { isFastBoot } from 'zuglet/-private/util/fastboot';
+
+let {
+  environment
+} = config;
+
+let isGoogleAnalyticsEnabled = environment === 'production';
 
 export default class Router extends EmberRouterScroll {
   location = config.locationType;
   rootURL = config.rootURL;
+
+  init() {
+    super.init(...arguments);
+    this.on('routeDidChange', () => this.routeDidChange());
+  }
+
+  sendPageview() {
+    if(!isGoogleAnalyticsEnabled) {
+      return;
+    }
+    if(typeof gtag_pageview !== 'undefined') {
+      let url = this.currentURL;
+      gtag_pageview(url); /* eslint-disable-line no-undef */
+    }
+  }
+
+  routeDidChange() {
+    if(!isFastBoot(this)) {
+      this.sendPageview();
+    }
+  }
+
 }
 
 Router.map(function() {
