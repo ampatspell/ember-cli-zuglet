@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = {
-  name: require('./package').name,
+  name: 'zuglet',
   isDevelopingAddon() {
     return true;
   },

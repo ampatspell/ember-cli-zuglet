@@ -1,13 +1,22 @@
 {
-  "name": "zuglet",
+  "name": "ember-cli-zuglet",
   "version": "2.3.24",
-  "description": "zuglet next",
+  "description": "Google Cloud Firestore documents for Ember.js",
   "keywords": [
-    "ember-addon"
+    "ember-addon",
+    "ember",
+    "glimmer",
+    "ember-octane",
+    "persistence",
+    "storage",
+    "documents",
+    "firebase",
+    "firestore",
+    "auth"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/ampatspell/zuglet-next.git"
+    "url": "https://github.com/ampatspell/ember-cli-zuglet.git"
   },
   "license": "MIT",
   "author": "Arnis Vuskans <ampatspell@gmail.com> (http://www.amateurinmotion.com/)",
@@ -30,7 +39,8 @@
     "patch": "npm version patch; npm run tags",
     "client:build": "WITH_FASTBOOT=true npm run build -- --output-path ./firebase/public",
     "deploy:hosting": "npm run client:build && (cd firebase && firebase deploy --only hosting)",
-    "deploy:all": "npm run client:build && (cd firebase && firebase deploy)"
+    "deploy:all": "npm run client:build && (cd firebase && firebase deploy)",
+    "deploy:travis": "(cd firebase && firebase deploy --except hosting --project ember-cli-zuglet-travis)"
   },
   "dependencies": {
     "ember-auto-import": "^1.7.0",
@@ -82,11 +92,6 @@
     "sass": "^1.29.0",
     "tracked-toolbox": "^1.2.1"
   },
-  "fastbootDependencies": [
-    "node-fetch",
-    "xmlhttprequest",
-    "buffer"
-  ],
   "engines": {
     "node": "10.* || >= 12"
   },
@@ -94,6 +99,12 @@
     "edition": "octane"
   },
   "ember-addon": {
-    "configPath": "tests/dummy/config"
+    "configPath": "tests/dummy/config",
+    "demoURL": "https://www.ember-cli-zuglet.com/",
+    "fastbootDependencies": [
+      "node-fetch",
+      "xmlhttprequest",
+      "buffer"
+    ]
   }
 }

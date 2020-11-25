@@ -1,4 +1,6 @@
-# zuglet@next
+# ember-cli-zuglet@2.x
+
+> `ember-cli-zuglet@^2.0.0` is not yet published to npm
 
 ``` bash
 $ ember new foof --skip-npm
@@ -7,7 +9,7 @@ $ ember new foof --skip-npm
 ``` diff
 "devDependencies": {
 -    "ember-data": "~3.22.0",
-+    "zuglet": "git+ssh://git@github.com:ampatspell/zuglet-next.git",
++    "zuglet": "git+ssh://git@github.com:ampatspell/ember-cli-zuglet.git",
 }
 ```
 
