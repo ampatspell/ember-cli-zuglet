@@ -9,7 +9,7 @@ export default class ApplicationRoute extends Route {
   @service
   store
 
-  async model() {
+  model() {
   }
 
   async load() {
