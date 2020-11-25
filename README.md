@@ -11,7 +11,6 @@ Open source apps built using ember-cli-zuglet:
 
 * [kaste](https://github.com/ampatspell/kaste)
 * [dzeja](https://github.com/ampatspell/dzeja)
-
 * Pre-octane Ember.js & ember-cli-zuglet v1.x
   * [tiny](http://github.com/ampatspell/tiny)
   * [bain ×](https://getbain.com/)
