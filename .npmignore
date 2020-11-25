@@ -36,3 +36,6 @@
 /firebase/
 /.github/
 /server/
+/jsconfig.json
+
+.DS_Store
