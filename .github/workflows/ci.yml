@@ -10,12 +10,22 @@ on:
     paths-ignore:
       - 'docs/**'
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Turnstyle
+        uses: softprops/turnstyle@v1
+        with:
+          same-branch-only: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Setup Node
+        uses: actions/setup-node@v1
         with:
           node-version: '14.x'
-      - run: npm ci
-      - run: npm run test
+      - name: NPM Install
+        run: npm ci
+      - name: Test
+        run: npm run test
