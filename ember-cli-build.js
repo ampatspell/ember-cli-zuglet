@@ -3,14 +3,13 @@
 const EmberAddon = require('ember-cli/lib/broccoli/ember-addon');
 const crawl = require('prember-crawler');
 
+const isFastbootEnabled = process.env.WITH_FASTBOOT === 'true';
+
 module.exports = function(defaults) {
   let app = new EmberAddon(defaults, {
-    sassOptions: {
-      implementation: require('sass')
-    },
     'ember-cli-remark-static': {
       paths: {
-        'docs': 'docs'
+        docs: 'docs'
       }
     },
     prember: {
@@ -21,10 +20,9 @@ module.exports = function(defaults) {
         });
       }
     },
-    // addons: {
-    //   blacklist: [ 'ember-cli-fastboot', 'prember' ]
-    // }
+    addons: {
+      blacklist: isFastbootEnabled ? [] : [ 'ember-cli-fastboot', 'prember' ]
+    }
   });
-
   return app.toTree();
 };

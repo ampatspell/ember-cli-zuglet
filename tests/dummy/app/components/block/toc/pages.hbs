@@ -1,0 +1,7 @@
+<div class="pages">
+  {{#each this.pages as |nested|}}
+    {{#unless nested.hidden}}
+      <Block::Toc::Page @page={{nested}}/>
+    {{/unless}}
+  {{/each}}
+</div>

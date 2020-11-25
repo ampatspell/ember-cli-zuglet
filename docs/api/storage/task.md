@@ -3,54 +3,101 @@ title: Task
 pos: 1
 ---
 
-# Storage Task
-
-Storage task represents a single file upload.
+# Task
 
 ``` javascript
-let task = storage.ref('hello').put({
-  type: 'data',
+let ref = this.storage.ref('hello');
+let task = ref.put({
   data: file,
   metadata: {
     contentType: file.type
   }
 });
-await task;
-task.isCompleted // → true
 ```
 
-Task is promise-like but also exposes `promise` property. There is no difference which is awaited for.
+## state
 
-Promise methods:
+* isRunning
+* isCompleted
+* isError
+* error
 
-* `then(resolve, reject)`
-* `catch(err)`
-* `finally(fn)`
+## progress
 
-## type `→ String`
+* progress
+* total
+* transferred
 
-Returns upload file type: `string` or `data`.
+Task reports progress only when it is activated:
 
-## ref `→ StorageReference`
+``` javascript
+class Upload extends EmberObject {
 
-Returns a storage reference associated with this task.
+  @service
+  store
 
-## State properties
+  @activate()
+  task
 
-* `isRunning` → `Boolean`
-* `isCompleted` → `Boollean`
-* `isError` → `Boolean`
-* `error` → `Error`
-* `bytesTransferred` → `Number`
-* `totalBytes` → `Number`
-* `percent` → `Number`
+  async upload(file) {
+    let ref = this.store.storage.ref('hello');
+    let task = ref.put({
+      data: file,
+      metadata: {
+        contentType: file.type
+      }
+    });
+    this.task = task;
+    await task.promise;
+  }
 
-## promise `→ Promise`
+  serialized() {
+    let { task: { total, transferred, progress } } = this;
+    return {
+      total,       // → 1038
+      transferred, // → 519
+      progress     // → 50
+    };
+  }
 
-Returns a promise which resolves when file is finished uploading.
+}
+```
 
-## serialized `→ Object`
+## metadata
 
-Returns json representation of most important storage task properties.
+Initial metadata is whatever proided for `ref.put({ metadata })`. When task finishs (`task.isCompleted === true`), metadata is refreshed.
 
-Useful for debugging.
+``` javascript
+{
+  contentType: "text/plain"
+}
+```
+
+``` javascript
+{
+  bucket: "<project-id>.appspot.com"
+  cacheControl: undefined
+  contentDisposition: "inline; filename*=utf-8''hello"
+  contentEncoding: "identity"
+  contentLanguage: undefined
+  contentType: "text/plain"
+  customMetadata: undefined
+  fullPath: "hello"
+  generation: "1605998945217023"
+  md5Hash: "8nqpBnIWx8XqWZtAgIQHOA=="
+  metageneration: "1"
+  name: "hello"
+  size: 8
+  timeCreated: Date
+  type: "file"
+  updated: Date
+}
+```
+
+## promise `→ Promise<Task>`
+
+Resolves when upload is finished.
+
+``` javascript
+await task.promise
+```

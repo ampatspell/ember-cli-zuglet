@@ -1,20 +1,33 @@
 ---
-pos: 4
+title: Functions
+pos: 6
 ---
 
 # Functions
 
-Represents a Firebase Cloud functions region.
-
 ``` javascript
-let functions = store.function();
-await functions.callable('hello-world').call({ });
+let functions = store.functions;
+let response = await functions.call('hello', { ok: true });
+response // → { data: { … } }
 ```
 
-## region `→ String | null`
+## async call(name, props) `→ object`
 
-Returns a name of the region
+Calls Firebase callable function in default region.
 
-## callable(name) `→ FunctionsCallable`
+Alias for `functions.region().call(...args)`
 
-Creates a callable instance for the name.
+## region()
+
+Returns default region.
+
+See [Store](api/store) `options.functions` on how to setup custom default region.
+
+## region(identifier)
+
+Returns custom region.
+
+``` javascript
+let region = functions.region('europe-west1');
+await region.call('hello', { ok: true });
+```

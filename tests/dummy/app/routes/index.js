@@ -1,21 +1,20 @@
 import Route from '@ember/routing/route';
+import { inject as service } from '@ember/service';
 import { hash } from 'rsvp';
 
-const names = [
-  'about',
-  'install',
-  'why',
-  'use'
-];
+export default class IndexRoute extends Route {
 
-export default Route.extend({
+  @service
+  docs
 
-  model() {
-    let docs = this.get('docs');
-    return hash(names.reduce((hash, key) => {
-      hash[key] = docs.load(`index/${key}`);
+  async model() {
+    let pages = await hash(this.docs.page('index').pages.reduce((hash, page) => {
+      hash[page.name] = page.load();
       return hash;
     }, {}));
+    return {
+      pages
+    };
   }
 
-});
+}

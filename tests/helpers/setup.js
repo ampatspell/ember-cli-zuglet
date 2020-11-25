@@ -1,27 +1,26 @@
 import { module, test, only, skip } from 'qunit';
 import { setupTest, setupRenderingTest } from 'ember-qunit';
-import setupStores from './setup-stores';
-import setupStore from './setup-store';
-import { recreateCollection } from './firebase';
+import { setupStore } from './setup-store';
+import { setupHelpers } from './setup-helpers';
 
-const setupStoreTest = hooks => {
+export const setupStoreTest = hooks => {
   setupTest(hooks);
-  setupStores(hooks);
   setupStore(hooks);
-};
-
-const setupStoreRenderingTest = hooks => {
-  setupRenderingTest(hooks);
-  setupStores(hooks);
-  setupStore(hooks);
-};
-
-const setupDucks = hooks => {
-  hooks.beforeEach(async function() {
-    this.coll = this.firestore.collection('ducks');
-    this.recreate = () => recreateCollection(this.coll);
-  });
+  setupHelpers(hooks);
 }
+
+export const setupRenderingStoreTest = (hooks, setup=true) => {
+  setupRenderingTest(hooks);
+  if(setup) {
+    setupStore(hooks);
+    setupHelpers(hooks);
+  }
+}
+
+const credentials = {
+  ampatspell: { email: 'ampatspell@gmail.com', password: 'heythere' },                   // should exist
+  zeeba:      { email: 'zeeba@gmail.com', password: 'R3allyS3cUr3Pas$wooooorrrd.kinda' } // should not exist
+};
 
 test.only = only;
 test.skip = skip;
@@ -29,10 +28,5 @@ test.skip = skip;
 export {
   module,
   test,
-  setupTest,
-  setupStores,
-  setupStore,
-  setupStoreTest,
-  setupStoreRenderingTest,
-  setupDucks
+  credentials
 }

@@ -1,21 +1,30 @@
 import Page from 'ember-cli-remark-static/static/page';
-import { computed } from '@ember/object';
-import { readOnly } from '@ember/object/computed';
 
-export default Page.extend({
+export default class DocPage extends Page {
 
-  title: computed('headings', 'frontmatter', function() {
-    let { name, headings, frontmatter } = this.getProperties('name', 'headings', 'frontmatter');
-    return (frontmatter && frontmatter.title) || (headings && headings[0] && headings[0].value) || name;
-  }).readOnly(),
+  get title() {
+    let { name, headings, frontmatter } = this;
+    return frontmatter?.title || headings?.[0]?.value || name;
+  }
 
-  pos: readOnly('frontmatter.pos'),
-  hidden: readOnly('frontmatter.hidden'),
+  get pos() {
+    return this.frontmatter?.pos;
+  }
+
+  get hidden() {
+    return this.frontmatter?.hidden;
+  }
 
   preprocessNode(parent, node) {
     if(node.tagName === 'a') {
-      node.properties.target = 'top';
+      let { properties: { href } } = node;
+      if(href.startsWith('/')) {
+        node.componentName = 'docs/route';
+        node.properties.route = node.properties.href.substr(1);
+      } else {
+        node.properties.target = 'top';
+      }
     }
   }
 
-});
+}

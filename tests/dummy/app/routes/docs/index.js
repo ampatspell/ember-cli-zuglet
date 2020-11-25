@@ -1,9 +1,13 @@
 import Route from '@ember/routing/route';
+import { inject as service } from '@ember/service';
 
-export default Route.extend({
+export default class DocsIndexRoute extends Route {
+
+  @service
+  docs
 
   model() {
-    return this.get('docs').load('docs');
+    return this.docs.load('docs');
   }
 
-});
+}

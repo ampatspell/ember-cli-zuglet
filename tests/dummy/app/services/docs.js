@@ -1,8 +1,8 @@
 import Service from 'ember-cli-remark-static/static/service';
 
-export default Service.extend({
+export default class DocsService extends Service {
 
-  identifier: 'docs',
+  identifier = 'docs'
 
   pageFactoryName(id) {
     if(!id) {
@@ -17,4 +17,4 @@ export default Service.extend({
     return 'model:docs/page';
   }
 
-});
+}

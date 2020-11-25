@@ -1,81 +1,54 @@
 ---
+title: Stores
 pos: 7
 ---
 
 # Stores
 
-``` javascript
-let stores = getOwner(this).lookup('zuglet:stores');
-```
+Stores manages any [Store](api/store) instances used in the app.
 
-## ready `→ Promise`
-
-A `Promise` which is resolved when all currently instantiated `Store` instances are ready to be used.
+Singleton, accessible using `getStores()` helper
 
 ``` javascript
-await store.ready;
+import { getStores } from 'zuglet/utils';
+let stores = getStores(this);
 ```
 
-``` javascript
-// app/routes/application.js
-import Route from '@ember/routing/route';
+## stats `→ Stats`
 
-export default Route.extend({
-  beforeModel() {
-    return this.store.ready;
-  }
-});
-```
+Returns singleton [Stats](api/stores/stats) instance.
+
+## models `→ Models`
+
+Returns singleton [Models](api/models) instance.
 
 ## createStore(identifier, factory) `→ Store`
 
-Creates and registers a new `Store` instance.
-
-* `identifier`: store identifier
-* `factory`: `Store` subclass
+Creates a new store.
 
 ``` javascript
-// app/instance-initializers/zuglet-store.js
-import Store from 'ember-cli-zuglet/store';
+import BaseStore from 'zuglet/store';
 
-const options = {
-  firebase: {
-    // apiKey: '',
-    // authDomain: '',
-    // databaseURL: '',
-    // projectId: '',
-    // storageBucket: '',
-  },
-  firestore: {
-    persistenceEnabled: true
-  }
-};
-
-const MainStore = Store.extend({
-
-  options,
-
-  restoreUser(user) {
-  },
-
-  restore() {
-  }
-
-});
-
-export default {
-  name: 'store',
-  initialize(app) {
-    let store = app.lookup('zuglet:stores').createStore('main', MainStore);
-    app.register('service:store', store, { instantiate: false });
-  }
+class Store extends BaseStore {
 }
+
+let store = getStores(this).createStore('store', Store);
 ```
 
-> TODO: See Register & Initialize helpers for easier store setup.
+## store(identifier, { optional })
 
-## settle() `→ Promise`
+Returns existing store.
 
-Returns a `Promise` which resolves when all currently running operations for all currently registered stores are finished.
+* `optional` → boolean, defaults to false
 
-> TODO: See `store.settle`
+``` javascript
+let missing = getStores(this).store('missing', { optional: true });
+missing // → undefined
+
+let existing = getStores(this).store('existing');
+existing // → Store
+```
+
+## async settle() → undefined
+
+Alias for `stores.stats.settle()`

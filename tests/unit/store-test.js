@@ -1,53 +1,75 @@
-import { module, test, setupStoreTest, setupDucks } from '../helpers/setup';
-import { run } from '@ember/runloop';
+import { module, test, setupStoreTest } from '../helpers/setup';
+import { isServerTimestamp } from 'zuglet/-private/util/object-to-json';
 
 module('store', function(hooks) {
   setupStoreTest(hooks);
-  setupDucks(hooks);
 
-  test('settle', async function(assert) {
-    let ops = this.store.get('_internal.queue.operations');
-
-    assert.equal(ops.get('length'), 0);
-
-    let foobar = this.store.doc('ducks/foobar').new({ name: 'foobar' });
-    foobar.save();
-
-    assert.equal(ops.get('length'), 1);
-
-    let query = this.store.collection('ducks').query({ type: 'array' });
-    query.load();
-
-    assert.equal(ops.get('length'), 2);
-
-    this.store.doc('ducks/whatever').load({ optional: true });
-    this.store.collection('ducks').load();
-
-    assert.equal(ops.get('length'), 4);
-
-    await run(() => this.store.settle());
-
-    assert.equal(ops.get('length'), 0);
-
-    assert.equal(foobar.get('isNew'), false);
-    assert.equal(query.get('isLoaded'), true);
+  hooks.beforeEach(function(assert) {
+    this.projectId = this.store.options.firebase.projectId;
+    assert.ok(this.projectId);
   });
 
-  test('observed models are destroyed', async function(assert) {
-    let foobar = this.store.doc('ducks/foobar').new({ name: 'foobar' });
-    await foobar.save();
-    foobar.observe();
+  test('serialized', function(assert) {
+    assert.deepEqual(this.store.serialized, {
+      identifier: 'test',
+      projectId: this.projectId
+    });
+  });
 
-    let query = this.store.collection('ducks').query({ type: 'array' });
-    await query.load();
-    query.observe();
+  test('toJSON', function(assert) {
+    let json = this.store.toJSON();
+    assert.deepEqual(json, {
+      instance: json.instance,
+      serialized: {
+        identifier: 'test',
+        projectId: this.projectId
+      }
+    });
+    assert.ok(json.instance.startsWith('TestStore::ember'));
+  });
 
-    assert.equal(this.store.get('observed.length'), 2);
+  test('toStringExtension', function(assert) {
+    assert.strictEqual(this.store.toStringExtension(), this.projectId);
+  });
 
-    run(() => this.store.destroy());
+  test('projectId', function(assert) {
+    assert.strictEqual(this.store.projectId, this.projectId);
+  });
 
-    assert.ok(foobar.isDestroyed);
-    assert.ok(query.isDestroyed);
+  test('dashboardURL', function(assert) {
+    assert.strictEqual(
+      this.store.dashboardURL,
+      `https://console.firebase.google.com/u/0/project/${this.projectId}/overview`
+    );
+  });
+
+  test('server timestamp', function(assert) {
+    let timestamp = this.store.serverTimestamp;
+    assert.ok(isServerTimestamp(timestamp));
+  });
+
+  test('models exist', function(assert) {
+    let instance = this.store.models;
+    assert.ok(instance);
+    assert.ok(instance === this.store.models);
+  });
+
+  test('auth exist', function(assert) {
+    let instance = this.store.auth;
+    assert.ok(instance);
+    assert.ok(instance === this.store.auth);
+  });
+
+  test('storage exist', function(assert) {
+    let instance = this.store.storage;
+    assert.ok(instance);
+    assert.ok(instance === this.store.storage);
+  });
+
+  test('functions exist', function(assert) {
+    let instance = this.store.functions;
+    assert.ok(instance);
+    assert.ok(instance === this.store.functions);
   });
 
 });

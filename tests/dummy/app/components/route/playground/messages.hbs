@@ -1,0 +1,18 @@
+<div class="route-playground-messages">
+
+  <div class="sidebar">
+    <div class="group">
+      {{#each @model.models as |message|}}
+        <div class="row"><LinkTo @route="playground.messages.message" @model={{message.id}}>{{or message.name message.id}}</LinkTo></div>
+      {{/each}}
+    </div>
+    <div class="group">
+      <div class="row"><LinkTo @route="playground.messages.message" @model="missing">missing</LinkTo></div>
+      <div class="row"><LinkTo @route="playground.messages">messages.index</LinkTo></div>
+    </div>
+  </div>
+  <div class="content">
+    {{yield}}
+  </div>
+
+</div>

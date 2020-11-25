@@ -1,13 +1,16 @@
 import Route from '@ember/routing/route';
+import { inject as service } from '@ember/service';
 
-export default Route.extend({
+export default class DocsPageRoute extends Route {
 
-  model(params) {
-    let id = params.page_id;
+  @service
+  docs
+
+  model({ page_id: id }) {
     if(id === 'index') {
       return this.transitionTo('index');
     }
-    return this.get('docs').load(id);
+    return this.docs.load(id);
   }
 
-});
+}

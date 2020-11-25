@@ -1,7 +1,12 @@
 {
   "firestore": {
-    "rules": "rules/firestore.rules",
-    "indexes": "rules/firestore.indexes.json"
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "functions": {
+    "predeploy": [
+      "npm --prefix \"$RESOURCE_DIR\" run lint"
+    ]
   },
   "hosting": {
     "public": "public",
@@ -13,16 +18,29 @@
     "rewrites": [
       {
         "source": "**",
-        "destination": "/_empty.html"
+        "destination": "/index.html"
       }
     ]
   },
   "storage": {
-    "rules": "rules/storage.rules"
+    "rules": "storage.rules"
   },
-  "functions": {
-    "predeploy": [
-      "npm --prefix \"$RESOURCE_DIR\" run lint"
-    ]
+  "emulators": {
+    "auth": {
+      "port": 9099
+    },
+    "functions": {
+      "port": 5001
+    },
+    "firestore": {
+      "port": 8080
+    },
+    "hosting": {
+      "port": 5000
+    },
+    "ui": {
+      "enabled": true,
+      "port": 3001
+    }
   }
 }

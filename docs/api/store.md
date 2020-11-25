@@ -1,177 +1,186 @@
 ---
+title: Store
 pos: 1
 ---
 
 # Store
 
 ``` javascript
-import Store from 'ember-cli-zuglet/store';
+import BaseStore from 'zuglet/store';
+
+export default class Store extends BaseStore {
+
+  options
+
+}
 ```
 
-> TODO: see `Stores`
+Store has `@root` decorator applied which activates Store instances on first access.
+
+## options `→ Object`
+
+Override to provide Firebase SDK and `ember-cli-zuglet` configuration:
+
+``` javascript
+options = {
+
+  // required
+  firebase: {
+    apiKey: '…',
+    authDomain: '…',
+    databaseURL: '…',
+    projectId: '…',
+    storageBucket: '…',
+    messagingSenderId: '…',
+    appId: '…'
+  },
+
+  firestore: {
+    persistenceEnabled: true // defaults to `false`
+  },
+
+  auth: {
+    user: 'user' // defaults to null
+  },
+
+  functions: {
+    region: null // defaults to null
+  },
+
+  // defaults to no emulators configured
+  emulators: {
+    host: 'localhost',
+    auth: 9099,
+    firestore: 8080,
+    functions: 5001
+  }
+
+}
+```
+
+## normalizedOptions `→ Object`
+
+Normalized options with all defaults expanded
 
 ## identifier `→ String`
 
-Unique `Store` identifier which can be used to distinguish multiple stores.
+Unique `Store` identifier which can be used to distinguish multiple stores in runtime.
 
-It is provided on `Store` creation and cannot be changed.
+## models `→ Models`
 
-## ready `→ Promise<Store>`
-
-A `Promise` which resolves when `Store` is ready to be used, meaning:
-
-* Firestore is ready to be used (with or without local persistence)
-* `restoreUser()` has resolved
-* `Auth` user is restored
-* `restore()` has resolved
+Returns singleton [Models](api/models) instance.
 
 ## auth `→ Auth`
 
-Returns a store `Auth` singleton instance.
-
-It is responsible for user management. Sign-up, sign-in and getting current user.
+Returns singleton [Auth](api/auth) instance.
 
 ## storage `→ Storage`
 
-Returns a store `Storage` singleton instance.
+Returns singleton [Storage](api/storage) instance.
 
-It lets you upload files, lookup and modify file metadata, get file public URLs.
+## functions `→ Functions`
 
-## functions(region) `→ Functions`
-
-Returns a store `Functions` singleton instance for a region.
-
-* `region` → `string` or `null` (defaults to `us-central1`)
-
-## observed `→ Array<Document|Query>`
-
-Returns an observable `EmberArray` with `Document` and `Query` instances currently being observed (having `ref.onSnapshot` listeners).
-
-Useful for debugging purposes to make sure app is not leaking observers.
-
-> TODO: see `observed()`, `Observer`
-
-## collection(name) `→ CollectionReference`
-
-Creates a `CollectionReference` with given name or path.
-
-* `name` → `String` name or path
-
-``` javascript
-store.collection('ducks');
-store.collection('blog/ducks/posts');
-```
+Returns singleton [Functions](api/functions) instance.
 
 ## doc(path) `→ DocumentReference`
 
-Creates a `DocumentReference` with given path.
-
-* `path` → `String`
+Creates [document reference](api/firestore/reference/document) for given path.
 
 ``` javascript
-store.doc('blog/ducks');
-store.doc('blog/ducks/posts/first');
+let doc = store.doc('messages/first');
+doc.id // → 'first'
+doc.path  // → 'messages/first'
 ```
 
-## object(arg) `→ DataObject`
+## collection(path) `→ CollectionReference`
 
-> TODO: Currently private
-
-## array(arg) `→ DataArray`
-
-> TODO: Currently private
-
-## serverTimestamp() `→ DataTimestamp`
-
-Creates a `DataTimestamp` instance configured as a server timestamp which will instruct Firestore to provide a timestamp value in the server side.
+Creates [collection reference](api/firestore/reference/collection) for given path.
 
 ``` javascript
-let doc = store.doc('ducks/yellow').new({
-  createdAt: store.serverTimestamp()
-});
+let uid = 'zeeba';
+let doc = store.collection(`users/${uid}/messages`);
+doc.id // → 'messages'
+doc.path  // → 'users/zeeba/messages'
 ```
 
-## transaction(fn) `→ Promise<Store>`
+## async transaction(callback) `→ Transaction`
 
-Creates a transaction you can use to batch multiple reads and writes in a single atomic operation.
+Creates a [Firestore transaction](api/firestore/transaction).
 
 ``` javascript
 await store.transaction(async tx => {
-  let doc = await tx.load(store.doc('books/yellow'));
-  doc.incrementProperty('data.pages');
-  tx.save(doc);
+  let doc = await tx.load(store.doc('messages/first'));
+  doc.data.value++;
+  await tx.save(doc);
 });
 ```
 
-> TODO: see Transaction
+## async batch(callback) `→ any`
 
-## batch({ multiple: true }) `→ Batch`
-
-* `multiple` → creates multiple batches if operations are more than 500 (defaults to `false`)
-
-Creates a `Batch` operation to perform multiple writes in one single atomic operation.
-
-``` javascript
-let batch = store.batch();
-batch.save(duck);
-batch.save(feathers);
-await batch.commit();
-```
-
-## batch(callback, { multiple: true }) `→ Promise<Result>`
-
-* `callback` → `Function`
-* `multiple` → creates multiple batches if operations are more than 500 (defaults to `false`)
-
-Creates a `Batch` operation to perform multiple writes in one single atomic operation. It is commited when the `Promise` returned from `callback` resolves.
+Creates a [Firestore batch](api/firestore/batch) which is commited immediately after async `callback` resolves.
 
 ``` javascript
 await store.batch(async batch => {
-  batch.save(duck);
-  batch.save(feathers);
+  let ref = store.doc('messages/first');
+  let doc = ref.new({ title: 'first' });
+  batch.save(doc);
 });
 ```
 
-## settle() `→ Promise`
+## batch() `→ Batch`
 
-Returns a promise which resolves when all currently running operations finishes.
-
-Operations may include:
-
-* Document read, write
-* Query load
-* Auth operations (like sign-in)
-* Cloud Function calls
-* Storage operations (upload tasks, metadata lodads)
+Creates a [Firestore batch](api/firestore/batch).
 
 ``` javascript
-let duck = store.doc('duck/yellow').new({ name: 'yellow' });
-duck.save();
-await store.settle();
-// duck.isNew → false
+let batch = store.batch();
+
+let ref = store.doc('messages/first');
+let doc = ref.new({ title: 'first' });
+batch.save(doc);
+
+await batch.commit();
 ```
 
-## `abstract` onError(props)
+## serverTimestamp `→ firestore.FieldValue`
+
+Returns `firestore.FieldValue.serverTimestamp()`
 
 ``` javascript
-import Store from 'ember-cli-zuglet/store';
+let doc = store.doc('messages/first').new({
+  createdAt: store.serverTimestamp
+});
+await doc.save();
+```
 
-export default Store.extend({
+## onObserverError(model, error)
 
-  onError({ type, model, operation, err, opts }) {
+* model → `Document`, `Query`, `Auth`, `Task`
+* error → `Error`
+
+Override to log or handle errors for `onSnapshot` and passive loads for documents, queries, also Auth and storage Task observer errors.
+
+``` javascript
+import BaseStore from 'zuglet/store';
+
+export default class Store extends BaseStore {
+
+  options = options
+
+  onObserverError(model, error) {
+    console.error(model + '', error.stack);
   }
 
-});
+}
 ```
 
-* `type` → `document` or `query`
-* `model` → instance
-* `operation` → `load`, `save`, `delete`, `snapshot`
+## projectId `→ String`
 
-## `abstact` restore() `→ Promise`
+`options.firestore.projectId`
 
-> TODO: restore. Check the flow
+## dashboardURL `→ String`
 
-## `abstract` restoreUser(user) `→ Promise`
+Firestore dashboard URL.
 
-> TODO: restoreUser. Check the flow
+## openDashboard()
+
+`window.open` Firestore dashboard URL.

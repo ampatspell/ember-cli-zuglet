@@ -1,5 +1,6 @@
 ---
-pos: 2
+title: Auth
+pos: 5
 ---
 
 # Auth
@@ -8,22 +9,27 @@ pos: 2
 let auth = store.auth;
 ```
 
+Auth is activated on first access from store.
+
+## user `→ User or null`
+
+Currently signed in user.
+
+See [Store](api/store) `options.auth` on how to setup custom user subclass.
+
+## promise `→ Promise<User | null>`
+
+Resolves on first `onAuthStateChanged` invocation.
+
+## async signOut() `→ undefined`
+
+Signs out current user if there is current user.
+
 ## methods `→ AuthMethods`
 
-``` javascript
-let methods = store.auth.methods;
-methods.anonymous // → AuthAnonymousMethod
-```
-
-## user `→ AuthUser | null`
-
-Returns currently logged-in `AuthUser` instance or null of user is not logged in.
-
-## signOut() `→ Promise`
-
-Signs out currently logged in user.
+Auth [methods](api/auth/methods).
 
 ``` javascript
-await store.auth.signOut();
-store.auth.user // → null
+let auth = store.auth;
+await auth.methods.anonymous.signIn();
 ```

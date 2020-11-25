@@ -3,29 +3,16 @@ title: Methods
 pos: 1
 ---
 
-# Auth Methods
+# Methods
 
-Lists and gives access to all available auth methods.
+## anonymous
 
-> Note: Currently only Email and Anonymous auth methods are implemented in ember-cli-zuglet
+anonymous accounts
 
-## available `→ Array<String>`
+## email
 
-Returns an array of auth method names.
+email-based accounts
 
-``` javascript
-let names = store.auth.methods.available;
-let methods = names.map(name => store.auth.methods[name]);
-```
+## popup
 
-## email `→ AuthEmailMethod`
-
-Sign-up and sign-in with email and password.
-
-> TODO: See AuthEmailMethod
-
-## anonymous `→ AuthAnonymousMethod`
-
-Sign-in anonymously.
-
-> TODO: See AuthAnonymousMethod
+popup-based sign-in

@@ -1,6 +1,5 @@
 {
   "projects": {
-    "default": "ember-cli-zuglet",
-    "travis": "ember-cli-zuglet-travis"
+    "default": "quatsch-38adf"
   }
 }

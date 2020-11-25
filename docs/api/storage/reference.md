@@ -3,162 +3,139 @@ title: Reference
 pos: 0
 ---
 
-# Storage Reference
+# Reference
 
-Storage reference represents a file location with stateful metadata and url.
-
-## parent `→ StorageReference`
-
-Creates and returns a new storage reference for parent.
 
 ``` javascript
-let ref = storage.ref('pictures/duck')
-ref.parent; // → StorageReference for 'pictures'
-ref.parent.parent // → null
-```
+let ref = store.storage.ref('users/zeeba/picture');
 
-## ref(path) `→ StorageReference`
-
-Creates and returns a new storage reference for a child file location.
-
-``` javascript
-let ref = storage.ref('pictures');
-ref.ref('duck') // → StorageReference for 'pictures/duck'
-ref.ref('duck/profile-picture') // → StorageReference for 'pictures/duck/profile-picture'
-```
-
-## fullPath `→ String`
-
-Returns a full file location path
-
-``` javascript
-let ref = storage.ref('pictures/duck');
-ref.fullPath // → 'pictures/duck'
-```
-
-## bucket `→ String`
-
-Returns a name of the bucket where file is stored.
-
-``` javascript
-let ref = storage.ref('pictures/duck');
-ref.bucket // → '<app-id>.appspot.com'
-```
-
-## name `→ String`
-
-Returns a filename
-
-## metadata `→ StorageReferenceMetadata`
-
-Returns a `StorageReferenceMetadata` instance for this reference.
-
-> TODO: See StorageReferenceMetadata
-
-## url `→ StorageReferenceURL`
-
-Returns a `StorageReferenceURL` instance for this reference.
-
-> TODO: See StorageReferenceURL
-
-## load({ url, metadata, optional }) `→ Promise<StorageReference>`
-
-Loads reference metadata and/or url.
-
-* `url` → Boolean (defaults to `false`)
-* `metadata` → Boolean (defaults to `false`)
-* `optional` → Boolean (defaults to `false`)
-
-If both `url` and `metadata` are `false`, both are set to true.
-
-``` javascript
-let ref = storage.ref('duck/yellow');
-await ref.load(); // → StorageReference with metadata and url loaded
-```
-
-If file does not exist and `optional` is `false`, load `Promise` rejects with an object not found error.
-
-## delete({ optional }) `→ Promise<StorageReference>`
-
-Deletes a file.
-
-* `optional` → Boolean (defaults to `false`)
-
-If file does not exist and `optional` is `false`, delete `Promise` rejects.
-
-## put({ type, data, format, metadata }) `→ StorageTask`
-
-Creates and returns a `StorageTask` and starts uploading a `Blob`, `File` or `String`.
-
-* `type` → 'file' or 'string'
-* `data` → `File`, `Blob` or `String`
-* `format` → String (only for `{ type: 'string' }`)
-* `metadata` → Object
-
-String formats:
-
-* `raw`
-* `base64`
-* `base64-url`
-* `data-url`
-
-``` javascript
-let task = storage.ref('hello').put({
-  type: 'string',
-  data: 'This is content',
-  format: 'raw',
-  metadata: {
-    contentType: 'text/plain',
-    customMetadata: {
-      ok: true
-    }
-  }
-});
-```
-
-``` javascript
-let task = storage.ref('hello').put({
-  type: 'data',
-  data: new Blob([ 'This is content' ]),
-  metadata: {
-    contentType: 'text/plain',
-    customMetadata: {
-      ok: true
-    }
-  }
-});
-```
-
-``` javascript
-let task = storage.ref('hello').put({
-  type: 'data',
+let task = ref.put({
   data: file,
   metadata: {
     contentType: file.type,
-    customMetadata: {
-      originalFilename: file.name
-    }
+  }
+});
+await task.promise;
+
+let url = await ref.url();
+let metadata = await ref.metadata();
+```
+
+## name
+
+Name of the file
+
+``` javascript
+let ref = store.storage.ref('users/zeeba/picture');
+ref.name // → picture
+```
+
+## path
+
+Full path of the file
+
+``` javascript
+let ref = store.storage.ref('users/zeeba/picture');
+ref.path // → users/zeeba/picture
+```
+
+## bucket
+
+Google Storage bucket
+
+``` javascript
+let ref = store.storage.ref('users/zeeba/picture');
+ref.bucket // → <project-id>.appspot.com"
+```
+
+## url()
+
+Composes public URL for a file.
+
+``` javascript
+let url = await store.storage.ref('hello').url();
+url // → https://firebasestorage.googleapis.com/v0/b/<project-id>.appspot.com/o/hello?alt=media&token=…
+```
+
+## metadata({ optional })
+
+Fetches all file metadata
+
+* `optional` → defaults to false, if true and file doesn't exist, method returns `undefined`
+
+``` javascript
+let ref = store.storage.ref('hello');
+let metadata = await ref.metadata();
+// → {
+//   bucket: "<project-id>.appspot.com"
+//   cacheControl: undefined
+//   contentDisposition: "inline; filename*=utf-8''hello"
+//   contentEncoding: "identity"
+//   contentLanguage: undefined
+//   contentType: "text/plain"
+//   customMetadata: undefined
+//   fullPath: "hello"
+//   generation: "1605998945217023"
+//   md5Hash: "8nqpBnIWx8XqWZtAgIQHOA=="
+//   metageneration: "1"
+//   name: "hello"
+//   size: 8
+//   timeCreated: Date
+//   type: "file"
+//   updated: Date
+// }
+```
+
+## update(metadata)
+
+Updates file metadata.
+
+``` javascript
+let ref = store.storage.ref('hello');
+await ref.update({
+  contentType: 'image/png'
+});
+```
+
+## delete({ optional }) `→ boolean`
+
+Deletes a file.
+
+* `optional` → defaults to false, if true and file doesn't exist, no errors are thown and method returns false
+
+``` javascript
+let ref = store.storage.ref('hello');
+let res = await ref.delete({ optional: true });
+res // → false
+```
+
+## put({ type, format, data, metadata }) `→ Task`
+
+Creates and starts file upload [Task](api/storage/task).
+
+* `type` → `string` or `data` (defaults to `data`)
+* `format` → `raw`, `base64`, `base64-url`, `data-url` (only for `{ type: 'string' }`)
+* `data` → file data (`string`, `File`, `Blob`…)
+* `metadata` → `{ contentType, … }`
+
+``` javascript
+let ref = this.storage.ref('hello');
+let task = ref.put({
+  type: 'string',
+  format: 'raw',
+  data: 'hey there',
+  metadata: {
+    contentType: 'text/plain'
   }
 });
 ```
 
 ``` javascript
-let task = storage.ref('hello').put({
-  type: 'string',
-  data: 'This is content',
-  format: 'raw'
+let ref = this.storage.ref('hello');
+let task = ref.put({
+  data: file,
+  metadata: {
+    contentType: file.type
+  }
 });
-
-task.isRunning // → true
-
-await task;
-
-task.isRunning // → false
-task.isCompleted // → true
 ```
-
-## serialized `→ Object`
-
-Returns json representation of most important `StorageReference` properties.
-
-Useful for debugging.

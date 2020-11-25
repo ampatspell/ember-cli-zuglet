@@ -1,44 +1,29 @@
 ---
 title: Email
-pos: 3
+pos: 1
 ---
 
-# Email Auth Method
+# Email
 
-Email method lets you sign-up and later sign-in users with email address and the password.
+## async signIn(email, password) `→ User`
 
-## signUp(email, password) `→ Promise<AuthUser>`
-
-Signs-up the user with email and password.
-
-Returns a `Promise` which resolves with newly created `AuthUser` instance. At that point also `store.auth.user` is updated.
+Sign-in using email and password
 
 ``` javascript
-let user = await store.auth.methods.email.signUp('zeeba@gmail.com', 'hello-world');
+let user = await store.auth.methods.email.signIn(email, password);
 store.auth.user === user // → true
 ```
 
-## signIn(email, password) `→ Promise<AuthUser>`
+## async signUp(email, password) `→ User`
 
-Signs-in existing user with email and password.
-
-Returns a `Promise` which resolves with signed-in `AuthUser` instance. At that point also `store.auth.user` is updated.
+Sign up with user and password
 
 ``` javascript
-let user = await store.auth.methods.email.signIn('zeeba@gmail.com', 'hello-world');
-store.auth.user === user // → true
+let user = await store.auth.methods.email.signUp(email, password);
 ```
 
-## sendPasswordReset(email, opts) `→ Promise<undefined>`
-
-Sends password reset email.
-
-Returns a promise which resolves with `undefined` if email was sent.
+## async sendPasswordReset(email, opts) `→ undefined`
 
 ``` javascript
-try {
-  await store.auth.methods.email.sendPasswordReset('zeeba@gmail.com');
-} catch(err) {
-  console.log(err.code);
-}
+await store.auth.methods.email.sendPasswordReset(email);
 ```

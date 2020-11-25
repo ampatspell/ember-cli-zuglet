@@ -1,3 +1,13 @@
-@import "breakpoints";
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu+Mono:wght@400;700&display=swap');
+
+$font-code: 'Ubuntu Mono';
+$font-text: "Ubuntu Mono";
+$font-size: 14px;
+$font-size-smaller: 12px;
+
 @import "body";
-@import "ui-application";
+@import "breakpoints";
+@import "application";
+@import "playground";
+@import "remark";
+@import "route/index";

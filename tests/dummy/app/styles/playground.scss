@@ -1,0 +1,82 @@
+.route-playground {
+  font-family: $font-code;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  > .content {
+    margin: 10px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  > .stats {
+    margin: 15px 0 0 0;
+  }
+}
+
+.block-playground-navigation {
+  display: flex;
+  flex-direction: row;
+  border-bottom: 1px solid fade-out(#000, 0.9);
+  font-size: $font-size-smaller;
+  font-weight: 600;
+  align-items: center;
+  > .name {
+    margin: 0 10px;
+  }
+  > a {
+    display: block;
+    padding: 8px 13px 7px 13px;
+    text-decoration: none;
+    &.active {
+      background: fade-out(#000, 0.2);
+      color: #fff;
+      position: relative;
+      &:after {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: -1px;
+        height: 1px;
+        background: fade-out(#000, 0.2);
+      }
+    }
+  }
+}
+
+.zuglet-stats {
+  border-top: 1px solid fade-out(#000, 0.9);
+  padding: 10px;
+  font-family: $font-code;
+  font-size: $font-size-smaller;
+  > .section {
+    margin-bottom: 10px;
+    &:last-child {
+      margin-bottom: 0;
+    }
+    > .label {
+      font-weight: 600;
+    }
+  }
+}
+
+.route-playground-messages {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  > .sidebar {
+    width: 150px;
+    border-right: 1px solid fade-out(#000, 0.9);
+    > .group {
+      margin-bottom: 15px;
+      > .row {
+        margin-bottom: 5px;
+      }
+    }
+  }
+  > .content {
+    padding-left: 10px;
+    flex: 1;
+  }
+}

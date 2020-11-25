@@ -1,0 +1,13 @@
+<div class="route-playground-dev">
+
+  <div class="row">
+    {{this}}
+  </div>
+
+  <div class="row">
+    <Block::Changes as |Changes|>
+      <Changes.Property @key="store" @value={{this.store}}/>
+    </Block::Changes>
+  </div>
+
+</div>

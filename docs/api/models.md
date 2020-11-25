@@ -1,63 +1,61 @@
 ---
-pos: 6
+title: Models
+pos: 2
 ---
 
 # Models
 
-Standalone helpers to register and lookup `model:${name}` factories as well as to create model instances.
+A simple wrapper around Ember's `getOwner(this).getFactory(…)` which works only with `model:…` registrations.
 
 ``` javascript
 let models = store.models;
 ```
 
+## create(name, ...args) `→ instance`
+
+Creates a new model instance for given factory name and properties.
+
+### EmberObject
+
+``` javascript
+// app/models/message.js
+export default class Message extends EmberObject {
+}
+```
+
+``` javascript
+let model = models.create('message', { from: 'larry', to: 'zeeba' });
+model.from // → 'larry'
+model.to // → 'zeeba'
+```
+
+### Plain ES6 Class
+
+``` javascript
+// app/models/message.js
+export default class Message {
+  constructor(injection, from, to) {
+    Object.assign(this, injection); // getOwner(this).ownerInjection()
+    this.from = from;
+    this.to = to;
+  }
+}
+```
+
+``` javascript
+let model = models.create('message', 'larry', 'zeeba');
+model.from // → 'larry'
+model.to // → 'zeeba'
+```
+
+## factoryFor(name, { optional }) `→ factory or undefined`
+
+* `optional` → boolean, defaults to false
+
+Lookups model factory for name.
+
+If `optional` is false and factory is not registered, assertation error is thrown.
+
 ## registerFactory(name, factory) `→ undefined`
 
-Registers a `factory` as `model:${name}` in Ember container.
-
-* `name` → `String`
-* `factory` → `EmberObject class`
-
-``` javascript
-models.registerFactory('duck', EmberObject.extend({ ... }));
-let model = models.create('duck', { name: 'yellow' });
-// → <foof@model:duck::ember1142>
-```
-
-## hasFactoryFor(name) `→ Boolean`
-
-Returns `true` if `model:${name}` is registered.
-
-* `name` → `String`
-
-## factoryFor(name, { optional }) `→ Factory`
-
-Returns a `model:${name}` factory.
-
-* `name` → `String`
-* `optional` → `Boolean` (defaults to `false`)
-
-If factory is not registered and optional is:
-
-* `true` → returns undefined
-* `false` → throws an assertation `Error`
-
-``` javascript
-let factory = models.FactoryFor('duck');
-let model = factory.create{ name: 'yellow' });
-// → <foof@model:duck::ember1142>
-```
-
-## create(name, props) `→ Instance`
-
-Creates an instance.
-
-* `name` → `String`
-* `props` → `Object`
-
-Throws an assertation `Error` if factory is not registered.
-
-``` javascript
-let factory = models.factoryFor('duck');
-let model = factory.create{ name: 'yellow' });
-// → <foof@model:duck::ember1142>
-```
+Registers model factory

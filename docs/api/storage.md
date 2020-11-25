@@ -1,31 +1,40 @@
 ---
-pos: 3
+title: Storage
+pos: 4
 ---
 
 # Storage
 
-`Storage` lets you upload files, load and update file metadata and get file public URLs.
+`Storage` manages Firebase Storage uploads, urls and metadata.
 
 ``` javascript
 let storage = store.storage;
 ```
 
-## tasks `→ Array<StorageTask>`
+## bucket
 
-Returns an observable array of currently running file upload `StorageTask` instances.
+Name of default storage bucket
 
-## ref(arg) `→ StorageReference`
+## ref(path) `→ Reference`
 
-Creates a `StorageReference` you can use to upload a file and/or get file metadata or public URL.
+Alias for `ref({ path })`
 
-* `arg` → `String` or `Object`
+## ref({ path }) `→ Reference`
 
-If argument is `String`, it is converted to `{ path: arg }`.
-
-Either `path` or `url` is required.
+Creates a storage reference for path in default bucket.
 
 ``` javascript
-storage.ref('pictures/duck');
-storage.ref({ path: 'pictures/duck' })
-storage.ref({ url: 'gs://foo/bar' })
+let ref = store.storage.ref('hello');
+ref.path // → hello
+ref.bucket // → project-id.appspot.com
+```
+
+## ref({ url }) `→ Reference`
+
+Creates a storage reference with `gs://` url.
+
+``` javascript
+let ref = store.storage.ref({ url: 'gs://foobar.appspot.com/hello' });
+ref.path // → hello
+ref.bucket // → foobar.appspot.com
 ```

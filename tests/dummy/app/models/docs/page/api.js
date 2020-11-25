@@ -1,3 +1,4 @@
-import Page from './-base';
+import Base from './-base';
 
-export default Page.extend();
+export default class ApiPage extends Base {
+}

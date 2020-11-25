@@ -1,87 +1,72 @@
 ---
 title: User
-pos: 2
+pos: 0
 ---
 
-# Auth User
+# User
 
-`AuthUser` represents currently signed-in user.
+Currently signed in user.
 
-## token({ type, refresh }) `→ Promise<String|Object>`
+See [Store](api/store) `options.auth.user` on how to provide custom `User` implementation
 
-Returns a `Promise` which is resolved with either encoded or decoded user token.
+## user
 
-* `type` → `String`: `string` or `json` (defaults to `string`)
-* `refresh` → Boolean (defaults to `false`)
+Firebase Auth User instance
 
-Decoded user token might be useful to get custom user claims.
+## props
 
-## delete() `→ Promise`
+aliases of `this.user[key]`
 
-Returns a `Promise` which is resolved when user is deleted.
+* uid
+* email
+* emailVerified
+* photoURL
+* displayName
+* isAnonymous
 
-## uid `→ String`
+## restore(user)
 
-Returns user id
-
-## isAnonymous `→ Boolean`
-
-Returns true if anonymous auth method was used to sign-in.
-
-## displayName `→ String`
-
-Returns user's display name if available.
-
-## email `→ String`
-
-Returns user's email if available.
-
-## emailVerified `→ Boolean`
-
-Returns whether user has verified email.
-
-## phoneNumber `→ String`
-
-Returns user's phone number if available.
-
-## photoURL `→ String`
-
-Returns user's photoURL if available.
-
-## providerId `→ String`
-
-Returns authentication provider id.
-
-If anonymous or email auth methods are used, this is `firebase`.
-
-## link(method, ...args) `→ Promise<AuthUser>`
-
-Links user with another auth provider.
+Override to load additional data on user sign-up/sign-in.
 
 ``` javascript
-let user = store.auth.user;
-user.isAnonymous // → true
-await user.link('email', 'zeeb@gmail.com', 'heythere');
-user.isAnonymous // → false
-user.email // → zeeba@gmail.com
+import User from 'zuglet/user';
+import { load } from 'zuglet/util';
+
+export default class User extends BaseUser {
+
+  @activate().content(({ store, uid }) => store.doc(`users/${uid}`).existing())
+  doc
+
+  async restore(user) {
+    super.restore(user);
+    await load(this.doc);
+  }
+
+}
 ```
 
-## serialized `→ Object`
+## signOut()
 
-Returns json representation of most important user's properties.
+Alias of `store.auth.signOut()`
 
-Useful for debugging.
+## token({ type, refresh })
+
+Fetch user's token.
+
+* `type` → defaults to `string`. `string` or `json`
+* `refresh` → defaults to `false`
 
 ``` javascript
-console.log(store.auth.user.serialized);
-// {
-//   uid: '…',
-//   isAnonymous: true,
-//   displayName: null,
-//   email: null,
-//   emailVerified: false,
-//   phoneNumber: null,
-//   photoURL: null,
-//   providerId: 'firebase'
-// }
+let token = store.auth.user.token({ type: 'json' });
+```
+
+## link(method, ...args)
+
+Link user accounts.
+
+* `method` → string
+* `...args` → arguments forwarded to method's credentials
+
+``` javascript
+await store.auth.user.link('email', 'email@address.com', 'heythere')
 ```

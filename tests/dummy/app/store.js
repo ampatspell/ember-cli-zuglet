@@ -1,42 +1,33 @@
-import Store from 'ember-cli-zuglet/store';
-import environment from './config/environment';
+import Store from 'zuglet/store';
+import { load } from 'zuglet/utils';
+import envionment from './config/environment';
 
-const {
-  firebase: options
-} = environment;
+let { dummy: { firebase } } = envionment;
+let persistenceEnabled = envionment.environment !== 'test';
 
-export default Store.extend({
+export default class DummyStore extends Store {
 
-  options,
-
-  user: null,
-
-  async restoreUser(user) {
-    let next = null;
-    if(user) {
-      next = this.models.create('user', { user });
+  options = {
+    firebase,
+    firestore: {
+      persistenceEnabled
+    },
+    auth: {
+      user: 'user'
+    },
+    functions: {
+      region: null
+    },
+    emulators: {
+      // host: 'localhost',
+      // auth: 9099,
+      // firestore: 8080,
+      // functions: 5001
     }
-
-    let current = this.user;
-    this.set('user', next);
-
-    if(current) {
-      current.destroy();
-    }
-
-    if(next) {
-      await next.restore();
-    }
-  },
-
-  onError({ model, operation, err, opts }) {
-    let args = [
-      `onError ${operation} ${err.message} ${model}`,
-    ];
-    if(opts) {
-      args.push(opts);
-    }
-    console.error(...args);
   }
 
-});
+  async load() {
+    await load(this.auth);
+  }
+
+}

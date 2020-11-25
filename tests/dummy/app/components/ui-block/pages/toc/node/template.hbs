@@ -1,9 +1,0 @@
-{{#unless page.hidden}}
-  {{#menu.item}}
-    {{link-to page.title 'docs.page' page.id}}
-  {{/menu.item}}
-
-  {{#menu.items sorted as |nested|}}
-    {{ui-block/pages/toc/node page=nested menu=menu}}
-  {{/menu.items}}
-{{/unless}}

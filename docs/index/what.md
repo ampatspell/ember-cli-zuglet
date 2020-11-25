@@ -1,0 +1,1 @@
+ember-cli-zuglet is an [Ember.js](https://emberjs.com/) addon that lets you build complex apps with [Google Firebase](http://firebase.google.com) Firestore, Auth, Storage and Functions easy and fun.

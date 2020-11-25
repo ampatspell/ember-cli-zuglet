@@ -1,0 +1,7 @@
+<Block::MasterDetail as |section|>
+  {{#if section.isMaster}}
+    <Block::Toc @page={{@docs.content}}/>
+  {{else if section.isDetail}}
+    {{yield}}
+  {{/if}}
+</Block::MasterDetail>

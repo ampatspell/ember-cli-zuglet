@@ -1,29 +1,14 @@
-import { assign } from '@ember/polyfills';
 import { assert } from '@ember/debug';
-import { A } from '@ember/array';
-import { isFastBoot } from './-private/util/fastboot';
 import { typeOf } from '@ember/utils';
+import { isFastBoot } from './-private/util/fastboot';
+import { setGlobal } from  './-private/util/set-global';
 
-// register({
-//   app,
-//   store: {
-//     identifier: 'store',
-//     factory: Store,
-//   },
-//   service: {
-//     enabled: true,
-//     name: 'store',
-//     inject: [ 'route', 'controller', 'component', 'model' ],
-//   },
-//   development: {
-//     enabled: true,
-//     export: 'store',
-//     logging: true
-//   }
-// });
+const {
+  assign
+} = Object;
 
 const normalizeStore = store => {
-  store = assign({ identifier: 'store', factory: null }, store || {});
+  store = assign({ identifier: 'store', factory: null }, store);
   assert(`opts.store.identifier is required`, typeof store.identifier === 'string');
   assert(`opts.store.factory is required`, !!store.factory);
   return store;
@@ -32,11 +17,9 @@ const normalizeStore = store => {
 const normalizeService = (service, store) => {
   service = assign({
     enabled: true,
-    name: store.identifier,
-    inject: [ 'route', 'controller', 'component', 'model' ]
+    name: store.identifier
   }, service);
   assert(`opts.service.name is required`, typeof service.name === 'string');
-  assert(`opts.service.inject must be array`, typeOf(service.inject) === 'array');
   return service;
 }
 
@@ -82,34 +65,24 @@ const normalize = (...args) => {
 
 const environment = app => app.factoryFor('config:environment').class.environment;
 
-export const register = (...args) => {
+export const initialize = (...args) => {
   let { app, opts } = normalize(...args);
 
   let stores = app.lookup('zuglet:stores');
   let store = stores.createStore(opts.store.identifier, opts.store.factory);
 
+  let fullName = `service:${opts.service.name}`;
+  app.register(fullName, store, { instantiate: false });
+
   if(opts.service.enabled) {
     let fullName = `service:${opts.service.name}`;
     app.register(fullName, store, { instantiate: false });
-    A(opts.service.inject).forEach(key => {
-      app.inject(key, opts.service.name, fullName);
-    });
   }
 
-  if(opts.development.enabled && environment(app) === 'development') {
-    if(typeof window !== 'undefined' && !isFastBoot(store)) {
-      let key = opts.store.identifier;
-      window[key] = store;
-      if(opts.development.logging) {
-        console.log(`window.${key} = ${store}`);
-      }
-      stores._internal.registerWillDestroyListener(() => {
-        delete window[key];
-      });
-    }
+  if(opts.development.enabled && environment(app) === 'development' && !isFastBoot(store)) {
+    let key = opts.development.export;
+    setGlobal({ [key]: store }, !opts.development.logging);
   }
 
   return store;
 }
-
-export const initialize = opts => app => register(app, opts);

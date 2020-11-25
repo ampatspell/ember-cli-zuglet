@@ -2,7 +2,7 @@ import { getOwner } from '@ember/application';
 
 export const lookupFastBoot = owner => {
   let fastboot = owner.lookup('service:fastboot');
-  let isFastBoot = fastboot && fastboot.get('isFastBoot');
+  let isFastBoot = fastboot && fastboot.isFastBoot;
   return {
     fastboot,
     isFastBoot
