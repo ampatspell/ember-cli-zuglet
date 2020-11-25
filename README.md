@@ -152,9 +152,3 @@ export default class RouteDevComponent extends Component {
 * if `mapping` changes, but `modelName` hasn't changed, `mappingDidChange` is invoked
 * if `model.mappindDidChange` doesn't exist, model is recreated
 * mapping properties are diffed individually
-
-### Textarea
-
-``` hbs
-<textarea {{on "input" this.update}} value={{this.value}}/>
-```
