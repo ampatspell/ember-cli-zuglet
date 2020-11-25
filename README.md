@@ -1,4 +1,6 @@
-# ember-cli-zuglet@2.x
+# ember-cli-zuglet
+
+Ember.js Octane edition.
 
 > `ember-cli-zuglet@^2.0.0` is not yet published to npm
 
