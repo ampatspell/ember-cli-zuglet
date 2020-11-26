@@ -10,6 +10,9 @@ import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
 import { route } from 'zuglet/decorators';
 
+// this "activates" model while this route is active
+// activated documents and queries automatically subscribe to onSnapshot observers
+// model trees are built by using @activate, @model, @models decorators
 @route()
 export default class MessagesRoute extends Route {
 
@@ -17,10 +20,13 @@ export default class MessagesRoute extends Route {
   store
 
   async model() {
+    // create `app/models/message.js` instance
     return this.store.models.create('messages');
   }
 
   async load(model) {
+    // at this point model is activated
+    // model.load waits for 1st query onSnapshot event
     await model.load();
   }
 
@@ -47,22 +53,31 @@ export default class Messages extends EmberObject {
     return this.store.collection('messages');
   }
 
+  // creates query on first access and activates it because Messages instance is activated by route
+  // activated query subscribes to onSnapshot observer
   @activate().content(({ coll }) => coll.orderBy('createdAt', 'desc').query())
   query
 
+  // creates models for each document and activates it
+  // each document here is *not* independently subscribed to onSnapshot
+  // because documents are created by query which observers
   @models().source(({ query }) => query.content).named(() => 'message').mapping(doc => ({ doc }))
   models
 
   async load() {
+    // small helper which just awaits this.query.promise
+    // which is resolved on 1st query onSnapshot event
     await load(this.query);
   }
 
   async add(text) {
     let { store, coll } = this;
+    // create a new document with generated id and provide some data
     let doc = coll.doc().new({
       text,
       createdAt: store.serverTimestamp
     });
+    // save document in Firestore
     await doc.save();
   }
 
@@ -98,6 +113,7 @@ export default class Message extends EmberObject {
   text
 
   async save() {
+    // saves document if doc.isDirty
     await this.doc.save();
   }
 

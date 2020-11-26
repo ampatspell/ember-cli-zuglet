@@ -1,15 +1,24 @@
-> ember-cli-zuglet is not yet published on npm
+``` bash
+$ ember install ember-cli-zuglet
+```
+
+and provide your Firebase project configuration in `app/store.js`.
+
+You might also want to remove `ember-data` from `package.json` and enable experimental decorators in `jsconfig.json`
 
 ``` diff
 "devDependencies": {
 -    "ember-data": "~3.22.0",
-+    "zuglet": "git+ssh://git@github.com:ampatspell/zuglet-next.git",
 }
 ```
 
-``` bash
-$ npm install
-$ ember generate zuglet
+``` javascript
+// jsconfig.json
+{
+  "compilerOptions": {
+    "target": "es6",
+    "experimentalDecorators": true
+  },
+  "exclude": [ "node_modules", ".git" ]
+}
 ```
-
-and provide your Firebase project configuration in `app/store.js`.
