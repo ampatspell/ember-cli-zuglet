@@ -40,3 +40,5 @@
 /NOTES.md
 
 .DS_Store
+
+/config.js
