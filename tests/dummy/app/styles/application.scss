@@ -113,3 +113,16 @@
     }
   }
 }
+
+.route-missing {
+  margin: 15px;
+  > .label {
+    font-weight: 600;
+    margin-bottom: 5px;
+  }
+  > .actions {
+    > a {
+      text-decoration: none;
+    }
+  }
+}
