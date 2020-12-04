@@ -44,7 +44,7 @@
     "deploy:functions": "(cd firebase && firebase deploy --only functions --project ember-cli-zuglet && firebase deploy --only functions --project ember-cli-zuglet-travis)"
   },
   "dependencies": {
-    "ember-auto-import": "^1.7.0",
+    "ember-auto-import": "^1.8.0",
     "ember-cli-babel": "^7.23.0",
     "ember-cli-htmlbars": "^5.3.1",
     "firebase": "^8.1.1",
@@ -75,7 +75,7 @@
     "ember-qunit": "^4.6.0",
     "ember-resolver": "^8.0.2",
     "ember-router-scroll": "^3.3.3",
-    "ember-source": "~3.23.0",
+    "ember-source": "~3.23.1",
     "ember-source-channel-url": "^3.0.0",
     "ember-template-lint": "^2.14.0",
     "ember-try": "^1.4.0",
