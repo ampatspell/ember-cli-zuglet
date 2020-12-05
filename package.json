@@ -79,7 +79,7 @@
     "ember-source-channel-url": "^3.0.0",
     "ember-template-lint": "^2.14.0",
     "ember-try": "^1.4.0",
-    "eslint": "^7.14.0",
+    "eslint": "^7.15.0",
     "eslint-plugin-ember": "^9.6.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
@@ -90,7 +90,7 @@
     "prember": "^1.0.5",
     "prember-crawler": "^1.0.0",
     "qunit-dom": "^1.6.0",
-    "sass": "^1.29.0",
+    "sass": "^1.30.0",
     "tracked-toolbox": "^1.2.1"
   },
   "engines": {
