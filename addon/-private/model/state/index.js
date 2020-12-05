@@ -1,10 +1,17 @@
 import { getOwner } from '../../util/get-owner';
 import { assert } from '@ember/debug';
 
+const {
+  assign
+} = Object;
+
 const marker = Symbol('ZUGLET');
 
-const createState = owner => {
-  let _owner = getOwner(owner);
+const createState = (owner, opts) => {
+  let _owner = getOwner(owner, opts);
+  if(!_owner) {
+    return;
+  }
   let factory;
   if(isRoot(owner)) {
     factory = _owner.factoryFor('zuglet:state/root');
@@ -15,12 +22,13 @@ const createState = owner => {
   return factory.create({ owner });
 }
 
-export const getState = (owner, create=true) => {
+export const getState = (owner, opts) => {
+  let { optional, create } = assign({ optional: false, create: true }, opts);
   assert(`owner is required`, !!owner);
 
   let state = owner[marker];
   if(!state && create) {
-    state = createState(owner);
+    state = createState(owner, { optional });
     owner[marker] = state;
   }
 

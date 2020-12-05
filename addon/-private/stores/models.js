@@ -3,6 +3,11 @@ import { dasherize } from '@ember/string';
 import { assert } from '@ember/debug';
 import { getOwner } from '../util/get-owner';
 import { isFunction } from '../util/object-to-json';
+import { getState } from '../model/state';
+
+const {
+  assign
+} = Object;
 
 export default class Models extends EmberObject {
 
@@ -17,18 +22,23 @@ export default class Models extends EmberObject {
   }
 
   registerFactory(name, factory) {
+    assert(`factory is required`, !!factory);
     let normalizedName = this.normalizeModelName(name);
     let fullName = this.modelFullNameForNormalizedName(normalizedName);
     getOwner(this).register(fullName, factory);
   }
 
-  factoryFor(name, opts={}) {
-    let { optional } = opts;
-    let normalizedName = this.normalizeModelName(name);
-    let fullName = this.modelFullNameForNormalizedName(normalizedName);
+  _factoryFor(normalizedName, fullName, opts) {
+    let { optional } = assign({ optional: false }, opts);
     let factory = getOwner(this).factoryFor(fullName);
     assert(`model '${normalizedName}' is not registered`, optional || !!factory);
     return factory;
+  }
+
+  factoryFor(name, opts) {
+    let normalizedName = this.normalizeModelName(name);
+    let fullName = this.modelFullNameForNormalizedName(normalizedName);
+    return this._factoryFor(normalizedName, fullName, opts);
   }
 
   hasFactoryFor(name) {
@@ -36,11 +46,19 @@ export default class Models extends EmberObject {
   }
 
   create(name, ...args) {
-    let factory = this.factoryFor(name);
+    let normalizedName = this.normalizeModelName(name);
+    let fullName = this.modelFullNameForNormalizedName(normalizedName);
+    let factory = this._factoryFor(normalizedName, fullName, { optional: false });
+
+    // classic
     if(isFunction(factory.class.create)) {
       return factory.create(...args);
     }
-    return new factory.class(getOwner(this).ownerInjection(), ...args);
+
+    // native
+    let instance = new factory.class(getOwner(this), ...args);
+    getState(instance).modelName = fullName;
+    return instance;
   }
 
 }

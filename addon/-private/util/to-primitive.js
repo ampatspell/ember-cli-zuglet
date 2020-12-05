@@ -1,8 +1,10 @@
 import { guidFor } from '@ember/object/internals';
+import { getState } from '../model/state';
 
 export const toPrimitive = model => {
   if(!model) {
     return;
   }
-  return `${model.constructor.name}::${guidFor(model)}`;
+  let name = getState(model, { optional: true })?.modelName || model.constructor.name;
+  return `${name}::${guidFor(model)}`;
 }

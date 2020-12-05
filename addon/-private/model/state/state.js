@@ -10,6 +10,8 @@ export default class State extends EmberObject {
   activators = new Activators();
   cache = Object.create(null);
 
+  modelName = null
+
   getProperty(key, create) {
     let property = this.properties[key];
     if(!property && create) {

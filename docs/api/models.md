@@ -33,9 +33,34 @@ model.to // → 'zeeba'
 
 ``` javascript
 // app/models/message.js
+import { setOwner } from '@ember/application';
+
 export default class Message {
-  constructor(injection, from, to) {
-    Object.assign(this, injection); // getOwner(this).ownerInjection()
+  constructor(owner, from, to) {
+    setOwner(this, owner); // owner → `getOwner(this)`
+    this.from = from;
+    this.to = to;
+  }
+}
+```
+
+``` javascript
+let model = models.create('message', 'larry', 'zeeba');
+model.from // → 'larry'
+model.to // → 'zeeba'
+```
+
+## Plain ZugletObject ES6 class
+
+`ZugletObject` sets owner and overrides `toString()`.
+
+``` javascript
+// app/models/message.js
+import ZugletObject from 'zuglet/object';
+
+export default class Message {
+  constructor(owner, from, to) {
+    super(owner);
     this.from = from;
     this.to = to;
   }
