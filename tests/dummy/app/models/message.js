@@ -1,12 +1,17 @@
-import EmberObject from '@ember/object';
+import ZugletObject from 'zuglet/object';
 import { objectToJSON, toJSON } from 'zuglet/utils';
 import { tracked } from '@glimmer/tracking';
 import { alias } from 'macro-decorators';
 
-export default class Message extends EmberObject {
+export default class Message extends ZugletObject {
 
   @tracked
   doc
+
+  constructor(owner, { doc }) {
+    super(owner);
+    this.doc = doc;
+  }
 
   get id() {
     return this.doc.id;

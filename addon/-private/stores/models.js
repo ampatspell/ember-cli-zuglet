@@ -4,12 +4,26 @@ import { assert } from '@ember/debug';
 import { getOwner } from '../util/get-owner';
 import { isFunction } from '../util/object-to-json';
 import { getState } from '../model/state';
+import { cached } from '../model/decorators/cached';
 
 const {
   assign
 } = Object;
 
 export default class Models extends EmberObject {
+
+  @cached()
+  get _modulePrefix() {
+    return getOwner(this).application?.modulePrefix;
+  }
+
+  _fullNameWithModulePrefix(fullName) {
+    let prefix = this._modulePrefix;
+    if(prefix) {
+      return `${prefix}@${fullName}`;
+    }
+    return fullName;
+  }
 
   normalizeModelName(name) {
     assert(`model name is required`, !!name);
@@ -57,7 +71,7 @@ export default class Models extends EmberObject {
 
     // native
     let instance = new factory.class(getOwner(this), ...args);
-    getState(instance).modelName = fullName;
+    getState(instance).modelName = this._fullNameWithModulePrefix(fullName);
     return instance;
   }
 

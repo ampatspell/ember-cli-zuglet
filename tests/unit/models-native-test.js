@@ -33,7 +33,7 @@ module('models / native', function(hooks) {
     assert.strictEqual(model.id, 'z33ba');
     assert.strictEqual(model.name, 'Zeeba');
     assert.ok(model.store === getOwner(this.store).lookup('service:store'));
-    assert.strictEqual(String(model), `<model:hamster::${guidFor(model)}:z33ba:Zeeba>`);
+    assert.strictEqual(String(model), `<dummy@model:hamster::${guidFor(model)}:z33ba:Zeeba>`);
   });
 
   test('create zuglet object', async function(assert) {
@@ -61,7 +61,7 @@ module('models / native', function(hooks) {
     assert.strictEqual(model.id, 'z33ba');
     assert.strictEqual(model.name, 'Zeeba');
     assert.ok(model.store === getOwner(this.store).lookup('service:store'));
-    assert.strictEqual(String(model), `<model:hamster::${guidFor(model)}:z33ba:Zeeba>`);
+    assert.strictEqual(String(model), `<dummy@model:hamster::${guidFor(model)}:z33ba:Zeeba>`);
   });
 
 });
