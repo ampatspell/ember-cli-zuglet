@@ -11,7 +11,11 @@ export default class ZugletObject {
   }
 
   toString() {
-    return toString(this, this.toStringExtension && this.toStringExtension());
+    let extension;
+    if(isFunction(this.toStringExtension)) {
+      extension = this.toStringExtension();
+    }
+    return toString(this, extension);
   }
 
 }
