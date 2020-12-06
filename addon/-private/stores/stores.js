@@ -20,9 +20,13 @@ export default class Stores extends EmberObject {
   }
 
   @cached()
-  get models() {
+  get factory() {
     let stores = this;
-    return getOwner(this).factoryFor('zuglet:stores/models').create({ stores });
+    return getOwner(this).factoryFor('zuglet:stores/factory').create({ stores });
+  }
+
+  get models() {
+    return this.factory.models;
   }
 
   _registerStoreFactory(identifier, factory) {
