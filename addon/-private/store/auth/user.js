@@ -1,4 +1,5 @@
-import EmberObject, { get } from '@ember/object';
+import ZugletObject from '../../object';
+import { get } from '@ember/object';
 import { assert } from '@ember/debug';
 import { toJSON } from '../../util/to-json';
 import { tracked } from "@glimmer/tracking";
@@ -19,7 +20,7 @@ const updateTrackedProperties = (target, source) => {
   });
 }
 
-export default class User extends EmberObject {
+export default class User extends ZugletObject {
 
   @tracked user
 
@@ -29,6 +30,12 @@ export default class User extends EmberObject {
   @tracked photoURL
   @tracked displayName
   @tracked isAnonymous
+
+  constructor(owner, { store, user }) {
+    super(owner);
+    this.store = store;
+    this.user = user;
+  }
 
   //
 

@@ -38,7 +38,7 @@ module('auth', function(hooks) {
         }
       }
     });
-    assert.ok(serialized.user.instance.startsWith('TestUser::ember'));
+    assert.ok(serialized.user.instance.startsWith('dummy@model:test-user::ember'));
     assert.ok(typeof serialized.user.serialized.emailVerified === 'boolean');
     assert.ok(typeof serialized.user.serialized.uid === 'string');
   });
