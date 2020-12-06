@@ -1,7 +1,7 @@
 import { setOwner } from '@ember/application';
 import { assert } from '@ember/debug';
 import { toString } from './util/to-string';
-import { isFunction } from './util/object-to-json';
+import { isFunction } from './util/types';
 
 export default class ZugletObject {
 

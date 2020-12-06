@@ -1,4 +1,4 @@
-import { isPromise } from './object-to-json';
+import { isPromise } from './types';
 
 const toPromises = args => {
   let models = [];

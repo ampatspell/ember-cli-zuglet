@@ -6,7 +6,7 @@ import { cached, getCached } from '../model/decorators/cached';
 import { getOwner } from '../util/get-owner';
 import { toJSON } from '../util/to-json';
 import { isFastBoot } from '../util/fastboot';
-import { isFunction, isDocumentReference, isCollectionReference } from '../util/object-to-json';
+import { isFunction, isDocumentReference, isCollectionReference } from '../util/types';
 import { registerPromise } from '../stores/stats';
 import { root } from '../model/decorators/root';
 import { activate } from '../model/properties/activate';

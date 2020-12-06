@@ -2,7 +2,7 @@ import EmberObject from '@ember/object';
 import { dasherize } from '@ember/string';
 import { assert } from '@ember/debug';
 import { getOwner } from '../util/get-owner';
-import { isFunction } from '../util/object-to-json';
+import { isFunction } from '../util/types';
 import { getState } from '../model/state';
 import { cached } from '../model/decorators/cached';
 

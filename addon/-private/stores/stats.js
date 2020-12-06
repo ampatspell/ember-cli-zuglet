@@ -1,7 +1,7 @@
 import EmberObject from '@ember/object';
 import { getStores } from './get-stores';
 import { A } from '@ember/array';
-import { isPromise } from '../util/object-to-json';
+import { isPromise } from '../util/types';
 import { next } from '../util/runloop';
 
 export default class Stats extends EmberObject {
