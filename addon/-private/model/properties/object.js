@@ -9,7 +9,7 @@ import {
   isFunction,
   isDocumentReference,
   isGeoPoint
-} from '../../util/object-to-json';
+} from '../../util/types';
 
 export default class ObjectProperty extends Property {
 

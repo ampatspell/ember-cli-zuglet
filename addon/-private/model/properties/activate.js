@@ -1,5 +1,5 @@
 import { property } from './property';
-import { isFunction } from '../../util/object-to-json';
+import { isFunction } from '../../util/types';
 import { assert } from '@ember/debug';
 
 let getProperty = (owner, key, opts) => property(owner, key, `activate/${opts.type}`, opts);

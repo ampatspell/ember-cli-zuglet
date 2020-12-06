@@ -1,6 +1,6 @@
 import { activate } from '../properties/activate';
 import { getState } from '../state';
-import { isFunction } from '../../util/object-to-json';
+import { isFunction } from '../../util/types';
 import { registerPromise } from '../../stores/stats';
 
 const activateRoute = route => {

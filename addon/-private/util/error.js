@@ -1,4 +1,4 @@
-import { isFunction } from './object-to-json';
+import { isFunction } from './types';
 
 const {
   assign

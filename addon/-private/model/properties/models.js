@@ -5,7 +5,7 @@ import { getState } from '../state';
 import { getStores } from '../../stores/get-stores';
 import { assert } from '@ember/debug';
 import { diff, asObject, asString } from '../decorators/diff';
-import { isFunction } from '../../util/object-to-json';
+import { isFunction } from '../../util/types';
 
 class Marker {
 

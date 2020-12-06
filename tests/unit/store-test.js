@@ -1,5 +1,5 @@
 import { module, test, setupStoreTest } from '../helpers/setup';
-import { isServerTimestamp } from 'zuglet/-private/util/object-to-json';
+import { isServerTimestamp } from 'zuglet/-private/util/types';
 
 module('store', function(hooks) {
   setupStoreTest(hooks);
