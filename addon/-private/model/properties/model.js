@@ -1,5 +1,5 @@
 import Property, { property } from './property';
-import { getStores } from '../../stores/get-stores';
+import { getFactory } from '../../stores/get-factory';
 import ObjectActivator from './activate/activators/object';
 import { diff, asOptionalString, asOptionalObject, asIdentity } from '../decorators/diff';
 import { isFunction } from '../../util/types';
@@ -26,7 +26,7 @@ export default class ModelProperty extends Property {
     let modelName = this._modelName;
     let props = this._props;
 
-    let create = () => getStores(this).models.create(modelName.current, props.current);
+    let create = () => getFactory(this).models.create(modelName.current, props.current);
 
     if(current && !modelName.updated) {
       if(props.updated) {
