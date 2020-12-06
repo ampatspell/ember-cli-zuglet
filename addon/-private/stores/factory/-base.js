@@ -15,7 +15,6 @@ export default prefix => {
 
     @factory registerFactory
     @factory factoryFor
-    @factory hasFactoryFor
     @factory create
 
   }
