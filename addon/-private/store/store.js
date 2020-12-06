@@ -3,13 +3,13 @@ import { assert } from '@ember/debug';
 import firebase from "firebase/app";
 import { initializeApp, enablePersistence, destroyApp } from './firebase';
 import { cached, getCached } from '../model/decorators/cached';
-import { getOwner } from '../util/get-owner';
 import { toJSON } from '../util/to-json';
 import { isFastBoot } from '../util/fastboot';
 import { isFunction, isDocumentReference, isCollectionReference } from '../util/types';
 import { registerPromise } from '../stores/stats';
 import { root } from '../model/decorators/root';
 import { activate } from '../model/properties/activate';
+import { getFactory } from '../stores/get-factory';
 
 const {
   assign
@@ -79,20 +79,20 @@ export default class Store extends EmberObject {
   }
 
   @activate().content(store => {
-    return getOwner(store).factoryFor('zuglet:store/auth').create({ store });
+    return getFactory(store).zuglet.create('store/auth', { store });
   })
   auth
 
   @cached()
   get storage() {
     let store = this;
-    return getOwner(this).factoryFor('zuglet:store/storage').create({ store });
+    return getFactory(this).zuglet.create('store/storage', { store });
   }
 
   @cached()
   get functions() {
     let store = this;
-    return getOwner(this).factoryFor('zuglet:store/functions').create({ store });
+    return getFactory(this).zuglet.create('store/functions', { store });
   }
 
   //
@@ -154,32 +154,32 @@ export default class Store extends EmberObject {
 
   _createDocumentReference(_ref) {
     let store = this;
-    return getOwner(this).factoryFor('zuglet:store/firestore/reference/document').create({ store, _ref });
+    return getFactory(this).zuglet.create('store/firestore/reference/document', { store, _ref });
   }
 
   _createCollectionReference(_ref) {
     let store = this;
-    return getOwner(this).factoryFor('zuglet:store/firestore/reference/collection').create({ store, _ref });
+    return getFactory(this).zuglet.create('store/firestore/reference/collection', { store, _ref });
   }
 
   _createConditionReference(_ref, string) {
     let store = this;
-    return getOwner(this).factoryFor('zuglet:store/firestore/reference/condition').create({ store, _ref, string });
+    return getFactory(this).zuglet.create('store/firestore/reference/condition', { store, _ref, string });
   }
 
   _createBatch() {
     let store = this;
     let _batch = this.firebase.firestore().batch();
-    return getOwner(this).factoryFor('zuglet:store/firestore/batch').create({ store, _batch });
+    return getFactory(this).zuglet.create('store/firestore/batch', { store, _batch });
   }
 
   _createTransaction(_tx) {
     let store = this;
-    return getOwner(this).factoryFor('zuglet:store/firestore/transaction').create({ store, _tx });
+    return getFactory(this).zuglet.create('store/firestore/transaction', { store, _tx });
   }
 
   _createDocumentWithProperties(props) {
-    return getOwner(this).factoryFor('zuglet:store/firestore/document').create(props);
+    return getFactory(this).zuglet.create('store/firestore/document', props);
   }
 
   _createDocumentForReference(ref, data) {
@@ -197,9 +197,9 @@ export default class Store extends EmberObject {
     let { type } = assign({ type: 'array' }, opts);
     let store = this;
     if(type === 'array') {
-      return getOwner(this).factoryFor('zuglet:store/firestore/query/array').create({ store, ref });
+      return getFactory(this).zuglet.create('store/firestore/query/array', { store, ref });
     } else if(type === 'first' || type === 'single') {
-      return getOwner(this).factoryFor('zuglet:store/firestore/query/single').create({ store, ref });
+      return getFactory(this).zuglet.create('store/firestore/query/single', { store, ref });
     }
     assert(`Unsupported type '${type}'`, false);
   }

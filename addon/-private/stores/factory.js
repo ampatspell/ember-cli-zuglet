@@ -36,50 +36,46 @@ export default class Factory extends EmberObject {
     return `${prefix}:${name}`;
   }
 
-  registerFactory(name, factory) {
+  registerFactory(prefix, name, factory) {
     assert(`factory is required`, !!factory);
     let normalizedName = this._normalizeModelName(name);
-    let fullName = this._modelFullNameForNormalizedName(normalizedName);
+    let fullName = this._modelFullNameForNormalizedName(prefix, normalizedName);
     getOwner(this).register(fullName, factory);
   }
 
-  _factoryFor(prefix, normalizedName, opts) {
+  _factoryFor(prefix, name, opts) {
     let { optional } = assign({ optional: false }, opts);
+    let normalizedName = this._normalizeModelName(name);
     let fullName = this._modelFullNameForNormalizedName(prefix, normalizedName);
     let factory = getOwner(this).factoryFor(fullName);
     assert(`model '${normalizedName}' is not registered`, optional || !!factory);
-    let isClassic;
-    if(factory) {
-      isClassic = isFunction(factory.class.create);
+    if(!factory) {
+      return;
     }
+    let isClassic = isFunction(factory.class.create);
+    let create = (...args) => {
+      if(isClassic) {
+        return factory.create(...args);
+      }
+      let instance = new factory.class(getOwner(this), ...args);
+      getState(instance).modelName = this._fullNameWithModulePrefix(fullName);
+      return instance;
+    };
     return {
       factory,
       fullName,
-      isClassic
+      isClassic,
+      create
     };
   }
 
   factoryFor(prefix, name, opts) {
-    let normalizedName = this._normalizeModelName(name);
-    let { factory } = this._factoryFor(prefix, normalizedName, opts);
-    return factory
-  }
-
-  hasFactoryFor(prefix, name) {
-    return !!this.factoryFor(prefix, name, { optional: true });
+    return this._factoryFor(prefix, name, opts);
   }
 
   create(prefix, name, ...args) {
-    let normalizedName = this._normalizeModelName(name);
-    let { factory, fullName, isClassic } = this._factoryFor(prefix, normalizedName, { optional: false });
-
-    if(isClassic) {
-      return factory.create(...args);
-    }
-
-    let instance = new factory.class(getOwner(this), ...args);
-    getState(instance).modelName = this._fullNameWithModulePrefix(fullName);
-    return instance;
+    let { create } = this._factoryFor(prefix, name, { optional: false });
+    return create(...args);
   }
 
   @cached()

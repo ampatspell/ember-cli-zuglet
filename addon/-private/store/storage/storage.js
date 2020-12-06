@@ -1,7 +1,7 @@
 import 'firebase/storage';
 import EmberObject from '@ember/object';
-import { getOwner } from '../../util/get-owner';
 import { toJSON } from '../../util/to-json';
+import { getFactory } from '../../stores/get-factory';
 
 export default class Storage extends EmberObject {
 
@@ -27,7 +27,7 @@ export default class Storage extends EmberObject {
     }
 
     let storage = this;
-    return getOwner(this).factoryFor('zuglet:store/storage/reference').create({ storage, _ref });
+    return getFactory(this).zuglet.create('store/storage/reference', { storage, _ref });
   }
 
   get serialized() {
