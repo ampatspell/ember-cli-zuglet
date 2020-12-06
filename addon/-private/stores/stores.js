@@ -14,12 +14,6 @@ export default class Stores extends EmberObject {
   stores = []
 
   @cached()
-  get stats() {
-    let stores = this;
-    return getOwner(this).factoryFor('zuglet:stores/stats').create({ stores });
-  }
-
-  @cached()
   get factory() {
     let stores = this;
     return getOwner(this).factoryFor('zuglet:stores/factory').create({ stores });
@@ -29,12 +23,19 @@ export default class Stores extends EmberObject {
     return this.factory.models;
   }
 
+  @cached()
+  get stats() {
+    let stores = this;
+    return this.factory.zuglet.create('stores/stats', { stores });
+  }
+
   _registerStoreFactory(identifier, factory) {
-    let factoryName = `zuglet:store/${identifier}`;
-    let registered = getOwner(this).factoryFor(factoryName);
+    let { factory: { zuglet } } = this;
+    let name = `store/${identifier}`;
+    let registered = zuglet.factoryFor(name, { optional: true });
     if(!registered) {
-      getOwner(this).register(factoryName, factory);
-      registered = getOwner(this).factoryFor(factoryName);
+      zuglet.registerFactory(name, factory);
+      registered = zuglet.factoryFor(name);
     }
     return registered;
   }
@@ -42,9 +43,9 @@ export default class Stores extends EmberObject {
   createStore(identifier, factory) {
     let store = this.store(identifier, { optional: true });
     assert(`store '${identifier}' is already registered`, !store);
+    let { create } = this._registerStoreFactory(identifier, factory);
     let stores = this;
-    factory = this._registerStoreFactory(identifier, factory);
-    store = factory.create({ stores, identifier });
+    store = create({ stores, identifier });
     this.stores = [ ...this.stores, store ];
     return store;
   }

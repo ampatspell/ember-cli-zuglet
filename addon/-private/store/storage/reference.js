@@ -1,9 +1,9 @@
 import EmberObject from '@ember/object';
 import { assert } from '@ember/debug';
-import { getOwner } from '../../util/get-owner';
 import { toJSON } from '../../util/to-json';
 import { registerPromise } from '../../stores/stats';
 import firebase from "firebase/app";
+import { getFactory } from '../../stores/get-factory';
 
 const {
   StringFormat
@@ -93,7 +93,7 @@ export default class StorageReference extends EmberObject {
   }
 
   put(opts) {
-    return getOwner(this).factoryFor('zuglet:store/storage/task').create(this._put(opts));
+    return getFactory(this).zuglet.create('store/storage/task', this._put(opts));
   }
 
   //

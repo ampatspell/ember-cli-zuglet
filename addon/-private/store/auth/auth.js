@@ -2,11 +2,11 @@ import 'firebase/auth';
 import EmberObject from '@ember/object';
 import { defer } from '../../util/defer';
 import { activate } from '../../model/properties/activate';
-import { getOwner } from '../../util/get-owner';
 import { objectToJSON } from '../../util/object-to-json';
 import { cached } from '../../model/decorators/cached';
 import { toJSON } from '../../util/to-json';
 import { registerObserver, registerPromise } from '../../stores/stats';
+import { getFactory } from '../../stores/get-factory';
 import { assert } from '@ember/debug';
 
 export default class Auth extends EmberObject {
@@ -64,7 +64,7 @@ export default class Auth extends EmberObject {
     if(auth && auth.user) {
       return this.store.models.create(auth.user, { store, user });
     }
-    return getOwner(this).factoryFor(`zuglet:store/auth/user`).create({ store, user });
+    return getFactory(this).zuglet.create('store/auth/user', { store, user });
   }
 
   async _restoreUser(internal, details) {
@@ -98,7 +98,7 @@ export default class Auth extends EmberObject {
   @cached()
   get methods() {
     let auth = this;
-    return getOwner(this).factoryFor('zuglet:store/auth/methods').create({ auth });
+    return getFactory(this).zuglet.create('store/auth/methods', { auth });
   }
 
   //

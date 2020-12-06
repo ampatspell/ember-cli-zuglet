@@ -1,8 +1,8 @@
 import 'firebase/functions';
 import EmberObject from '@ember/object';
-import { getOwner } from '../../util/get-owner';
 import { cached } from '../../model/decorators/cached';
 import { toJSON } from '../../util/to-json';
+import { getFactory } from '../../stores/get-factory';
 
 export default class Functions extends EmberObject {
 
@@ -38,7 +38,7 @@ export default class Functions extends EmberObject {
   region(region) {
     let functions = this;
     let _region = this._functions(region);
-    return getOwner(this).factoryFor('zuglet:store/functions/region').create({ functions, _region });
+    return getFactory(this).zuglet.create('store/functions/region', { functions, _region });
   }
 
   call() {

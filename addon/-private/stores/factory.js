@@ -36,10 +36,10 @@ export default class Factory extends EmberObject {
     return `${prefix}:${name}`;
   }
 
-  registerFactory(name, factory) {
+  registerFactory(prefix, name, factory) {
     assert(`factory is required`, !!factory);
     let normalizedName = this._normalizeModelName(name);
-    let fullName = this._modelFullNameForNormalizedName(normalizedName);
+    let fullName = this._modelFullNameForNormalizedName(prefix, normalizedName);
     getOwner(this).register(fullName, factory);
   }
 
@@ -49,13 +49,23 @@ export default class Factory extends EmberObject {
     let factory = getOwner(this).factoryFor(fullName);
     assert(`model '${normalizedName}' is not registered`, optional || !!factory);
     let isClassic;
+    let create;
     if(factory) {
       isClassic = isFunction(factory.class.create);
+      create = (...args) => {
+        if(isClassic) {
+          return factory.create(...args);
+        }
+        let instance = new factory.class(getOwner(this), ...args);
+        getState(instance).modelName = this._fullNameWithModulePrefix(fullName);
+        return instance;
+      };
     }
     return {
       factory,
       fullName,
-      isClassic
+      isClassic,
+      create
     };
   }
 
@@ -71,15 +81,8 @@ export default class Factory extends EmberObject {
 
   create(prefix, name, ...args) {
     let normalizedName = this._normalizeModelName(name);
-    let { factory, fullName, isClassic } = this._factoryFor(prefix, normalizedName, { optional: false });
-
-    if(isClassic) {
-      return factory.create(...args);
-    }
-
-    let instance = new factory.class(getOwner(this), ...args);
-    getState(instance).modelName = this._fullNameWithModulePrefix(fullName);
-    return instance;
+    let { create } = this._factoryFor(prefix, normalizedName, { optional: false });
+    return create(...args);
   }
 
   @cached()

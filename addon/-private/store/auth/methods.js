@@ -1,12 +1,12 @@
 import EmberObject from '@ember/object';
-import { getOwner } from '../../util/get-owner';
 import { cached } from '../../model/decorators/cached';
+import { getFactory } from '../../stores/get-factory';
 
 export default class AuthMethods extends EmberObject {
 
   _method(name) {
     let { auth } = this;
-    return getOwner(this).factoryFor(`zuglet:store/auth/methods/${name}`).create({ auth });
+    return getFactory(this).zuglet.create(`store/auth/methods/${name}`, { auth });
   }
 
   @cached()
