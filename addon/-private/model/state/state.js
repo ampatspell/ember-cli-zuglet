@@ -1,9 +1,9 @@
-import EmberObject from '@ember/object';
+import ZugletObject from '../../object';
 import { assert } from '@ember/debug';
 import { registerActivated, unregisterActivated } from '../../stores/stats';
 import Activators from './activators';
 
-export default class State extends EmberObject {
+export default class State extends ZugletObject {
 
   owner = null
   properties = Object.create(null);
@@ -11,6 +11,11 @@ export default class State extends EmberObject {
   cache = Object.create(null);
 
   modelName = null
+
+  constructor(_owner, { owner }) {
+    super(_owner);
+    this.owner = owner;
+  }
 
   getProperty(key, create) {
     let property = this.properties[key];

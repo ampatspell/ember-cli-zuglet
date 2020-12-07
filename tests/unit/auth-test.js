@@ -51,7 +51,7 @@ module('auth', function(hooks) {
         user: null
       }
     });
-    assert.ok(json.instance.startsWith('Auth::ember'));
+    assert.ok(json.instance.startsWith('zuglet@store/auth::ember'));
   });
 
 });

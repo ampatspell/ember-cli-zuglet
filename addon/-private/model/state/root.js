@@ -3,8 +3,8 @@ import { registerDestructor } from '@ember/destroyable';
 
 export default class RootState extends State {
 
-  init() {
-    super.init(...arguments);
+  constructor() {
+    super(...arguments);
     registerDestructor(this.owner, () => this._onOwnerWillDestroy());
     this.activate(this);
   }
