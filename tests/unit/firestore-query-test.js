@@ -144,7 +144,7 @@ module('firestore / query', function(hooks) {
         string: 'ducks.orderBy(name, asc).limit(1)'
       }
     });
-    assert.ok(json.instance.startsWith('QuerySingle::ember'));
+    assert.ok(json.instance.startsWith('zuglet@store/firestore/query/single::ember'));
   });
 
   test('toStringExtension', function(assert) {

@@ -289,7 +289,7 @@ module('firestore / document', function(hooks) {
         }
       }
     });
-    assert.ok(json.instance.startsWith('Document::ember'));
+    assert.ok(json.instance.startsWith('zuglet@store/firestore/document::ember'));
   });
 
   test('toStringExtension', function(assert) {
