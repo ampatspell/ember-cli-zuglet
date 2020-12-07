@@ -1,10 +1,10 @@
-import EmberObject from '@ember/object';
+import ZugletObject from '../object';
 import { getStores } from './get-stores';
 import { A } from '@ember/array';
 import { isPromise } from '../util/types';
 import { next } from '../util/runloop';
 
-export default class Stats extends EmberObject {
+export default class Stats extends ZugletObject {
 
   activated = A();
   observers = A();
