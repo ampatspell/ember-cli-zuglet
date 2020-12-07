@@ -1,3 +1,3 @@
 import { getStores } from './get-stores';
 
-export const getFactory = owner => getStores(owner).factory;
+export const getFactory = (owner, opts) => getStores(owner, opts)?.factory;
