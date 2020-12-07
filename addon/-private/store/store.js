@@ -1,4 +1,5 @@
-import EmberObject from '@ember/object';
+import ZugletObject from '../object';
+import { registerDestructor } from '@ember/destroyable';
 import { assert } from '@ember/debug';
 import firebase from "firebase/app";
 import { initializeApp, enablePersistence, destroyApp } from './firebase';
@@ -44,15 +45,17 @@ const normalizeOptions = options => {
 }
 
 @root()
-export default class Store extends EmberObject {
+export default class Store extends ZugletObject {
 
   identifier = null
   firebase = null
   enablePersistencePromise = null
 
-  init() {
-    super.init(...arguments);
-    this._initializeApp();
+  constructor(owner, { stores, identifier }) {
+    super(owner);
+    this.stores = stores;
+    this.identifier = identifier;
+    registerDestructor(this, () => this._destroy());
   }
 
   @cached()
@@ -60,7 +63,7 @@ export default class Store extends EmberObject {
     return normalizeOptions(this.options);
   }
 
-  _initializeApp() {
+  _initialize() {
     let { normalizedOptions: options } = this;
     this.firebase = initializeApp(options.firebase, this.identifier);
     this.enablePersistencePromise = Promise.resolve();
@@ -254,10 +257,9 @@ export default class Store extends EmberObject {
 
   //
 
-  willDestroy() {
+  _destroy() {
     getCached(this, 'auth')?.destroy();
     destroyApp(this.firebase);
-    super.willDestroy(...arguments);
   }
 
 }

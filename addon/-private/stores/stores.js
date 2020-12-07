@@ -1,4 +1,5 @@
 import EmberObject from '@ember/object';
+import { associateDestroyableChild } from '@ember/destroyable';
 import { getOwner } from '../util/get-owner';
 import { cached } from '../model/decorators/cached';
 import { tracked } from "@glimmer/tracking"
@@ -40,12 +41,19 @@ export default class Stores extends EmberObject {
     return registered;
   }
 
+  _createStore(identifier, factory) {
+    let { create } = this._registerStoreFactory(identifier, factory);
+    let stores = this;
+    let store = create({ stores, identifier });
+    associateDestroyableChild(this, store);
+    store._initialize();
+    return store;
+  }
+
   createStore(identifier, factory) {
     let store = this.store(identifier, { optional: true });
     assert(`store '${identifier}' is already registered`, !store);
-    let { create } = this._registerStoreFactory(identifier, factory);
-    let stores = this;
-    store = create({ stores, identifier });
+    store = this._createStore(identifier, factory);
     this.stores = [ ...this.stores, store ];
     return store;
   }
@@ -59,12 +67,6 @@ export default class Stores extends EmberObject {
 
   async settle() {
     await this.stats.settle();
-  }
-
-  willDestroy() {
-    this.stores.map(store => store.destroy());
-    this.stats.destroy();
-    super.willDestroy(...arguments);
   }
 
 }
