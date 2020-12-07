@@ -80,13 +80,13 @@ export default class Factory extends EmberObject {
   @cached()
   get models() {
     let factory = this;
-    return getOwner(this).factoryFor('zuglet:factory/models').create({ factory });
+    return this.create('zuglet', 'factory/models', { factory });
   }
 
   @cached()
   get zuglet() {
     let factory = this;
-    return getOwner(this).factoryFor('zuglet:factory/zuglet').create({ factory });
+    return this.create('zuglet', 'factory/zuglet', { factory });
   }
 
 }
