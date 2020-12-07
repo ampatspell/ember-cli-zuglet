@@ -5,8 +5,8 @@ export default class ContentActivateProperty extends BaseActivateProperty {
 
   @diff()
   _value() {
-    let { owner, opts: { value } } = this;
-    return value.call(owner, owner);
+    let { owner, opts: { value }, key } = this;
+    return value.call(owner, owner, key);
   }
 
   getPropertyValue() {
