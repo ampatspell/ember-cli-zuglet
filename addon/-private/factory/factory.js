@@ -17,12 +17,11 @@ export default class Factory extends EmberObject {
     return getOwner(this).application?.modulePrefix;
   }
 
-  _fullNameWithModulePrefix(fullName) {
-    let prefix = this._modulePrefix;
-    if(prefix) {
-      return `${prefix}@${fullName}`;
+  _debugModelName(prefix, name, fullName) {
+    if(prefix === 'zuglet') {
+      return `${prefix}@${name}`;
     }
-    return fullName;
+    return `${this._modulePrefix}@${fullName}`;
   }
 
   _normalizeModelName(name) {
@@ -58,7 +57,7 @@ export default class Factory extends EmberObject {
         return factory.create(...args);
       }
       let instance = new factory.class(getOwner(this), ...args);
-      getState(instance).modelName = this._fullNameWithModulePrefix(fullName);
+      getState(instance).modelName = this._debugModelName(prefix, normalizedName, fullName);
       return instance;
     };
     return {
@@ -81,13 +80,13 @@ export default class Factory extends EmberObject {
   @cached()
   get models() {
     let factory = this;
-    return getOwner(this).factoryFor('zuglet:stores/factory/models').create({ factory });
+    return getOwner(this).factoryFor('zuglet:factory/models').create({ factory });
   }
 
   @cached()
   get zuglet() {
     let factory = this;
-    return getOwner(this).factoryFor('zuglet:stores/factory/zuglet').create({ factory });
+    return getOwner(this).factoryFor('zuglet:factory/zuglet').create({ factory });
   }
 
 }

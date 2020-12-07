@@ -1,8 +1,8 @@
 import Stores from 'zuglet/-private/stores/stores';
 import Stats from 'zuglet/-private/stores/stats';
-import Factory from 'zuglet/-private/stores/factory';
-import ModelsFactory from 'zuglet/-private/stores/factory/models';
-import ZugletFactory from 'zuglet/-private/stores/factory/zuglet';
+import Factory from 'zuglet/-private/factory/factory';
+import ModelsFactory from 'zuglet/-private/factory/factory/models';
+import ZugletFactory from 'zuglet/-private/factory/factory/zuglet';
 
 import ModelState from 'zuglet/-private/model/state/model';
 import RootState from 'zuglet/-private/model/state/root';
@@ -44,10 +44,11 @@ import FunctionsRegion from 'zuglet/-private/store/functions/region';
 export default {
   name: 'zuglet:internal',
   initialize(container) {
+    container.register('zuglet:factory', Factory);
+    container.register('zuglet:factory/models', ModelsFactory);
+    container.register('zuglet:factory/zuglet', ZugletFactory);
+
     container.register('zuglet:stores', Stores);
-    container.register('zuglet:stores/factory', Factory);
-    container.register('zuglet:stores/factory/models', ModelsFactory);
-    container.register('zuglet:stores/factory/zuglet', ZugletFactory);
     container.register('zuglet:stores/stats', Stats);
 
     container.register('zuglet:state/model', ModelState);

@@ -1,6 +1,6 @@
 import EmberObject from '@ember/object';
 import { associateDestroyableChild } from '@ember/destroyable';
-import { getOwner } from '../util/get-owner';
+import { getFactory } from '../factory/get-factory';
 import { cached } from '../model/decorators/cached';
 import { tracked } from "@glimmer/tracking"
 import { assert } from '@ember/debug';
@@ -16,8 +16,7 @@ export default class Stores extends EmberObject {
 
   @cached()
   get factory() {
-    let stores = this;
-    return getOwner(this).factoryFor('zuglet:stores/factory').create({ stores });
+    return getFactory(this);
   }
 
   get models() {
