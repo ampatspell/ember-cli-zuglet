@@ -44,6 +44,8 @@ const normalizeOptions = options => {
   };
 }
 
+const activated = activate().content((store, key) => store._factory.zuglet.create(`store/${key}`, { store }));
+
 @root()
 export default class Store extends ZugletObject {
 
@@ -86,22 +88,9 @@ export default class Store extends ZugletObject {
     return this._factory.models;
   }
 
-  @activate().content(store => {
-    return store._factory.zuglet.create('store/auth', { store });
-  })
-  auth
-
-  @cached()
-  get storage() {
-    let store = this;
-    return this._factory.zuglet.create('store/storage', { store });
-  }
-
-  @cached()
-  get functions() {
-    let store = this;
-    return this._factory.zuglet.create('store/functions', { store });
-  }
+  @activated auth
+  @activated storage
+  @activated functions
 
   //
 

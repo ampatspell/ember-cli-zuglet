@@ -10,6 +10,13 @@ const {
   assign
 } = Object;
 
+const factory = (_, key) => ({
+  get() {
+    let factory = this;
+    return this.create('zuglet', `factory/${key}`, { factory });
+  }
+});
+
 export default class Factory extends EmberObject {
 
   @cached()
@@ -77,16 +84,14 @@ export default class Factory extends EmberObject {
     return create(...args);
   }
 
-  @cached()
-  get models() {
-    let factory = this;
-    return this.create('zuglet', 'factory/models', { factory });
-  }
+  //
 
   @cached()
-  get zuglet() {
-    let factory = this;
-    return this.create('zuglet', 'factory/zuglet', { factory });
-  }
+  @factory
+  models
+
+  @cached()
+  @factory
+  zuglet
 
 }
