@@ -1,8 +1,13 @@
-import EmberObject from '@ember/object';
+import ZugletObject from '../../object';
 import { cached } from '../../model/decorators/cached';
 import { getFactory } from '../../factory/get-factory';
 
-export default class AuthMethods extends EmberObject {
+export default class AuthMethods extends ZugletObject {
+
+  constructor(owner, { auth }) {
+    super(owner);
+    this.auth = auth;
+  }
 
   _method(name) {
     let { auth } = this;
