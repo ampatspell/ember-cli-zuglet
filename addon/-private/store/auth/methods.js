@@ -1,6 +1,6 @@
 import EmberObject from '@ember/object';
 import { cached } from '../../model/decorators/cached';
-import { getFactory } from '../../stores/get-factory';
+import { getFactory } from '../../factory/get-factory';
 
 export default class AuthMethods extends EmberObject {
 

@@ -1,5 +1,5 @@
 import { getState } from '../../state';
-import { getFactory } from '../../../stores/get-factory';
+import { getFactory } from '../../../factory/get-factory';
 
 const createProperty = (state, owner, name, key, opts) => {
   return getFactory(owner).zuglet.create(`properties/${name}`, { state, owner, key, opts });

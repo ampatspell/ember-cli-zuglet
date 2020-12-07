@@ -1,5 +1,5 @@
 import Property, { property } from './property';
-import { getFactory } from '../../stores/get-factory';
+import { getFactory } from '../../factory/get-factory';
 import ObjectActivator from './activate/activators/object';
 import { diff, asOptionalString, asOptionalObject, asIdentity } from '../decorators/diff';
 import { isFunction } from '../../util/types';

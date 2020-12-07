@@ -1,7 +1,7 @@
 import 'firebase/storage';
 import EmberObject from '@ember/object';
 import { toJSON } from '../../util/to-json';
-import { getFactory } from '../../stores/get-factory';
+import { getFactory } from '../../factory/get-factory';
 
 export default class Storage extends EmberObject {
 
