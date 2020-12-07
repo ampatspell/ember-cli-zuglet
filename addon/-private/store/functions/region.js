@@ -1,8 +1,14 @@
-import EmberObject from '@ember/object';
+import ZugletObject from '../../../object';
 import { toJSON } from '../../util/to-json';
 import { registerPromise } from '../../stores/stats';
 
-export default class FunctionsRegion extends EmberObject {
+export default class FunctionsRegion extends ZugletObject {
+
+  constructor(owner, { functions, _region }) {
+    super(owner);
+    this.functions = functions;
+    this._region = _region;
+  }
 
   get identifier() {
     return this._region.region;
