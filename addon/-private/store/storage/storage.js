@@ -1,9 +1,14 @@
 import 'firebase/storage';
-import EmberObject from '@ember/object';
+import ZugletObject from '../../../object';
 import { toJSON } from '../../util/to-json';
 import { getFactory } from '../../factory/get-factory';
 
-export default class Storage extends EmberObject {
+export default class Storage extends ZugletObject {
+
+  constructor(owner, { store }) {
+    super(owner);
+    this.store = store;
+  }
 
   get _storage() {
     return this.store.firebase.storage();
