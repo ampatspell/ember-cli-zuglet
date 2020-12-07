@@ -39,7 +39,7 @@ module('functions', function(hooks) {
         region: 'us-central1'
       }
     });
-    assert.ok(json.instance.startsWith('Functions::ember'));
+    assert.ok(json.instance.startsWith('zuglet@store/functions::ember'));
   });
 
   test('toStringExtension', function(assert) {

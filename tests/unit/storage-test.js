@@ -27,7 +27,7 @@ module('storage', function(hooks) {
         bucket: this.bucket
       }
     });
-    assert.ok(json.instance.startsWith('Storage::ember'));
+    assert.ok(json.instance.startsWith('zuglet@store/storage::ember'));
   });
 
   test('toStringExtension', function(assert) {
