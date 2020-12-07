@@ -4,10 +4,7 @@ import { A } from '@ember/array';
 
 export default class QueryArray extends Query {
 
-  init() {
-    super.init(...arguments);
-    this.content = A([]);
-  }
+  content = A([]);
 
   _onSnapshotRefresh(current, snapshots) {
     let content = A();

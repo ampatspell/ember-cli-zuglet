@@ -1,4 +1,4 @@
-import EmberObject from '@ember/object';
+import ZugletObject from '../../../../object';
 import { objectToJSON } from '../../../util/object-to-json';
 import { toJSON } from '../../../util/to-json';
 import { activate } from '../../../model/properties/activate';
@@ -11,7 +11,7 @@ const {
   assign
 } = Object;
 
-export default class Query extends EmberObject {
+export default class Query extends ZugletObject {
 
   @activate()
   content
@@ -25,8 +25,10 @@ export default class Query extends EmberObject {
   _isPassive = false
   _reusable
 
-  init() {
-    super.init(...arguments);
+  constructor(owner, { store, ref }) {
+    super(owner);
+    this.store = store;
+    this.ref = ref;
     this._deferred = defer();
   }
 

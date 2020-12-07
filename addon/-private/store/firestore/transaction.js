@@ -1,12 +1,18 @@
-import EmberObject from '@ember/object';
+import ZugletObject from '../../../object';
 import { isDocument } from './document';
 import { isDocumentReference } from './references/document';
 import { assert } from '@ember/debug';
 
-export default class Transaction extends EmberObject {
+export default class Transaction extends ZugletObject {
 
   store = null
   _tx = null
+
+  constructor(owner, { store, _tx }) {
+    super(owner);
+    this.store = store;
+    this._tx = _tx;
+  }
 
   load(arg, opts) {
     assert(`argument must be Document or DocumentReference not '${arg}'`, isDocument(arg) || isDocumentReference(arg));
