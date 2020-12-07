@@ -13,8 +13,8 @@ import {
 
 export default class ObjectProperty extends Property {
 
-  init() {
-    super.init(...arguments);
+  constructor() {
+    super(...arguments);
     this.manager = new DataManager({
       delegate: {
         onDirty: () => this.onDirty(),

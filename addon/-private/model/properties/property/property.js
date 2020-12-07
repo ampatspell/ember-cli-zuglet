@@ -1,12 +1,20 @@
-import EmberObject from '@ember/object';
+import ZugletObject from '../../../object';
 import { getState } from '../../state';
 
-export default class Property extends EmberObject {
+export default class Property extends ZugletObject {
 
   state = null;
   owner = null;
   key = null;
   opts = null;
+
+  constructor(_owner, { state, owner, key, opts }) {
+    super(_owner);
+    this.state = state;
+    this.owner = owner;
+    this.key = key;
+    this.opts = opts;
+  }
 
   get isActivated() {
     return this.state.isActivated;

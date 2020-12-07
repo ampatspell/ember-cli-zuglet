@@ -44,8 +44,8 @@ const getMarker = model => {
 
 export default class ModelsProperty extends Property {
 
-  init() {
-    super.init(...arguments);
+  constructor() {
+    super(...arguments);
     this.models = A([]);
     this.factory = getFactory(this).models;
   }

@@ -3,10 +3,6 @@ import { diff } from '../../decorators/diff';
 
 export default class ContentActivateProperty extends BaseActivateProperty {
 
-  init() {
-    super.init(...arguments);
-  }
-
   @diff()
   _value() {
     let { owner, opts: { value } } = this;

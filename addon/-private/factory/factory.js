@@ -3,7 +3,7 @@ import { dasherize } from '@ember/string';
 import { assert } from '@ember/debug';
 import { getOwner } from '../util/get-owner';
 import { isFunction } from '../util/types';
-import { getState } from '../model/state';
+import { MODEL_NAME } from '../util/to-primitive';
 import { cached } from '../model/decorators/cached';
 
 const {
@@ -57,7 +57,7 @@ export default class Factory extends EmberObject {
         return factory.create(...args);
       }
       let instance = new factory.class(getOwner(this), ...args);
-      getState(instance).modelName = this._debugModelName(prefix, normalizedName, fullName);
+      instance[MODEL_NAME] = this._debugModelName(prefix, normalizedName, fullName);
       return instance;
     };
     return {
