@@ -1,5 +1,5 @@
 import { module, test, setupStoreTest } from '../helpers/setup';
-import EmberObject from '@ember/object';
+import ZugletObject, { setProperties } from 'zuglet/object';
 import { model } from 'zuglet/decorators';
 import { isActivated } from 'zuglet/utils';
 import { dedupeTracked } from 'tracked-toolbox';
@@ -8,9 +8,14 @@ module('decorators / @model', function(hooks) {
   setupStoreTest(hooks);
 
   hooks.beforeEach(function() {
-    this.registerModel('duck', class Model extends EmberObject {
+    this.registerModel('duck', class Model extends ZugletObject {
 
       type = 'duck'
+
+      constructor(owner, args) {
+        super(owner);
+        setProperties(this, args);
+      }
 
       mappingDidChange({ id }) {
         this.id = id;
@@ -18,8 +23,15 @@ module('decorators / @model', function(hooks) {
 
     });
 
-    this.registerModel('hamster', class Model extends EmberObject {
+    this.registerModel('hamster', class Model extends ZugletObject {
+
       type = 'hamster'
+
+      constructor(owner, args) {
+        super(owner);
+        setProperties(this, args);
+      }
+
     });
 
     this.define = Box => {
@@ -30,7 +42,7 @@ module('decorators / @model', function(hooks) {
   });
 
   test('creates named model', async function(assert) {
-    let box = this.define(class Box extends EmberObject {
+    let box = this.define(class Box extends ZugletObject {
 
       @dedupeTracked
       name = 'duck'
@@ -40,6 +52,11 @@ module('decorators / @model', function(hooks) {
 
       @model().named(({ name }) => name).mapping(({ id }) => ({ id }))
       model
+
+      constructor(owner, args) {
+        super(owner);
+        setProperties(this, args);
+      }
 
     });
 
@@ -49,13 +66,18 @@ module('decorators / @model', function(hooks) {
   });
 
   test('creates model with static name', async function(assert) {
-    let box = this.define(class Box extends EmberObject {
+    let box = this.define(class Box extends ZugletObject {
 
       @dedupeTracked
       id = 'yellow'
 
       @model().named('duck').mapping(({ id }) => ({ id }))
       model
+
+      constructor(owner, args) {
+        super(owner);
+        setProperties(this, args);
+      }
 
     });
 
@@ -65,7 +87,7 @@ module('decorators / @model', function(hooks) {
   });
 
   test('returns null for falsy model name', async function(assert) {
-    let box = this.define(class Box extends EmberObject {
+    let box = this.define(class Box extends ZugletObject {
 
       @dedupeTracked
       name = 'duck'
@@ -75,6 +97,11 @@ module('decorators / @model', function(hooks) {
 
       @model().named(({ name }) => name).mapping(({ id }) => ({ id }))
       model
+
+      constructor(owner, args) {
+        super(owner);
+        setProperties(this, args);
+      }
 
     });
 
@@ -89,7 +116,7 @@ module('decorators / @model', function(hooks) {
   });
 
   test('activate already created model', async function(assert) {
-    let box = this.define(class Box extends EmberObject {
+    let box = this.define(class Box extends ZugletObject {
 
       @dedupeTracked
       name = 'duck'
@@ -99,6 +126,11 @@ module('decorators / @model', function(hooks) {
 
       @model().named(({ name }) => name).mapping(({ id }) => ({ id }))
       model
+
+      constructor(owner, args) {
+        super(owner);
+        setProperties(this, args);
+      }
 
     });
 
@@ -111,7 +143,7 @@ module('decorators / @model', function(hooks) {
   });
 
   test('updates model properties on change', async function(assert) {
-    let box = this.define(class Box extends EmberObject {
+    let box = this.define(class Box extends ZugletObject {
 
       @dedupeTracked
       name = 'duck'
@@ -121,6 +153,11 @@ module('decorators / @model', function(hooks) {
 
       @model().named(({ name }) => name).mapping(({ id }) => ({ id }))
       model
+
+      constructor(owner, args) {
+        super(owner);
+        setProperties(this, args);
+      }
 
     });
 
@@ -134,7 +171,7 @@ module('decorators / @model', function(hooks) {
   });
 
   test('dedupes named changes', async function(assert) {
-    let box = this.define(class Box extends EmberObject {
+    let box = this.define(class Box extends ZugletObject {
 
       @dedupeTracked
       name = 'hamster'
@@ -144,6 +181,11 @@ module('decorators / @model', function(hooks) {
 
       @model().named(({ name }) => name).mapping(({ id }) => ({ id }))
       model
+
+      constructor(owner, args) {
+        super(owner);
+        setProperties(this, args);
+      }
 
     });
 
@@ -153,7 +195,7 @@ module('decorators / @model', function(hooks) {
   });
 
   test('dedupes mapping changes', async function(assert) {
-    let box = this.define(class Box extends EmberObject {
+    let box = this.define(class Box extends ZugletObject {
 
       @dedupeTracked
       name = 'hamster'
@@ -163,6 +205,11 @@ module('decorators / @model', function(hooks) {
 
       @model().named(({ name }) => name).mapping(({ id }) => ({ id }))
       model
+
+      constructor(owner, args) {
+        super(owner);
+        setProperties(this, args);
+      }
 
     });
 
@@ -172,7 +219,7 @@ module('decorators / @model', function(hooks) {
   });
 
   test('replces model on properties change if mappingDidChange doesnt exist', async function(assert) {
-    let box = this.define(class Box extends EmberObject {
+    let box = this.define(class Box extends ZugletObject {
 
       @dedupeTracked
       name = 'hamster'
@@ -182,6 +229,11 @@ module('decorators / @model', function(hooks) {
 
       @model().named(({ name }) => name).mapping(({ id }) => ({ id }))
       model
+
+      constructor(owner, args) {
+        super(owner);
+        setProperties(this, args);
+      }
 
     });
 
@@ -207,7 +259,7 @@ module('decorators / @model', function(hooks) {
   });
 
   test('replaces model on name change', async function(assert) {
-    let box = this.define(class Box extends EmberObject {
+    let box = this.define(class Box extends ZugletObject {
 
       @dedupeTracked
       name = 'duck'
@@ -217,6 +269,11 @@ module('decorators / @model', function(hooks) {
 
       @model().named(({ name }) => name).mapping(({ id }) => ({ id }))
       model
+
+      constructor(owner, args) {
+        super(owner);
+        setProperties(this, args);
+      }
 
     });
 

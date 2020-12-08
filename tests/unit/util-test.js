@@ -1,5 +1,6 @@
 import { module, test, setupStoreTest } from '../helpers/setup';
 import EmberObject from '@ember/object';
+import ZugletObject from 'zuglet/object';
 import { alive } from 'zuglet/-private/util/alive';
 import { delay } from 'zuglet/-private/util/delay';
 import { next } from 'zuglet/-private/util/runloop';
@@ -7,11 +8,12 @@ import { resolve } from 'zuglet/-private/util/resolve';
 import { toPrimitive } from 'zuglet/-private/util/to-primitive';
 import { toString } from 'zuglet/-private/util/to-string';
 import { assert as zugletAssert, isZugletError } from 'zuglet/-private/util/error';
+import { destroy } from '@ember/destroyable';
 
 module('util', function(hooks) {
   setupStoreTest(hooks);
 
-  test('alive', async function(assert) {
+  test('alive with ember object', async function(assert) {
     this.registerModel('thing', class Thing extends EmberObject {
 
       value = 0;
@@ -26,6 +28,27 @@ module('util', function(hooks) {
     let model = this.store.models.create('thing');
     model.increment();
     model.destroy();
+    await next();
+    model.increment();
+
+    assert.strictEqual(model.value, 1);
+  });
+
+  test('alive with native class', async function(assert) {
+    this.registerModel('thing', class Thing extends ZugletObject {
+
+      value = 0;
+
+      @alive()
+      increment() {
+        this.value++;
+      }
+
+    });
+
+    let model = this.store.models.create('thing');
+    model.increment();
+    destroy(model);
     await next();
     model.increment();
 

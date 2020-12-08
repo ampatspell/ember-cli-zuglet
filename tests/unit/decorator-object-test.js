@@ -1,5 +1,5 @@
 import { module, test, setupStoreTest } from '../helpers/setup';
-import EmberObject from '@ember/object';
+import ZugletObject from 'zuglet/object';
 import { object, raw, update } from 'zuglet/decorators/object';
 
 module('decorator / @object', function(hooks) {
@@ -7,7 +7,7 @@ module('decorator / @object', function(hooks) {
 
   hooks.beforeEach(function() {
     this.model = () => {
-      this.registerModel('model', class Model extends EmberObject {
+      this.registerModel('model', class Model extends ZugletObject {
 
         @object().onDirty(owner => owner._dataDidChange())
         data

@@ -1,5 +1,5 @@
 import { module, test, setupStoreTest } from '../helpers/setup';
-import EmberObject from '@ember/object';
+import ZugletObject, { setProperties } from 'zuglet/object';
 import { activate } from 'zuglet/decorators';
 import { tracked } from '@glimmer/tracking';
 import { isActivated } from 'zuglet/utils';
@@ -9,7 +9,11 @@ module('decorators / @activate / content / object', function(hooks) {
   setupStoreTest(hooks);
 
   hooks.beforeEach(function() {
-    this.registerModel('nested', class Nested extends EmberObject {
+    this.registerModel('nested', class Nested extends ZugletObject {
+      constructor(owner, args) {
+        super(owner);
+        setProperties(this, args);
+      }
     });
     this.define = Box => {
       let { store } = this;
@@ -19,13 +23,18 @@ module('decorators / @activate / content / object', function(hooks) {
   });
 
   test('initial content is activated and deactivated on recreate', async function(assert) {
-    let box = this.define(class Box extends EmberObject {
+    let box = this.define(class Box extends ZugletObject {
 
       @tracked
       base = 'zeeba'
 
       @activate().content(({ store, base }) => store.models.create('nested', { base }))
       model
+
+      constructor(owner, args) {
+        super(owner);
+        setProperties(this, args);
+      }
 
     });
 
@@ -43,13 +52,18 @@ module('decorators / @activate / content / object', function(hooks) {
   });
 
   test('content is replaced and then activated', async function(assert) {
-    let box = this.define(class Box extends EmberObject {
+    let box = this.define(class Box extends ZugletObject {
 
       @tracked
       base = 'zeeba'
 
       @activate().content(({ store, base }) => store.models.create('nested', { base }))
       model
+
+      constructor(owner, args) {
+        super(owner);
+        setProperties(this, args);
+      }
 
     });
 
@@ -66,13 +80,18 @@ module('decorators / @activate / content / object', function(hooks) {
   });
 
   test('content is activated when parent is and deactivated when parent is', async function(assert) {
-    let box = this.define(class Box extends EmberObject {
+    let box = this.define(class Box extends ZugletObject {
 
       @tracked
       base = 'zeeba'
 
       @activate().content(({ store, base }) => store.models.create('nested', { base }))
       model
+
+      constructor(owner, args) {
+        super(owner);
+        setProperties(this, args);
+      }
 
     });
 
@@ -93,7 +112,7 @@ module('decorators / @activate / content / object', function(hooks) {
   });
 
   test(`model is recreated if @dedupeTracked is set to the same value`, async function(assert) {
-    let box = this.define(class Box extends EmberObject {
+    let box = this.define(class Box extends ZugletObject {
 
       @tracked
       base = 'zeeba'
@@ -103,6 +122,11 @@ module('decorators / @activate / content / object', function(hooks) {
 
       @activate().content(({ store, base, deduped }) => store.models.create('nested', { base, deduped }))
       model
+
+      constructor(owner, args) {
+        super(owner);
+        setProperties(this, args);
+      }
 
     });
 
@@ -112,7 +136,7 @@ module('decorators / @activate / content / object', function(hooks) {
   });
 
   test(`model is not recreated if @dedupeTracked is set to the same value`, async function(assert) {
-    let box = this.define(class Box extends EmberObject {
+    let box = this.define(class Box extends ZugletObject {
 
       @tracked
       base = 'zeeba'
@@ -123,6 +147,11 @@ module('decorators / @activate / content / object', function(hooks) {
       @activate().content(({ store, base, deduped }) => store.models.create('nested', { base, deduped }))
       model
 
+      constructor(owner, args) {
+        super(owner);
+        setProperties(this, args);
+      }
+
     });
 
     let model = box.model;
@@ -131,13 +160,18 @@ module('decorators / @activate / content / object', function(hooks) {
   });
 
   test(`model is recreated if @tracked property is set to another value`, async function(assert) {
-    let box = this.define(class Box extends EmberObject {
+    let box = this.define(class Box extends ZugletObject {
 
       @tracked
       base = 'zeeba'
 
       @activate().content(({ store, base }) => store.models.create('nested', { base }))
       model
+
+      constructor(owner, args) {
+        super(owner);
+        setProperties(this, args);
+      }
 
     });
 
@@ -147,7 +181,7 @@ module('decorators / @activate / content / object', function(hooks) {
   });
 
   test(`model is recreated if @tracked property is set to the same value`, async function(assert) {
-    let box = this.define(class Box extends EmberObject {
+    let box = this.define(class Box extends ZugletObject {
 
       @tracked
       base = 'zeeba'
@@ -155,6 +189,11 @@ module('decorators / @activate / content / object', function(hooks) {
       @activate()
         .content(({ store, base }) => store.models.create('nested', { base }))
       model
+
+      constructor(owner, args) {
+        super(owner);
+        setProperties(this, args);
+      }
 
     });
 
