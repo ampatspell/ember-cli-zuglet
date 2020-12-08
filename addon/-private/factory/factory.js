@@ -3,8 +3,8 @@ import { dasherize } from '@ember/string';
 import { assert } from '@ember/debug';
 import { getOwner } from '../util/get-owner';
 import { isFunction } from '../util/types';
-import { MODEL_NAME } from '../util/to-primitive';
 import { cached } from '../model/decorators/cached';
+import { registerModel } from '../util/model-factory';
 
 const {
   assign
@@ -70,7 +70,7 @@ export default class Factory extends ZugletObject {
         return factory.create(...args);
       }
       let instance = new factory.class(getOwner(this), ...args);
-      instance[MODEL_NAME] = this._debugModelName(prefix, normalizedName, fullName);
+      registerModel(instance, this._debugModelName(prefix, normalizedName, fullName));
       return instance;
     };
     return {
