@@ -10,8 +10,6 @@ export default class State extends ZugletObject {
   activators = new Activators();
   cache = Object.create(null);
 
-  modelName = null
-
   constructor(_owner, { owner }) {
     super(_owner);
     this.owner = owner;
