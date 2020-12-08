@@ -1,13 +1,14 @@
 import 'firebase/functions';
-import EmberObject from '@ember/object';
+import ZugletObject from '../../object';
 import { cached } from '../../model/decorators/cached';
 import { toJSON } from '../../util/to-json';
-import { getFactory } from '../../stores/get-factory';
+import { getFactory } from '../../factory/get-factory';
 
-export default class Functions extends EmberObject {
+export default class Functions extends ZugletObject {
 
-  init() {
-    super.init(...arguments);
+  constructor(owner, { store }) {
+    super(owner);
+    this.store = store;
   }
 
   _maybeSetupEmulator(functions) {

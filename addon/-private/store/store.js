@@ -10,7 +10,7 @@ import { isFunction, isDocumentReference, isCollectionReference } from '../util/
 import { registerPromise } from '../stores/stats';
 import { root } from '../model/decorators/root';
 import { activate } from '../model/properties/activate';
-import { getFactory } from '../stores/get-factory';
+import { getFactory } from '../factory/get-factory';
 
 const {
   assign
@@ -43,6 +43,8 @@ const normalizeOptions = options => {
     emulators
   };
 }
+
+const activated = activate().content((store, key) => store._factory.zuglet.create(`store/${key}`, { store }));
 
 @root()
 export default class Store extends ZugletObject {
@@ -77,26 +79,18 @@ export default class Store extends ZugletObject {
     }
   }
 
+  @cached()
+  get _factory() {
+    return getFactory(this);
+  }
+
   get models() {
-    return this.stores.models;
+    return this._factory.models;
   }
 
-  @activate().content(store => {
-    return getFactory(store).zuglet.create('store/auth', { store });
-  })
-  auth
-
-  @cached()
-  get storage() {
-    let store = this;
-    return getFactory(this).zuglet.create('store/storage', { store });
-  }
-
-  @cached()
-  get functions() {
-    let store = this;
-    return getFactory(this).zuglet.create('store/functions', { store });
-  }
+  @activated auth
+  @activated storage
+  @activated functions
 
   //
 
@@ -157,32 +151,32 @@ export default class Store extends ZugletObject {
 
   _createDocumentReference(_ref) {
     let store = this;
-    return getFactory(this).zuglet.create('store/firestore/reference/document', { store, _ref });
+    return this._factory.zuglet.create('store/firestore/reference/document', { store, _ref });
   }
 
   _createCollectionReference(_ref) {
     let store = this;
-    return getFactory(this).zuglet.create('store/firestore/reference/collection', { store, _ref });
+    return this._factory.zuglet.create('store/firestore/reference/collection', { store, _ref });
   }
 
   _createConditionReference(_ref, string) {
     let store = this;
-    return getFactory(this).zuglet.create('store/firestore/reference/condition', { store, _ref, string });
+    return this._factory.zuglet.create('store/firestore/reference/condition', { store, _ref, string });
   }
 
   _createBatch() {
     let store = this;
     let _batch = this.firebase.firestore().batch();
-    return getFactory(this).zuglet.create('store/firestore/batch', { store, _batch });
+    return this._factory.zuglet.create('store/firestore/batch', { store, _batch });
   }
 
   _createTransaction(_tx) {
     let store = this;
-    return getFactory(this).zuglet.create('store/firestore/transaction', { store, _tx });
+    return this._factory.zuglet.create('store/firestore/transaction', { store, _tx });
   }
 
   _createDocumentWithProperties(props) {
-    return getFactory(this).zuglet.create('store/firestore/document', props);
+    return this._factory.zuglet.create('store/firestore/document', props);
   }
 
   _createDocumentForReference(ref, data) {
@@ -198,11 +192,12 @@ export default class Store extends ZugletObject {
 
   _createQuery(ref, opts) {
     let { type } = assign({ type: 'array' }, opts);
+    let { _factory } = this;
     let store = this;
     if(type === 'array') {
-      return getFactory(this).zuglet.create('store/firestore/query/array', { store, ref });
+      return _factory.zuglet.create('store/firestore/query/array', { store, ref });
     } else if(type === 'first' || type === 'single') {
-      return getFactory(this).zuglet.create('store/firestore/query/single', { store, ref });
+      return _factory.zuglet.create('store/firestore/query/single', { store, ref });
     }
     assert(`Unsupported type '${type}'`, false);
   }

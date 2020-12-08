@@ -2,7 +2,7 @@ import Property, { property } from './property';
 import { setOwner, getOwner } from '@ember/application';
 import { A, isArray } from '@ember/array';
 import { getState } from '../state';
-import { getFactory } from '../../stores/get-factory';
+import { getFactory } from '../../factory/get-factory';
 import { assert } from '@ember/debug';
 import { diff, asObject, asString } from '../decorators/diff';
 import { isFunction } from '../../util/types';
@@ -44,8 +44,8 @@ const getMarker = model => {
 
 export default class ModelsProperty extends Property {
 
-  init() {
-    super.init(...arguments);
+  constructor() {
+    super(...arguments);
     this.models = A([]);
     this.factory = getFactory(this).models;
   }

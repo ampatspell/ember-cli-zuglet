@@ -1,4 +1,4 @@
-import EmberObject from '@ember/object';
+import ZugletObject from '../../../object';
 import { object, raw, update } from '../../model/properties/object';
 import { objectToJSON } from '../../util/object-to-json';
 import { toJSON } from '../../util/to-json';
@@ -19,7 +19,7 @@ export const isDocument = arg => arg instanceof Document;
 
 const noop = () => {};
 
-export default class Document extends EmberObject {
+export default class Document extends ZugletObject {
 
   @object().onDirty(owner => owner._dataDidChange())
   data
@@ -39,12 +39,12 @@ export default class Document extends EmberObject {
 
   _isPassive = false
 
-  init(opts) {
-    let { snapshot, data } = opts;
-    delete opts.snapshot;
-    super.init(...arguments);
+  constructor(owner, { store, ref, snapshot, parent, data }) {
+    super(owner);
+    this.store = store;
+    this.ref = ref;
+    this.parent = parent;
     this._listeners = new Listeners();
-    this._deferred = defer();
     if(data) {
       this.data = data;
       this._state.untracked.setProperties({ isNew: true, isDirty: true });
@@ -54,6 +54,7 @@ export default class Document extends EmberObject {
         this._onSnapshot(snapshot, { source: 'initial' });
       }
     }
+    this._deferred = defer();
   }
 
   //

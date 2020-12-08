@@ -1,21 +1,22 @@
 import 'firebase/auth';
-import EmberObject from '@ember/object';
+import ZugletObject from '../../object';
 import { defer } from '../../util/defer';
 import { activate } from '../../model/properties/activate';
 import { objectToJSON } from '../../util/object-to-json';
 import { cached } from '../../model/decorators/cached';
 import { toJSON } from '../../util/to-json';
 import { registerObserver, registerPromise } from '../../stores/stats';
-import { getFactory } from '../../stores/get-factory';
+import { getFactory } from '../../factory/get-factory';
 import { assert } from '@ember/debug';
 
-export default class Auth extends EmberObject {
+export default class Auth extends ZugletObject {
 
   @activate()
   user
 
-  init() {
-    super.init(...arguments);
+  constructor(owner, { store }) {
+    super(owner);
+    this.store = store;
     this._maybeSetupEmulator();
     this._deferred = defer();
   }

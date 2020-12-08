@@ -1,5 +1,5 @@
-import EmberObject from '@ember/object';
 import firebase from "firebase/app";
+import ZugletObject from '../../../object';
 import { objectToJSON } from '../../util/object-to-json';
 import { tracked } from '@glimmer/tracking';
 import { toJSON } from '../../util/to-json';
@@ -15,7 +15,7 @@ const calculateProgress = (total, transferred) => {
   return Math.round((value + Number.EPSILON) * 10) / 10;
 };
 
-export default class StorageTask extends EmberObject {
+export default class StorageTask extends ZugletObject {
 
   @state _state
   @readable total = null
@@ -28,9 +28,14 @@ export default class StorageTask extends EmberObject {
 
   @tracked metadata
 
-  init() {
-    super.init(...arguments);
-    this._await(this._task);
+  constructor(owner, { ref, type, data, _task, metadata }) {
+    super(owner);
+    this.ref = ref;
+    this.type = type;
+    this.data = data;
+    this._task = _task;
+    this.metadata = metadata;
+    this._await(_task);
   }
 
   async _await(task) {

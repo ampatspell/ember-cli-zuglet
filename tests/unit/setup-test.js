@@ -1,6 +1,6 @@
 import { module, test, setupStoreTest } from '../helpers/setup';
 import { isActivated } from 'zuglet/utils';
-import EmberObject from '@ember/object';
+import ZugletObject from 'zuglet/object';
 
 module('setup', function(hooks) {
   setupStoreTest(hooks);
@@ -18,8 +18,12 @@ module('setup', function(hooks) {
   });
 
   test('register model', function(assert) {
-    class Box extends EmberObject {
+    class Box extends ZugletObject {
       name = 'box'
+      constructor(owner, { ok }) {
+        super(owner);
+        this.ok = ok;
+      }
     }
 
     this.registerModel('box', Box);

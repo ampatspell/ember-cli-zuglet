@@ -1,8 +1,8 @@
-import EmberObject from '@ember/object';
+import Method from '../method';
 import firebase from "firebase/app";
 import { registerPromise } from '../../../../stores/stats';
 
-export default class PopupGoogleAuthMethod extends EmberObject {
+export default class PopupGoogleAuthMethod extends Method {
 
   /* istanbul ignore next */
   signIn(scopes) {

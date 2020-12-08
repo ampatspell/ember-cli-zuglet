@@ -1,28 +1,40 @@
-import EmberObject from '@ember/object';
+import ZugletObject from '../object';
 import { dasherize } from '@ember/string';
 import { assert } from '@ember/debug';
 import { getOwner } from '../util/get-owner';
 import { isFunction } from '../util/types';
-import { getState } from '../model/state';
+import { MODEL_NAME } from '../util/to-primitive';
 import { cached } from '../model/decorators/cached';
 
 const {
   assign
 } = Object;
 
-export default class Factory extends EmberObject {
+const factory = (_, key) => ({
+  get() {
+    let factory = this;
+    return this.create('zuglet', `factory/${key}`, { factory });
+  }
+});
+
+export default class Factory extends ZugletObject {
+
+  static create(owner) {
+    return new this(getOwner(owner));
+  }
+
+  //
 
   @cached()
   get _modulePrefix() {
     return getOwner(this).application?.modulePrefix;
   }
 
-  _fullNameWithModulePrefix(fullName) {
-    let prefix = this._modulePrefix;
-    if(prefix) {
-      return `${prefix}@${fullName}`;
+  _debugModelName(prefix, name, fullName) {
+    if(prefix === 'zuglet') {
+      return `${prefix}@${name}`;
     }
-    return fullName;
+    return `${this._modulePrefix}@${fullName}`;
   }
 
   _normalizeModelName(name) {
@@ -58,7 +70,7 @@ export default class Factory extends EmberObject {
         return factory.create(...args);
       }
       let instance = new factory.class(getOwner(this), ...args);
-      getState(instance).modelName = this._fullNameWithModulePrefix(fullName);
+      instance[MODEL_NAME] = this._debugModelName(prefix, normalizedName, fullName);
       return instance;
     };
     return {
@@ -78,16 +90,14 @@ export default class Factory extends EmberObject {
     return create(...args);
   }
 
-  @cached()
-  get models() {
-    let factory = this;
-    return getOwner(this).factoryFor('zuglet:stores/factory/models').create({ factory });
-  }
+  //
 
   @cached()
-  get zuglet() {
-    let factory = this;
-    return getOwner(this).factoryFor('zuglet:stores/factory/zuglet').create({ factory });
-  }
+  @factory
+  models
+
+  @cached()
+  @factory
+  zuglet
 
 }

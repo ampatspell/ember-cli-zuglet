@@ -19,7 +19,7 @@ const createState = (owner, opts) => {
     factory = _owner.factoryFor('zuglet:state/model');
   }
 
-  return factory.create({ owner });
+  return new factory.class(_owner, { owner });
 }
 
 export const getState = (owner, opts) => {

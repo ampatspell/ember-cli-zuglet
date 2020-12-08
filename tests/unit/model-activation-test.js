@@ -1,13 +1,13 @@
 import { module, test, setupStoreTest } from '../helpers/setup';
 import { activate, isActivated } from 'zuglet/utils';
 import { getState } from 'zuglet/-private/model/state';
-import EmberObject from '@ember/object';
+import ZugletObject from 'zuglet/object';
 
 module('model / activation', function(hooks) {
   setupStoreTest(hooks);
 
   hooks.beforeEach(function() {
-    class Thing extends EmberObject {
+    class Thing extends ZugletObject {
     }
     this.registerModel('thing', Thing);
   });

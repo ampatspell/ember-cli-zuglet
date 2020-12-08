@@ -1,5 +1,5 @@
 import { module, test, setupStoreTest } from '../helpers/setup';
-import EmberObject from '@ember/object';
+import ZugletObject, { setProperties } from 'zuglet/object';
 import { activate } from 'zuglet/decorators';
 import { tracked } from '@glimmer/tracking';
 import { isActivated } from 'zuglet/utils';
@@ -8,7 +8,12 @@ module('decorators / @activate / content / array', function(hooks) {
   setupStoreTest(hooks);
 
   hooks.beforeEach(function() {
-    this.registerModel('model', class Model extends EmberObject {});
+    this.registerModel('model', class Model extends ZugletObject {
+      constructor(owner, args) {
+        super(owner);
+        setProperties(this, args);
+      }
+    });
     this.define = Box => {
       let { store } = this;
       this.registerModel('box', Box);
@@ -19,7 +24,7 @@ module('decorators / @activate / content / array', function(hooks) {
   test('content is recreated on dependency change', async function(assert) {
     let create = [];
 
-    let box = this.define(class Box extends EmberObject {
+    let box = this.define(class Box extends ZugletObject {
 
       @tracked
       names = [ 'one', 'two' ]
@@ -29,6 +34,11 @@ module('decorators / @activate / content / array', function(hooks) {
         return store.models.create('model', { name });
       }))
       models
+
+      constructor(owner, args) {
+        super(owner);
+        setProperties(this, args);
+      }
 
     });
 

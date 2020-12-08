@@ -1,5 +1,5 @@
 import { module, test, setupStoreTest } from '../helpers/setup';
-import EmberObject from '@ember/object';
+import ZugletObject, { setProperties } from 'zuglet/object';
 import { models, activate } from 'zuglet/decorators';
 import { isActivated, load } from 'zuglet/utils';
 import { dedupeTracked } from 'tracked-toolbox';
@@ -12,12 +12,13 @@ module('decorators / @models', function(hooks) {
     let created = [];
     this.created = created;
 
-    this.registerModel('duck', class Model extends EmberObject {
+    this.registerModel('duck', class Model extends ZugletObject {
 
       type = 'duck'
 
-      init() {
-        super.init(...arguments);
+      constructor(owner, args) {
+        super(owner);
+        setProperties(this, args);
         created.push('duck');
       }
 
@@ -27,12 +28,13 @@ module('decorators / @models', function(hooks) {
 
     });
 
-    this.registerModel('hamster', class Model extends EmberObject {
+    this.registerModel('hamster', class Model extends ZugletObject {
 
       type = 'hamster'
 
-      init() {
-        super.init(...arguments);
+      constructor(owner, args) {
+        super(owner);
+        setProperties(this, args);
         created.push('hamster');
       }
 
@@ -57,7 +59,7 @@ module('decorators / @models', function(hooks) {
       { _id: '3', pos: 3, type: 'duck', name: 'Three', visible: true },
     ]);
 
-    let box = this.define(class Box extends EmberObject {
+    let box = this.define(class Box extends ZugletObject {
 
       @dedupeTracked
       visible = true
@@ -67,6 +69,11 @@ module('decorators / @models', function(hooks) {
 
       @models().source(({ query }) => query.content).named(doc => doc.data.type).mapping(doc => ({ doc }))
       models
+
+      constructor(owner, args) {
+        super(owner);
+        setProperties(this, args);
+      }
 
     });
 

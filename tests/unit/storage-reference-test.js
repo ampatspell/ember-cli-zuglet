@@ -48,7 +48,7 @@ module('storage / reference', function(hooks) {
         path: 'ducks/hello'
       }
     });
-    assert.ok(json.instance.startsWith('StorageReference::ember'));
+    assert.ok(json.instance.startsWith('zuglet@store/storage/reference::ember'));
   });
 
   test('toStringExtension', function(assert) {

@@ -1,5 +1,5 @@
 import { module, test, setupStoreTest } from '../helpers/setup';
-import EmberObject from '@ember/object';
+import ZugletObject, { setProperties } from 'zuglet/object';
 import { route as routeDecorator } from 'zuglet/decorators';
 import { isActivated } from 'zuglet/utils';
 
@@ -8,8 +8,16 @@ module('decorators / @route', function(hooks) {
 
   hooks.beforeEach(function(assert) {
 
-    class BaseRoute extends EmberObject {
-      resetController() {}
+    class BaseRoute extends ZugletObject {
+
+      constructor(owner, args) {
+        super(owner);
+        setProperties(this, args);
+      }
+
+      resetController() {
+      }
+
     }
 
     @routeDecorator()
@@ -30,7 +38,12 @@ module('decorators / @route', function(hooks) {
 
     }
 
-    class Model extends EmberObject {
+    class Model extends ZugletObject {
+
+      constructor(owner, args) {
+        super(owner);
+        setProperties(this, args);
+      }
 
       async load() {
         assert.ok(isActivated(this));

@@ -87,7 +87,7 @@ module('storage / task', function(hooks) {
     });
 
     let json = task.toJSON();
-    assert.ok(json.instance.startsWith('StorageTask::ember'));
+    assert.ok(json.instance.startsWith('zuglet@store/storage/task::ember'));
     assert.strictEqual(json.serialized.path, 'hello');
     assert.deepEqual(json.serialized.metadata, {
       contentType: 'text/plain'

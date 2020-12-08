@@ -25,7 +25,7 @@ module('store', function(hooks) {
         projectId: this.projectId
       }
     });
-    assert.ok(json.instance.startsWith('dummy@zuglet:store/test::ember'));
+    assert.ok(json.instance.startsWith('zuglet@store/test::ember'));
   });
 
   test('toStringExtension', function(assert) {

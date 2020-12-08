@@ -1,5 +1,5 @@
 import { module, test, setupStoreTest } from '../helpers/setup';
-import EmberObject from '@ember/object';
+import ZugletObject, { setProperties } from 'zuglet/object';
 import { activate } from 'zuglet/decorators';
 import { activate as _activate, isActivated } from 'zuglet/utils';
 
@@ -7,7 +7,11 @@ module('decorators / @activate / writable / object', function(hooks) {
   setupStoreTest(hooks);
 
   hooks.beforeEach(function() {
-    this.registerModel('model', class Model extends EmberObject {
+    this.registerModel('model', class Model extends ZugletObject {
+      constructor(owner, args) {
+        super(owner);
+        setProperties(this, args);
+      }
     });
     this.define = Box => {
       let { store } = this;
@@ -17,10 +21,15 @@ module('decorators / @activate / writable / object', function(hooks) {
   });
 
   test('model is activated when parent is', function(assert) {
-    let box = this.define(class Box extends EmberObject {
+    let box = this.define(class Box extends ZugletObject {
 
       @activate()
       model
+
+      constructor(owner, args) {
+        super(owner);
+        setProperties(this, args);
+      }
 
     });
 
@@ -34,10 +43,15 @@ module('decorators / @activate / writable / object', function(hooks) {
   });
 
   test('model is deactivated when parent is', function(assert) {
-    let box = this.define(class Box extends EmberObject {
+    let box = this.define(class Box extends ZugletObject {
 
       @activate()
       model
+
+      constructor(owner, args) {
+        super(owner);
+        setProperties(this, args);
+      }
 
     });
 
@@ -54,10 +68,15 @@ module('decorators / @activate / writable / object', function(hooks) {
   });
 
   test('model is activated on set', function(assert) {
-    let box = this.define(class Box extends EmberObject {
+    let box = this.define(class Box extends ZugletObject {
 
       @activate()
       model
+
+      constructor(owner, args) {
+        super(owner);
+        setProperties(this, args);
+      }
 
     });
 
@@ -70,7 +89,7 @@ module('decorators / @activate / writable / object', function(hooks) {
   });
 
   test('model is deactivated on unset', function(assert) {
-    let box = this.define(class Box extends EmberObject {
+    let box = this.define(class Box extends ZugletObject {
 
       @activate()
       model
@@ -89,10 +108,15 @@ module('decorators / @activate / writable / object', function(hooks) {
   });
 
   test('models are deactivated - activated on replace', function(assert) {
-    let box = this.define(class Box extends EmberObject {
+    let box = this.define(class Box extends ZugletObject {
 
       @activate()
       model
+
+      constructor(owner, args) {
+        super(owner);
+        setProperties(this, args);
+      }
 
     });
 

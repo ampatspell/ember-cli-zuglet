@@ -1,14 +1,20 @@
-import EmberObject from '@ember/object';
+import ZugletObject from '../../../object';
 import { isDocument } from './document';
 import { isDocumentReference } from './references/document';
 import { registerPromise } from '../../stores/stats';
 import { assert } from '@ember/debug';
 
-export default class Batch extends EmberObject {
+export default class Batch extends ZugletObject {
 
   store = null
   _batch = null
   _callbacks = [];
+
+  constructor(owner, { store, _batch }) {
+    super(owner);
+    this.store = store;
+    this._batch = _batch;
+  }
 
   async commit() {
     try {

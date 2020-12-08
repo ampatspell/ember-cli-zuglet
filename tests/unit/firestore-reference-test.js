@@ -112,7 +112,7 @@ module('firestore / reference', function(hooks) {
         path: 'ducks/yellow'
       }
     });
-    assert.ok(json.instance.startsWith('DocumentReference::ember'));
+    assert.ok(json.instance.startsWith('zuglet@store/firestore/reference/document::ember'));
   });
 
   test('condition toStringExtension', function(assert) {

@@ -4,8 +4,8 @@ import { A } from '@ember/array';
 
 export default class QueryArray extends Query {
 
-  init() {
-    super.init(...arguments);
+  constructor() {
+    super(...arguments);
     this.content = A([]);
   }
 

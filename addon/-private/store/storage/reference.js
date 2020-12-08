@@ -1,9 +1,9 @@
-import EmberObject from '@ember/object';
+import ZugletObject from '../../../object';
 import { assert } from '@ember/debug';
 import { toJSON } from '../../util/to-json';
 import { registerPromise } from '../../stores/stats';
 import firebase from "firebase/app";
-import { getFactory } from '../../stores/get-factory';
+import { getFactory } from '../../factory/get-factory';
 
 const {
   StringFormat
@@ -21,7 +21,13 @@ const stringFormats = {
   'data-url':   StringFormat.DATA_URL
 };
 
-export default class StorageReference extends EmberObject {
+export default class StorageReference extends ZugletObject {
+
+  constructor(owner, { storage, _ref }) {
+    super(owner);
+    this.storage = storage;
+    this._ref = _ref;
+  }
 
   get name() {
     return this._ref.name;
@@ -105,9 +111,9 @@ export default class StorageReference extends EmberObject {
     if(type === 'string') {
       let format_ = stringFormats[format];
       assert(`opts.format can be one of the following [ ${keys(stringFormats).join(', ')} ]`, format_);
-      _task = registerPromise(this, 'put', this._ref.putString(data, format_, metadata));
+      _task = this._ref.putString(data, format_, metadata);
     } else if(type === 'data') {
-      _task = registerPromise(this, 'put', this._ref.put(data, metadata));
+      _task = this._ref.put(data, metadata);
     } else {
       assert(`opts.type must be 'string' or 'data'`, false);
     }
