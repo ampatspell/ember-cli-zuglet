@@ -1,4 +1,4 @@
-import EmberObject from '@ember/object';
+import ZugletObject from '../object';
 import { dasherize } from '@ember/string';
 import { assert } from '@ember/debug';
 import { getOwner } from '../util/get-owner';
@@ -17,7 +17,13 @@ const factory = (_, key) => ({
   }
 });
 
-export default class Factory extends EmberObject {
+export default class Factory extends ZugletObject {
+
+  static create(owner) {
+    return new this(getOwner(owner));
+  }
+
+  //
 
   @cached()
   get _modulePrefix() {
