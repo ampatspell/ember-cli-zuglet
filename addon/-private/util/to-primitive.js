@@ -1,11 +1,10 @@
 import { guidFor } from '@ember/object/internals';
-
-export const MODEL_NAME = Symbol('ZUGLET_FACTORY');
+import { getModelName } from './model-factory';
 
 export const toPrimitive = model => {
   if(!model) {
     return;
   }
-  let name = model[MODEL_NAME] || model.constructor.name;
+  let name = getModelName(model) || model.constructor.name;
   return `${name}::${guidFor(model)}`;
 }
