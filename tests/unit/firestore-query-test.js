@@ -18,7 +18,7 @@ module('firestore / query', function(hooks) {
       isLoading: false,
       isError: false,
       error: null,
-      string: 'ducks.orderBy(name, asc)'
+      string: `ducks.orderBy('name', 'asc')`
     });
 
     let promise = query.load();
@@ -27,7 +27,7 @@ module('firestore / query', function(hooks) {
       isLoading: true,
       isError: false,
       error: null,
-      string: 'ducks.orderBy(name, asc)'
+      string: `ducks.orderBy('name', 'asc')`
     });
     await promise;
 
@@ -36,7 +36,7 @@ module('firestore / query', function(hooks) {
       isLoading: false,
       isError: false,
       error: null,
-      string: 'ducks.orderBy(name, asc)'
+      string: `ducks.orderBy('name', 'asc')`
     });
 
     assert.strictEqual(query.content.length, 2);
@@ -61,7 +61,7 @@ module('firestore / query', function(hooks) {
       isLoading: false,
       isError: false,
       error: null,
-      string: 'ducks.orderBy(name, asc).limit(1)'
+      string: `ducks.orderBy('name', 'asc').limit(1)`
     });
 
     let promise = query.load();
@@ -70,7 +70,7 @@ module('firestore / query', function(hooks) {
       isLoading: true,
       isError: false,
       error: null,
-      string: 'ducks.orderBy(name, asc).limit(1)'
+      string: `ducks.orderBy('name', 'asc').limit(1)`
     });
     await promise;
 
@@ -79,7 +79,7 @@ module('firestore / query', function(hooks) {
       isLoading: false,
       isError: false,
       error: null,
-      string: 'ducks.orderBy(name, asc).limit(1)'
+      string: `ducks.orderBy('name', 'asc').limit(1)`
     });
 
     assert.deepEqual(query.content.data, {
@@ -141,7 +141,7 @@ module('firestore / query', function(hooks) {
         isLoading: false,
         isError: false,
         error: null,
-        string: 'ducks.orderBy(name, asc).limit(1)'
+        string: `ducks.orderBy('name', 'asc').limit(1)`
       }
     });
     assert.ok(json.instance.startsWith('zuglet@store/firestore/query/single::ember'));
@@ -151,7 +151,7 @@ module('firestore / query', function(hooks) {
     let ref = this.store.collection('ducks');
     let query = ref.orderBy('name', 'asc').limit(1).query({ type: 'single' });
     let string = query.toStringExtension();
-    assert.strictEqual(string, 'ducks.orderBy(name, asc).limit(1)');
+    assert.strictEqual(string, `ducks.orderBy('name', 'asc').limit(1)`);
   });
 
   test('passive', function(assert) {

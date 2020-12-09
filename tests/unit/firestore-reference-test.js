@@ -117,13 +117,13 @@ module('firestore / reference', function(hooks) {
 
   test('condition toStringExtension', function(assert) {
     let ref = this.store.collection('ducks').where('name', '==', 'yellow').limit(1);
-    assert.equal(ref.toStringExtension(), 'ducks.where(name, ==, yellow).limit(1)');
+    assert.equal(ref.toStringExtension(), `ducks.where('name', '==', 'yellow').limit(1)`);
   });
 
   test('condition serialized', function(assert) {
     let ref = this.store.collection('ducks').where('name', '==', 'yellow').limit(1);
     assert.deepEqual(ref.serialized, {
-      string: 'ducks.where(name, ==, yellow).limit(1)'
+      string: `ducks.where('name', '==', 'yellow').limit(1)`
     });
   });
 

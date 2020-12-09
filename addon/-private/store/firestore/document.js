@@ -120,6 +120,7 @@ export default class Document extends ZugletObject {
   }
 
   _onSnapshot(snapshot, opts) {
+    this._snapshot = snapshot;
     let { source } = opts || {};
     let { exists } = snapshot;
     let notify;
