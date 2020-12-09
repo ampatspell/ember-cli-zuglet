@@ -1,22 +1,41 @@
 import Reference from './reference';
 import { documentNotFoundError } from '../../../util/error';
 import { registerPromise } from '../../../stores/stats';
+import { isDocument } from '../document';
+import { assert } from '@ember/debug';
+import { isArray } from '../../../util/types';
 
 const {
   assign
 } = Object;
 
+const normalizeMethodArguments = args => args.map(arg => {
+  if(isDocument(arg)) {
+    let snapshot = arg._snapshot;
+    assert(`Document '${arg}' is not yet loaded`, !!snapshot);
+    return snapshot;
+  }
+  return arg;
+});
+
+const normalizeStringArguments = args => args.map(arg => {
+  if(isArray(arg)) {
+    return `[ ${normalizeStringArguments(arg)} ]`;
+  }
+  if(isDocument(arg)) {
+    return arg.id;
+  }
+  if(typeof arg === 'string') {
+    return `'${arg}'`;
+  }
+  return arg;
+}).join(', ');
+
 export default class QueryableReference extends Reference {
 
   _conditionParameters(name, args) {
-    let _ref = this._ref[name].call(this._ref, ...args);
-    let normalized = args.map(arg => {
-      if(Array.isArray(arg)) {
-        return `[ ${arg.join(', ')} ]`;
-      }
-      return arg;
-    })
-    let string = `${this.string}.${name}(${normalized.join(', ')})`;
+    let _ref = this._ref[name].call(this._ref, ...normalizeMethodArguments(args));
+    let string = `${this.string}.${name}(${normalizeStringArguments(args)})`;
     return {
       _ref,
       string
