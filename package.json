@@ -20,6 +20,9 @@
   },
   "license": "MIT",
   "author": "Arnis Vuskans <ampatspell@gmail.com> (http://www.amateurinmotion.com/)",
+  "funding": {
+    "url": "https://github.com/sponsors/ampatspell"
+  },
   "directories": {
     "doc": "doc",
     "test": "tests"
