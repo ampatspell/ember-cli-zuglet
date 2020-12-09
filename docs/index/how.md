@@ -37,16 +37,21 @@ Then let's add `Messages` model:
 
 ``` javascript
 // app/models/messages.js
-import EmberObject from '@ember/object';
+import { setOwner } from '@ember/application';
 import { inject as service } from '@ember/service';
 import { load } from 'zuglet/utils';
 import { activate, models } from 'zuglet/decorators';
 import { cached } from 'tracked-toolbox';
 
-export default class Messages extends EmberObject {
+export default class Messages {
 
   @service
   store
+
+  constructor(owner) {
+    // or extend from `zuglet/object` which does this and makes toString pretty
+    setOwner(this, owner);
+  }
 
   @cached
   get coll() {
@@ -94,12 +99,12 @@ Let's create that too:
 
 ``` javascript
 // app/models/message.js
-import EmberObject from '@ember/object';
+import { setOwner } from '@ember/application';
 import { read, alias } from 'macro-decorators';
 
 const data = key => alias(`doc.data.${key}`);
 
-export default class Message extends EmberObject {
+export default class Message {
 
   doc
 
@@ -111,6 +116,11 @@ export default class Message extends EmberObject {
 
   @data('text')
   text
+
+  constructor(owner, { doc }) {
+    setOwner(this, owner);
+    this.doc = doc; // comes from @models()…mapping(fn)
+  }
 
   async save() {
     // saves document if doc.isDirty
