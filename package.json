@@ -1,6 +1,6 @@
 {
   "name": "ember-cli-zuglet",
-  "version": "2.4.6",
+  "version": "2.4.7",
   "description": "Easiest way to use Google Firebase services in your Ember.js Octane app",
   "keywords": [
     "ember-addon",
