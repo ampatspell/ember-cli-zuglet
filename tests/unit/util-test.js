@@ -9,12 +9,14 @@ import { toPrimitive } from 'zuglet/-private/util/to-primitive';
 import { toString } from 'zuglet/-private/util/to-string';
 import { assert as zugletAssert, isZugletError } from 'zuglet/-private/util/error';
 import { destroy } from '@ember/destroyable';
+import classic from 'ember-classic-decorator';
 
 module('util', function(hooks) {
   setupStoreTest(hooks);
 
   test('alive with ember object', async function(assert) {
-    this.registerModel('thing', class Thing extends EmberObject {
+    @classic
+    class Thing extends EmberObject {
 
       value = 0;
 
@@ -23,7 +25,8 @@ module('util', function(hooks) {
         this.value++;
       }
 
-    });
+    }
+    this.registerModel('thing', Thing);
 
     let model = this.store.models.create('thing');
     model.increment();

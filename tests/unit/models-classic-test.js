@@ -3,11 +3,13 @@ import { getOwner } from '@ember/application';
 import { inject as service } from '@ember/service';
 import { guidFor } from '@ember/object/internals';
 import EmberObject from '@ember/object';
+import classic from 'ember-classic-decorator';
 
 module('models / classic', function(hooks) {
   setupStoreTest(hooks);
 
   test('create classic model', async function(assert) {
+    @classic
     class Hamster extends EmberObject {
 
       @service store
