@@ -6,6 +6,8 @@ import { cached } from '../model/decorators/cached';
 import { tracked } from "@glimmer/tracking"
 import { assert } from '@ember/debug';
 import classic from 'ember-classic-decorator';
+import { toJSON } from '../util/to-json';
+import { registerModel } from '../util/model-factory';
 
 const {
   assign
@@ -15,7 +17,7 @@ const {
 export default class Stores extends ZugletObject {
 
   static create(owner) {
-    return new this(getOwner(owner));
+    return registerModel(new this(getOwner(owner)), 'zuglet@stores');
   }
 
   destroy() {
@@ -79,6 +81,17 @@ export default class Stores extends ZugletObject {
 
   async settle() {
     await this.stats.settle();
+  }
+
+  get serialized() {
+    return {
+      stores: this.stores.map(store => store.serialized)
+    };
+  }
+
+  toJSON() {
+    let { serialized } = this;
+    return toJSON(this, serialized);
   }
 
 }
