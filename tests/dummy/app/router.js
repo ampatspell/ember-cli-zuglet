@@ -1,6 +1,7 @@
 import EmberRouterScroll from 'ember-router-scroll';
 import config from 'dummy/config/environment';
 import { isFastBoot } from 'zuglet/-private/util/fastboot';
+import classic from 'ember-classic-decorator';
 
 let {
   environment
@@ -8,6 +9,7 @@ let {
 
 let isGoogleAnalyticsEnabled = environment === 'production';
 
+@classic
 export default class Router extends EmberRouterScroll {
   location = config.locationType;
   rootURL = config.rootURL;

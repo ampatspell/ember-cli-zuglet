@@ -1,26 +1,17 @@
-import ZugletObject from '../../object';
-import { getOwner } from '../util/get-owner';
-import { associateDestroyableChild, destroy } from '@ember/destroyable';
+import EmberObject from '@ember/object';
+import { associateDestroyableChild } from '@ember/destroyable';
 import { getFactory } from '../factory/get-factory';
 import { cached } from '../model/decorators/cached';
 import { tracked } from "@glimmer/tracking"
 import { assert } from '@ember/debug';
+import classic from 'ember-classic-decorator';
 
 const {
   assign
 } = Object;
 
-export default class Stores extends ZugletObject {
-
-  static create(owner) {
-    return new this(getOwner(owner));
-  }
-
-  destroy() {
-    destroy(this);
-  }
-
-  //
+@classic
+export default class Stores extends EmberObject {
 
   @tracked
   stores = []
