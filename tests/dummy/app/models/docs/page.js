@@ -1,5 +1,7 @@
 import Page from 'ember-cli-remark-static/static/page';
+import classic from 'ember-classic-decorator';
 
+@classic
 export default class DocPage extends Page {
 
   get title() {
