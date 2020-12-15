@@ -2,6 +2,8 @@
 
 This addon is dead simple way to use Google Firebase services in your Ember.js apps. Cloud Firestore, Storage, Auth, Functions.
 
+**[ember-cli-zuglet is built and maintained by Arnis Vuskans, contact me for Ember.js, ember-cli-zuglet and Google Firebase consulting](https://www.amateurinmotion.com/)**.
+
 ember-cli-zuglet@^2.0.0 is a complete rewrite for Ember.js Octane edition.
 
 * [Website](https://www.ember-cli-zuglet.com/)
