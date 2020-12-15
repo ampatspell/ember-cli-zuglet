@@ -1,4 +1,4 @@
-# ember-cli-zuglet ![CI](https://github.com/ampatspell/ember-cli-zuglet/workflows/CI/badge.svg)
+# ember-cli-zuglet ![CI](https://github.com/ampatspell/ember-cli-zuglet/workflows/CI/badge.svg) [![npm version](https://img.shields.io/npm/v/ember-cli-zuglet.svg)](https://badge.fury.io/js/ember-cli-zuglet)
 
 This addon is dead simple way to use Google Firebase services in your Ember.js apps. Cloud Firestore, Storage, Auth, Functions.
 
