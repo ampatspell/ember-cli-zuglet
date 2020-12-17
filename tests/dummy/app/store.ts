@@ -2,8 +2,8 @@ import Store from 'zuglet/store';
 import { load } from 'zuglet/utils';
 import envionment from './config/environment';
 
-let { dummy: { firebase } } = envionment;
-let persistenceEnabled = envionment.environment !== 'test';
+const { dummy: { firebase } } = envionment;
+const persistenceEnabled = envionment.environment !== 'test';
 
 export default class DummyStore extends Store {
 
@@ -26,7 +26,7 @@ export default class DummyStore extends Store {
     }
   }
 
-  async load() {
+  async load(): Promise<void> {
     await load(this.auth);
   }
 

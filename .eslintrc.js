@@ -69,7 +69,9 @@ module.exports = {
         'plugin:@typescript-eslint/recommended'
       ],
       rules: {
-        semi: [2, 'always']
+        semi: [2, 'always'],
+        '@typescript-eslint/no-empty-function': 'off',
+        '@typescript-eslint/no-explicit-any': 'off'
       },
     },
   ]

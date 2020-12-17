@@ -11,4 +11,10 @@ declare const config: {
   locationType: string;
   rootURL: string;
   APP: Record<string, unknown>;
+  dummy: {
+    name: string,
+    version: string,
+    // TODO: use zuglet's type when it's available
+    firebase: { [key: string]: string }
+  }
 };

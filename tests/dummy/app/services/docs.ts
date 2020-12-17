@@ -4,7 +4,7 @@ export default class DocsService extends Service {
 
   identifier = 'docs'
 
-  pageFactoryName(id) {
+  pageFactoryName(id: string): string | undefined {
     if(!id) {
       return;
     }

@@ -3,33 +3,35 @@ import config from 'dummy/config/environment';
 import { isFastBoot } from 'zuglet/-private/util/fastboot';
 import classic from 'ember-classic-decorator';
 
-let {
+const {
   environment
 } = config;
 
-let isGoogleAnalyticsEnabled = environment === 'production';
+const isGoogleAnalyticsEnabled = environment === 'production';
+
+declare let gtag_pageview: Fixme;
 
 @classic
 export default class Router extends EmberRouterScroll {
   location = config.locationType;
   rootURL = config.rootURL;
 
-  init() {
-    super.init(...arguments);
+  init(): void {
+    super.init();
     this.on('routeDidChange', () => this.routeDidChange());
   }
 
-  sendPageview() {
+  sendPageview(): void {
     if(!isGoogleAnalyticsEnabled) {
       return;
     }
     if(typeof gtag_pageview !== 'undefined') {
-      let url = this.currentURL;
+      const url = (this as Fixme).currentURL;
       gtag_pageview(url); /* eslint-disable-line no-undef */
     }
   }
 
-  routeDidChange() {
+  routeDidChange(): void {
     if(!isFastBoot(this)) {
       this.sendPageview();
     }

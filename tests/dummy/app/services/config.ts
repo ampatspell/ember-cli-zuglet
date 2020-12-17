@@ -1,7 +1,7 @@
 import Service from '@ember/service';
 import environment from '../config/environment';
 
-let {
+const {
   dummy: {
     name,
     version
