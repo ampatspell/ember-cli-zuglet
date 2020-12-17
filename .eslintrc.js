@@ -20,7 +20,9 @@ module.exports = {
   env: {
     browser: true
   },
-  rules: {},
+  rules: {
+    semi: [2, 'always']
+  },
   overrides: [
     // node files
     {
@@ -66,7 +68,9 @@ module.exports = {
         'plugin:@typescript-eslint/eslint-recommended',
         'plugin:@typescript-eslint/recommended'
       ],
-      rules: {},
+      rules: {
+        semi: [2, 'always']
+      },
     },
   ]
 };
