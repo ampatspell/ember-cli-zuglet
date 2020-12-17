@@ -50,6 +50,23 @@ module.exports = {
       },
       plugins: ['node'],
       extends: ['plugin:node/recommended']
-    }
+    },
+    {
+      files: ['**/*.ts'],
+      parser: '@typescript-eslint/parser',
+      parserOptions: {
+        tsconfigRootDir: __dirname,
+        project: ['./tsconfig.json'],
+      },
+      plugins: [
+        '@typescript-eslint',
+        'ember'
+      ],
+      extends: [
+        'plugin:@typescript-eslint/eslint-recommended',
+        'plugin:@typescript-eslint/recommended'
+      ],
+      rules: {},
+    },
   ]
 };
