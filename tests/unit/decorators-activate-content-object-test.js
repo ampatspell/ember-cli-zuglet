@@ -19,7 +19,7 @@ module('decorators / @activate / content / object', function(hooks) {
       let { store } = this;
       this.registerModel('box', Box);
       return store.models.create('box', { store });
-    }
+    };
   });
 
   test('initial content is activated and deactivated on recreate', async function(assert) {

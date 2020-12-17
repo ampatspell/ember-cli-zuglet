@@ -42,7 +42,7 @@ const normalizeOptions = options => {
     functions,
     emulators
   };
-}
+};
 
 const activated = activate().content((store, key) => store._factory.zuglet.create(`store/${key}`, { store }));
 

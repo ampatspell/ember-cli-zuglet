@@ -17,7 +17,7 @@ module('decorators / @activate / writable / object', function(hooks) {
       let { store } = this;
       this.registerModel('box', Box);
       return store.models.create('box', { store });
-    }
+    };
   });
 
   test('model is activated when parent is', function(assert) {

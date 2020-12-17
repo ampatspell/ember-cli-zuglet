@@ -34,6 +34,6 @@ const getConfig = name => {
   let config = configs[name];
   assert(config, `Config for name '${name}' was not found`);
   return config;
-}
+};
 
 module.exports = getConfig;

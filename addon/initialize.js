@@ -12,7 +12,7 @@ const normalizeStore = store => {
   assert(`opts.store.identifier is required`, typeof store.identifier === 'string');
   assert(`opts.store.factory is required`, !!store.factory);
   return store;
-}
+};
 
 const normalizeService = (service, store) => {
   service = assign({
@@ -21,7 +21,7 @@ const normalizeService = (service, store) => {
   }, service);
   assert(`opts.service.name is required`, typeof service.name === 'string');
   return service;
-}
+};
 
 const normalizeDevelopment = (development, store) => {
   development = assign({
@@ -31,7 +31,7 @@ const normalizeDevelopment = (development, store) => {
   }, development);
   assert(`opts.development.export is required`, typeof development.export === 'string');
   return development;
-}
+};
 
 const normalizeArgs = (...args) => {
   let opts;
@@ -49,7 +49,7 @@ const normalizeArgs = (...args) => {
     assert(`opts.app is required`, !!app);
   }
   return { app, opts };
-}
+};
 
 const normalize = (...args) => {
   let { app, opts } = normalizeArgs(...args);
@@ -61,7 +61,7 @@ const normalize = (...args) => {
   development = normalizeDevelopment(development, store);
 
   return { app, opts: { store, service, development } };
-}
+};
 
 const environment = app => app.factoryFor('config:environment').class.environment;
 
@@ -85,4 +85,4 @@ export const initialize = (...args) => {
   }
 
   return store;
-}
+};

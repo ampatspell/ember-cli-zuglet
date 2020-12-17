@@ -35,12 +35,12 @@ const marker = Symbol('MODELS');
 const setMarker = (model, value) => {
   let state = getState(model);
   state[marker] = value;
-}
+};
 
 const getMarker = model => {
   let state = getState(model);
   return state[marker];
-}
+};
 
 export default class ModelsProperty extends Property {
 
@@ -168,7 +168,7 @@ const define = props => (_, key) => {
       return getProperty(this, key, props).getPropertyValue();
     }
   };
-}
+};
 
 // @models().source(({ query }) => query.content).named((doc, owner) => 'animal').mapping(doc => ({ doc }))
 export const models = () => {
@@ -185,7 +185,7 @@ export const models = () => {
       assert(`@models().source(fn) must be function not '${source}'`, isFunction(source));
       opts.source = source;
       return extend();
-    }
+    };
     curr.named = name => {
       if(isFunction(name)) {
         opts.modelName = name;
@@ -193,14 +193,14 @@ export const models = () => {
         opts.modelName = () => name;
       }
       return extend();
-    }
+    };
     curr.mapping = fn => {
       assert(`@models().mapping(fn) must be function not '${fn}'`, isFunction(fn));
       opts.mapping = fn;
       return extend();
-    }
+    };
     return curr;
-  }
+  };
 
   return extend();
-}
+};

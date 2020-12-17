@@ -7,7 +7,7 @@ export const propToIndex = prop => {
     return null;
   }
   return idx;
-}
+};
 
 export const ARRAY_GETTERS = new Set([
   Symbol.iterator,

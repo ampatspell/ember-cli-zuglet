@@ -90,7 +90,7 @@ const define = props => (_, key) => {
       return getProperty(this, key, props).getPropertyValue();
     }
   };
-}
+};
 
 // @model().named((doc, owner) => 'animal').mapping(doc => ({ doc }))
 export const model = () => {
@@ -109,14 +109,14 @@ export const model = () => {
         opts.modelName = () => name;
       }
       return extend();
-    }
+    };
     curr.mapping = mapping => {
       assert(`@model().mapping(fn) must be function not '${mapping}'`, isFunction(mapping));
       opts.mapping = mapping;
       return extend();
-    }
+    };
     return curr;
-  }
+  };
 
   return extend();
-}
+};

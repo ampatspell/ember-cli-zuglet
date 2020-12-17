@@ -80,12 +80,12 @@ const createArrayProxy = (property, target) => {
     }
 
     return true;
-  }
+  };
 
   Object.defineProperty(proxy, UPDATE, { value: update });
 
   return proxy;
-}
+};
 
 const createObjectProxy = (property, target) => {
   let proxy = new Proxy(target, {
@@ -151,12 +151,12 @@ const createObjectProxy = (property, target) => {
     }
     remove.forEach(key => delete proxy[key]);
     return true;
-  }
+  };
 
   Object.defineProperty(proxy, UPDATE, { value: update });
 
   return proxy;
-}
+};
 
 export default class DataManager {
 

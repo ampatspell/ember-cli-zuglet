@@ -8,4 +8,4 @@ export const randomString = (len=8) => {
     string += possible.charAt(Math.floor(Math.random() * possible.length));
   }
   return string;
-}
+};

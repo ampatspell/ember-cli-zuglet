@@ -20,7 +20,7 @@ module('decorator / @object', function(hooks) {
 
       });
       return this.store.models.create('model');
-    }
+    };
   });
 
   test('direct get and set', async function(assert) {

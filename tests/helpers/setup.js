@@ -7,7 +7,7 @@ export const setupStoreTest = hooks => {
   setupTest(hooks);
   setupStore(hooks);
   setupHelpers(hooks);
-}
+};
 
 export const setupRenderingStoreTest = (hooks, setup=true) => {
   setupRenderingTest(hooks);
@@ -15,7 +15,7 @@ export const setupRenderingStoreTest = (hooks, setup=true) => {
     setupStore(hooks);
     setupHelpers(hooks);
   }
-}
+};
 
 const credentials = {
   ampatspell: { email: 'ampatspell@gmail.com', password: 'hello-world' },                // should exist
@@ -29,4 +29,4 @@ export {
   module,
   test,
   credentials
-}
+};

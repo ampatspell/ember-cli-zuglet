@@ -48,7 +48,7 @@ module('decorators / @models', function(hooks) {
       let { store } = this;
       this.registerModel('box', Box);
       return store.models.create('box', { store });
-    }
+    };
   });
 
   test('create models from query', async function(assert) {

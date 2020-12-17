@@ -22,4 +22,4 @@ export const diffArrays = (current, next) => {
     removed,
     intact
   };
-}
+};

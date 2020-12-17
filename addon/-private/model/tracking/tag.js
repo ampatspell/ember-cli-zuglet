@@ -6,7 +6,7 @@ class Tag {
   __tag__
 
   consume() {
-    this.__tag__
+    this.__tag__;
   }
 
   dirty() {
@@ -31,12 +31,12 @@ const getTag = (object, key) => {
   }
 
   return tag;
-}
+};
 
 export const consumeKey = (object, key) => {
   getTag(object, key).consume();
-}
+};
 
 export const dirtyKey = (object, key) => {
   getTag(object, key).dirty();
-}
+};

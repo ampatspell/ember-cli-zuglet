@@ -284,7 +284,7 @@ export default class Document extends ZugletObject {
     return {
       resolve: () => this._didDelete(),
       reject: err => this._deleteDidFail(err)
-    }
+    };
   }
 
   delete() {

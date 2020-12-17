@@ -33,14 +33,14 @@ const isEmpty = value => value === undefined || value === null;
 export const asString = (prev, curr) => {
   assert(`value must be string not ${curr}`, typeof curr === 'string');
   return prev !== curr;
-}
+};
 
 export const asOptionalString = (prev, curr) => {
   if(isEmpty(curr)) {
     return isEmpty(prev) !== isEmpty(curr);
   }
   return asString(prev, curr);
-}
+};
 
 export const asObject = (prev, curr) => {
   assert(`value must be object not ${curr}`, typeof curr === 'object');
@@ -53,14 +53,14 @@ export const asObject = (prev, curr) => {
     }
   }
   return false;
-}
+};
 
 export const asOptionalObject = (prev, curr) => {
   if(isEmpty(curr)) {
     return isEmpty(prev) !== isEmpty(curr);
   }
   return asObject(prev, curr);
-}
+};
 
 export const asIdentity = (prev, curr) => prev !== curr;
 
@@ -91,4 +91,4 @@ export const diff = (diff=asIdentity) => (_, key, descriptor) => {
       };
     }
   };
-}
+};

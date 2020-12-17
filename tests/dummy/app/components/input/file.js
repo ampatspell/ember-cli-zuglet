@@ -13,7 +13,7 @@ const formatBytes = (bytes, decimals = 2) => {
   let value = parseFloat((bytes / Math.pow(k, i)).toFixed(dm));
   let size = sizes[i];
   return `${value}${size}`;
-}
+};
 
 export default class InputFileComponent extends Component {
 

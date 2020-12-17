@@ -38,7 +38,7 @@ module('decorators / @model', function(hooks) {
       let { store } = this;
       this.registerModel('box', Box);
       return store.models.create('box', { store });
-    }
+    };
   });
 
   test('creates named model', async function(assert) {

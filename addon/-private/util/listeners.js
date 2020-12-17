@@ -26,7 +26,7 @@ export class Listeners {
       removed = true;
       type.removeObject(fn);
       return true;
-    }
+    };
   }
 
   notify(name, ...args) {

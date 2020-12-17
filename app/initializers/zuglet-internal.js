@@ -88,4 +88,4 @@ export default {
     container.register('zuglet:store/functions', Functions);
     container.register('zuglet:store/functions/region', FunctionsRegion);
   }
-}
+};

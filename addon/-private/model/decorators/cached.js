@@ -7,13 +7,13 @@ export const cached = () => (_, key, descriptor) => {
       let state = getState(this);
       let cache = state.cache[key];
       if(!cache) {
-        cache = createCache(() => descriptor.get.call(this))
+        cache = createCache(() => descriptor.get.call(this));
         state.cache[key] = cache;
       }
       return getValue(cache);
     }
   };
-}
+};
 
 export const getCached = (owner, key) => {
   let state = getState(owner);
@@ -22,4 +22,4 @@ export const getCached = (owner, key) => {
     return;
   }
   return getValue(cache);
-}
+};

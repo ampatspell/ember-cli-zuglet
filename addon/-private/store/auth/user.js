@@ -18,7 +18,7 @@ const updateTrackedProperties = (target, source) => {
       target[key] = value;
     }
   });
-}
+};
 
 export default class User extends ZugletObject {
 

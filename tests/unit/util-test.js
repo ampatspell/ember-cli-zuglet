@@ -124,7 +124,7 @@ module('util', function(hooks) {
     let then = (resolve) => {
       invoked = true;
       resolve();
-    }
+    };
 
     await resolve(null, [ doc, null, undefined ], null, undefined, { ok: true }, { then });
 

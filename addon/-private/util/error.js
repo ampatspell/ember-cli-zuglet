@@ -30,7 +30,7 @@ export const error = opts => {
   assign(err, opts);
 
   return err;
-}
+};
 
 export const documentForRefNotFoundError = ref => error({
   message: `Document '${ref.path}' missing`,
@@ -53,8 +53,8 @@ export const assert = (message, condition) => {
       code: 'assert'
     });
   }
-}
+};
 
 export const isZugletError = err => {
   return err instanceof ZugletError;
-}
+};

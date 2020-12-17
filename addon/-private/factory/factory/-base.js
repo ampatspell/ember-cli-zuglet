@@ -22,5 +22,5 @@ export default prefix => {
       this.factory = factory;
     }
 
-  }
-}
+  };
+};

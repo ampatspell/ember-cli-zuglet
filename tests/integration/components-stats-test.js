@@ -21,7 +21,7 @@ module('components / stats', function(hooks) {
         label,
         models
       };
-    }
+    };
 
     {
       let section = sectionInfo(sections[0]);

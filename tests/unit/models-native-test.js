@@ -16,7 +16,7 @@ module('models / native', function(hooks) {
       constructor(owner, id, name) {
         setOwner(this, owner);
         this.id = id;
-        this.name = name
+        this.name = name;
       }
 
       toString() {
@@ -44,7 +44,7 @@ module('models / native', function(hooks) {
       constructor(owner, id, name) {
         super(owner);
         this.id = id;
-        this.name = name
+        this.name = name;
       }
 
       toStringExtension() {

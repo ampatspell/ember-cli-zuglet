@@ -109,7 +109,7 @@ const getMeta = (prototype, create=true) => {
     META.set(prototype, hash);
   }
   return hash;
-}
+};
 
 const getMetaChain = prototype => {
   let chain = Object.create(null);
@@ -125,12 +125,12 @@ const getMetaChain = prototype => {
     prototype = prototype.__proto__;
   }
   return chain;
-}
+};
 
 const setMeta = (prototype, key, value) => {
   let meta = getMeta(prototype);
   meta[key] = value;
-}
+};
 
 const getState = owner => {
   let state = _getState(owner).cache.state;
@@ -139,7 +139,7 @@ const getState = owner => {
     _getState(owner).cache.state = state;
   }
   return state;
-}
+};
 
 export const state = () => {
   return {
@@ -147,7 +147,7 @@ export const state = () => {
       return getState(this);
     }
   };
-}
+};
 
 export const readable = (prototype, key, descriptor) => {
   let { initializer } = descriptor;
@@ -157,4 +157,4 @@ export const readable = (prototype, key, descriptor) => {
       return getState(this).get(key);
     }
   };
-}
+};

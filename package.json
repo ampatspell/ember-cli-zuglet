@@ -33,6 +33,7 @@
     "lint:hbs": "ember-template-lint .",
     "lint:js": "eslint .",
     "lint:ts": "tsc --noEmit",
+    "fix:js": "eslint . --fix",
     "start": "ember serve",
     "test": "npm-run-all lint:* test:*",
     "test:ember": "ember test",

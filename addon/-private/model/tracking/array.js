@@ -33,19 +33,19 @@ const createProxy = (manager, _target) => new Proxy(_target, {
             let item = target.shift();
             manager.onItemRemoved(item);
             return item;
-          }
+          };
         } else if(prop === 'push') {
           return (...items) => {
             manager.onItemsAdded(items);
             dirtyKey(target, ARRAY);
             return target.push(...items);
-          }
+          };
         } else if(prop === 'unshift') {
           return (...items) => {
             manager.onItemsAdded(items);
             dirtyKey(target, ARRAY);
             return target.unshift(...items);
-          }
+          };
         } else if(prop === 'splice') {
           return (start, deleteCount, ...adding) => {
             dirtyKey(target, ARRAY);
@@ -53,7 +53,7 @@ const createProxy = (manager, _target) => new Proxy(_target, {
             manager.onItemsAdded(adding);
             manager.onItemsRemoved(removed);
             return removed;
-          }
+          };
         } else if(prop === 'replace') {
           return (start, deleteCount, items) => {
             dirtyKey(target, ARRAY);
@@ -61,7 +61,7 @@ const createProxy = (manager, _target) => new Proxy(_target, {
             manager.onItemsAdded(items);
             manager.onItemsRemoved(removed);
             return removed;
-          }
+          };
         } else if(ARRAY_MUTATORS.has(prop)) {
           throw new Error(`Array mutator ${prop} is not supported`);
         }

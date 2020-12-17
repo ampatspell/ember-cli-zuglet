@@ -64,6 +64,6 @@ export const registerObserver = (model, cancel) => {
     observer();
     cancel();
   };
-}
+};
 
 export const registerPromise = (model, label, promise) => getStats(model)._registerPromise(model, label, promise);

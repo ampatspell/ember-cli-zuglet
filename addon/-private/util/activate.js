@@ -13,7 +13,7 @@ export const activate = (model, activator=_activator) => {
   state.activate(activator);
   return () => {
     state.deactivate(activator);
-  }
-}
+  };
+};
 
 export const isActivated = model => getState(model).isActivated;

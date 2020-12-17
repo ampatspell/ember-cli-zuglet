@@ -17,7 +17,7 @@ module('storage / reference', function(hooks) {
         }
       });
       await task.promise;
-    }
+    };
   });
 
   test('create ref with path', async function(assert) {
@@ -110,7 +110,7 @@ module('storage / reference', function(hooks) {
     await this.putString(ref);
     await ref.update({
       customMetadata: { name: 'duck' }
-    })
+    });
 
     let metadata = await ref.metadata();
 

@@ -18,7 +18,7 @@ module('decorators / @activate / content / array', function(hooks) {
       let { store } = this;
       this.registerModel('box', Box);
       return store.models.create('box', { store });
-    }
+    };
   });
 
   test('content is recreated on dependency change', async function(assert) {

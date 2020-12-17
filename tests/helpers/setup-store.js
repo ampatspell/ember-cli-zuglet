@@ -48,7 +48,7 @@ let pluralizeDangling = (len, singular, plural) => {
     return `1 dangling ${singular}`;
   }
   return `${len} dangling ${plural}`;
-}
+};
 
 export const setupStore = (hooks, identifier='test') => {
   hooks.beforeEach(async function() {
@@ -62,8 +62,8 @@ export const setupStore = (hooks, identifier='test') => {
       return () => {
         cancel();
         this.activations.removeObject(cancel);
-      }
-    }
+      };
+    };
     this.activate(this.store);
     await this.store.load();
   });
@@ -76,4 +76,4 @@ export const setupStore = (hooks, identifier='test') => {
     assert.ok(!stats.hasPromises, pluralizeDangling(stats.promises.length, 'promise', 'promises'));
     assert.ok(!stats.hasObservers, pluralizeDangling(stats.observers.length, 'observer', 'observers'));
   });
-}
+};

@@ -20,7 +20,7 @@ const createState = (owner, opts) => {
   }
 
   return new factory.class(_owner, { owner });
-}
+};
 
 export const getState = (owner, opts) => {
   let { optional, create } = assign({ optional: false, create: true }, opts);
@@ -33,14 +33,14 @@ export const getState = (owner, opts) => {
   }
 
   return state;
-}
+};
 
 const root = 'root';
 
 export const isRoot = instance => {
   return instance && instance.constructor[marker] === root;
-}
+};
 
 export const setRoot = Class => {
   Class[marker] = root;
-}
+};

@@ -5,4 +5,4 @@ export const toString = (model, string) => {
     return;
   }
   return `<${toPrimitive(model)}${string ? `:${string}` : ''}>`;
-}
+};

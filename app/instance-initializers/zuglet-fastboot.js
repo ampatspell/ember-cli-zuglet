@@ -10,4 +10,4 @@ export default {
       fastboot.deferRendering(stores.settle());
     }
   }
-}
+};

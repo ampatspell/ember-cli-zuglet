@@ -7,4 +7,4 @@ export const toPrimitive = model => {
   }
   let name = getModelName(model) || model.constructor.name;
   return `${name}::${guidFor(model)}`;
-}
+};

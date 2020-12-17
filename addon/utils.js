@@ -25,4 +25,4 @@ export {
   activate,
   isActivated,
   defer
-}
+};

@@ -7,7 +7,7 @@ let getProperty = (owner, key, opts) => property(owner, key, `activate/${opts.ty
 const define = opts => (_, key) => {
   let get = function() {
     return getProperty(this, key, opts).getPropertyValue();
-  }
+  };
   if(opts.type === 'content') {
     return {
       get
@@ -15,13 +15,13 @@ const define = opts => (_, key) => {
   } else {
     let set = function(value) {
       return getProperty(this, key, opts).setPropertyValue(value);
-    }
+    };
     return {
       get,
       set
     };
   }
-}
+};
 
 export const activate = () => {
 
@@ -36,9 +36,9 @@ export const activate = () => {
       opts.value = value;
       opts.type = 'content';
       return extend();
-    }
+    };
     return curr;
-  }
+  };
 
   return extend();
-}
+};

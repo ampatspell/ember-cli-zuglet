@@ -10,14 +10,14 @@ export const saveCollection = async (ref, docs=[]) => {
     }
     batch.save(doc.new(rest));
   }));
-}
+};
 
 export const replaceCollection = async (ref, docs=[]) => {
   let { store } = ref;
   let existing = await ref.load();
   await store.batch(batch => existing.map(doc => batch.delete(doc)));
   await saveCollection(ref, docs);
-}
+};
 
 export const poll = async (cb) => {
   return new Promise((resolve, reject) => {
@@ -30,7 +30,7 @@ export const poll = async (cb) => {
       }
       clearInterval(timeout);
       resolve();
-    }
+    };
     next();
   });
-}
+};

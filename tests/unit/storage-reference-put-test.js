@@ -11,7 +11,7 @@ module('storage / reference / put', function(hooks) {
       let url = await ref.url();
       let res = await fetch(url);
       return await res.text();
-    }
+    };
   });
 
   test('put raw string', async function(assert) {

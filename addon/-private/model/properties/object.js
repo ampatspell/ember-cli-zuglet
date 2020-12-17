@@ -73,7 +73,7 @@ const define = (opts) => (_, key) => {
       return getProperty(this, key, opts).setPropertyValue(value);
     }
   };
-}
+};
 
 export const object = () => {
 
@@ -87,12 +87,12 @@ export const object = () => {
       assert(`@object().onDirty(fn) must be function not '${fn}'`, isFunction(fn));
       opts.onDirty = fn;
       return extend();
-    }
+    };
     return curr;
-  }
+  };
 
   return extend();
-}
+};
 
 export const raw = objectKey => () => {
   return {
@@ -104,7 +104,7 @@ export const raw = objectKey => () => {
       return property.getRaw();
     }
   };
-}
+};
 
 export const update = (objectKey) => () => {
   return {
@@ -115,5 +115,5 @@ export const update = (objectKey) => () => {
       }
       return property.update(object);
     }
-  }
-}
+  };
+};

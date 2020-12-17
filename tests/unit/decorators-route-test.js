@@ -89,7 +89,7 @@ module('decorators / @route', function(hooks) {
 
     route.onModel = () => {
       transition.isAborted = true;
-    }
+    };
 
     await route.model(model, transition);
 
@@ -109,7 +109,7 @@ module('decorators / @route', function(hooks) {
 
     route.onModel = () => {
       throw new Error('done');
-    }
+    };
 
     try {
       await route.model(model, transition);
@@ -134,7 +134,7 @@ module('decorators / @route', function(hooks) {
 
     model.onLoad = () => {
       transition.isAborted = true;
-    }
+    };
 
     await route.model(model, transition);
 
@@ -154,7 +154,7 @@ module('decorators / @route', function(hooks) {
 
     model.onLoad = () => {
       throw new Error('done');
-    }
+    };
 
     try {
       await route.model(model, transition);

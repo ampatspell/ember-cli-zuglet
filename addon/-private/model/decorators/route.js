@@ -8,7 +8,7 @@ const activateRoute = route => {
     route.isActivated = true;
     getState(route).activate(route);
   }
-}
+};
 
 const deactivateRoute = route => {
   if(route.isActivated) {
@@ -16,7 +16,7 @@ const deactivateRoute = route => {
     getState(route).deactivate(route);
   }
   route.active = null;
-}
+};
 
 const extend = Class => class ActivatingRoute extends Class {
 
@@ -50,6 +50,6 @@ const extend = Class => class ActivatingRoute extends Class {
     return super.resetController(...arguments);
   }
 
-}
+};
 
 export const route = () => Class => extend(Class);
