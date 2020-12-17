@@ -2,15 +2,16 @@ import { activate } from '../properties/activate';
 import { getState } from '../state';
 import { isFunction } from '../../util/types';
 import { registerPromise } from '../../stores/stats';
+import type Route from '@ember/routing/route';
 
-const activateRoute = route => {
+const activateRoute = (route: any): void => {
   if(!route.isActivated) {
     route.isActivated = true;
     getState(route).activate(route);
   }
 };
 
-const deactivateRoute = route => {
+const deactivateRoute = (route: any): void => {
   if(route.isActivated) {
     route.isActivated = false;
     getState(route).deactivate(route);
@@ -18,17 +19,17 @@ const deactivateRoute = route => {
   route.active = null;
 };
 
-const extend = Class => class ActivatingRoute extends Class {
+const extend = (Class: any): any => class ActivatingRoute extends Class {
 
   @activate()
-  active
+  active: any
 
   isActivated = false;
 
-  async model(_, transition) {
+  async model(_: any, transition: any): Promise<any> {
     activateRoute(this);
     try {
-      let model = await super.model(...arguments);
+      const model = await super.model(...arguments);
       this.active = model;
       if(!transition.isAborted && isFunction(this.load)) {
         await registerPromise(this, 'load', this.load(model));
@@ -43,7 +44,7 @@ const extend = Class => class ActivatingRoute extends Class {
     }
   }
 
-  resetController(_, isExiting) {
+  resetController(_: any, isExiting: boolean): any {
     if(isExiting) {
       deactivateRoute(this);
     }
@@ -52,4 +53,4 @@ const extend = Class => class ActivatingRoute extends Class {
 
 };
 
-export const route = () => Class => extend(Class);
+export const route = () => <T extends typeof Route> (Class: T): T => extend(Class);

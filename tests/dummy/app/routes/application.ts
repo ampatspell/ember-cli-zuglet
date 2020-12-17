@@ -1,17 +1,18 @@
 import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
 import { route } from 'zuglet/decorators';
+import type DummyStore from '../store';
 
 @route()
 export default class RouteRoute extends Route {
 
   @service
-  store
+  store!: DummyStore
 
-  model() {
+  model(): void {
   }
 
-  async load() {
+  async load(): Promise<void> {
     // resolve current user before rendering app
     await this.store.load();
   }

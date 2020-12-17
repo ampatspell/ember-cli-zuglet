@@ -23,15 +23,15 @@ const define = opts => (_, key) => {
   }
 };
 
-export const activate = () => {
+export const activate = (): PropertyDecorator => {
 
-  let opts = {
-    type: 'writable'
+  const opts: { value: any, type: string } = {
+    type: 'writable',
   };
 
-  let extend = () => {
-    let curr = define(opts);
-    curr.content = value => {
+  const extend = (): any => {
+    const curr = define(opts);
+    curr.content = (value: any) => {
       assert(`@activate().contnet(fn) must be function not '${value}'`, isFunction(value));
       opts.value = value;
       opts.type = 'content';

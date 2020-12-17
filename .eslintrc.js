@@ -21,7 +21,7 @@ module.exports = {
     browser: true
   },
   rules: {
-    semi: [2, 'always']
+    'semi': [2, 'always']
   },
   overrides: [
     // node files
@@ -69,9 +69,17 @@ module.exports = {
         'plugin:@typescript-eslint/recommended'
       ],
       rules: {
-        semi: [2, 'always'],
+        'semi': [2, 'always'],
+        'prefer-rest-params': 'off',
         '@typescript-eslint/no-empty-function': 'off',
-        '@typescript-eslint/no-explicit-any': 'off'
+        '@typescript-eslint/no-explicit-any': 'off',
+        '@typescript-eslint/explicit-function-return-type': [
+          'error',
+          {
+            allowExpressions: true,
+            allowHigherOrderFunctions: true,
+          },
+        ],
       },
     },
   ]
