@@ -10,13 +10,13 @@ export default class RouteRoute extends Route {
   store
 
   // is activated when this returns
-  async model() {
+  async model(): Promise<any> {
     return this.store.models.create('messages');
   }
 
   // right after model is activated
   // optionally preload data before model() hook resolves
-  async load(model) {
+  async load(model: any): Promise<void> {
     setGlobal({ model });
     await model.load();
   }

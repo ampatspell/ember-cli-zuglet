@@ -2,16 +2,15 @@ import { activate } from '../properties/activate';
 import { getState } from '../state';
 import { isFunction } from '../../util/types';
 import { registerPromise } from '../../stores/stats';
-import type Route from '@ember/routing/route';
 
-const activateRoute = (route: any): void => {
+const activateRoute = route => {
   if(!route.isActivated) {
     route.isActivated = true;
     getState(route).activate(route);
   }
 };
 
-const deactivateRoute = (route: any): void => {
+const deactivateRoute = route => {
   if(route.isActivated) {
     route.isActivated = false;
     getState(route).deactivate(route);
@@ -19,14 +18,14 @@ const deactivateRoute = (route: any): void => {
   route.active = null;
 };
 
-const extend = (Class: any): any => class ActivatingRoute extends Class {
+const extend = Class => class ActivatingRoute extends Class {
 
   @activate()
-  active: any
+  active
 
   isActivated = false;
 
-  async model(_: any, transition: any): Promise<any> {
+  async model(_, transition) {
     activateRoute(this);
     try {
       const model = await super.model(...arguments);
@@ -44,7 +43,7 @@ const extend = (Class: any): any => class ActivatingRoute extends Class {
     }
   }
 
-  resetController(_: any, isExiting: boolean): any {
+  resetController(_, isExiting) {
     if(isExiting) {
       deactivateRoute(this);
     }
@@ -53,4 +52,4 @@ const extend = (Class: any): any => class ActivatingRoute extends Class {
 
 };
 
-export const route = () => <T extends typeof Route> (Class: T): T => extend(Class);
+export const route = () => Class => extend(Class);
