@@ -60,7 +60,7 @@ refs[0] // → DocumentReference
 * `type` → return type, `doc` or `ref`, defaults to `doc`
 * `optional` → boolean, defaults to `false`
 
-Loads first document matching given query.
+Loads first document or document reference matching given query.
 
 ``` javascript
 let doc = await store.collection('messsages').where('owner', '==', 'zeeba').limit(1).first({ optional: true });
