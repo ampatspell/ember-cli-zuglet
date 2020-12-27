@@ -1,7 +1,10 @@
 <div class="route-playground-pagination">
 
   <div class="row">
-    <input type="button" value="Insert posts" {{on "click" this.insert}}/>
+    <input type="button" value="Insert posts" {{on "click" this.insert}} disabled={{this.isInserting}}/>
+    {{#if this.isInserting}}
+      Inserting…
+    {{/if}}
   </div>
 
 </div>

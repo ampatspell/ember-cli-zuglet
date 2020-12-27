@@ -1,8 +1,9 @@
 import Component from '@glimmer/component';
 import { inject as service } from '@ember/service';
 import { root } from 'zuglet/decorators';
-import { setGlobal, toString } from 'zuglet/utils';
+import { setGlobal, toString, alive } from 'zuglet/utils';
 import { action } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
 
 @root()
 export default class RoutePlaygroundPaginationComponent extends Component {
@@ -19,31 +20,49 @@ export default class RoutePlaygroundPaginationComponent extends Component {
     return toString(this);
   }
 
+  @tracked
+  isInserting = false
+
+  @alive()
+  didInsert() {
+    this.isInserting = false;
+  }
+
   @action
   async insert() {
-    let { store } = this;
-    let coll = store.collection('posts');
+    if(this.isInserting) {
+      return;
+    }
 
-    let docs = await coll.load();
-    console.log(`Delete ${docs.length} posts`);
-    await store.batch(async batch => {
-      docs.map(doc => batch.delete(doc));
-    });
+    this.isInserting = true;
 
-    let len = 500;
-    console.log(`Insert ${len} posts`);
-    await store.batch(async batch => {
-      for(let i = 0; i < len; i++) {
-        let doc = coll.doc().new({
-          createdAt: store.serverTimestamp,
-          position: i,
-          title: `Post #${i}`
-        });
-        batch.save(doc);
-      }
-    });
+    try {
+      let { store } = this;
+      let coll = store.collection('posts');
 
-    console.log('Done');
+      let docs = await coll.load();
+      console.log(`Delete ${docs.length} posts`);
+      await store.batch(async batch => {
+        docs.map(doc => batch.delete(doc));
+      });
+
+      let len = 500;
+      console.log(`Insert ${len} posts`);
+      await store.batch(async batch => {
+        for(let i = 0; i < len; i++) {
+          let doc = coll.doc().new({
+            createdAt: store.serverTimestamp,
+            position: i,
+            title: `Post #${i}`
+          });
+          batch.save(doc);
+        }
+      });
+
+      console.log('Done');
+    } finally {
+      this.didInsert();
+    }
   }
 
 }
