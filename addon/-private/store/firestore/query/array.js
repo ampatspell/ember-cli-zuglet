@@ -63,6 +63,7 @@ export default class QueryArray extends Query {
     } else {
       this._onSnapshotChanges(content, snapshot);
     }
+    this._notifyOnData();
   }
 
   _onLoad(_snapshot) {
@@ -77,6 +78,7 @@ export default class QueryArray extends Query {
       }
       return doc;
     });
+    this._notifyOnData();
   }
 
 }
