@@ -6,6 +6,7 @@ import { defer } from '../../../util/defer';
 import { registerObserver, registerPromise } from '../../../stores/stats';
 import { isFastBoot } from '../../../util/fastboot';
 import { state, readable }  from '../../../model/tracking/state';
+import { Listeners } from '../../../util/listeners';
 
 const {
   assign
@@ -29,6 +30,7 @@ export default class Query extends ZugletObject {
     super(owner);
     this.store = store;
     this.ref = ref;
+    this._listeners = new Listeners();
     this._deferred = defer();
   }
 
@@ -47,6 +49,16 @@ export default class Query extends ZugletObject {
 
   get promise() {
     return this._deferred.promise;
+  }
+
+  //
+
+  onData(fn) {
+    return this._listeners.register('onData', fn);
+  }
+
+  _notifyOnData() {
+    this._listeners.notify('onData', this);
   }
 
   //

@@ -25,6 +25,7 @@ export default class QuerySingle extends Query {
       }
       this.content = null;
     }
+    this._notifyOnData();
   }
 
   _onSnapshot(snapshot) {
