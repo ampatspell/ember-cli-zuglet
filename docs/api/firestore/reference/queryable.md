@@ -37,9 +37,11 @@ let array = store.collection('messages').query();
 let first = store.collection('messages').query({ type: 'first' });
 ```
 
-## async load() `→ Array<Document>`
+## async load({ type }) `→ Array<Document>`
 
-Loads documents matching given query
+* `type` → return type, `doc` or `ref`, defaults to `doc`
+
+Loads documents or document references matching given query
 
 ``` javascript
 let docs = await store.collection('messsages').where('owner', '==', 'zeeba').load();
@@ -47,11 +49,18 @@ docs.length // → 5
 docs[0].data.owner // → 'zeeba'
 ```
 
-## first({ optional })
+``` javascript
+let refs = await store.collection('messsages').where('owner', '==', 'zeeba').load({ type: 'ref' });
+refs.length // → 5
+refs[0] // → DocumentReference
+```
 
+## first({ type, optional })
+
+* `type` → return type, `doc` or `ref`, defaults to `doc`
 * `optional` → boolean, defaults to `false`
 
-Loads first document matching given query.
+Loads first document or document reference matching given query.
 
 ``` javascript
 let doc = await store.collection('messsages').where('owner', '==', 'zeeba').limit(1).first({ optional: true });
