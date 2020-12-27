@@ -2,7 +2,7 @@
   "name": "standalone",
   "private": true,
   "dependencies": {
-    "firebase-admin": "^9.4.1",
+    "firebase-admin": "^9.4.2",
     "minimist": "^1.2.5"
   }
 }
