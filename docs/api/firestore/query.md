@@ -70,6 +70,21 @@ await query.load({ force: true }); // does load even if query is already loaded
 
 Alias for `query.load({ force: true })`
 
+## onData `→ cancelFn`
+
+Subscribe to query changes from onSnapshot observer.
+
+``` javascript
+let query = store.collection('messages').query();
+let cancel = query.onData(arg => {
+  arg === query // → true
+});
+
+await query.load();
+
+cancel();
+```
+
 ## register(doc)
 
 Registers document for reuse in query content.
