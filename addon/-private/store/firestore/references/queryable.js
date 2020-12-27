@@ -85,20 +85,30 @@ export default class QueryableReference extends Reference {
     return this.store._createQuery(this, opts);
   }
 
-  async load() {
+  _snapshotToType(snapshot, type) {
+    if(type === 'doc') {
+      return this.store._createDocumentForSnapshot(snapshot);
+    } else if(type === 'ref') {
+      return this.store._createDocumentReference(snapshot.ref);
+    }
+    assert(`Unsupported type '${type}'`, false);
+  }
+
+  async load(opts) {
+    let { type } = assign({ type: 'doc' }, opts);
     let snapshot = await registerPromise(this, 'load', this._ref.get());
-    return snapshot.docs.map(doc => this.store._createDocumentForSnapshot(doc));
+    return snapshot.docs.map(doc => this._snapshotToType(doc, type));
   }
 
   async first(opts) {
-    let { optional } = assign({ optional: false }, opts);
+    let { type, optional } = assign({ type: 'doc', optional: false }, opts);
     let snapshot = await registerPromise(this, 'first', this._ref.get());
     if(snapshot.docs.length > 1) {
       console.warn(`${this.string} yields more than 1 document`);
     }
     let doc = snapshot.docs[0];
     if(doc) {
-      return this.store._createDocumentForSnapshot(doc);
+      return this._snapshotToType(doc, type);
     }
     if(!optional) {
       throw documentNotFoundError();
