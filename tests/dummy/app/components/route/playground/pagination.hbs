@@ -16,6 +16,12 @@
   </div>
 
   <div class="row">
+    {{#each this.query.content as |doc|}}
+      <div class="row">{{doc}} {{doc.data.title}}</div>
+    {{/each}}
+  </div>
+
+  <div class="row">
     {{#each this.query.queries as |query|}}
       <div class="row">{{query}}</div>
       {{#each query.content as |doc|}}
