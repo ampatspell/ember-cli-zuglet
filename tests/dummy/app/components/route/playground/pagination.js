@@ -40,10 +40,10 @@ export default class RoutePlaygroundPaginationComponent extends Component {
       let { store } = this;
       let coll = store.collection('posts');
 
-      let docs = await coll.load();
-      console.log(`Delete ${docs.length} posts`);
+      let refs = await coll.load({ type: 'ref' });
+      console.log(`Delete ${refs.length} posts`);
       await store.batch(async batch => {
-        docs.map(doc => batch.delete(doc));
+        refs.map(ref => batch.delete(ref));
       });
 
       let len = 500;
