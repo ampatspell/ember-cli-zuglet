@@ -85,7 +85,7 @@ export default class QueryableReference extends Reference {
     return this.store._createQuery(this, opts);
   }
 
-  _snapshotToType(snapshot, type) {
+  _createDocumentOrReferenceForSnapshot(snapshot, type) {
     if(type === 'doc') {
       return this.store._createDocumentForSnapshot(snapshot);
     } else if(type === 'ref') {
@@ -97,7 +97,7 @@ export default class QueryableReference extends Reference {
   async load(opts) {
     let { type } = assign({ type: 'doc' }, opts);
     let snapshot = await registerPromise(this, 'load', this._ref.get());
-    return snapshot.docs.map(doc => this._snapshotToType(doc, type));
+    return snapshot.docs.map(doc => this._createDocumentOrReferenceForSnapshot(doc, type));
   }
 
   async first(opts) {
@@ -108,7 +108,7 @@ export default class QueryableReference extends Reference {
     }
     let doc = snapshot.docs[0];
     if(doc) {
-      return this._snapshotToType(doc, type);
+      return this._createDocumentOrReferenceForSnapshot(doc, type);
     }
     if(!optional) {
       throw documentNotFoundError();
