@@ -1,5 +1,7 @@
 import { module, test, setupStoreTest } from '../helpers/setup';
 import { replaceCollection } from '../helpers/util';
+import DocumentReference from 'zuglet/-private/store/firestore/references/document';
+import Document from 'zuglet/-private/store/firestore/document';
 
 module('firestore / reference', function(hooks) {
   setupStoreTest(hooks);
@@ -135,6 +137,8 @@ module('firestore / reference', function(hooks) {
     ]);
     let coll = ref.orderBy('name', 'asc');
     let docs = await coll.load();
+    assert.ok(docs[0] instanceof Document);
+    assert.ok(docs[1] instanceof Document);
     assert.deepEqual(docs.map(doc => doc.id), [ 'green', 'yellow' ]);
   });
 
@@ -146,6 +150,7 @@ module('firestore / reference', function(hooks) {
     ]);
     let coll = ref.orderBy('name', 'asc').limit(1);
     let doc = await coll.first();
+    assert.ok(doc instanceof Document);
     assert.strictEqual(doc.id, 'green');
   });
 
@@ -167,6 +172,31 @@ module('firestore / reference', function(hooks) {
     let coll = ref.where('name', '==', 'red').limit(1);
     let doc = await coll.first({ optional: true });
     assert.strictEqual(doc, undefined);
+  });
+
+  test('query load ref', async function(assert) {
+    let ref = this.store.collection('ducks');
+    await replaceCollection(ref, [
+      { _id: 'yellow', name: 'yellow' },
+      { _id: 'green', name: 'green' },
+    ]);
+    let coll = ref.orderBy('name', 'asc');
+    let refs = await coll.load({ type: 'ref' });
+    assert.ok(refs[0] instanceof DocumentReference);
+    assert.ok(refs[1] instanceof DocumentReference);
+    assert.deepEqual(refs.map(ref => ref.id), [ 'green', 'yellow' ]);
+  });
+
+  test('query first ref', async function(assert) {
+    let ref = this.store.collection('ducks');
+    await replaceCollection(ref, [
+      { _id: 'yellow', name: 'yellow' },
+      { _id: 'green', name: 'green' },
+    ]);
+    let coll = ref.orderBy('name', 'asc').limit(1);
+    let doc = await coll.first({ type: 'ref' });
+    assert.ok(doc instanceof DocumentReference);
+    assert.strictEqual(doc.id, 'green');
   });
 
 });
