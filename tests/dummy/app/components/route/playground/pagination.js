@@ -14,6 +14,13 @@ export default class RoutePlaygroundPaginationComponent extends Component {
   @activate()
   queries
 
+  @activate().content(({ store }) => {
+    let base = store.collection('posts').orderBy('position', 'asc').limit(5);
+    // strategy: `fn(ref, first, last)`
+    return base.query({ type: 'paginated', strategy: 'startAfter' });
+  })
+  query
+
   get ref() {
     return this.store.collection('posts').orderBy('position', 'asc').limit(5);
   }
