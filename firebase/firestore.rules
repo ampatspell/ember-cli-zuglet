@@ -13,5 +13,10 @@ service cloud.firestore {
       allow write: if true;
     }
 
+    match /posts/{post} {
+      allow read: if true;
+      allow write: if true;
+    }
+
   }
 }
