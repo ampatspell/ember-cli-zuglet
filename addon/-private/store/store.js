@@ -191,13 +191,15 @@ export default class Store extends ZugletObject {
   }
 
   _createQuery(ref, opts) {
-    let { type } = assign({ type: 'array' }, opts);
+    let { type, strategy } = assign({ type: 'array', strategy: 'startAfter' }, opts);
     let { _factory } = this;
     let store = this;
     if(type === 'array') {
       return _factory.zuglet.create('store/firestore/query/array', { store, ref });
     } else if(type === 'first' || type === 'single') {
       return _factory.zuglet.create('store/firestore/query/single', { store, ref });
+    } else if(type === 'paginated') {
+      return _factory.zuglet.create('store/firestore/query/paginated', { store, ref, strategy });
     }
     assert(`Unsupported type '${type}'`, false);
   }

@@ -12,7 +12,11 @@
   </div>
 
   <div class="row">
-    {{#each this.queries as |query|}}
+    {{this.query}}
+  </div>
+
+  <div class="row">
+    {{#each this.query.queries as |query|}}
       <div class="row">{{query}}</div>
       {{#each query.content as |doc|}}
         <div class="row">{{doc.data.title}}</div>

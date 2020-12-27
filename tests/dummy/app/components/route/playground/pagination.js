@@ -11,39 +11,30 @@ export default class RoutePlaygroundPaginationComponent extends Component {
   @service
   store
 
-  @activate()
-  queries
-
   @activate().content(({ store }) => {
+    let strategy = ({ ref, type, last }) => {
+      if(type === 'next') {
+        return ref.startAfter(last);
+      } else if(type === 'first') {
+        return ref;
+      }
+    }
     let base = store.collection('posts').orderBy('position', 'asc').limit(5);
-    // strategy: `fn(ref, first, last)`
-    return base.query({ type: 'paginated', strategy: 'startAfter' });
+    return base.query({ type: 'paginated', strategy });
   })
   query
-
-  get ref() {
-    return this.store.collection('posts').orderBy('position', 'asc').limit(5);
-  }
 
   constructor() {
     super(...arguments);
     setGlobal({ component: this });
-    this.queries = [];
-    let query = this.ref.query();
-    this.queries.push(query);
   }
 
   @action
   loadMore() {
-    let lastObject = arr => arr[arr.length - 1];
-    let last = lastObject(lastObject(this.queries).content);
-    let query = this.ref.startAfter(last).query();
-    this.queries.push(query);
+    this.query.loadMore();
   }
 
-  toString() {
-    return toString(this);
-  }
+  //
 
   @tracked
   isInserting = false
@@ -88,6 +79,12 @@ export default class RoutePlaygroundPaginationComponent extends Component {
     } finally {
       this.didInsert();
     }
+  }
+
+  //
+
+  toString() {
+    return toString(this);
   }
 
 }
