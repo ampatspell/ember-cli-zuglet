@@ -77,45 +77,45 @@ export default class QueryPaginated extends ZugletObject {
 
   //
 
-  _onQueryData() {
-    let content = [];
-    let exists = doc => content.find(existing => existing.path === doc.path);
-    this.queries.forEach(query => query.content.forEach(doc => {
-      if(exists(doc)) {
-        return;
-      }
-      content.push(doc);
-    }));
-    this.content = content;
-  }
+  // _onQueryData() {
+  //   let content = [];
+  //   let exists = doc => content.find(existing => existing.path === doc.path);
+  //   this.queries.forEach(query => query.content.forEach(doc => {
+  //     if(exists(doc)) {
+  //       return;
+  //     }
+  //     content.push(doc);
+  //   }));
+  //   this.content = content;
+  // }
 
   //
 
-  _subscribeQuery(query) {
-    if(!this._isActivated) {
-      return;
-    }
-    let cancel = query.onData(query => this._onQueryData(query));
-    let { _cancel } = this;
-    if(!_cancel) {
-      _cancel = [];
-      this._cancel = _cancel;
-    }
-    _cancel.push(cancel);
-  }
+  // _subscribeQuery(query) {
+  //   if(!this._isActivated) {
+  //     return;
+  //   }
+  //   let cancel = query.onData(query => this._onQueryData(query));
+  //   let { _cancel } = this;
+  //   if(!_cancel) {
+  //     _cancel = [];
+  //     this._cancel = _cancel;
+  //   }
+  //   _cancel.push(cancel);
+  // }
 
   onActivated() {
     this._isActivated = true;
-    this.queries.map(query => this._subscribeQuery(query));
+    // this.queries.map(query => this._subscribeQuery(query));
   }
 
   onDeactivated() {
     this._isActivated = false;
-    let { _cancel } = this;
-    if(_cancel) {
-      this._cancel = null;
-      _cancel.map(cancel => cancel());
-    }
+    // let { _cancel } = this;
+    // if(_cancel) {
+    //   this._cancel = null;
+    //   _cancel.map(cancel => cancel());
+    // }
   }
 
   //
@@ -123,8 +123,16 @@ export default class QueryPaginated extends ZugletObject {
   loadMore() {
     let next = this._createNextQuery();
     if(next) {
-      this._subscribeQuery(next);
+      // this._subscribeQuery(next);
       this.queries.push(next);
+      return next.load();
+    }
+  }
+
+  load(...args) {
+    let [ query ] = this.queries;
+    if(query) {
+      return query.load(...args);
     }
   }
 
