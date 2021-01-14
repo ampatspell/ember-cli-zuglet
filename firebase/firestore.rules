@@ -18,5 +18,9 @@ service cloud.firestore {
       allow write: if true;
     }
 
+    match /{path=**}/messages/{doc} {
+      allow read: if true;
+    }
+
   }
 }
