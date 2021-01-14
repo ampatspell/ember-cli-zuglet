@@ -16,7 +16,7 @@ export const isFirestoreDocumentOrCollectionReference = value => {
 };
 
 export const serverTimestamp = FieldValue.serverTimestamp();
-export const isFirestoreServerTimestamp = value => serverTimestamp.isEqual(value);
+export const isFirestoreServerTimestamp = value => value && serverTimestamp.isEqual(value);
 
 export const isFirestoreTimestamp = value => value instanceof Timestamp;
 
