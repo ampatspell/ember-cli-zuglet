@@ -177,6 +177,11 @@ export default Internal.extend({
     return this.createInternalCollectionReferenceForReference(collection);
   },
 
+  collectionGroup(identifier) {
+    let collection = this.app.firestore().collectionGroup(identifier);
+    return this.createInternalCollectionReferenceForReference(collection); // TODO: collectionGroupReference
+  },
+
   doc(path) {
     let ref = this.app.firestore().doc(path);
     return this.createInternalDocumentReferenceForReference(ref);

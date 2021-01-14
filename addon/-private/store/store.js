@@ -30,6 +30,7 @@ export default EmberObject.extend(ModelMixin, {
   observed: readOnly('_internal.observedProxy'),
 
   collection: invokeReturningModel('collection'),
+  collectionGroup: invokeReturningModel('collectionGroup'),
   doc: invokeReturningModel('doc'),
 
   object: invokeReturningModel('object'),
