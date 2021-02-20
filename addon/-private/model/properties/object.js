@@ -11,7 +11,6 @@ import {
   isGeoPoint,
   isFirestoreBlob
 } from '../../util/types';
-import firebase from "firebase/app";
 
 export default class ObjectProperty extends Property {
 
