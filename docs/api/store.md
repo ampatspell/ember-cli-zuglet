@@ -152,6 +152,17 @@ let doc = store.doc('messages/first').new({
 await doc.save();
 ```
 
+## blobFromUint8Array(array) `→ firestore.Blob`
+
+Returns `firestore.Blob` created given from `Uint8Array`
+
+``` javascript
+let doc = store.doc('ducks/yellow').new({
+  blob: store.blobFromUint8Array(new Uint8Array([ 1, 1, 1, 1, 0, 0, 1 ]))
+});
+await doc.save();
+```
+
 ## onObserverError(model, error)
 
 * model → `Document`, `Query`, `Auth`, `Task`
