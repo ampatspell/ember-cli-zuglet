@@ -129,6 +129,10 @@ export default class Store extends ZugletObject {
     return firebase.firestore.FieldValue.serverTimestamp();
   }
 
+  blobFromUint8Array(value) {
+    return firebase.firestore.Blob.fromUint8Array(value);
+  }
+
   //
 
   _toDocumentReference(arg) {

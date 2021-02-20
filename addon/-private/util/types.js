@@ -17,6 +17,7 @@ export const isTimestamp = arg => arg instanceof firebase.firestore.Timestamp;
 export const isDocumentReference = arg => arg instanceof firebase.firestore.DocumentReference;
 export const isCollectionReference = arg => arg instanceof firebase.firestore.CollectionReference;
 export const isGeoPoint = arg => arg instanceof firebase.firestore.GeoPoint;
+export const isFirestoreBlob = arg => arg instanceof firebase.firestore.Blob;
 
 export const isFunction = arg => typeof arg === 'function';
 

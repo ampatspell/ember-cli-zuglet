@@ -6,7 +6,8 @@ import {
   isArray,
   isDate,
   isFile,
-  isFileList
+  isFileList,
+  isFirestoreBlob
 } from './types';
 
 import {
@@ -51,6 +52,10 @@ export const objectToJSON = value => {
     } else if(isServerTimestamp(value)) {
       return {
         type: 'server-timestamp',
+      };
+    } else if(isFirestoreBlob(value)) {
+      return {
+        type: 'firestore-blob',
       };
     } else {
       let hash = {};
