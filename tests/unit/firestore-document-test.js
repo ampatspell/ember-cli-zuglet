@@ -297,7 +297,7 @@ module('firestore / document', function(hooks) {
     assert.strictEqual(doc.toStringExtension(), 'ducks/yellow');
   });
 
-  test.only('save blob', async function(assert) {
+  test('save blob', async function(assert) {
     let array = new Uint8Array([1,1,1,1,2,1,1,1,1]);
     let blob = this.store.blobFromUint8Array(array);
 
