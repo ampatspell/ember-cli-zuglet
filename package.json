@@ -48,17 +48,17 @@
   },
   "dependencies": {
     "ember-auto-import": "^1.10.1",
+    "ember-classic-decorator": "^2.0.0",
     "ember-cli-babel": "^7.23.1",
     "ember-cli-htmlbars": "^5.3.2",
-    "firebase": "^8.2.7",
+    "firebase": "^8.2.9",
     "node-fetch": "^2.6.1",
-    "xmlhttprequest": "^1.8.0",
-    "ember-classic-decorator": "^2.0.0"
+    "xmlhttprequest": "^1.8.0"
   },
   "devDependencies": {
     "@ember/optional-features": "^2.0.0",
-    "@ember/test-helpers": "^2.1.4",
     "@ember/render-modifiers": "^1.0.2",
+    "@ember/test-helpers": "^2.1.4",
     "@glimmer/component": "^1.0.3",
     "@glimmer/tracking": "^1.0.3",
     "babel-eslint": "^10.1.0",
