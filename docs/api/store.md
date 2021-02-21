@@ -36,7 +36,9 @@ options = {
   },
 
   firestore: {
-    persistenceEnabled: true // defaults to `false`
+    persistenceEnabled: true, // defaults to `false`
+    experimentalAutoDetectLongPolling: true, // defaults to `false`
+    experimentalForceLongPolling: true // defaults to `false`
   },
 
   auth: {
