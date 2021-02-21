@@ -10,7 +10,9 @@ const options = {
     messagingSenderId: ''
   },
   firestore: {
-    persistenceEnabled: true
+    persistenceEnabled: true,
+    // experimentalAutoDetectLongPolling: true,
+    // experimentalForceLongPolling: true
   },
   auth: {
     user: 'user'

@@ -20,7 +20,11 @@ const normalizeOptions = options => {
   assert(`store.options are required`, !!options);
   let { firebase, firestore, auth, functions, emulators } = options;
   assert(`store.options.firebase is required`, !!firebase);
-  firestore = assign({ persistenceEnabled: false }, firestore);
+  firestore = assign({
+    persistenceEnabled: false,
+    experimentalAutoDetectLongPolling: false,
+    experimentalForceLongPolling: false
+  }, firestore);
   auth = assign({ user: null }, auth);
   functions = assign({ region: null }, functions);
   emulators = assign({ host: 'localhost', firestore: null, auth: null, functions: null }, emulators);
@@ -68,11 +72,20 @@ export default class Store extends ZugletObject {
   _initialize() {
     let { normalizedOptions: options } = this;
     this.firebase = initializeApp(options.firebase, this.identifier);
+
+    if(options.firestore.experimentalAutoDetectLongPolling) {
+      this.firebase.firestore().settings({ experimentalAutoDetectLongPolling: true, merge: true });
+    }
+    if(options.firestore.experimentalForceLongPolling) {
+      this.firebase.firestore().settings({ experimentalForceLongPolling: true, merge: true });
+    }
+
     this.enablePersistencePromise = Promise.resolve();
     if(options.emulators.firestore) {
       this.firebase.firestore().settings({
         host: options.emulators.firestore,
-        ssl: false
+        ssl: false,
+        merge: true
       });
     } else if(options.firestore.persistenceEnabled && !isFastBoot(this)) {
       this.enablePersistencePromise = registerPromise(this, 'enable-persistence', enablePersistence(this.firebase));
