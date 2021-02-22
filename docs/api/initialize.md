@@ -33,3 +33,16 @@ export default {
   }
 }
 ```
+
+## Flags
+
+``` javascript
+// ember-cli-build.js
+let app = new EmberApp(defaults, {
+  zuglet: {
+    proxyClassicSupport: false
+  }
+});
+```
+
+* `proxyClassicSupport` → if enabled, for compatibility with `computed`, `doc.data` will invoke `notifyPropertyChange`. Defaults to `false`

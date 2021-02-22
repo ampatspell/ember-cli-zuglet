@@ -5,21 +5,26 @@ import { A, isArray } from '@ember/array';
 import { assert } from '@ember/debug';
 import { DEBUG } from '@glimmer/env';
 import { notifyPropertyChange } from '@ember/object';
+import flags from '../../flags';
 
-// https://github.com/pzuraq/tracked-built-ins/blob/master/addon/-private/object.js
-if (DEBUG) {
-  // eslint-disable-next-line no-undef
-  let utils = Ember.__loader.require('@ember/-internals/utils')
-  let setupMandatorySetter = utils.setupMandatorySetter;
-  utils.setupMandatorySetter = (tag, obj, keyName) => {
-    if(obj instanceof ObjectProxy) {
-      return;
+const PROXY_CLASSIC_SUPPORT = flags.proxyClassicSupport;
+
+if(PROXY_CLASSIC_SUPPORT) {
+  // https://github.com/pzuraq/tracked-built-ins/blob/master/addon/-private/object.js
+  if (DEBUG) {
+    // eslint-disable-next-line no-undef
+    let utils = Ember.__loader.require('@ember/-internals/utils')
+    let setupMandatorySetter = utils.setupMandatorySetter;
+    utils.setupMandatorySetter = (tag, obj, keyName) => {
+      if(obj instanceof ObjectProxy) {
+        return;
+      }
+      // TODO: Needs notifyPropertyChange for array ops
+      // if(obj instanceof ArrayProxy) {
+      //   return;
+      // }
+      return setupMandatorySetter(tag, obj, keyName);
     }
-    // TODO: Needs notifyPropertyChange for array ops
-    // if(obj instanceof ArrayProxy) {
-    //   return;
-    // }
-    return setupMandatorySetter(tag, obj, keyName);
   }
 }
 
@@ -126,10 +131,14 @@ const createObjectProxy = (property, target) => {
       property.dirty();
       if(value === undefined) {
         delete target[prop];
-        notifyPropertyChange(proxy, prop);
+        if(PROXY_CLASSIC_SUPPORT) {
+          notifyPropertyChange(proxy, prop);
+        }
       } else {
         target[prop] = property.wrap(value);
-        notifyPropertyChange(proxy, prop);
+        if(PROXY_CLASSIC_SUPPORT) {
+          notifyPropertyChange(proxy, prop);
+        }
       }
       return true;
     },
@@ -139,7 +148,9 @@ const createObjectProxy = (property, target) => {
         dirtyKey(target, KEYS);
         property.dirty();
         delete target[prop];
-        notifyPropertyChange(proxy, prop);
+        if(PROXY_CLASSIC_SUPPORT) {
+          notifyPropertyChange(proxy, prop);
+        }
       }
       return true;
     },
