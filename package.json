@@ -47,6 +47,8 @@
     "deploy:functions": "(cd firebase && firebase deploy --only functions --project ember-cli-zuglet && firebase deploy --only functions --project ember-cli-zuglet-travis)"
   },
   "dependencies": {
+    "broccoli-file-creator": "^2.1.1",
+    "broccoli-merge-trees": "^4.2.0",
     "ember-auto-import": "^1.10.1",
     "ember-classic-decorator": "^2.0.0",
     "ember-cli-babel": "^7.23.1",
