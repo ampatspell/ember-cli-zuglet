@@ -45,6 +45,7 @@ export default class Document extends ZugletObject {
     this.ref = ref;
     this.parent = parent;
     this._listeners = new Listeners();
+    this._deferred = defer();
     if(data) {
       this.data = data;
       this._state.untracked.setProperties({ isNew: true, isDirty: true });
@@ -52,9 +53,9 @@ export default class Document extends ZugletObject {
       this.data = {};
       if(snapshot) {
         this._onSnapshot(snapshot, { source: 'initial' });
+        this._deferred.resolve(this);
       }
     }
-    this._deferred = defer();
   }
 
   //
