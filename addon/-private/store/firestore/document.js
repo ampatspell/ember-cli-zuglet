@@ -385,6 +385,14 @@ export default class Document extends ZugletObject {
     };
   }
 
+  get dashboardURL() {
+    return this.ref.dashboardURL;
+  }
+
+  openDashboard() {
+    this.ref.openDashboard();
+  }
+
   toJSON() {
     let { serialized } = this;
     return toJSON(this, { serialized });
