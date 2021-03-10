@@ -22,12 +22,12 @@ const noop = () => {};
 export default class Document extends ZugletObject {
 
   @object().onDirty(owner => owner._dataDidChange())
-  data
+  data;
 
   @raw('data')
-  _data
+  _data;
 
-  @state _state
+  @state _state;
   @readable isNew = false;
   @readable isLoading = false;
   @readable isLoaded = false;
@@ -37,7 +37,7 @@ export default class Document extends ZugletObject {
   @readable error = null;
   @readable exists = undefined;
 
-  _isPassive = false
+  _isPassive = false;
 
   constructor(owner, { store, ref, snapshot, parent, data }) {
     super(owner);
@@ -107,7 +107,7 @@ export default class Document extends ZugletObject {
   }
 
   @update('data')
-  __setData
+  __setData;
 
   _setData(data) {
     assert('data must be object', data instanceof Object);

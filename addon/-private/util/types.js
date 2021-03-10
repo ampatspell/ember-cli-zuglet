@@ -11,7 +11,7 @@ export const isServerTimestamp = arg => {
     _serverTimestamp = firebase.firestore.FieldValue.serverTimestamp();
   }
   return typeof arg === 'object' && _serverTimestamp.isEqual(arg);
-}
+};
 
 export const isTimestamp = arg => arg instanceof firebase.firestore.Timestamp;
 export const isDocumentReference = arg => arg instanceof firebase.firestore.DocumentReference;

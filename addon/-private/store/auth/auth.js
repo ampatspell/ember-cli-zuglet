@@ -12,7 +12,7 @@ import { assert } from '@ember/debug';
 export default class Auth extends ZugletObject {
 
   @activate()
-  user
+  user;
 
   constructor(owner, { store }) {
     super(owner);

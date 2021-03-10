@@ -66,4 +66,4 @@ export const objectToJSON = value => {
     }
   }
   return value;
-}
+};

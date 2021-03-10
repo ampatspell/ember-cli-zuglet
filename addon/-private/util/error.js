@@ -53,8 +53,8 @@ export const assert = (message, condition) => {
       code: 'assert'
     });
   }
-}
+};
 
 export const isZugletError = err => {
   return err instanceof ZugletError;
-}
+};

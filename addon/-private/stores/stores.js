@@ -27,7 +27,7 @@ export default class Stores extends ZugletObject {
   //
 
   @tracked
-  stores = []
+  stores = [];
 
   @cached()
   get factory() {

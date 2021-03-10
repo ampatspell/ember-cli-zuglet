@@ -6,8 +6,8 @@ import { assert } from '@ember/debug';
 
 export default class Batch extends ZugletObject {
 
-  store = null
-  _batch = null
+  store = null;
+  _batch = null;
   _callbacks = [];
 
   constructor(owner, { store, _batch }) {

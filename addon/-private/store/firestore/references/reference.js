@@ -3,8 +3,8 @@ import { toJSON } from '../../../util/to-json';
 
 export default class Reference extends ZugletObject {
 
-  store = null
-  _ref = null
+  store = null;
+  _ref = null;
 
   constructor(owner, { store, _ref }) {
     super(owner);

@@ -1,7 +1,7 @@
 import ZugletObject from '../object';
 import { registerDestructor } from '@ember/destroyable';
 import { assert } from '@ember/debug';
-import firebase from "firebase/app";
+import firebase from 'firebase/app';
 import { initializeApp, enablePersistence, destroyApp } from './firebase';
 import { cached, getCached } from '../model/decorators/cached';
 import { toJSON } from '../util/to-json';
@@ -53,9 +53,9 @@ const activated = activate().content((store, key) => store._factory.zuglet.creat
 @root()
 export default class Store extends ZugletObject {
 
-  identifier = null
-  firebase = null
-  enablePersistencePromise = null
+  identifier = null;
+  firebase = null;
+  enablePersistencePromise = null;
 
   constructor(owner, { stores, identifier }) {
     super(owner);
@@ -101,9 +101,9 @@ export default class Store extends ZugletObject {
     return this._factory.models;
   }
 
-  @activated auth
-  @activated storage
-  @activated functions
+  @activated auth;
+  @activated storage;
+  @activated functions;
 
   //
 

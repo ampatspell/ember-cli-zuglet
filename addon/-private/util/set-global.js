@@ -11,4 +11,4 @@ export const setGlobal = (hash, silent=false) => {
     }
     window[key] = value;
   }
-}
+};

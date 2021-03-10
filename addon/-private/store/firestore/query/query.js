@@ -15,16 +15,16 @@ const {
 export default class Query extends ZugletObject {
 
   @activate()
-  content
+  content;
 
-  @state _state
+  @state _state;
   @readable isLoading = false;
   @readable isLoaded = false;
   @readable isError = false;
   @readable error = null;
 
-  _isPassive = false
-  _reusable
+  _isPassive = false;
+  _reusable;
 
   constructor(owner, { store, ref }) {
     super(owner);

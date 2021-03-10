@@ -27,9 +27,9 @@ const toPromises = args => {
   });
 
   return promises;
-}
+};
 
 export const resolve = (...args) => {
   let promises = toPromises(args);
   return Promise.all(promises);
-}
+};

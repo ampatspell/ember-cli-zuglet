@@ -5,8 +5,8 @@ import { assert } from '@ember/debug';
 
 export default class Transaction extends ZugletObject {
 
-  store = null
-  _tx = null
+  store = null;
+  _tx = null;
 
   constructor(owner, { store, _tx }) {
     super(owner);

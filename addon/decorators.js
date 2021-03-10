@@ -12,4 +12,4 @@ export {
   object,
   models,
   model
-}
+};
