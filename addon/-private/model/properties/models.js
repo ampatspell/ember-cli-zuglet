@@ -75,18 +75,35 @@ export default class ModelsProperty extends Property {
 
   //
 
-  sourceArrayDidChange(source) {
+  sourceArrayDidChange(source, markers) {
     let current = this.models;
     let removed = A([ ...current ]);
     let added = A();
     let models = A();
 
     if(isArray(source)) {
-      let find = doc => current.find(model => getMarker(model).source === doc);
+      let empty = {};
+      let find = doc => {
+        for(let model of current) {
+          let marker;
+          if(markers) {
+            marker = markers.get(model);
+          }
+          if(!marker) {
+            marker = getMarker(model);
+          }
+          if(marker.source === doc) {
+            return {
+              marker,
+              model
+            };
+          }
+        }
+        return empty;
+      }
       source.forEach(doc => {
-        let model = find(doc);
+        let { model, marker } = find(doc);
         if(model) {
-          let marker = getMarker(model);
           if(marker.modelName.updated) {
             model = this.createModel(doc);
             added.pushObject(model);
@@ -120,35 +137,46 @@ export default class ModelsProperty extends Property {
     this.models = models;
   }
 
-  isSourceArrayUpdated(source) {
+  sourceArrayChanges(source) {
     let current = this.models;
+    let changed = true;
+    let markers;
 
-    if(!isArray(source)) {
-      return true;
+    if(isArray(source)) {
+      let length = current.length;
+      if(length === source.length) {
+        for(let i = 0; i < length; i++) {
+          let currentModel = current[i];
+          let sourceDoc = source[i];
+          let marker = getMarker(currentModel);
+          if(marker.source === sourceDoc) {
+            // TODO: not a greatest thing ever.
+            // thing is, modelName and props.updated resets after get so it will need peek to clean up this mess
+            let modelName = {
+              updated: marker.modelName.updated
+            };
+            let props = {
+              updated: marker.props.updated,
+              current: marker.props.current
+            }
+            if(modelName.updated || props.updated) {
+              if(!markers) {
+                markers = new Map();
+              }
+              markers.set(currentModel, { modelName, props });
+            }
+          }
+        }
+        if(!markers) {
+          changed = false;
+        }
+      }
     }
 
-    let length = current.length;
-
-    if(length !== source.length) {
-      return true;
-    }
-
-    for(let i = 0; i < length; i++) {
-      let currentModel = current[i];
-      let sourceDoc = source[i];
-      let marker = getMarker(currentModel);
-      if(marker.source !== sourceDoc) {
-        return true;
-      }
-      if(marker.modelName.updated) { // TODO: this updates modelName to new value. sourceArrayDidChange doesn't get it
-        return true;
-      }
-      if(marker.props.updated) { // same here
-        return true;
-      }
-    }
-
-    return false;
+    return {
+      changed,
+      markers
+    };
   }
 
   sourceDidChange() {
@@ -157,8 +185,9 @@ export default class ModelsProperty extends Property {
       _source: { current: next }
     } = this;
 
-    if(this.isSourceArrayUpdated(next)) {
-      this.sourceArrayDidChange(next);
+    let { changed, markers } = this.sourceArrayChanges(next);
+    if(changed) {
+      this.sourceArrayDidChange(next, markers);
     }
 
     if(next !== current) {
