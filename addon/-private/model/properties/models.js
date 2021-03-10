@@ -140,10 +140,10 @@ export default class ModelsProperty extends Property {
       if(marker.source !== sourceDoc) {
         return true;
       }
-      if(marker.modelName.updated) {
+      if(marker.modelName.updated) { // TODO: this updates modelName to new value. sourceArrayDidChange doesn't get it
         return true;
       }
-      if(marker.props.updated) {
+      if(marker.props.updated) { // same here
         return true;
       }
     }
