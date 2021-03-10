@@ -176,9 +176,9 @@ export default class Store extends ZugletObject {
     return this._factory.zuglet.create('store/firestore/reference/collection', { store, _ref });
   }
 
-  _createConditionReference(_ref, string) {
+  _createConditionReference(parent, _ref, string) {
     let store = this;
-    return this._factory.zuglet.create('store/firestore/reference/condition', { store, _ref, string });
+    return this._factory.zuglet.create('store/firestore/reference/condition', { store, _ref, parent, string });
   }
 
   _createBatch() {
@@ -235,7 +235,7 @@ export default class Store extends ZugletObject {
   }
 
   get dashboardURL() {
-    return `https://console.firebase.google.com/u/0/project/${this.projectId}/overview`;
+    return `https://console.firebase.google.com/u/0/project/${this.projectId}`;
   }
 
   openDashboard() {

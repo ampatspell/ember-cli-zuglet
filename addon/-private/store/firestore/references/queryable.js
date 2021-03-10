@@ -44,7 +44,7 @@ export default class QueryableReference extends Reference {
 
   _condition(name, args) {
     let { _ref, string } = this._conditionParameters(name, args);
-    return this.store._createConditionReference(_ref, string);
+    return this.store._createConditionReference(this, _ref, string);
   }
 
   where(...args) {

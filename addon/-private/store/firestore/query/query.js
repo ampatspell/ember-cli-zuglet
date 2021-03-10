@@ -171,6 +171,16 @@ export default class Query extends ZugletObject {
 
   //
 
+  get dashboardURL() {
+    return this.ref.dashboardURL;
+  }
+
+  openDashboard() {
+    this.ref.openDashboard();
+  }
+
+  //
+
   get string() {
     return this.ref.string;
   }

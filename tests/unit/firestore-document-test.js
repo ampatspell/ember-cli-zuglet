@@ -318,4 +318,12 @@ module('firestore / document', function(hooks) {
     });
   });
 
+  test('dashboardURL', function(assert) {
+    let projectId = this.store.options.firebase.projectId;
+    assert.strictEqual(
+      this.store.doc('ducks/yellow').dashboardURL,
+      `https://console.firebase.google.com/u/0/project/${projectId}/firestore/data/ducks/yellow`
+    );
+  });
+
 });
