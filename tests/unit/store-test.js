@@ -39,7 +39,7 @@ module('store', function(hooks) {
   test('dashboardURL', function(assert) {
     assert.strictEqual(
       this.store.dashboardURL,
-      `https://console.firebase.google.com/u/0/project/${this.projectId}/overview`
+      `https://console.firebase.google.com/u/0/project/${this.projectId}`
     );
   });
 
