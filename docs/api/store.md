@@ -192,8 +192,8 @@ export default class Store extends BaseStore {
 
 ## dashboardURL `→ String`
 
-Firestore dashboard URL.
+Firebase dashboard URL.
 
 ## openDashboard()
 
-`window.open` Firestore dashboard URL.
+`window.open` Firebase dashboard URL.

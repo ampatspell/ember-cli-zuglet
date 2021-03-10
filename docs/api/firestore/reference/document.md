@@ -113,3 +113,11 @@ Useful mostly for development and unittests.
 ``` javascript
 await store.doc('messages/first').save({ message: 'hey there' }, { merge: true });
 ```
+
+## dashboardURL `→ String`
+
+Firestore dashboard URL.
+
+## openDashboard()
+
+`window.open` Firestore dashboard URL.
