@@ -120,13 +120,46 @@ export default class ModelsProperty extends Property {
     this.models = models;
   }
 
+  isSourceArrayUpdated(source) {
+    let current = this.models;
+
+    if(!isArray(source)) {
+      return true;
+    }
+
+    let length = current.length;
+
+    if(length !== source.length) {
+      return true;
+    }
+
+    for(let i = 0; i < length; i++) {
+      let currentModel = current[i];
+      let sourceDoc = source[i];
+      let marker = getMarker(currentModel);
+      if(marker.source !== sourceDoc) {
+        return true;
+      }
+      if(marker.modelName.updated) {
+        return true;
+      }
+      if(marker.props.updated) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   sourceDidChange() {
     let {
       source: current,
       _source: { current: next }
     } = this;
 
-    this.sourceArrayDidChange(next);
+    if(this.isSourceArrayUpdated(next)) {
+      this.sourceArrayDidChange(next);
+    }
 
     if(next !== current) {
       this.source = next;
