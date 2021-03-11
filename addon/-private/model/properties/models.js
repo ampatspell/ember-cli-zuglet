@@ -6,6 +6,7 @@ import { getFactory } from '../../factory/get-factory';
 import { assert } from '@ember/debug';
 import { diff, asObject, asString } from '../decorators/diff';
 import { isFunction } from '../../util/types';
+import { removeObject } from '../../util/array';
 
 class Marker {
 
@@ -77,8 +78,8 @@ export default class ModelsProperty extends Property {
 
   sourceArrayDidChange(source, markers) {
     let current = this.models;
-    let removed = A([ ...current ]);
-    let added = A();
+    let removed = [ ...current ];
+    let added = [];
     let models = A();
 
     if(isArray(source)) {
@@ -106,26 +107,26 @@ export default class ModelsProperty extends Property {
         if(model) {
           if(marker.modelName.updated) {
             model = this.createModel(doc);
-            added.pushObject(model);
+            added.push(model);
           } else {
             let props = marker.props;
             if(props.updated) {
               if(isFunction(model.mappingDidChange)) {
                 model.mappingDidChange.call(model, props.current);
-                removed.removeObject(model);
+                removeObject(removed, model);
               } else {
                 model = this.createModel(doc);
-                added.pushObject(model);
+                added.push(model);
               }
             } else {
-              removed.removeObject(model);
+              removeObject(removed, model);
             }
           }
         } else {
           model = this.createModel(doc);
-          added.pushObject(model);
+          added.push(model);
         }
-        models.pushObject(model);
+        models.push(model);
       });
     }
 
