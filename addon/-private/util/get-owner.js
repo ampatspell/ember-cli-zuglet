@@ -11,4 +11,4 @@ export const getOwner = (object, opts) => {
   let owner = emberGetOwner(object);
   assert(`${object} must have Ember.js owner`, !!owner || optional);
   return owner;
-}
+};

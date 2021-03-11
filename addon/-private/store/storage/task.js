@@ -17,8 +17,8 @@ const calculateProgress = (total, transferred) => {
 
 export default class StorageTask extends ZugletObject {
 
-  @state _state
-  @readable total = null
+  @state _state;
+  @readable total = null;
   @readable transferred = null;
   @readable isRunning = true;
   @readable isCompleted = false;
@@ -26,7 +26,7 @@ export default class StorageTask extends ZugletObject {
   @readable error = null;
   @readable progress = 0;
 
-  @tracked metadata
+  @tracked metadata;
 
   constructor(owner, { ref, type, data, _task, metadata }) {
     super(owner);

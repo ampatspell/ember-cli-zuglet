@@ -34,6 +34,17 @@ export default class CollectionReference extends QueryableReference {
 
   //
 
+  get dashboardURL() {
+    let { store: { dashboardURL }, path } = this;
+    return `${dashboardURL}/firestore/data/${path}`;
+  }
+
+  openDashboard() {
+    window.open(this.dashboardURL, '_blank');
+  }
+
+  //
+
   get string() {
     return this.path;
   }

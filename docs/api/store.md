@@ -36,7 +36,9 @@ options = {
   },
 
   firestore: {
-    persistenceEnabled: true // defaults to `false`
+    persistenceEnabled: true, // defaults to `false`
+    experimentalAutoDetectLongPolling: true, // defaults to `false`
+    experimentalForceLongPolling: true // defaults to `false`
   },
 
   auth: {
@@ -152,6 +154,17 @@ let doc = store.doc('messages/first').new({
 await doc.save();
 ```
 
+## blobFromUint8Array(array) `→ firestore.Blob`
+
+Returns `firestore.Blob` created given from `Uint8Array`
+
+``` javascript
+let doc = store.doc('ducks/yellow').new({
+  blob: store.blobFromUint8Array(new Uint8Array([ 1, 1, 1, 1, 0, 0, 1 ]))
+});
+await doc.save();
+```
+
 ## onObserverError(model, error)
 
 * model → `Document`, `Query`, `Auth`, `Task`
@@ -179,8 +192,8 @@ export default class Store extends BaseStore {
 
 ## dashboardURL `→ String`
 
-Firestore dashboard URL.
+Firebase dashboard URL.
 
 ## openDashboard()
 
-`window.open` Firestore dashboard URL.
+`window.open` Firebase dashboard URL.

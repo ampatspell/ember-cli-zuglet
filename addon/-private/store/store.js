@@ -1,7 +1,7 @@
 import ZugletObject from '../object';
 import { registerDestructor } from '@ember/destroyable';
 import { assert } from '@ember/debug';
-import firebase from "firebase/app";
+import firebase from 'firebase/app';
 import { initializeApp, enablePersistence, destroyApp } from './firebase';
 import { cached, getCached } from '../model/decorators/cached';
 import { toJSON } from '../util/to-json';
@@ -20,7 +20,11 @@ const normalizeOptions = options => {
   assert(`store.options are required`, !!options);
   let { firebase, firestore, auth, functions, emulators } = options;
   assert(`store.options.firebase is required`, !!firebase);
-  firestore = assign({ persistenceEnabled: false }, firestore);
+  firestore = assign({
+    persistenceEnabled: false,
+    experimentalAutoDetectLongPolling: false,
+    experimentalForceLongPolling: false
+  }, firestore);
   auth = assign({ user: null }, auth);
   functions = assign({ region: null }, functions);
   emulators = assign({ host: 'localhost', firestore: null, auth: null, functions: null }, emulators);
@@ -49,9 +53,9 @@ const activated = activate().content((store, key) => store._factory.zuglet.creat
 @root()
 export default class Store extends ZugletObject {
 
-  identifier = null
-  firebase = null
-  enablePersistencePromise = null
+  identifier = null;
+  firebase = null;
+  enablePersistencePromise = null;
 
   constructor(owner, { stores, identifier }) {
     super(owner);
@@ -68,11 +72,20 @@ export default class Store extends ZugletObject {
   _initialize() {
     let { normalizedOptions: options } = this;
     this.firebase = initializeApp(options.firebase, this.identifier);
+
+    if(options.firestore.experimentalAutoDetectLongPolling) {
+      this.firebase.firestore().settings({ experimentalAutoDetectLongPolling: true, merge: true });
+    }
+    if(options.firestore.experimentalForceLongPolling) {
+      this.firebase.firestore().settings({ experimentalForceLongPolling: true, merge: true });
+    }
+
     this.enablePersistencePromise = Promise.resolve();
     if(options.emulators.firestore) {
       this.firebase.firestore().settings({
         host: options.emulators.firestore,
-        ssl: false
+        ssl: false,
+        merge: true
       });
     } else if(options.firestore.persistenceEnabled && !isFastBoot(this)) {
       this.enablePersistencePromise = registerPromise(this, 'enable-persistence', enablePersistence(this.firebase));
@@ -88,9 +101,9 @@ export default class Store extends ZugletObject {
     return this._factory.models;
   }
 
-  @activated auth
-  @activated storage
-  @activated functions
+  @activated auth;
+  @activated storage;
+  @activated functions;
 
   //
 
@@ -129,6 +142,10 @@ export default class Store extends ZugletObject {
     return firebase.firestore.FieldValue.serverTimestamp();
   }
 
+  blobFromUint8Array(value) {
+    return firebase.firestore.Blob.fromUint8Array(value);
+  }
+
   //
 
   _toDocumentReference(arg) {
@@ -159,9 +176,9 @@ export default class Store extends ZugletObject {
     return this._factory.zuglet.create('store/firestore/reference/collection', { store, _ref });
   }
 
-  _createConditionReference(_ref, string) {
+  _createConditionReference(parent, _ref, string) {
     let store = this;
-    return this._factory.zuglet.create('store/firestore/reference/condition', { store, _ref, string });
+    return this._factory.zuglet.create('store/firestore/reference/condition', { store, _ref, parent, string });
   }
 
   _createBatch() {
@@ -220,7 +237,7 @@ export default class Store extends ZugletObject {
   }
 
   get dashboardURL() {
-    return `https://console.firebase.google.com/u/0/project/${this.projectId}/overview`;
+    return `https://console.firebase.google.com/u/0/project/${this.projectId}`;
   }
 
   openDashboard() {

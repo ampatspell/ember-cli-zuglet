@@ -1,7 +1,7 @@
 import { assert } from '@ember/debug';
 import { typeOf } from '@ember/utils';
 import { isFastBoot } from './-private/util/fastboot';
-import { setGlobal } from  './-private/util/set-global';
+import { setGlobal } from './-private/util/set-global';
 
 const {
   assign

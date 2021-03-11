@@ -10,4 +10,4 @@ export const alive = () => (target, key, descriptor) => {
       return fn.call(this, ...args);
     }
   };
-}
+};

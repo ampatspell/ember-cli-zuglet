@@ -297,4 +297,33 @@ module('firestore / document', function(hooks) {
     assert.strictEqual(doc.toStringExtension(), 'ducks/yellow');
   });
 
+  test('save blob', async function(assert) {
+    let array = new Uint8Array([1,1,1,1,2,1,1,1,1]);
+    let blob = this.store.blobFromUint8Array(array);
+
+    let doc = this.store.doc('ducks/yellow').new({
+      blob
+    });
+
+    assert.ok(blob === doc.data.blob);
+
+    await doc.save();
+    await doc.reload();
+    assert.deepEqual([...doc.data.blob.toUint8Array()], [1,1,1,1,2,1,1,1,1]);
+
+    assert.deepEqual(doc.serialized.data, {
+      blob: {
+        type: 'firestore-blob'
+      }
+    });
+  });
+
+  test('dashboardURL', function(assert) {
+    let projectId = this.store.options.firebase.projectId;
+    assert.strictEqual(
+      this.store.doc('ducks/yellow').dashboardURL,
+      `https://console.firebase.google.com/u/0/project/${projectId}/firestore/data/ducks/yellow`
+    );
+  });
+
 });

@@ -22,14 +22,14 @@ const updateTrackedProperties = (target, source) => {
 
 export default class User extends ZugletObject {
 
-  @tracked user
+  @tracked user;
 
-  @tracked uid
-  @tracked email
-  @tracked emailVerified
-  @tracked photoURL
-  @tracked displayName
-  @tracked isAnonymous
+  @tracked uid;
+  @tracked email;
+  @tracked emailVerified;
+  @tracked photoURL;
+  @tracked displayName;
+  @tracked isAnonymous;
 
   constructor(owner, { store, user }) {
     super(owner);

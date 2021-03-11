@@ -6,8 +6,8 @@ export const lookupFastBoot = owner => {
   return {
     fastboot,
     isFastBoot
-  }
-}
+  };
+};
 
 export const getFastBoot = sender => lookupFastBoot(getOwner(sender));
 

@@ -38,3 +38,11 @@ let coll = store.collection('users');
 let ref = coll.doc('zeeba');
 ref.path // → 'users/zeeba'
 ```
+
+## dashboardURL `→ String`
+
+Firestore dashboard URL.
+
+## openDashboard()
+
+`window.open` Firestore dashboard URL.

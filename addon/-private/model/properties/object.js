@@ -8,7 +8,8 @@ import {
   isTimestamp,
   isFunction,
   isDocumentReference,
-  isGeoPoint
+  isGeoPoint,
+  isFirestoreBlob
 } from '../../util/types';
 
 export default class ObjectProperty extends Property {
@@ -33,6 +34,8 @@ export default class ObjectProperty extends Property {
     } else if(isDocumentReference(value)) {
       return false;
     } else if(isGeoPoint(value)) {
+      return false;
+    } else if(isFirestoreBlob(value)) {
       return false;
     }
     return true;

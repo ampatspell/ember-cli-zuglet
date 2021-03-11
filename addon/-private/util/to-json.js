@@ -5,4 +5,4 @@ export const toJSON = (instance, props) => {
     instance: toPrimitive(instance),
     ...props
   };
-}
+};

@@ -11,7 +11,7 @@ export const setProperties = (object, hash, diff=true) => {
     }
     object[key] = value;
   }
-}
+};
 
 export default class ZugletObject {
 

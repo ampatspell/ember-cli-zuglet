@@ -10,7 +10,9 @@ export default class DummyStore extends Store {
   options = {
     firebase,
     firestore: {
-      persistenceEnabled
+      persistenceEnabled,
+      // experimentalAutoDetectLongPolling: true,
+      // experimentalForceLongPolling: true
     },
     auth: {
       user: 'user'

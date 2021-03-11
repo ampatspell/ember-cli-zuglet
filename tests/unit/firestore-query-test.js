@@ -163,4 +163,12 @@ module('firestore / query', function(hooks) {
     assert.strictEqual(query.isPassive, true);
   });
 
+  test('dashboardURL', function(assert) {
+    let projectId = this.store.options.firebase.projectId;
+    assert.strictEqual(
+      this.store.collection('ducks').orderBy('name', 'asc').limit(1).dashboardURL,
+      `https://console.firebase.google.com/u/0/project/${projectId}/firestore/data/ducks`
+    );
+  });
+
 });

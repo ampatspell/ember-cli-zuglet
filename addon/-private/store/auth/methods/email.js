@@ -1,5 +1,5 @@
 import AuthMethod from './method';
-import firebase from "firebase/app";
+import firebase from 'firebase/app';
 import { registerPromise } from '../../../stores/stats';
 
 export default class EmailAuthMethod extends AuthMethod {

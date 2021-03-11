@@ -22,12 +22,12 @@ const noop = () => {};
 export default class Document extends ZugletObject {
 
   @object().onDirty(owner => owner._dataDidChange())
-  data
+  data;
 
   @raw('data')
-  _data
+  _data;
 
-  @state _state
+  @state _state;
   @readable isNew = false;
   @readable isLoading = false;
   @readable isLoaded = false;
@@ -37,7 +37,7 @@ export default class Document extends ZugletObject {
   @readable error = null;
   @readable exists = undefined;
 
-  _isPassive = false
+  _isPassive = false;
 
   constructor(owner, { store, ref, snapshot, parent, data }) {
     super(owner);
@@ -45,6 +45,7 @@ export default class Document extends ZugletObject {
     this.ref = ref;
     this.parent = parent;
     this._listeners = new Listeners();
+    this._deferred = defer();
     if(data) {
       this.data = data;
       this._state.untracked.setProperties({ isNew: true, isDirty: true });
@@ -52,9 +53,9 @@ export default class Document extends ZugletObject {
       this.data = {};
       if(snapshot) {
         this._onSnapshot(snapshot, { source: 'initial' });
+        this._deferred.resolve(this);
       }
     }
-    this._deferred = defer();
   }
 
   //
@@ -106,7 +107,7 @@ export default class Document extends ZugletObject {
   }
 
   @update('data')
-  __setData
+  __setData;
 
   _setData(data) {
     assert('data must be object', data instanceof Object);
@@ -382,6 +383,14 @@ export default class Document extends ZugletObject {
       exists,
       data: objectToJSON(_data)
     };
+  }
+
+  get dashboardURL() {
+    return this.ref.dashboardURL;
+  }
+
+  openDashboard() {
+    this.ref.openDashboard();
   }
 
   toJSON() {
