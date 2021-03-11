@@ -6,6 +6,7 @@ import { getFactory } from '../../factory/get-factory';
 import { assert } from '@ember/debug';
 import { diff, asObject, asString } from '../decorators/diff';
 import { isFunction } from '../../util/types';
+import { removeObject } from '../../util/array';
 
 class Marker {
 
@@ -75,40 +76,57 @@ export default class ModelsProperty extends Property {
 
   //
 
-  sourceArrayDidChange(source) {
+  sourceArrayDidChange(source, markers) {
     let current = this.models;
-    let removed = A([ ...current ]);
-    let added = A();
+    let removed = [ ...current ];
+    let added = [];
     let models = A();
 
     if(isArray(source)) {
-      let find = doc => current.find(model => getMarker(model).source === doc);
+      let empty = {};
+      let find = doc => {
+        for(let model of current) {
+          let marker;
+          if(markers) {
+            marker = markers.get(model);
+          }
+          if(!marker) {
+            marker = getMarker(model);
+          }
+          if(marker.source === doc) {
+            return {
+              marker,
+              model
+            };
+          }
+        }
+        return empty;
+      }
       source.forEach(doc => {
-        let model = find(doc);
+        let { model, marker } = find(doc);
         if(model) {
-          let marker = getMarker(model);
           if(marker.modelName.updated) {
             model = this.createModel(doc);
-            added.pushObject(model);
+            added.push(model);
           } else {
             let props = marker.props;
             if(props.updated) {
               if(isFunction(model.mappingDidChange)) {
                 model.mappingDidChange.call(model, props.current);
-                removed.removeObject(model);
+                removeObject(removed, model);
               } else {
                 model = this.createModel(doc);
-                added.pushObject(model);
+                added.push(model);
               }
             } else {
-              removed.removeObject(model);
+              removeObject(removed, model);
             }
           }
         } else {
           model = this.createModel(doc);
-          added.pushObject(model);
+          added.push(model);
         }
-        models.pushObject(model);
+        models.push(model);
       });
     }
 
@@ -120,13 +138,58 @@ export default class ModelsProperty extends Property {
     this.models = models;
   }
 
+  sourceArrayChanges(source) {
+    let current = this.models;
+    let changed = true;
+    let markers;
+
+    if(isArray(source)) {
+      let length = current.length;
+      if(length === source.length) {
+        for(let i = 0; i < length; i++) {
+          let currentModel = current[i];
+          let sourceDoc = source[i];
+          let marker = getMarker(currentModel);
+          if(marker.source === sourceDoc) {
+            // TODO: not a greatest thing ever.
+            // thing is, modelName and props.updated resets after get so it will need peek to clean up this mess
+            let modelName = {
+              updated: marker.modelName.updated
+            };
+            let props = {
+              updated: marker.props.updated,
+              current: marker.props.current
+            }
+            if(modelName.updated || props.updated) {
+              if(!markers) {
+                markers = new Map();
+              }
+              markers.set(currentModel, { modelName, props });
+            }
+          }
+        }
+        if(!markers) {
+          changed = false;
+        }
+      }
+    }
+
+    return {
+      changed,
+      markers
+    };
+  }
+
   sourceDidChange() {
     let {
       source: current,
       _source: { current: next }
     } = this;
 
-    this.sourceArrayDidChange(next);
+    let { changed, markers } = this.sourceArrayChanges(next);
+    if(changed) {
+      this.sourceArrayDidChange(next, markers);
+    }
 
     if(next !== current) {
       this.source = next;
