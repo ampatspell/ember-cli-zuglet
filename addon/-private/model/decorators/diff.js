@@ -10,7 +10,7 @@ const {
 
 class Thing {
 
-  @updated()
+  @diff(asIdentity)
   _modelName(curr) {
     let { owner, opts } = this;
     return opts.modelName.call(owner, owner);
