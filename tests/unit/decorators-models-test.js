@@ -51,7 +51,7 @@ module('decorators / @models', function(hooks) {
     }
   });
 
-  test('create models from query', async function(assert) {
+  test.only('create models from query', async function(assert) {
     let ref = this.store.collection('ducks');
     await replaceCollection(ref, [
       { _id: '1', pos: 1, type: 'duck', name: 'One', visible: true },
@@ -89,7 +89,7 @@ module('decorators / @models', function(hooks) {
     await ref.doc('1').save({ type: 'hamster' }, { merge: true });
     await poll(() => box.query.content[0].data.type === 'hamster');
 
-    assert.ok(box.models);
+    assert.deepEqual(box.models.map(model => model.type), [ 'hamster', 'duck', 'duck' ]);
     assert.deepEqual(this.created, [ 'duck', 'duck', 'duck', 'hamster' ]);
 
     assert.ok(!isActivated(duck));
