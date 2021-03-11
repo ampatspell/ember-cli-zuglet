@@ -51,7 +51,7 @@ module('decorators / @models', function(hooks) {
     }
   });
 
-  test.only('create models from query', async function(assert) {
+  test('create models from query', async function(assert) {
     let ref = this.store.collection('ducks');
     await replaceCollection(ref, [
       { _id: '1', pos: 1, type: 'duck', name: 'One', visible: true },
