@@ -56,7 +56,7 @@
     "ember-classic-decorator": "^2.0.0",
     "ember-cli-babel": "^7.23.1",
     "ember-cli-htmlbars": "^5.3.2",
-    "firebase": "^8.2.9",
+    "firebase": "^8.3.0",
     "node-fetch": "^2.6.1",
     "xmlhttprequest": "^1.8.0"
   },
