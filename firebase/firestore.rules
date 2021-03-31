@@ -3,9 +3,13 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
+    function isEqualToString(value, expected) {
+      return value is string && value == expected;
+    }
+
     match /messages/{message} {
       allow read: if true;
-      allow write: if true;
+      allow write: if !isEqualToString(request.resource.data.name, 'fail');
     }
 
     match /ducks/{duck} {

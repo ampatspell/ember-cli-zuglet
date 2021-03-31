@@ -203,17 +203,20 @@ export default class Document extends ZugletObject {
   }
 
   _willSave() {
-    this._state.setProperties({ isSaving: true, isError: false, error: null });
+    let isDirty = this._state.untracked.get('isDirty');
+    this._state.setProperties({ isDirty: false, isSaving: true, isError: false, error: null });
+    return { isDirty };
   }
 
   _didSave() {
-    this._state.setProperties({ isNew: false, isLoaded: true, isSaving: false, isDirty: false, exists: true });
+    this._state.setProperties({ isNew: false, isLoaded: true, isSaving: false, exists: true });
     this._maybeSubscribeToOnSnapshot();
     this._deferred.resolve(this);
   }
 
-  _saveDidFail(error) {
-    this._state.setProperties({ isSaving: false, isError: true, error });
+  _saveDidFail(state, error) {
+    let isDirty = state.isDirty || this._state.untracked.get('isDirty');
+    this._state.setProperties({ isSaving: false, isError: true, isDirty, error });
   }
 
   async _saveInternal(set, opts) {
@@ -221,13 +224,13 @@ export default class Document extends ZugletObject {
     if(skip) {
       return this;
     }
-    this._willSave();
+    let state = this._willSave();
     try {
       let data = this._saveData(token);
       await registerPromise(this, 'save', set(this.ref._ref, data, { merge }));
       this._didSave();
     } catch(error) {
-      this._saveDidFail(error);
+      this._saveDidFail(state, error);
       throw error;
     }
     return this;
