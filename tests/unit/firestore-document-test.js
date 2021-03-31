@@ -114,7 +114,7 @@ module('firestore / document', function(hooks) {
       path: 'ducks/yellow',
       exists: undefined,
       isNew: true,
-      isDirty: true,
+      isDirty: false,
       isLoaded: false,
       isLoading: false,
       isSaving: true,
