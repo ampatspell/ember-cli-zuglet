@@ -143,6 +143,72 @@ module('firestore / document', function(hooks) {
     });
   });
 
+  test('save new document fails', async function(assert) {
+    let ref = this.store.doc('ducks/yellow');
+    await ref.delete();
+
+    let doc = ref.new({ name: 'fail' });
+
+    assert.deepEqual(doc.serialized, {
+      id: 'yellow',
+      path: 'ducks/yellow',
+      exists: undefined,
+      isNew: true,
+      isDirty: true,
+      isLoaded: false,
+      isLoading: false,
+      isSaving: false,
+      isError: false,
+      error: null,
+      data: {
+        name: 'fail'
+      }
+    });
+
+    let promise = doc.save();
+    assert.deepEqual(doc.serialized, {
+      id: 'yellow',
+      path: 'ducks/yellow',
+      exists: undefined,
+      isNew: true,
+      isDirty: false,
+      isLoaded: false,
+      isLoading: false,
+      isSaving: true,
+      isError: false,
+      error: null,
+      data: {
+        name: 'fail'
+      }
+    });
+
+    try {
+      await promise;
+      assert.ok(false, 'should fail');
+    } catch(err) {
+      assert.strictEqual(err.message, 'Missing or insufficient permissions.');
+    }
+
+    assert.deepEqual(doc.serialized, {
+      id: 'yellow',
+      path: 'ducks/yellow',
+      exists: undefined,
+      isNew: true,
+      isDirty: true,
+      isLoaded: false,
+      isLoading: false,
+      isSaving: false,
+      isError: true,
+      error: doc.serialized.error,
+      data: {
+        name: 'fail'
+      }
+    });
+
+    assert.strictEqual(doc.error.message, 'Missing or insufficient permissions.');
+    assert.strictEqual(doc.error.code, 'permission-denied');
+  });
+
   test(`passive document`, function(assert) {
     let doc = this.store.doc('ducks/yellow').new();
     assert.strictEqual(doc.isPassive, false);
