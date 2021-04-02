@@ -270,6 +270,7 @@ export default class Store extends ZugletObject {
   //
 
   _destroy() {
+    this.stores._storeWillDestroy(this);
     getCached(this, 'auth')?.destroy();
     destroyApp(this.firebase);
   }

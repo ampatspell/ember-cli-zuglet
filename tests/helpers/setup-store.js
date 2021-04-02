@@ -75,5 +75,9 @@ export const setupStore = (hooks, identifier='test') => {
     let stats = getStats(this.store);
     assert.ok(!stats.hasPromises, pluralizeDangling(stats.promises.length, 'promise', 'promises'));
     assert.ok(!stats.hasObservers, pluralizeDangling(stats.observers.length, 'observer', 'observers'));
+
+    this.stores = null;
+    this.store = null;
+    this.activations = null;
   });
 }

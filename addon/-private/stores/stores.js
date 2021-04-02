@@ -8,6 +8,7 @@ import { assert } from '@ember/debug';
 import classic from 'ember-classic-decorator';
 import { toJSON } from '../util/to-json';
 import { registerModel } from '../util/model-factory';
+import { removeObject } from '../util/array';
 
 const {
   assign
@@ -62,6 +63,10 @@ export default class Stores extends ZugletObject {
     associateDestroyableChild(this, store);
     store._initialize();
     return store;
+  }
+
+  _storeWillDestroy(store) {
+    this.stores = removeObject(this.stores, store);
   }
 
   createStore(identifier, factory) {
