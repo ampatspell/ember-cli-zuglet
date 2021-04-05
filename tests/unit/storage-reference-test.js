@@ -48,6 +48,16 @@ module('storage / reference', function(hooks) {
     });
   });
 
+  test('create nested with multiple path components', async function(assert) {
+    let ducks = this.storage.ref('ducks');
+    let yellow = ducks.ref('cute/yellow');
+    assert.deepEqual(yellow.serialized, {
+      "bucket": this.bucket,
+      "name": "yellow",
+      "path": "ducks/cute/yellow"
+    });
+  });
+
   test('toJSON', async function(assert) {
     let json = this.storage.ref('ducks/hello').toJSON();
     assert.deepEqual(json, {
@@ -200,28 +210,6 @@ module('storage / reference', function(hooks) {
 
     let deleted = await ref.delete();
     assert.strictEqual(deleted, true);
-  });
-
-  test('list', async function(assert) {
-    let files = this.storage.ref('files');
-    await Promise.all([
-      this.putString(files.ref('one')),
-      this.putString(files.ref('two')),
-      this.putString(files.ref('three'))
-    ]);
-    let result = await files.list();
-    console.log(result);
-  });
-
-  test('list all', async function(assert) {
-    let files = this.storage.ref('files');
-    await Promise.all([
-      this.putString(files.ref('one')),
-      this.putString(files.ref('two')),
-      this.putString(files.ref('three'))
-    ]);
-    let result = await files.listAll();
-    console.log(result);
   });
 
 });

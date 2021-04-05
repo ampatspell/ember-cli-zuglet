@@ -10,6 +10,10 @@ service firebase.storage {
     match /files/{file} {
       allow read: if true;
       allow write: if true;
+      match /{nested} {
+        allow read: if true;
+        allow write: if true;
+      }
     }
 
   }
