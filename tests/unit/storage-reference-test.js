@@ -38,6 +38,16 @@ module('storage / reference', function(hooks) {
     });
   });
 
+  test('create nested', async function(assert) {
+    let ducks = this.storage.ref('ducks');
+    let yellow = ducks.ref('yellow');
+    assert.deepEqual(yellow.serialized, {
+      "bucket": this.bucket,
+      "name": "yellow",
+      "path": "ducks/yellow"
+    });
+  });
+
   test('toJSON', async function(assert) {
     let json = this.storage.ref('ducks/hello').toJSON();
     assert.deepEqual(json, {
