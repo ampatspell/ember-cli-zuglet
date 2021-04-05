@@ -203,7 +203,7 @@ module('storage / reference', function(hooks) {
     console.log(result);
   });
 
-  test.only('list all', async function(assert) {
+  test('list all', async function(assert) {
     let files = this.storage.ref('files');
     await Promise.all([
       this.putString(files.ref('one')),
