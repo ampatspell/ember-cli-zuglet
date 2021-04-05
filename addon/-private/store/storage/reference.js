@@ -43,6 +43,12 @@ export default class StorageReference extends ZugletObject {
 
   //
 
+  ref(path) {
+    return this.storage._createReference(this._ref.child(path));
+  }
+
+  //
+
   async url() {
     return await registerPromise(this, 'url', this._ref.getDownloadURL());
   }

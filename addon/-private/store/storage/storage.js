@@ -18,6 +18,11 @@ export default class Storage extends ZugletObject {
     return this._storage.app.options.storageBucket;
   }
 
+  _createReference(_ref) {
+    let storage = this;
+    return getFactory(this).zuglet.create('store/storage/reference', { storage, _ref });
+  }
+
   ref(arg) {
     if(typeof arg === 'string') {
       arg = { path: arg };
@@ -31,8 +36,7 @@ export default class Storage extends ZugletObject {
       _ref = this._storage.refFromURL(url);
     }
 
-    let storage = this;
-    return getFactory(this).zuglet.create('store/storage/reference', { storage, _ref });
+    return this._createReference(_ref);
   }
 
   get serialized() {
