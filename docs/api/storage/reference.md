@@ -57,6 +57,16 @@ let url = await store.storage.ref('hello').url();
 url // → https://firebasestorage.googleapis.com/v0/b/<project-id>.appspot.com/o/hello?alt=media&token=…
 ```
 
+## ref(path) `→ Reference`
+
+Creates a nested reference.
+
+``` javascript
+let user = store.storage.ref('users/zeeba');
+let picture = user.ref('public/picture');
+picture.path // → "users/zeeba/public/picture"
+```
+
 ## metadata({ optional })
 
 Fetches all file metadata
@@ -139,3 +149,19 @@ let task = ref.put({
   }
 });
 ```
+
+## async list({ maxResults, pageToken }) `→ { items, prefixes, nextPageToken }`
+
+Lists files.
+
+``` javascript
+let ref = this.storage.ref('images');
+let { items, prefixes, nextPageToken } = await ref.list();
+if(nextPageToken) {
+  await ref.list({ pageToken: nextPageToken });
+}
+```
+
+## async listAll() `→ { items, prefixes, nextPageToken }`
+
+Lists all files.
