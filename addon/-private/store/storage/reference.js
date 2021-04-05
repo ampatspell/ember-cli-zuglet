@@ -127,6 +127,27 @@ export default class StorageReference extends ZugletObject {
     return { ref, type, data, _task, metadata };
   }
 
+  _toListResult(result) {
+    let { items, nextPageToken, prefixes } = result;
+    let wrap = refs => refs.map(ref => this.storage._createReference(ref));
+    return {
+      items: wrap(items),
+      prefixes: wrap(prefixes),
+      nextPageToken
+    };
+  }
+
+  async list(opts) {
+    let { maxResults, pageToken } = assign({ }, opts);
+    let result = await this._ref.list({ maxResults, pageToken });
+    return this._toListResult(result);
+  }
+
+  async listAll() {
+    let result = await this._ref.listAll();
+    return this._toListResult(result);
+  }
+
   //
 
   get serialized() {

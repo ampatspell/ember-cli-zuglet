@@ -37,6 +37,10 @@ $ ember install ember-cli-zuglet
 
 Open `app/store.js` and add your Firebase config.
 
+## Documentation
+
+See the [ember-cli-zuglet website](https://www.ember-cli-zuglet.com) for documentation and [dummy app](https://github.com/ampatspell/ember-cli-zuglet/tree/master/tests/dummy/app/components/route/playground) for examples.
+
 ## Tweaks
 
 ``` javascript
