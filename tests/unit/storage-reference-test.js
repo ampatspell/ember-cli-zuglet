@@ -192,4 +192,26 @@ module('storage / reference', function(hooks) {
     assert.strictEqual(deleted, true);
   });
 
+  test('list', async function(assert) {
+    let files = this.storage.ref('files');
+    await Promise.all([
+      this.putString(files.ref('one')),
+      this.putString(files.ref('two')),
+      this.putString(files.ref('three'))
+    ]);
+    let result = await files.list();
+    console.log(result);
+  });
+
+  test.only('list all', async function(assert) {
+    let files = this.storage.ref('files');
+    await Promise.all([
+      this.putString(files.ref('one')),
+      this.putString(files.ref('two')),
+      this.putString(files.ref('three'))
+    ]);
+    let result = await files.listAll();
+    console.log(result);
+  });
+
 });
