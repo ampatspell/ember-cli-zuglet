@@ -120,7 +120,8 @@
     "fastbootDependencies": [
       "node-fetch",
       "xmlhttprequest",
-      "buffer"
+      "buffer",
+      "simple-dom"
     ]
   }
 }
