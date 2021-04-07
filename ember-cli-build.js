@@ -1,6 +1,7 @@
 'use strict';
 
 const EmberAddon = require('ember-cli/lib/broccoli/ember-addon');
+const defaultFingerprintExtensions = require('broccoli-asset-rev/lib/default-options').extensions;
 const crawl = require('prember-crawler');
 
 const isFastbootEnabled = process.env.WITH_FASTBOOT === 'true';
@@ -11,6 +12,10 @@ module.exports = function (defaults) {
       collections: {
         'docs': 'docs'
       }
+    },
+    fingerprint: {
+      extensions: [ ...defaultFingerprintExtensions, 'md', 'json' ],
+      generateAssetMap: true
     },
     prember: {
       urls({ visit }) {
