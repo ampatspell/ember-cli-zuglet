@@ -1,30 +1,52 @@
-import Page from 'ember-cli-remark-static/static/page';
+import { setOwner } from '@ember/application';
+import { reads } from "macro-decorators";
+import { cached } from "tracked-toolbox";
+import { remark } from 'remark/decorators';
 
-export default class DocPage extends Page {
+export default class Page {
 
-  get title() {
-    let { name, headings, frontmatter } = this;
-    return frontmatter?.title || headings?.[0]?.value || name;
+  constructor(owner, { file }) {
+    setOwner(this, owner);
+    this.file = file;
   }
 
-  get pos() {
-    return this.frontmatter?.pos;
+  @reads('file.body') body;
+  @reads('file.filename') filename;
+  @reads('file.directory') directory;
+
+  @cached
+  get name() {
+    let components = this.filename.split('.');
+    components.pop();
+    return components.join('.');
   }
 
-  get hidden() {
-    return this.frontmatter?.hidden;
-  }
-
-  preprocessNode(parent, node) {
+  @remark('body')
+  tree(node) {
     if(node.tagName === 'a') {
-      let { properties: { href } } = node;
-      if(href.startsWith('/')) {
-        node.componentName = 'docs/route';
-        node.properties.route = node.properties.href.substr(1);
-      } else {
+      let href = node.properties.href;
+      if(href.startsWith('http:') || href.startsWith('https:') || href.startsWith('mailto:')) {
         node.properties.target = 'top';
+      } else if(href.startsWith('/')) {
+        console.log(node);
+        // let route = href.substr(1);
+        // return {
+        //   type: 'component',
+        //   name: 'remark/link-to',
+        //   inline: true,
+        //   model: {
+        //     route
+        //   },
+        //   children: node.children
+        // };
       }
     }
+    return node;
+  }
+
+  async load() {
+    await this.file.load();
+    await this.tree.load();
   }
 
 }

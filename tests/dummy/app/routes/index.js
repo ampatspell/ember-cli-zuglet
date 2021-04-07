@@ -8,10 +8,14 @@ export default class IndexRoute extends Route {
   docs
 
   async model() {
-    let pages = await hash(this.docs.page('index').pages.reduce((hash, page) => {
-      hash[page.name] = page.load();
+    let pages = this.docs.directory('index');
+    await Promise.all(pages.map(page => page.load()));
+
+    pages = pages.reduce((hash, page) => {
+      hash[page.name] = page;
       return hash;
-    }, {}));
+    }, {});
+
     return {
       pages
     };

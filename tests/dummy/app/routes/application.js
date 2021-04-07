@@ -5,15 +5,18 @@ import { route } from 'zuglet/decorators';
 @route()
 export default class RouteRoute extends Route {
 
-  @service
-  store
+  @service store;
+  @service docs;
 
   model() {
   }
 
   async load() {
     // resolve current user before rendering app
-    await this.store.load();
+    await Promise.all([
+      this.store.load(),
+      this.docs.load()
+    ]);
   }
 
 }

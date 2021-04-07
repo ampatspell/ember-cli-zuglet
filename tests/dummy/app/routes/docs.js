@@ -3,8 +3,7 @@ import { inject as service } from '@ember/service';
 
 export default class DocsRoute extends Route {
 
-  @service
-  docs
+  @service docs;
 
   model() {
     return this.docs;
