@@ -1,8 +1,7 @@
-<Block::MasterDetail>
-  <:master>
+<Block::MasterDetail as |md|>
+  {{#if md.isMaster}}
     <Block::Toc @pages={{@docs.root}}/>
-  </:master>
-  <:detail>
+  {{else if md.isDetail}}
     {{yield}}
-  </:detail>
+  {{/if}}
 </Block::MasterDetail>
