@@ -1,8 +1,14 @@
 import FilesService from 'remark/services/files';
 import { cached } from "tracked-toolbox";
 import { inject as service } from "@ember/service";
-import { setGlobal } from 'zuglet/utils';
 import { sortedBy } from '../util/array';
+
+const normalize = name => {
+  if(name && name.endsWith('/')) {
+    name = name.substring(0, name.length - 1);
+  }
+  return name;
+}
 
 export default class DocsService extends FilesService {
 
@@ -17,16 +23,18 @@ export default class DocsService extends FilesService {
     }), page => page.pos);
   }
 
-  constructor() {
-    super(...arguments);
-    setGlobal({ docs: this });
+  @cached
+  get root() {
+    return this.pages.filter(page => page.directory === '');
   }
 
   page(name) {
-    return this.pages.find(page => page.filename === `${name}.md`);
+    name = normalize(name);
+    return this.pages.find(page => page.id === name);
   }
 
   directory(name) {
+    name = normalize(name);
     return this.pages.filter(page => page.directory === name);
   }
 

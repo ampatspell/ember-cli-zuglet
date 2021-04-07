@@ -1,8 +1,8 @@
 <div class="block-master-detail">
   <div class="master">
-    {{yield (hash isMaster=true)}}
+    {{yield to="master"}}
   </div>
   <div class="detail">
-    {{yield (hash isDetail=true)}}
+    {{yield to="detail"}}
   </div>
 </div>

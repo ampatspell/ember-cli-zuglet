@@ -3,10 +3,19 @@ import { reads } from "macro-decorators";
 import { cached } from "tracked-toolbox";
 import { remark } from 'remark/decorators';
 
+const withoutExtension = fn => (target, key) => cached(target, key, {
+  get() {
+    let components = fn.call(this, this).split('.');
+    components.pop();
+    return components.join('.');
+  }
+});
+
 export default class Page {
 
-  constructor(owner, { file }) {
+  constructor(owner, { docs, file }) {
     setOwner(this, owner);
+    this.docs = docs;
     this.file = file;
   }
 
@@ -16,11 +25,11 @@ export default class Page {
   @reads('file.filename') filename;
   @reads('file.directory') directory;
 
-  @cached
-  get name() {
-    let components = this.filename.split('.');
-    components.pop();
-    return components.join('.');
+  @withoutExtension(page => page.file.name) id;
+  @withoutExtension(page => page.filename) name;
+
+  get pages() {
+    return this.docs.directory(this.id);
   }
 
   @cached
@@ -35,18 +44,19 @@ export default class Page {
       let href = node.properties.href;
       if(href.startsWith('http:') || href.startsWith('https:') || href.startsWith('mailto:')) {
         node.properties.target = 'top';
-      } else if(href.startsWith('/')) {
-        console.log(node);
-        // let route = href.substr(1);
-        // return {
-        //   type: 'component',
-        //   name: 'remark/link-to',
-        //   inline: true,
-        //   model: {
-        //     route
-        //   },
-        //   children: node.children
-        // };
+      } else if(href.startsWith('api/')) {
+        return {
+          type: 'component',
+          name: 'block/remark/link-to',
+          inline: true,
+          model: {
+            route: 'docs.page',
+            model: href
+          },
+          children: node.children
+        };
+      } else {
+        console.log('Unmapped link', node);
       }
     }
     return node;

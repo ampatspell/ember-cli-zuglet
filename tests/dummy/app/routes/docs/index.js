@@ -3,11 +3,10 @@ import { inject as service } from '@ember/service';
 
 export default class DocsIndexRoute extends Route {
 
-  @service
-  docs
+  @service docs;
 
   model() {
-    return this.docs.load('docs');
+    return this.docs.page('docs').load();
   }
 
 }

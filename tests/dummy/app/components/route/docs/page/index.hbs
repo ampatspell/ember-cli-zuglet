@@ -1,3 +1,7 @@
 <div class="route-docs-page-index">
-  <Block::Remark @page={{@model}}/>
+  {{#if @page}}
+    <Block::Remark @page={{@page}}/>
+  {{else}}
+    <div class="placeholder">Page "{{@id}}" was not found</div>
+  {{/if}}
 </div>
