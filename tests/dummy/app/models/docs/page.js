@@ -10,6 +10,7 @@ export default class Page {
     this.file = file;
   }
 
+  @reads('file.attributes.pos') pos;
   @reads('file.body') body;
   @reads('file.filename') filename;
   @reads('file.directory') directory;
