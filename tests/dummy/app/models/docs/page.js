@@ -11,6 +11,7 @@ export default class Page {
   }
 
   @reads('file.attributes.pos') pos;
+  @reads('file.attributes.hidden') hidden;
   @reads('file.body') body;
   @reads('file.filename') filename;
   @reads('file.directory') directory;
@@ -20,6 +21,12 @@ export default class Page {
     let components = this.filename.split('.');
     components.pop();
     return components.join('.');
+  }
+
+  @cached
+  get title() {
+    let { file } = this;
+    return file.attributes.title || file.toc[0]?.content || this.name;
   }
 
   @remark('body')
