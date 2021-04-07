@@ -1,7 +1,7 @@
-<Block::MasterDetail as |section|>
-  {{#if section.isMaster}}
-    <Block::Toc @page={{@docs.content}}/>
-  {{else if section.isDetail}}
+<Block::MasterDetail as |md|>
+  {{#if md.isMaster}}
+    <Block::Toc @pages={{@docs.root}}/>
+  {{else if md.isDetail}}
     {{yield}}
   {{/if}}
 </Block::MasterDetail>

@@ -3,14 +3,17 @@ import { inject as service } from '@ember/service';
 
 export default class DocsPageRoute extends Route {
 
-  @service
-  docs
+  @service docs;
 
-  model({ page_id: id }) {
+  async model({ page_id: id }) {
     if(id === 'index') {
       return this.transitionTo('index');
     }
-    return this.docs.load(id);
+    let page = await this.docs.page(id)?.load();
+    return {
+      id,
+      page
+    };
   }
 
 }

@@ -1,30 +1,71 @@
-import Page from 'ember-cli-remark-static/static/page';
+import { setOwner } from '@ember/application';
+import { reads } from "macro-decorators";
+import { cached } from "tracked-toolbox";
+import { remark } from 'remark/decorators';
 
-export default class DocPage extends Page {
+const withoutExtension = fn => (target, key) => cached(target, key, {
+  get() {
+    let components = fn.call(this, this).split('.');
+    components.pop();
+    return components.join('.');
+  }
+});
 
+export default class Page {
+
+  constructor(owner, { docs, file }) {
+    setOwner(this, owner);
+    this.docs = docs;
+    this.file = file;
+  }
+
+  @reads('file.attributes.pos') pos;
+  @reads('file.attributes.hidden') hidden;
+  @reads('file.body') body;
+  @reads('file.filename') filename;
+  @reads('file.directory') directory;
+
+  @withoutExtension(page => page.file.name) id;
+  @withoutExtension(page => page.filename) name;
+
+  get pages() {
+    return this.docs.directory(this.id);
+  }
+
+  @cached
   get title() {
-    let { name, headings, frontmatter } = this;
-    return frontmatter?.title || headings?.[0]?.value || name;
+    let { file } = this;
+    return file.attributes.title || file.toc[0]?.content || this.name;
   }
 
-  get pos() {
-    return this.frontmatter?.pos;
-  }
-
-  get hidden() {
-    return this.frontmatter?.hidden;
-  }
-
-  preprocessNode(parent, node) {
+  @remark('body')
+  tree(node) {
     if(node.tagName === 'a') {
-      let { properties: { href } } = node;
-      if(href.startsWith('/')) {
-        node.componentName = 'docs/route';
-        node.properties.route = node.properties.href.substr(1);
-      } else {
+      let href = node.properties.href;
+      if(href.startsWith('http:') || href.startsWith('https:') || href.startsWith('mailto:')) {
         node.properties.target = 'top';
+      } else if(href.startsWith('api/')) {
+        return {
+          type: 'component',
+          name: 'block/remark/link-to',
+          inline: true,
+          model: {
+            route: 'docs.page',
+            model: href
+          },
+          children: node.children
+        };
+      } else {
+        console.log('Unmapped link', node);
       }
     }
+    return node;
+  }
+
+  async load() {
+    await this.file.load();
+    await this.tree.load();
+    return this;
   }
 
 }
