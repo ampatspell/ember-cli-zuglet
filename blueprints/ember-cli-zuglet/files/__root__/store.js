@@ -24,6 +24,7 @@ const options = {
   //   host: 'localhost',
   //   auth: 9099,
   //   firestore: 8080,
+  //   storage: 9199,
   //   functions: 5001
   // }
 };

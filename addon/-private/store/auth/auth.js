@@ -41,7 +41,7 @@ export default class Auth extends ZugletObject {
   _maybeSetupEmulator() {
     let emulators = this.store.normalizedOptions.emulators;
     if(emulators.auth) {
-      this._auth.useEmulator(emulators.auth);
+      this._auth.useEmulator(emulators.auth, { disableWarnings: true });
     }
   }
 

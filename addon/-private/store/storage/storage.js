@@ -8,6 +8,14 @@ export default class Storage extends ZugletObject {
   constructor(owner, { store }) {
     super(owner);
     this.store = store;
+    this._maybeSetupEmulator();
+  }
+
+  _maybeSetupEmulator() {
+    let emulators = this.store.normalizedOptions.emulators;
+    if(emulators.storage) {
+      this._storage.useEmulator(emulators.storage.host, emulators.storage.port);
+    }
   }
 
   get _storage() {

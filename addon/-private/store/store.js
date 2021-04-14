@@ -27,16 +27,19 @@ const normalizeOptions = options => {
   }, firestore);
   auth = assign({ user: null }, auth);
   functions = assign({ region: null }, functions);
-  emulators = assign({ host: 'localhost', firestore: null, auth: null, functions: null }, emulators);
+  emulators = assign({ host: 'localhost', firestore: null, auth: null, functions: null, storage: null }, emulators);
   if(emulators.host) {
     if(emulators.firestore) {
-      emulators.firestore = `${emulators.host}:${emulators.firestore}`;
+      emulators.firestore = { host: emulators.host, port: emulators.firestore };
     }
     if(emulators.auth) {
       emulators.auth = `http://${emulators.host}:${emulators.auth}/`;
     }
     if(emulators.functions) {
-      emulators.functions = `http://${emulators.host}:${emulators.functions}`;
+      emulators.functions = { host: emulators.host, port: emulators.functions };
+    }
+    if(emulators.storage) {
+      emulators.storage = { host: emulators.host, port: emulators.storage };
     }
   }
   return {
@@ -69,26 +72,26 @@ export default class Store extends ZugletObject {
     return normalizeOptions(this.options);
   }
 
+  get _firestore() {
+    return this.firebase.firestore();
+  }
+
   _initialize() {
     let { normalizedOptions: options } = this;
     this.firebase = initializeApp(options.firebase, this.identifier);
 
     if(options.firestore.experimentalAutoDetectLongPolling) {
-      this.firebase.firestore().settings({ experimentalAutoDetectLongPolling: true, merge: true });
+      this._firestore.settings({ experimentalAutoDetectLongPolling: true, merge: true });
     }
     if(options.firestore.experimentalForceLongPolling) {
-      this.firebase.firestore().settings({ experimentalForceLongPolling: true, merge: true });
+      this._firestore.settings({ experimentalForceLongPolling: true, merge: true });
     }
 
     this.enablePersistencePromise = Promise.resolve();
     if(options.emulators.firestore) {
-      this.firebase.firestore().settings({
-        host: options.emulators.firestore,
-        ssl: false,
-        merge: true
-      });
+      this._firestore.useEmulator(options.emulators.firestore.host, options.emulators.firestore.port);
     } else if(options.firestore.persistenceEnabled && !isFastBoot(this)) {
-      this.enablePersistencePromise = registerPromise(this, 'enable-persistence', enablePersistence(this.firebase));
+      this.enablePersistencePromise = registerPromise(this, 'enable-persistence', enablePersistence(this._firestore));
     }
   }
 
@@ -118,7 +121,7 @@ export default class Store extends ZugletObject {
   }
 
   transaction(cb) {
-    return registerPromise(this, 'transaction', this.firebase.firestore().runTransaction(async tx => {
+    return registerPromise(this, 'transaction', this._firestore.runTransaction(async tx => {
       let transaction = this._createTransaction(tx);
       return await cb(transaction);
     }));
@@ -152,7 +155,7 @@ export default class Store extends ZugletObject {
     if(isDocumentReference(arg)) {
       return arg;
     } else if(typeof arg === 'string' && !!arg) {
-      return this.firebase.firestore().doc(arg);
+      return this._firestore.doc(arg);
     }
     assert(`argument must be string not '${arg}'`, false);
   }
@@ -161,7 +164,7 @@ export default class Store extends ZugletObject {
     if(isCollectionReference(arg)) {
       return arg;
     } else if(typeof arg === 'string' && !!arg) {
-      return this.firebase.firestore().collection(arg);
+      return this._firestore.collection(arg);
     }
     assert(`argument must be string not '${arg}'`, false);
   }
@@ -183,7 +186,7 @@ export default class Store extends ZugletObject {
 
   _createBatch() {
     let store = this;
-    let _batch = this.firebase.firestore().batch();
+    let _batch = this._firestore.batch();
     return this._factory.zuglet.create('store/firestore/batch', { store, _batch });
   }
 
