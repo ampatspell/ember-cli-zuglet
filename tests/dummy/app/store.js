@@ -1,9 +1,9 @@
 import Store from 'zuglet/store';
 import { load } from 'zuglet/utils';
-import envionment from './config/environment';
+import environment from './config/environment';
 
-let { dummy: { firebase } } = envionment;
-let persistenceEnabled = envionment.environment !== 'test';
+let { dummy: { firebase } } = environment;
+let persistenceEnabled = environment.environment !== 'test';
 
 export default class DummyStore extends Store {
 
@@ -21,10 +21,11 @@ export default class DummyStore extends Store {
       region: null
     },
     emulators: {
-      // host: 'localhost',
+      host: 'localhost',
       // auth: 9099,
       // firestore: 8080,
       // functions: 5001
+      // storage: 9199
     }
   }
 

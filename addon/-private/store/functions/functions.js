@@ -12,9 +12,10 @@ export default class Functions extends ZugletObject {
   }
 
   _maybeSetupEmulator(functions) {
+    window.functions = functions;
     let emulators = this.store.normalizedOptions.emulators;
     if(emulators.functions) {
-      functions.useFunctionsEmulator(emulators.functions);
+      functions.useEmulator(emulators.functions.host, emulators.functions.port);
     }
     return functions;
   }
