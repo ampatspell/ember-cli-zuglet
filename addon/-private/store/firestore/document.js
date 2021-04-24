@@ -10,6 +10,7 @@ import { randomString } from '../../util/random-string';
 import { Listeners } from '../../util/listeners';
 import { isFastBoot } from '../../util/fastboot';
 import { state, readable } from '../../model/tracking/state';
+import { isServerTimestamp } from '../../util/types';
 
 const {
   assign
@@ -120,6 +121,20 @@ export default class Document extends ZugletObject {
     return this.token !== token;
   }
 
+  // TODO: replace this with partial updates in tracking/data
+  _applyPartialSnapshotData(next) {
+    let applied = false;
+    let { data } = this;
+    for(let key in next) {
+      let curr = data[key];
+      if(isServerTimestamp(curr)) {
+        data[key] = next[key];
+        applied = true;
+      }
+    }
+    return applied;
+  }
+
   _onSnapshot(snapshot, opts) {
     this._snapshot = snapshot;
     let { source } = opts || {};
@@ -129,6 +144,8 @@ export default class Document extends ZugletObject {
       let data = snapshot.data({ serverTimestamps: 'estimate' });
       if(this._shouldApplySnapshotData(data)) {
         this._setData(data);
+        notify = 'onData';
+      } else if(this._applyPartialSnapshotData(data)) {
         notify = 'onData';
       }
     } else {

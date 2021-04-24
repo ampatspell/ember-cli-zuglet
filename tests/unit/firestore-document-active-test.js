@@ -1,5 +1,6 @@
 import { module, test, setupStoreTest } from '../helpers/setup';
 import { defer } from 'zuglet/utils';
+import { isServerTimestamp, isTimestamp } from 'zuglet/-private/util/types';
 
 module('firestore / document / active', function(hooks) {
   setupStoreTest(hooks);
@@ -128,6 +129,26 @@ module('firestore / document / active', function(hooks) {
     assert.ok(snapshot === invocations);
 
     assert.ok(!cancel());
+  });
+
+  test('save with token and server timestamp', async function(assert) {
+    let ref = this.store.doc('ducks/yellow');
+    await ref.delete();
+
+    let doc = ref.new({ name: 'yellow', createdAt: this.store.serverTimestamp });
+    await doc.save({ token: true });
+
+    assert.ok(isServerTimestamp(doc.data.createdAt));
+
+    this.activate(doc);
+
+    let deferred = defer();
+    let cancel = doc.onData(() => deferred.resolve());
+    await deferred.promise;
+
+    assert.ok(isTimestamp(doc.data.createdAt));
+
+    cancel();
   });
 
 });
