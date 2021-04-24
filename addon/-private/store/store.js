@@ -142,7 +142,10 @@ export default class Store extends ZugletObject {
   }
 
   get serverTimestamp() {
-    return firebase.firestore.FieldValue.serverTimestamp();
+    let timestamp = firebase.firestore.FieldValue.serverTimestamp();
+    let now = new Date();
+    timestamp.toDate = () => now;
+    return timestamp;
   }
 
   blobFromUint8Array(value) {
