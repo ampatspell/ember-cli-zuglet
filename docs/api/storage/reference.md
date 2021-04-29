@@ -13,6 +13,9 @@ let task = ref.put({
   data: file,
   metadata: {
     contentType: file.type,
+    customMetadata: {
+      // …
+    }
   }
 });
 await task.promise;
