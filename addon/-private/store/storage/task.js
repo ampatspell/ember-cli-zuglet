@@ -59,7 +59,7 @@ export default class StorageTask extends ZugletObject {
 
   _onError(error) {
     this._state.setProperties({ isRunning: false, isError: true, error });
-    this.store.onObserverError(this, error);
+    this.ref.storage.store.onObserverError(this, error);
   }
 
   _onCompleted() {
