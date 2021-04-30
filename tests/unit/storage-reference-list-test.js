@@ -35,10 +35,8 @@ module('storage / reference / list', function(hooks) {
     try {
       await this.storage.ref('foof').list();
     } catch(err) {
-      assert.strictEqual(
-        err.message,
-        `Firebase Storage: User does not have permission to access 'foof'. (storage/unauthorized)`
-      );
+      assert.ok(err.message.startsWith(`Firebase Storage: User does not have permission to access 'foof'. (storage/unauthorized)`));
+      assert.strictEqual(err.code, 'storage/unauthorized');
     }
   });
 

@@ -91,7 +91,7 @@ module('storage / reference', function(hooks) {
       await ref.url();
       assert.ok(false);
     } catch(err) {
-      assert.strictEqual(err.message, `Firebase Storage: Object 'hello' does not exist. (storage/object-not-found)`);
+      assert.ok(err.message.startsWith(`Firebase Storage: Object 'hello' does not exist. (storage/object-not-found)`));
       assert.strictEqual(err.code, `storage/object-not-found`);
     }
   });
@@ -112,7 +112,7 @@ module('storage / reference', function(hooks) {
       await ref.metadata();
       assert.ok(false);
     } catch(err) {
-      assert.strictEqual(err.message, `Firebase Storage: Object 'hello' does not exist. (storage/object-not-found)`);
+      assert.ok(err.message.startsWith(`Firebase Storage: Object 'hello' does not exist. (storage/object-not-found)`));
       assert.strictEqual(err.code, `storage/object-not-found`);
     }
   });
@@ -168,7 +168,7 @@ module('storage / reference', function(hooks) {
       await ref.update({ contentType: 'duck/fancy' });
       assert.ok(false);
     } catch(err) {
-      assert.strictEqual(err.message, `Firebase Storage: Object 'hello' does not exist. (storage/object-not-found)`);
+      assert.ok(err.message.startsWith(`Firebase Storage: Object 'hello' does not exist. (storage/object-not-found)`));
       assert.strictEqual(err.code, `storage/object-not-found`);
     }
   });
@@ -191,7 +191,7 @@ module('storage / reference', function(hooks) {
       await ref.delete();
       assert.ok(false);
     } catch(err) {
-      assert.strictEqual(err.message, `Firebase Storage: Object 'hello' does not exist. (storage/object-not-found)`);
+      assert.ok(err.message.startsWith(`Firebase Storage: Object 'hello' does not exist. (storage/object-not-found)`));
       assert.strictEqual(err.code, `storage/object-not-found`);
     }
   });
