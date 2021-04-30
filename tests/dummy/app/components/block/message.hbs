@@ -1,10 +1,10 @@
 <div class="row">
   <div class="row">{{@message}}</div>
   <div class="row">
-    <Input @type="text" @value={{@message.name}} @placeholder="name"/>
+    <Input @type="text" @value={{@message.name}} placeholder="name"/>
   </div>
   <div class="row">
-    <Input @type="text" @value={{@message.text}} @placeholder="text"/>
+    <Input @type="text" @value={{@message.text}} placeholder="text"/>
   </div>
   <div class="row">
     <input type="button" value="Save" {{on "click" this.save}}/>
