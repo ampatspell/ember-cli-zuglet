@@ -21,6 +21,11 @@ service cloud.firestore {
       allow delete: if true;
     }
 
+    match /{path=**}/feathers/{feather} {
+      allow read: if true;
+      allow write: if true;
+    }
+
     match /posts/{post} {
       allow read: if true;
       allow write: if true;
