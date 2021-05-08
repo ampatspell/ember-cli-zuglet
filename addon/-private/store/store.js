@@ -120,6 +120,11 @@ export default class Store extends ZugletObject {
     return this._createCollectionReference(ref);
   }
 
+  group(arg) {
+    let ref = this._toCollectionGroupReference(arg);
+    return this._createCollectionGroupReference(ref, arg);
+  }
+
   transaction(cb) {
     return registerPromise(this, 'transaction', this._firestore.runTransaction(async tx => {
       let transaction = this._createTransaction(tx);
@@ -172,6 +177,13 @@ export default class Store extends ZugletObject {
     assert(`argument must be string not '${arg}'`, false);
   }
 
+  _toCollectionGroupReference(arg) {
+    if(typeof arg === 'string' && !!arg) {
+      return this._firestore.collectionGroup(arg);
+    }
+    assert(`argument must be string not '${arg}'`, false);
+  }
+
   _createDocumentReference(_ref) {
     let store = this;
     return this._factory.zuglet.create('store/firestore/reference/document', { store, _ref });
@@ -185,6 +197,11 @@ export default class Store extends ZugletObject {
   _createConditionReference(parent, _ref, string) {
     let store = this;
     return this._factory.zuglet.create('store/firestore/reference/condition', { store, _ref, parent, string });
+  }
+
+  _createCollectionGroupReference(_ref, id) {
+    let store = this;
+    return this._factory.zuglet.create('store/firestore/reference/collection-group', { store, _ref, id });
   }
 
   _createBatch() {

@@ -1,6 +1,7 @@
 import { module, test, setupStoreTest } from '../helpers/setup';
 import { replaceCollection } from '../helpers/util';
 import DocumentReference from 'zuglet/-private/store/firestore/references/document';
+import CollectionGroupReference from 'zuglet/-private/store/firestore/references/collection-group';
 import Document from 'zuglet/-private/store/firestore/document';
 
 module('firestore / reference', function(hooks) {
@@ -197,6 +198,32 @@ module('firestore / reference', function(hooks) {
     let doc = await coll.first({ type: 'ref' });
     assert.ok(doc instanceof DocumentReference);
     assert.strictEqual(doc.id, 'green');
+  });
+
+  test('create collection group', async function(assert) {
+    let group = this.store.group('feathers');
+    assert.ok(group);
+    assert.ok(group instanceof CollectionGroupReference);
+  });
+
+  test('collection group with conditions', async function(assert) {
+    await replaceCollection(this.store.collection('ducks/yellow/feathers'), [
+      { _id: 'yellow', duck: 'yellow', name: 'yellow' },
+      { _id: 'orange', duck: 'yellow', name: 'orange' },
+      { _id: 'green', duck: 'green', name: 'red' },
+    ]);
+
+    let group = this.store.group('feathers').where('duck', '==', 'yellow').orderBy('name', 'asc');
+    let docs = await group.load();
+    assert.deepEqual(docs.map(doc => doc.id), [ 'orange', 'yellow' ]);
+  });
+
+  test('collection group id and string', async function(assert) {
+    let cond = this.store.group('feathers').where('duck', '==', 'yellow').orderBy('name', 'asc');
+    let group = cond.parent.parent;
+    assert.equal(group.id, 'feathers');
+    assert.equal(group.string, 'group(feathers)');
+    assert.equal(cond.string, "group(feathers).where('duck', '==', 'yellow').orderBy('name', 'asc')");
   });
 
 });
