@@ -1,5 +1,20 @@
 {
-  "indexes": [],
+  "indexes": [
+    {
+      "collectionGroup": "feathers",
+      "queryScope": "COLLECTION_GROUP",
+      "fields": [
+        {
+          "fieldPath": "duck",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "name",
+          "order": "ASCENDING"
+        }
+      ]
+    }
+  ],
   "fieldOverrides": [
     {
       "collectionGroup": "feathers",
