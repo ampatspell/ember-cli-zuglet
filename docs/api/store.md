@@ -105,6 +105,14 @@ doc.id // → 'messages'
 doc.path  // → 'users/zeeba/messages'
 ```
 
+## group(id) `→ CollectionGroupReference`
+
+Creates [collection group reference](api/firestore/reference/collection-group) for given id.
+
+``` javascript
+let query = store.group('payment').where('uid', '==', uid);
+```
+
 ## async transaction(callback) `→ Transaction`
 
 Creates a [Firestore transaction](api/firestore/transaction).
