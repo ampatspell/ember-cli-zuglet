@@ -141,6 +141,7 @@ export default class ModelsProperty extends Property {
   sourceArrayChanges(source) {
     let current = this.models;
     let changed = true;
+    let replaced = false;
     let markers;
 
     if(isArray(source)) {
@@ -166,9 +167,12 @@ export default class ModelsProperty extends Property {
               }
               markers.set(currentModel, { modelName, props });
             }
+          } else {
+            // TODO: this could also create marker
+            replaced = true;
           }
         }
-        if(!markers) {
+        if(!markers && !replaced) {
           changed = false;
         }
       }
