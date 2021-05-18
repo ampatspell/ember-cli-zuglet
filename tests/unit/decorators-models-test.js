@@ -126,6 +126,8 @@ module('decorators / @models', function(hooks) {
       { _id: 'two', pos: 1, type: 'duck', name: 'Two', visible: true }
     ]);
 
+    await box.query.load();
+
     assert.deepEqual(box.models.map(model => model.doc.id), [ 'two' ]);
   });
 
