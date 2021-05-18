@@ -95,4 +95,38 @@ module('decorators / @models', function(hooks) {
     assert.ok(!isActivated(duck));
   });
 
+  test('create and remove models from query', async function(assert) {
+    let ref = this.store.collection('ducks');
+    await replaceCollection(ref, [
+      { _id: 'one', pos: 1, type: 'duck', name: 'One', visible: true }
+    ]);
+
+    let box = this.define(class Box extends ZugletObject {
+
+      @activate().content(({ store }) => store.collection('ducks').query())
+      query
+
+      @models().source(({ query }) => query.content).named(doc => doc.data.type).mapping(doc => ({ doc }))
+      models
+
+      constructor(owner, args) {
+        super(owner);
+        setProperties(this, args);
+      }
+
+    });
+
+    this.activate(box);
+
+    await load(box.query);
+
+    assert.deepEqual(box.models.map(model => model.doc.id), [ 'one' ]);
+
+    await replaceCollection(ref, [
+      { _id: 'two', pos: 1, type: 'duck', name: 'Two', visible: true }
+    ]);
+
+    assert.deepEqual(box.models.map(model => model.doc.id), [ 'two' ]);
+  });
+
 });
