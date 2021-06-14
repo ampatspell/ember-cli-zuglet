@@ -61,6 +61,7 @@ Router.map(function() {
       this.route('message', { path: ':message_id' }, function() {
       });
     });
+    this.route('pagination');
   });
 
   this.route('missing', { path: '/*path' });
