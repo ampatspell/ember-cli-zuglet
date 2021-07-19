@@ -9,7 +9,7 @@ export default {
       if(options.id === 'manager-capabilities.modifiers-3-13') {
         return;
       }
-      next();
+      next(message, options, next);
     });
     initialize(app, {
       store: {
