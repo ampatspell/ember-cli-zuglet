@@ -5,8 +5,7 @@ import { activate, models } from 'zuglet/decorators';
 
 export default class Messages extends ZugletObject {
 
-  @service
-  store
+  @service store;
 
   get coll() {
     return this.store.collection('messages');
@@ -14,7 +13,7 @@ export default class Messages extends ZugletObject {
 
   @activate()
     .content(({ coll }) => coll.query())
-  query
+  query;
 
   @models()
     .source(({ query }) => query.content)
@@ -25,10 +24,10 @@ export default class Messages extends ZugletObject {
       return 'message';
     })
     .mapping(doc => ({ doc }))
-  models
+  models;
 
   async load() {
-    await load(this.query);
+    await load.cached(this.query);
   }
 
   async add(name) {

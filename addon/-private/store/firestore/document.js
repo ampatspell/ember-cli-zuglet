@@ -3,7 +3,8 @@ import { object, raw, update } from '../../model/properties/object';
 import { objectToJSON } from '../../util/object-to-json';
 import { toJSON } from '../../util/to-json';
 import { assert } from '@ember/debug';
-import { defer } from '../../util/defer';
+import { cachedRemoteDefer } from '../../util/defer';
+import { snapshotToDeferredType } from '../../util/snapshot';
 import { registerObserver, registerPromise } from '../../stores/stats';
 import { cached } from '../../model/decorators/cached';
 import { randomString } from '../../util/random-string';
@@ -46,7 +47,7 @@ export default class Document extends ZugletObject {
     this.ref = ref;
     this.parent = parent;
     this._listeners = new Listeners();
-    this._deferred = defer();
+    this._deferred = cachedRemoteDefer();
     if(data) {
       this.data = data;
       this._state.untracked.setProperties({ isNew: true, isDirty: true });
@@ -54,7 +55,7 @@ export default class Document extends ZugletObject {
       this.data = {};
       if(snapshot) {
         this._onSnapshot(snapshot, { source: 'initial' });
-        this._deferred.resolve(this);
+        this._deferred.resolve(snapshotToDeferredType(snapshot), this);
       }
     }
   }
@@ -81,7 +82,7 @@ export default class Document extends ZugletObject {
   }
 
   get promise() {
-    return this._deferred.promise;
+    return this._deferred;
   }
 
   //
@@ -167,10 +168,15 @@ export default class Document extends ZugletObject {
     assert(`Document ${this} already have a parent`, !this.parent);
     this.parent = parent;
     this._onSnapshot(snapshot, opts);
+    this._onSnapshotMetadata(snapshot);
     return this;
   }
 
   //
+
+  _onSnapshotMetadata(snapshot) {
+    this._deferred.resolve(snapshotToDeferredType(snapshot), this);
+  }
 
   async _loadInternal(get, opts) {
     let { force } = assign({ force: false }, opts);
@@ -183,10 +189,10 @@ export default class Document extends ZugletObject {
       let snapshot = await registerPromise(this, 'load', get(this.ref._ref));
       this._onSnapshot(snapshot, { source: 'load' });
       this._maybeSubscribeToOnSnapshot();
-      this._deferred.resolve(this);
+      this._onSnapshotMetadata(snapshot);
     } catch(error) {
       this._state.setProperties({ isNew: false, isLoading: false, isError: true, error });
-      this._deferred.reject(error);
+      this._deferred.reject('remote', error);
       throw error;
     }
     return this;
@@ -228,7 +234,7 @@ export default class Document extends ZugletObject {
   _didSave() {
     this._state.setProperties({ isNew: false, isLoaded: true, isSaving: false, exists: true });
     this._maybeSubscribeToOnSnapshot();
-    this._deferred.resolve(this);
+    this._deferred.resolve('remote', this);
   }
 
   _saveDidFail(state, error) {
@@ -318,7 +324,7 @@ export default class Document extends ZugletObject {
     if(this.isPassive) {
       let { isLoaded } = this._state.untracked.getProperties('isLoaded');
       if(!isLoaded) {
-        this._deferred = defer();
+        this._deferred = cachedRemoteDefer();
         this.load().then(() => {}, err => this.store.onObserverError(this, err));
       }
     } else {
@@ -326,14 +332,14 @@ export default class Document extends ZugletObject {
       if(!isLoaded) {
         this._state.setProperties({ isLoading: true, isError: false, error: null });
       }
-      this._deferred = defer();
-      this._cancel = registerObserver(this, this.ref._ref.onSnapshot({ includeMetadataChanges: false }, snapshot => {
+      this._deferred = cachedRemoteDefer();
+      this._cancel = registerObserver(this, this.ref._ref.onSnapshot({ includeMetadataChanges: true }, snapshot => {
         this._onSnapshot(snapshot, { source: 'subscription' });
-        this._deferred.resolve(this);
+        this._deferred.resolve(snapshotToDeferredType(snapshot), this);
       }, error => {
         this._state.setProperties({ isLoading: false, isError: true, error });
         this.store.onObserverError(this, error);
-        this._deferred.reject(error);
+        this._deferred.reject('remote', error);
       }));
     }
   }
