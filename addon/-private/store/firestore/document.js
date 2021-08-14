@@ -47,7 +47,7 @@ export default class Document extends ZugletObject {
     this.ref = ref;
     this.parent = parent;
     this._listeners = new Listeners();
-    this._deferred = cachedRemoteDefer();
+    this._deferred = cachedRemoteDefer(this);
     if(data) {
       this.data = data;
       this._state.untracked.setProperties({ isNew: true, isDirty: true });
@@ -324,7 +324,7 @@ export default class Document extends ZugletObject {
     if(this.isPassive) {
       let { isLoaded } = this._state.untracked.getProperties('isLoaded');
       if(!isLoaded) {
-        this._deferred = cachedRemoteDefer();
+        this._deferred = cachedRemoteDefer(this);
         this.load().then(() => {}, err => this.store.onObserverError(this, err));
       }
     } else {
@@ -332,7 +332,7 @@ export default class Document extends ZugletObject {
       if(!isLoaded) {
         this._state.setProperties({ isLoading: true, isError: false, error: null });
       }
-      this._deferred = cachedRemoteDefer();
+      this._deferred = cachedRemoteDefer(this);
       this._cancel = registerObserver(this, this.ref._ref.onSnapshot({ includeMetadataChanges: true }, snapshot => {
         this._onSnapshot(snapshot, { source: 'subscription' });
         this._deferred.resolve(snapshotToDeferredType(snapshot), this);

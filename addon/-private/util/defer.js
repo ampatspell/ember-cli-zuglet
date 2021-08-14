@@ -16,7 +16,8 @@ export const defer = () => {
 
 class CachedRemoteDefer {
 
-  constructor() {
+  constructor(arg) {
+    this._owner = arg;
     this._cached = defer();
     this._remote = defer();
   }
@@ -35,7 +36,7 @@ class CachedRemoteDefer {
   }
 
   _deprecate(name) {
-    deprecate(`deferred.${name} is deprecated. use deferred.{cached,remote}.${name} instead`, false, { id: 'deferred', for: 'ember-cli-zuglet' ,since:'2.4.37', until: '2.6' });
+    deprecate(`deferred.${name} is deprecated for ${this._owner}. use deferred.{cached,remote}.${name} instead`, false, { id: 'deferred', for: 'ember-cli-zuglet' ,since:'2.4.37', until: '2.6' });
   }
 
   get cached() {
@@ -52,7 +53,6 @@ class CachedRemoteDefer {
   }
 
   resolve(type, arg) {
-    console.log('resolve', type, arg+'');
     this._settle('resolve', type, arg);
   }
 
@@ -77,4 +77,4 @@ class CachedRemoteDefer {
 
 }
 
-export const cachedRemoteDefer = () => new CachedRemoteDefer();
+export const cachedRemoteDefer = owner => new CachedRemoteDefer(owner);
