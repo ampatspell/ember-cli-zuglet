@@ -186,7 +186,7 @@ module('firestore / document', function(hooks) {
       await promise;
       assert.ok(false, 'should fail');
     } catch(err) {
-      assert.strictEqual(err.message, 'The caller does not have permission');
+      assert.strictEqual(err.message, 'Missing or insufficient permissions.');
     }
 
     assert.deepEqual(doc.serialized, {
@@ -205,7 +205,7 @@ module('firestore / document', function(hooks) {
       }
     });
 
-    assert.strictEqual(doc.error.message, 'The caller does not have permission');
+    assert.strictEqual(doc.error.message, 'Missing or insufficient permissions.');
     assert.strictEqual(doc.error.code, 'permission-denied');
   });
 
