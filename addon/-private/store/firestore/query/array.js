@@ -39,6 +39,7 @@ export default class QueryArray extends Query {
         assert(`existing document not found for path '${path}'`, !!existing);
       }
       existing._onSnapshot(snapshot, { source: 'subscription' });
+      existing._onSnapshotMetadata(snapshot);
     } else if(type === 'removed') {
       let existing = content[oldIndex];
       if(existing) {
