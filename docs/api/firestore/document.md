@@ -55,11 +55,17 @@ doc.path // → messages/first
 doc.ref.path // → messages/first
 ```
 
-## promise `→ Promise<this>`
+## promise `→ CachedRemotePromise`
 
 Resolves when document is loaded either by `doc.load()` or when first `onSnapshot` is processed.
 
 > Note: promise doesn't automatically do a load. You need to activate document using `@activate` decorator for this to work as expected
+
+``` javascript
+let doc = store.doc('messages/first').existing();
+await doc.promise.cached;
+await doc.promise.remote;
+```
 
 ## token `→ string`
 

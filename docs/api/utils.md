@@ -23,6 +23,8 @@ import {
 } from 'ember-cli-zuglet/utils';
 ```
 
+## load
+
 ``` js
 import { load } from 'zuglet/utils';
 

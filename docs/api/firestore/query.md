@@ -41,17 +41,23 @@ class Model extends EmberObject {
   query
 
   async load() {
-    await this.promise.promise; // resolves when query is loaded
+    await this.query.promise.cached; // resolves when query is loaded
   }
 
 }
 ```
 
-## promise `→ Promise<this>`
+## promise `→ CachedRemotePromise`
 
 Resolves when query is loaded either by `query.load()` or when first `onSnapshot` is processed.
 
 > Note: promise doesn't automatically do a load. You need to activate query using `@activate` decorator for this to work as expected
+
+``` javascript
+let query = store.collection('messages').query();
+await query.promise.cached;
+await query.promise.remote;
+```
 
 ## async load(opts) `→ this`
 
