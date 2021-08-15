@@ -62,6 +62,10 @@ export default class Query extends ZugletObject {
     this._listeners.notify('onData', this);
   }
 
+  _onSnapshotMetadata(snapshot) {
+    this._deferred.resolve(snapshotToDeferredType(snapshot), this);
+  }
+
   //
 
   async load(opts) {
@@ -102,10 +106,6 @@ export default class Query extends ZugletObject {
   }
 
   //
-
-  _onSnapshotMetadata(snapshot) {
-    this._deferred.resolve(snapshotToDeferredType(snapshot), this);
-  }
 
   _reusableDocumentForSnapshot(snapshot) {
     let { _reusable } = this;

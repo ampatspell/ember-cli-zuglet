@@ -188,8 +188,8 @@ export default class Document extends ZugletObject {
     try {
       let snapshot = await registerPromise(this, 'load', get(this.ref._ref));
       this._onSnapshot(snapshot, { source: 'load' });
-      this._maybeSubscribeToOnSnapshot();
       this._onSnapshotMetadata(snapshot);
+      this._maybeSubscribeToOnSnapshot();
     } catch(error) {
       this._state.setProperties({ isNew: false, isLoading: false, isError: true, error });
       this._deferred.reject('remote', error);
@@ -233,8 +233,8 @@ export default class Document extends ZugletObject {
 
   _didSave() {
     this._state.setProperties({ isNew: false, isLoaded: true, isSaving: false, exists: true });
-    this._maybeSubscribeToOnSnapshot();
     this._deferred.resolve('remote', this);
+    this._maybeSubscribeToOnSnapshot();
   }
 
   _saveDidFail(state, error) {
