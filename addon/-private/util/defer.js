@@ -36,7 +36,7 @@ class CachedRemoteDefer {
   }
 
   _deprecate(name) {
-    deprecate(`deferred.${name} is deprecated for ${this._owner}. use deferred.{cached,remote}.${name} instead`, false, { id: 'deferred', for: 'ember-cli-zuglet' ,since:'2.4.37', until: '2.6' });
+    deprecate(`deferred.${name} is deprecated for ${this._owner}. use deferred.{cached,remote}.${name} instead`, false, { id: 'deferred', for: 'zuglet' ,since:'2.4.37', until: '2.6' });
   }
 
   get cached() {

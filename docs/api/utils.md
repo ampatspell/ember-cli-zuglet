@@ -20,7 +20,7 @@ import {
   activate,
   isActivated,
   defer
-} from 'ember-cli-zuglet/utils';
+} from 'zuglet/utils';
 ```
 
 ## load
