@@ -1,6 +1,20 @@
 import { isPromise } from './types';
 
-const toPromises = args => {
+const promiseForType = (model, type) => {
+  if(!model) {
+    return;
+  }
+  let { promise } = model;
+  if(type) {
+    let nested = promise[type];
+    if(nested) {
+      return nested;
+    }
+  }
+  return promise;
+}
+
+const toPromises = (args, type) => {
   let models = [];
 
   args.forEach(arg => {
@@ -17,19 +31,23 @@ const toPromises = args => {
     if(!model) {
       return;
     }
-
-    if(isPromise(model.promise)) {
-      promises.push(model.promise);
+    let promise = promiseForType(model, type);
+    if(isPromise(promise)) {
+      promises.push(promise);
     } else if(isPromise(model)) {
       promises.push(model);
     }
-
   });
 
   return promises;
 };
 
-export const resolve = (...args) => {
-  let promises = toPromises(args);
-  return Promise.all(promises);
-};
+const _resolve = type => (...args) => Promise.all(toPromises(args, type));
+
+const resolve = _resolve();
+resolve.cached = _resolve('cached');
+resolve.remote = _resolve('remote');
+
+export {
+  resolve
+}

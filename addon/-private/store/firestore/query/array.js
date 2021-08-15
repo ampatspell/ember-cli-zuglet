@@ -16,6 +16,7 @@ export default class QueryArray extends Query {
       let doc = current.find(doc => doc.path === path);
       if(doc) {
         doc._onSnapshot(snapshot);
+        doc._onSnapshotMetadata(snapshot);
       } else {
         doc = this._createDocumentForSnapshot(snapshot);
       }
@@ -38,6 +39,7 @@ export default class QueryArray extends Query {
         assert(`existing document not found for path '${path}'`, !!existing);
       }
       existing._onSnapshot(snapshot, { source: 'subscription' });
+      existing._onSnapshotMetadata(snapshot);
     } else if(type === 'removed') {
       let existing = content[oldIndex];
       if(existing) {
@@ -51,9 +53,10 @@ export default class QueryArray extends Query {
   }
 
   _onSnapshotChanges(content, snapshot) {
-    snapshot.docChanges({ includeMetadataChanges: false }).map(change => {
+    snapshot.docChanges({ includeMetadataChanges: true }).map(change => {
       this._onSnapshotChange(content, change);
     });
+    content.forEach(doc => doc._onSnapshotMetadata(snapshot));
   }
 
   _onSnapshot(snapshot, refresh) {

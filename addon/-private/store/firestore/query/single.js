@@ -16,6 +16,7 @@ export default class QuerySingle extends Query {
     if(snapshot) {
       if(content && content.path === snapshot.ref.path) {
         content._onSnapshot(snapshot, { source: 'subscription' });
+        content._onSnapshotMetadata(snapshot);
       } else {
         this.content = this._createDocumentForSnapshot(snapshot);
       }
