@@ -38,7 +38,7 @@ export default class QueryArray extends Query {
         existing = content.find(doc => doc.path === path);
         assert(`existing document not found for path '${path}'`, !!existing);
       }
-      existing._onSnapshot(snapshot, { source: 'subscription' });
+      existing._onSnapshot(snapshot, { type: 'subscription' });
       existing._onSnapshotMetadata(snapshot);
     } else if(type === 'removed') {
       let existing = content[oldIndex];

@@ -14,13 +14,14 @@ class RemoteDocumentUpdates {
     this.start();
   }
 
-  onData(doc, { source, type, fromCache, hasPendingWrites }) {
+  onData(doc, { type, source, partial, fromCache, hasPendingWrites }) {
     console.log({
       data: doc.serialized.data,
-      source,
       type,
+      source,
+      partial,
       fromCache,
-      hasPendingWrites,
+      hasPendingWrites
     });
   }
 
@@ -68,6 +69,7 @@ export default class RoutePlaygroundDataComponent extends Component {
   async saveLocal() {
     let { doc } = this;
     doc.data.name = this.name;
+    doc.data.updated = this.store.serverTimestamp;
     await doc.save({ token: true });
   }
 

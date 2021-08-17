@@ -54,7 +54,7 @@ export default class Document extends ZugletObject {
     } else {
       this.data = {};
       if(snapshot) {
-        this._onSnapshot(snapshot, { source: 'initial' });
+        this._onSnapshot(snapshot, { type: 'initial' });
         this._deferred.resolve(snapshotToDeferredType(snapshot), this);
       }
     }
@@ -138,36 +138,35 @@ export default class Document extends ZugletObject {
 
   _onSnapshot(snapshot, opts) {
     this._snapshot = snapshot;
-    let { source } = opts || {};
+    let { type } = opts || {};
     let { exists, metadata: { fromCache, hasPendingWrites } } = snapshot;
     let notify;
-    let type = 'remote';
+    let source = 'remote';
+    let partial = false;
     if(exists) {
       let data = snapshot.data({ serverTimestamps: 'estimate' });
       if(this._shouldApplySnapshotData(data)) {
         this._setData(data);
         notify = 'onData';
-        type = 'remote';
       } else if(this._applyPartialSnapshotData(data)) {
         notify = 'onData';
-        type = 'partial';
+        partial = true;
       } else {
         notify = 'onData';
-        type = 'local';
+        source = 'local';
       }
     } else {
-      if(source === 'initial') {
+      if(type === 'initial') {
         this._setData({});
-      } else if(source === 'subscription') {
+      } else if(type === 'subscription') {
         if(this.exists !== false) {
           notify = 'onDeleted';
-          type = 'remote';
         }
       }
     }
     this._state.setProperties({ isNew: false, isLoading: false, isLoaded: true, isDirty: false, exists });
     if(notify) {
-      this._listeners.notify(notify, this, { source, type, fromCache, hasPendingWrites });
+      this._listeners.notify(notify, this, { source, type, partial, fromCache, hasPendingWrites });
     }
   }
 
@@ -194,7 +193,7 @@ export default class Document extends ZugletObject {
     this._state.setProperties({ isLoading: true, isError: false, error: null });
     try {
       let snapshot = await registerPromise(this, 'load', get(this.ref._ref));
-      this._onSnapshot(snapshot, { source: 'load' });
+      this._onSnapshot(snapshot, { type: 'load' });
       this._onSnapshotMetadata(snapshot);
       this._maybeSubscribeToOnSnapshot();
     } catch(error) {
@@ -341,7 +340,7 @@ export default class Document extends ZugletObject {
       }
       this._deferred = cachedRemoteDefer(this);
       this._cancel = registerObserver(this, this.ref._ref.onSnapshot({ includeMetadataChanges: true }, snapshot => {
-        this._onSnapshot(snapshot, { source: 'subscription' });
+        this._onSnapshot(snapshot, { type: 'subscription' });
         this._deferred.resolve(snapshotToDeferredType(snapshot), this);
       }, error => {
         this._state.setProperties({ isLoading: false, isError: true, error });
