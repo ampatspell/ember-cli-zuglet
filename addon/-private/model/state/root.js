@@ -6,6 +6,9 @@ export default class RootState extends State {
   constructor() {
     super(...arguments);
     registerDestructor(this.owner, () => this._onOwnerWillDestroy());
+  }
+
+  didCreateState() {
     this.activate(this);
   }
 
