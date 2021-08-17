@@ -56,6 +56,7 @@ Router.map(function() {
     this.route('auth');
     this.route('storage');
     this.route('functions');
+    this.route('data');
     this.route('dev');
     this.route('messages', function() {
       this.route('message', { path: ':message_id' }, function() {
