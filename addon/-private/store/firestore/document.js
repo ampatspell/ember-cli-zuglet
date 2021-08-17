@@ -139,7 +139,7 @@ export default class Document extends ZugletObject {
   _onSnapshot(snapshot, opts) {
     this._snapshot = snapshot;
     let { source } = opts || {};
-    let { exists } = snapshot;
+    let { exists, metadata: { fromCache } } = snapshot;
     let notify;
     if(exists) {
       let data = snapshot.data({ serverTimestamps: 'estimate' });
@@ -160,7 +160,7 @@ export default class Document extends ZugletObject {
     }
     this._state.setProperties({ isNew: false, isLoading: false, isLoaded: true, isDirty: false, exists });
     if(notify) {
-      this._listeners.notify(notify, this);
+      this._listeners.notify(notify, this, { source, fromCache });
     }
   }
 
@@ -334,8 +334,10 @@ export default class Document extends ZugletObject {
       }
       this._deferred = cachedRemoteDefer(this);
       this._cancel = registerObserver(this, this.ref._ref.onSnapshot({ includeMetadataChanges: true }, snapshot => {
-        this._onSnapshot(snapshot, { source: 'subscription' });
-        this._deferred.resolve(snapshotToDeferredType(snapshot), this);
+        if(!snapshot.metadata.hasPendingWrites) {
+          this._onSnapshot(snapshot, { source: 'subscription' });
+          this._deferred.resolve(snapshotToDeferredType(snapshot), this);
+        }
       }, error => {
         this._state.setProperties({ isLoading: false, isError: true, error });
         this.store.onObserverError(this, error);

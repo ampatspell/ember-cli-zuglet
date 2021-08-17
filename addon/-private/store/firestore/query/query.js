@@ -141,10 +141,12 @@ export default class Query extends ZugletObject {
         let refresh = true;
         this._deferred = cachedRemoteDefer(this);
         this._cancel = registerObserver(this, this.ref._ref.onSnapshot({ includeMetadataChanges: true }, snapshot => {
-          this._onSnapshot(snapshot, refresh);
-          refresh = false;
-          this._state.setProperties({ isLoading: false, isLoaded: true });
-          this._onSnapshotMetadata(snapshot);
+          if(!snapshot.metadata.hasPendingWrites) {
+            this._onSnapshot(snapshot, refresh);
+            refresh = false;
+            this._state.setProperties({ isLoading: false, isLoaded: true });
+            this._onSnapshotMetadata(snapshot);
+          }
         }, error => {
           this._state.setProperties({ isLoading: false, isError: true, error });
           this.store.onObserverError(this, error);
