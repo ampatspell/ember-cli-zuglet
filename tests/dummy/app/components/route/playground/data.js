@@ -14,11 +14,12 @@ class RemoteDocumentUpdates {
     this.start();
   }
 
-  onData(doc, { source, fromCache }) {
+  onData(doc, { source, fromCache, hasPendingWrites }) {
     console.log({
       data: doc.serialized.data,
       source,
-      fromCache
+      fromCache,
+      hasPendingWrites
     });
   }
 
