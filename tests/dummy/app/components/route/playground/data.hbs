@@ -6,7 +6,8 @@
 
   <div class="row">
     <Input @type="text" @value={{this.name}} placeholder="name"/>
-    <input type="button" value="Save" {{on "click" this.save}}/>
+    <input type="button" value="Save local" {{on "click" this.saveLocal}}/>
+    <input type="button" value="Save remote" {{on "click" this.saveRemote}}/>
   </div>
 
 </div>
