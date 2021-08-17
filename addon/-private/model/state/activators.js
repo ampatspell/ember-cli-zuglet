@@ -1,6 +1,5 @@
 import { assert } from '@ember/debug';
 import { removeObject } from '../../util/array';
-import { tracked } from "@glimmer/tracking";
 
 class Activator {
 
@@ -22,7 +21,7 @@ class Activator {
 
 export default class Activators {
 
-  @tracked activators = [];
+  activators = [];
 
   _find(object) {
     return this.activators.find(activator => activator.object === object);
@@ -34,9 +33,7 @@ export default class Activators {
       activator.inc();
     } else {
       activator = new Activator(object);
-      let { activators } = this;
-      activators.push(activator);
-      this.activators = activators;
+      this.activators.push(activator);
     }
   }
 
@@ -44,9 +41,7 @@ export default class Activators {
     let activator = this._find(object);
     assert(`Activator not found for object ${object}`, !!activator);
     if(activator.dec()) {
-      let { activators } = this;
-      removeObject(activators, activator);
-      this.activators = activators;
+      removeObject(this.activators, activator);
     }
   }
 
