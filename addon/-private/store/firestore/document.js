@@ -141,13 +141,19 @@ export default class Document extends ZugletObject {
     let { source } = opts || {};
     let { exists, metadata: { fromCache, hasPendingWrites } } = snapshot;
     let notify;
+    let type = 'remote';
     if(exists) {
       let data = snapshot.data({ serverTimestamps: 'estimate' });
       if(this._shouldApplySnapshotData(data)) {
         this._setData(data);
         notify = 'onData';
+        type = 'remote';
       } else if(this._applyPartialSnapshotData(data)) {
         notify = 'onData';
+        type = 'partial';
+      } else {
+        notify = 'onData';
+        type = 'local';
       }
     } else {
       if(source === 'initial') {
@@ -155,12 +161,13 @@ export default class Document extends ZugletObject {
       } else if(source === 'subscription') {
         if(this.exists !== false) {
           notify = 'onDeleted';
+          type = 'remote';
         }
       }
     }
     this._state.setProperties({ isNew: false, isLoading: false, isLoaded: true, isDirty: false, exists });
     if(notify) {
-      this._listeners.notify(notify, this, { source, fromCache, hasPendingWrites });
+      this._listeners.notify(notify, this, { source, type, fromCache, hasPendingWrites });
     }
   }
 
