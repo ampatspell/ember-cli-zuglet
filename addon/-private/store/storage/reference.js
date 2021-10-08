@@ -2,12 +2,8 @@ import ZugletObject from '../../../object';
 import { assert } from '@ember/debug';
 import { toJSON } from '../../util/to-json';
 import { registerPromise } from '../../stores/stats';
-import firebase from "firebase/app";
 import { getFactory } from '../../factory/get-factory';
-
-const {
-  StringFormat
-} = firebase.storage;
+import { StringFormat } from 'firebase/storage';
 
 const {
   assign,

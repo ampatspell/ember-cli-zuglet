@@ -1,7 +1,7 @@
 import ZugletObject from '../object';
 import { registerDestructor } from '@ember/destroyable';
 import { assert } from '@ember/debug';
-import firebase from 'firebase/app';
+import { getFirestore } from 'firebase/firestore';
 import { initializeApp, enablePersistence, destroyApp } from './firebase';
 import { cached, getCached } from '../model/decorators/cached';
 import { toJSON } from '../util/to-json';
@@ -73,7 +73,7 @@ export default class Store extends ZugletObject {
   }
 
   get _firestore() {
-    return this.firebase.firestore();
+    return getFirestore(this.firebase);
   }
 
   _initialize() {
