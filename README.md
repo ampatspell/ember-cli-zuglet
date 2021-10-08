@@ -44,18 +44,6 @@ See the [ember-cli-zuglet website](https://www.ember-cli-zuglet.com) for documen
 ## Tweaks
 
 ``` javascript
-// .template-lintrc.js
-'use strict';
-
-module.exports = {
-  extends: 'octane',
-  rules: {
-    'no-index-component-invocation': false
-  }
-};
-```
-
-``` javascript
 // jsconfig.json
 {
   "compilerOptions": {

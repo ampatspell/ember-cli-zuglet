@@ -5,7 +5,6 @@ import { getFactory } from '../factory/get-factory';
 import { cached } from '../model/decorators/cached';
 import { tracked } from "@glimmer/tracking"
 import { assert } from '@ember/debug';
-import classic from 'ember-classic-decorator';
 import { toJSON } from '../util/to-json';
 import { registerModel } from '../util/model-factory';
 import { removeObject } from '../util/array';
@@ -14,13 +13,13 @@ const {
   assign
 } = Object;
 
-@classic
 export default class Stores extends ZugletObject {
 
   static create(owner) {
     return registerModel(new this(getOwner(owner)), 'zuglet@stores');
   }
 
+  // eslint-disable-next-line ember/classic-decorator-hooks
   destroy() {
     destroy(this);
   }
