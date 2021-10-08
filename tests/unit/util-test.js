@@ -64,7 +64,6 @@ module('util', function(hooks) {
     assert.ok(took > 299);
   });
 
-  // eslint-disable-next-line qunit/require-expect
   test('error', async function(assert) {
     let ref = this.store.doc('ducks/yellow');
     await ref.delete();
@@ -90,7 +89,6 @@ module('util', function(hooks) {
     }
   });
 
-  // eslint-disable-next-line qunit/require-expect
   test('assert', async function(assert) {
     try {
       zugletAssert('fake one', false);
@@ -102,7 +100,6 @@ module('util', function(hooks) {
     }
   });
 
-  // eslint-disable-next-line qunit/require-expect
   test('assert with message function', async function(assert) {
     try {
       zugletAssert(() => 'fake one', false);
@@ -133,7 +130,6 @@ module('util', function(hooks) {
     assert.true(doc.isLoaded);
   });
 
-  // eslint-disable-next-line qunit/require-expect
   test('toPrimitive', async function(assert) {
     {
       let string = toPrimitive(new Date());
@@ -142,7 +138,6 @@ module('util', function(hooks) {
     assert.strictEqual(toPrimitive(undefined), undefined);
   });
 
-  // eslint-disable-next-line qunit/require-expect
   test('toString', async function(assert) {
     {
       let string = toString(new Date());

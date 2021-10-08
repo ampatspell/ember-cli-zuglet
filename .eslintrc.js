@@ -33,6 +33,7 @@ module.exports = {
         './blueprints/*/index.js',
         './config/**/*.js',
         './tests/dummy/config/**/*.js',
+        './config.js'
       ],
       parserOptions: {
         sourceType: 'script',
@@ -48,6 +49,12 @@ module.exports = {
       // Test files:
       files: ['tests/**/*-test.{js,ts}'],
       extends: ['plugin:qunit/recommended'],
+      rules: {
+        'qunit/require-expect': 'off',
+        'qunit/no-ok-equality': 'off',
+        'qunit/no-negated-ok': 'off',
+        'qunit/no-assert-equal-boolean': 'off'
+      }
     },
   ],
 };
