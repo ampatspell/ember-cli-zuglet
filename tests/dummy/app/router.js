@@ -1,7 +1,6 @@
 import EmberRouter from '@ember/routing/router';
 import config from 'dummy/config/environment';
 import { isFastBoot } from 'zuglet/-private/util/fastboot';
-import classic from 'ember-classic-decorator';
 
 let {
   environment
@@ -9,13 +8,12 @@ let {
 
 let isGoogleAnalyticsEnabled = environment === 'production';
 
-@classic
 export default class Router extends EmberRouter {
   location = config.locationType;
   rootURL = config.rootURL;
 
-  init() {
-    super.init(...arguments);
+  constructor() {
+    super(...arguments);
     this.on('routeDidChange', () => this.routeDidChange());
   }
 
