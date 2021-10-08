@@ -9,13 +9,11 @@ import { toPrimitive } from 'zuglet/-private/util/to-primitive';
 import { toString } from 'zuglet/-private/util/to-string';
 import { assert as zugletAssert, isZugletError } from 'zuglet/-private/util/error';
 import { destroy } from '@ember/destroyable';
-import classic from 'ember-classic-decorator';
 
 module('util', function(hooks) {
   setupStoreTest(hooks);
 
   test('alive with ember object', async function(assert) {
-    @classic
     class Thing extends EmberObject {
 
       value = 0;
@@ -66,6 +64,7 @@ module('util', function(hooks) {
     assert.ok(took > 299);
   });
 
+  // eslint-disable-next-line qunit/require-expect
   test('error', async function(assert) {
     let ref = this.store.doc('ducks/yellow');
     await ref.delete();
@@ -91,23 +90,25 @@ module('util', function(hooks) {
     }
   });
 
+  // eslint-disable-next-line qunit/require-expect
   test('assert', async function(assert) {
     try {
       zugletAssert('fake one', false);
       assert.ok(false);
     } catch(err) {
-      assert.strictEqual(isZugletError(err), true);
+      assert.true(isZugletError(err));
       assert.strictEqual(err.code, 'zuglet/assert');
       assert.strictEqual(err.message, 'fake one');
     }
   });
 
+  // eslint-disable-next-line qunit/require-expect
   test('assert with message function', async function(assert) {
     try {
       zugletAssert(() => 'fake one', false);
       assert.ok(false);
     } catch(err) {
-      assert.strictEqual(isZugletError(err), true);
+      assert.true(isZugletError(err));
       assert.strictEqual(err.code, 'zuglet/assert');
       assert.strictEqual(err.message, 'fake one');
     }
@@ -129,17 +130,19 @@ module('util', function(hooks) {
     await resolve(null, [ doc, null, undefined ], null, undefined, { ok: true }, { then });
 
     assert.ok(invoked);
-    assert.strictEqual(doc.isLoaded, true);
+    assert.true(doc.isLoaded);
   });
 
+  // eslint-disable-next-line qunit/require-expect
   test('toPrimitive', async function(assert) {
     {
       let string = toPrimitive(new Date());
       assert.ok(string.startsWith('Date::ember'));
     }
-    assert.ok(!toPrimitive(undefined));
+    assert.strictEqual(toPrimitive(undefined), undefined);
   });
 
+  // eslint-disable-next-line qunit/require-expect
   test('toString', async function(assert) {
     {
       let string = toString(new Date());
@@ -151,7 +154,7 @@ module('util', function(hooks) {
       assert.ok(string.startsWith('<Date::ember'));
       assert.ok(string.endsWith(':ok=true>'));
     }
-    assert.ok(!toString(undefined));
+    assert.strictEqual(toString(undefined), undefined);
   });
 
 });

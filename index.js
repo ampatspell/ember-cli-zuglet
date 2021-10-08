@@ -15,14 +15,14 @@ module.exports = {
   included(app, parentAddon) {
     this._super.included.apply(this, arguments);
     this.zuglet = Object.assign({}, defaults, (parentAddon || app).options['zuglet']);
-    app.import('vendor/zuglet/register-version.js');
+    // app.import('vendor/zuglet/register-version.js');
     app.import('vendor/zuglet/fastboot.js');
   },
   treeForVendor(tree) {
-    let { version } = require('./package.json');
+    // let { version } = require('./package.json');
     return MergeTrees([
       tree,
-      writeFile('zuglet/register-version.js', `Ember.libraries.register('ember-cli-zuglet', '${version}');`)
+      // writeFile('zuglet/register-version.js', `Ember.libraries.register('ember-cli-zuglet', '${version}');`)
     ]);
   },
   treeForAddon() {
