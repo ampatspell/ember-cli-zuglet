@@ -1,6 +1,6 @@
 import Method from '../method';
-import firebase from "firebase/app";
 import { registerPromise } from '../../../../stores/stats';
+import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 
 export default class PopupGoogleAuthMethod extends Method {
 
@@ -8,9 +8,9 @@ export default class PopupGoogleAuthMethod extends Method {
   signIn(scopes) {
     scopes = scopes || [ 'profile', 'email' ];
     return this.auth._withAuthReturningUser(async auth => {
-      let provider = new firebase.auth.GoogleAuthProvider();
+      let provider = new GoogleAuthProvider();
       scopes.forEach(scope => provider.addScope(scope));
-      let { user, credential: { accessToken } } = await registerPromise(this, 'sign-in', auth.signInWithPopup(provider));
+      let { user, credential: { accessToken } } = await registerPromise(this, 'sign-in', signInWithPopup(auth, provider));
       return { user, google: { accessToken } };
     });
   }

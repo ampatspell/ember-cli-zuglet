@@ -1,6 +1,7 @@
 import ZugletObject from '../../../object';
 import { toJSON } from '../../util/to-json';
 import { registerPromise } from '../../stores/stats';
+import { httpsCallable } from 'firebase/functions';
 
 export default class FunctionsRegion extends ZugletObject {
 
@@ -17,7 +18,7 @@ export default class FunctionsRegion extends ZugletObject {
   //
 
   async call(name, props) {
-    let callable = this._region.httpsCallable(name);
+    let callable = httpsCallable(this._region, name);
     let result = await registerPromise(this, 'call', callable(props));
     return result;
   }

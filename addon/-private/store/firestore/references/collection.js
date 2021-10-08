@@ -1,5 +1,6 @@
 import QueryableReference from './queryable';
 import { cached } from '../../../model/decorators/cached';
+import { doc } from 'firebase/firestore';
 
 export default class CollectionReference extends QueryableReference {
 
@@ -25,9 +26,9 @@ export default class CollectionReference extends QueryableReference {
   doc(path) {
     let _ref;
     if(path) {
-      _ref = this._ref.doc(path);
+      _ref = doc(this._ref, path);
     } else {
-      _ref = this._ref.doc();
+      _ref = doc(this._ref);
     }
     return this.store.doc(_ref);
   }

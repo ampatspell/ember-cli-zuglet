@@ -1,5 +1,12 @@
-import firebase from "firebase/app";
 import { isArray } from '@ember/array';
+import {
+  Timestamp,
+  serverTimestamp,
+  DocumentReference,
+  CollectionReference,
+  GeoPoint,
+  Bytes
+} from 'firebase/firestore';
 
 export {
   isArray
@@ -8,16 +15,16 @@ export {
 let _serverTimestamp;
 export const isServerTimestamp = arg => {
   if(!_serverTimestamp) {
-    _serverTimestamp = firebase.firestore.FieldValue.serverTimestamp();
+    _serverTimestamp = serverTimestamp();
   }
   return !!arg && typeof arg === 'object' && _serverTimestamp.isEqual(arg);
 };
 
-export const isTimestamp = arg => arg instanceof firebase.firestore.Timestamp;
-export const isDocumentReference = arg => arg instanceof firebase.firestore.DocumentReference;
-export const isCollectionReference = arg => arg instanceof firebase.firestore.CollectionReference;
-export const isGeoPoint = arg => arg instanceof firebase.firestore.GeoPoint;
-export const isFirestoreBlob = arg => arg instanceof firebase.firestore.Blob;
+export const isTimestamp = arg => arg instanceof Timestamp;
+export const isDocumentReference = arg => arg instanceof DocumentReference;
+export const isCollectionReference = arg => arg instanceof CollectionReference;
+export const isGeoPoint = arg => arg instanceof GeoPoint;
+export const isFirestoreBlob = arg => arg instanceof Bytes;
 
 export const isFunction = arg => typeof arg === 'function';
 

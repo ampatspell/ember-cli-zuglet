@@ -1,7 +1,6 @@
 import ZugletObject from '../object';
 import { registerDestructor } from '@ember/destroyable';
 import { assert } from '@ember/debug';
-import { getFirestore } from 'firebase/firestore';
 import { initializeApp, enablePersistence, destroyApp } from './firebase';
 import { cached, getCached } from '../model/decorators/cached';
 import { toJSON } from '../util/to-json';
@@ -11,6 +10,16 @@ import { registerPromise } from '../stores/stats';
 import { root } from '../model/decorators/root';
 import { activate } from '../model/properties/activate';
 import { getFactory } from '../factory/get-factory';
+import {
+  getFirestore,
+  serverTimestamp,
+  Bytes,
+  doc,
+  collection,
+  collectionGroup,
+  writeBatch,
+  runTransaction
+} from 'firebase/firestore';
 
 const {
   assign
@@ -126,7 +135,7 @@ export default class Store extends ZugletObject {
   }
 
   transaction(cb) {
-    return registerPromise(this, 'transaction', this._firestore.runTransaction(async tx => {
+    return registerPromise(this, 'transaction', runTransaction(this._firestore, async tx => {
       let transaction = this._createTransaction(tx);
       return await cb(transaction);
     }));
@@ -147,14 +156,14 @@ export default class Store extends ZugletObject {
   }
 
   get serverTimestamp() {
-    let timestamp = firebase.firestore.FieldValue.serverTimestamp();
+    let timestamp = serverTimestamp();
     let now = new Date();
     timestamp.toDate = () => now;
     return timestamp;
   }
 
   blobFromUint8Array(value) {
-    return firebase.firestore.Blob.fromUint8Array(value);
+    return Bytes.fromUint8Array(value);
   }
 
   //
@@ -163,7 +172,7 @@ export default class Store extends ZugletObject {
     if(isDocumentReference(arg)) {
       return arg;
     } else if(typeof arg === 'string' && !!arg) {
-      return this._firestore.doc(arg);
+      return doc(this._firestore, arg);
     }
     assert(`argument must be string not '${arg}'`, false);
   }
@@ -172,14 +181,14 @@ export default class Store extends ZugletObject {
     if(isCollectionReference(arg)) {
       return arg;
     } else if(typeof arg === 'string' && !!arg) {
-      return this._firestore.collection(arg);
+      return collection(this._firestore, arg);
     }
     assert(`argument must be string not '${arg}'`, false);
   }
 
   _toCollectionGroupReference(arg) {
     if(typeof arg === 'string' && !!arg) {
-      return this._firestore.collectionGroup(arg);
+      return collectionGroup(this._firestore, arg);
     }
     assert(`argument must be string not '${arg}'`, false);
   }
@@ -206,7 +215,7 @@ export default class Store extends ZugletObject {
 
   _createBatch() {
     let store = this;
-    let _batch = this._firestore.batch();
+    let _batch = writeBatch(this._firestore);
     return this._factory.zuglet.create('store/firestore/batch', { store, _batch });
   }
 

@@ -1,4 +1,4 @@
-import 'firebase/auth';
+import { getAuth } from 'firebase/auth';
 import ZugletObject from '../../object';
 import { defer } from '../../util/defer';
 import { activate } from '../../model/properties/activate';
@@ -35,7 +35,7 @@ export default class Auth extends ZugletObject {
   //
 
   get _auth() {
-    return this.store.firebase.auth();
+    return getAuth(this.store.firebase);
   }
 
   _maybeSetupEmulator() {

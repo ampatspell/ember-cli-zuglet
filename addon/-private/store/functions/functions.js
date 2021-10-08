@@ -3,6 +3,7 @@ import ZugletObject from '../../object';
 import { cached } from '../../model/decorators/cached';
 import { toJSON } from '../../util/to-json';
 import { getFactory } from '../../factory/get-factory';
+import { getFunctions } from 'firebase/functions';
 
 export default class Functions extends ZugletObject {
 
@@ -25,16 +26,16 @@ export default class Functions extends ZugletObject {
     let { store: { firebase, options: { functions } } } = this;
     let region = functions && functions.region;
     if(!region) {
-      return this._maybeSetupEmulator(firebase.functions());
+      return this._maybeSetupEmulator(getFunctions(firebase));
     }
-    return this._maybeSetupEmulator(firebase.functions(region));
+    return this._maybeSetupEmulator(getFunctions(firebase, region));
   }
 
   _functions(region) {
     if(!region) {
       return this._defaultRegion;
     }
-    return this._maybeSetupEmulator(this.store.firebase.functions(region));
+    return this._maybeSetupEmulator(getFunctions(this.store.firebase, region));
   }
 
   region(region) {

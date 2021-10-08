@@ -2,6 +2,7 @@ import Reference from './reference';
 import { documentForRefNotFoundError } from '../../../util/error';
 import { cached } from '../../../model/decorators/cached';
 import { registerPromise } from '../../../stores/stats';
+import { getDoc, setDoc, deleteDoc, collection } from 'firebase/firestore';
 
 const {
   assign
@@ -30,7 +31,7 @@ export default class DocumentReference extends Reference {
   //
 
   collection(path) {
-    return this.store.collection(this._ref.collection(path));
+    return this.store.collection(collection(this._ref, path));
   }
 
   //
@@ -44,22 +45,22 @@ export default class DocumentReference extends Reference {
   }
 
   load(opts) {
-    return this._loadInternal(ref => ref.get(), opts);
+    return this._loadInternal(ref => getDoc(ref), opts);
   }
 
   async delete() {
-    await registerPromise(this, 'delete', this._ref.delete());
+    await registerPromise(this, 'delete', deleteDoc(this._ref));
     return this;
   }
 
   async data() {
-    let snapshot = await registerPromise(this, 'data', this._ref.get());
+    let snapshot = await registerPromise(this, 'data', getDoc(this._ref));
     return snapshot.data();
   }
 
   async save(data, opts) {
     let { merge } = assign({ merge: false }, opts);
-    await registerPromise(this, 'save', this._ref.set(data, { merge }));
+    await registerPromise(this, 'save', setDoc(this._ref, data, { merge }));
     return this;
   }
 
@@ -69,7 +70,7 @@ export default class DocumentReference extends Reference {
     let { optional } = assign({ optional: false }, opts);
     let { _ref } = this;
     let snapshot = await registerPromise(this, 'load', get(_ref));
-    if(!snapshot.exists) {
+    if(!snapshot.exists()) {
       if(optional) {
         return;
       }
