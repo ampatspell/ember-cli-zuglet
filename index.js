@@ -4,7 +4,11 @@ const MergeTrees = require('broccoli-merge-trees');
 const writeFile = require('broccoli-file-creator');
 
 const defaults = {
-  proxyClassicSupport: false
+  proxyClassicSupport: false,
+  version: {
+    zuglet: require('./package.json').version,
+    firebase: require('firebase').SDK_VERSION
+  }
 };
 
 module.exports = {
@@ -15,15 +19,7 @@ module.exports = {
   included(app, parentAddon) {
     this._super.included.apply(this, arguments);
     this.zuglet = Object.assign({}, defaults, (parentAddon || app).options['zuglet']);
-    // app.import('vendor/zuglet/register-version.js');
     app.import('vendor/zuglet/fastboot.js');
-  },
-  treeForVendor(tree) {
-    // let { version } = require('./package.json');
-    return MergeTrees([
-      tree,
-      // writeFile('zuglet/register-version.js', `Ember.libraries.register('ember-cli-zuglet', '${version}');`)
-    ]);
   },
   treeForAddon() {
     let tree = this._super.treeForAddon.apply(this, arguments);
