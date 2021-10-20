@@ -9,15 +9,15 @@ export default class ModelProperty extends Property {
 
   @diff(asOptionalString)
   _modelName() {
-    let { owner, opts } = this;
-    return opts.modelName.call(owner, owner);
+    let { owner, opts, key } = this;
+    return opts.modelName.call(owner, owner, key);
   }
 
   @diff(asOptionalObject)
   _props() {
-    let { owner, opts } = this;
+    let { owner, opts, key } = this;
     if(opts.mapping) {
-      return opts.mapping.call(owner, owner);
+      return opts.mapping.call(owner, owner, key);
     }
   }
 

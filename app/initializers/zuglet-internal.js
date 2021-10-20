@@ -44,6 +44,7 @@ import FunctionsRegion from 'zuglet/-private/store/functions/region';
 
 export default {
   name: 'zuglet:internal',
+  after: 'zuglet:version',
   initialize(container) {
     container.register('zuglet:factory', Factory);
     container.register('zuglet:factory/models', ModelsFactory);
