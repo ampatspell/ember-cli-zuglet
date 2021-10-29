@@ -1,0 +1,31 @@
+<div class="route-playground-reordering">
+
+  <div class="row">
+    <Input @value={{this.title}} placeholder="Title"/>
+    <Input @value={{this.position}} placeholder="Position"/>
+    <input type="button" value="Add" {{on "click" this.add}}/>
+  </div>
+
+  <div class="row">
+    <input type="button" value="Reset" {{on "click" this.reset}}/>
+  </div>
+
+  <div class="row">
+    {{#each this.query.content as |doc|}}
+      <div>
+        #{{doc.data.position}}: {{doc.data.title}}
+        <span {{on 'click' (fn this.moveUp doc)}} role="button">[Up]</span>
+        <span {{on 'click' (fn this.moveDown doc)}} role="button">[Down]</span>
+      </div>
+    {{/each}}
+  </div>
+
+  <div class="row">
+    {{#each this.models as |model|}}
+      <div>
+        #{{model.position}}: {{model.title}}
+      </div>
+    {{/each}}
+  </div>
+
+</div>

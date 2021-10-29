@@ -55,6 +55,7 @@ Router.map(function() {
     this.route('storage');
     this.route('functions');
     this.route('dev');
+    this.route('reordering');
     this.route('messages', function() {
       this.route('message', { path: ':message_id' }, function() {
       });
