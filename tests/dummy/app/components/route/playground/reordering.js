@@ -57,10 +57,12 @@ export default class RoutePlaygroundReorderingComponent extends Component {
       let del = content.filter(doc => !keep.includes(doc));
       await Promise.all(del.map(doc => doc.delete()));
     }
-    await Promise.all(keep.map(async (doc, idx) => {
-      doc.data.position = idx;
-      await doc.save();
-    }));
+    await this.store.batch(batch => {
+      keep.forEach((doc, idx) => {
+        doc.data.position = (idx + 1) * 10;
+        batch.save(doc);
+      });
+    });
   }
 
   async swap(a, b) {
@@ -92,6 +94,11 @@ export default class RoutePlaygroundReorderingComponent extends Component {
   @action
   moveDown(doc) {
     this.swap(doc, nextObject(this.query.content, doc));
+  }
+
+  @action
+  async delete(doc) {
+    await doc.delete();
   }
 
   toString() {

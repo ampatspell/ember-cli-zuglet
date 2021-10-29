@@ -16,6 +16,7 @@
         #{{doc.data.position}}: {{doc.data.title}}
         <span {{on 'click' (fn this.moveUp doc)}} role="button">[Up]</span>
         <span {{on 'click' (fn this.moveDown doc)}} role="button">[Down]</span>
+        <span {{on 'click' (fn this.delete doc)}} role="button">[Delete]</span>
       </div>
     {{/each}}
   </div>
