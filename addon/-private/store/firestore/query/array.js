@@ -40,6 +40,10 @@ export default class QueryArray extends Query {
       }
       existing._onSnapshot(snapshot, { source: 'subscription' });
       existing._onSnapshotMetadata(snapshot);
+      if(oldIndex !== newIndex) {
+        content.removeAt(oldIndex);
+        content.insertAt(newIndex, existing);
+      }
     } else if(type === 'removed') {
       let existing = content[oldIndex];
       if(existing) {

@@ -15,6 +15,8 @@ export default class State extends ZugletObject {
     this.owner = owner;
   }
 
+  didCreateState() {}
+
   getProperty(key, create) {
     let property = this.properties[key];
     if(!property && create) {

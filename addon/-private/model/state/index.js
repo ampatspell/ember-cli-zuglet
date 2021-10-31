@@ -29,7 +29,10 @@ export const getState = (owner, opts) => {
   let state = owner[marker];
   if(!state && create) {
     state = createState(owner, { optional });
-    owner[marker] = state;
+    if(state) {
+      owner[marker] = state;
+      state.didCreateState();
+    }
   }
 
   return state;

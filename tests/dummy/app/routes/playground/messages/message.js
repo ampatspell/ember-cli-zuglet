@@ -5,8 +5,8 @@ import { route } from 'zuglet/decorators';
 @route()
 export default class MessagesMessageRoute extends Route {
 
-  @service
-  store
+  @service store;
+  @service router;
 
   model({ message_id: id }) {
     let messages = this.modelFor('playground.messages');
@@ -19,7 +19,7 @@ export default class MessagesMessageRoute extends Route {
 
   afterModel(model) {
     if(!model.message) {
-      this.transitionTo('playground.messages');
+      this.router.transitionTo('playground.messages');
     }
   }
 

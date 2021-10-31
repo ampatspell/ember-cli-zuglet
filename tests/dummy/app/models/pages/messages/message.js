@@ -4,7 +4,7 @@ import { activate } from 'zuglet/decorators';
 export default class PagesMessagesMessage extends ZugletObject {
 
   @activate().content(({ messages, id }) => messages.byId(id))
-  message
+  message;
 
   constructor(owner, { messages, id }) {
     super(owner);
