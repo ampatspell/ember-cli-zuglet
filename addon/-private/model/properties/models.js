@@ -12,21 +12,22 @@ class Marker {
 
   @diff(asString)
   modelName() {
-    let { owner, source, opts } = this;
-    return opts.modelName.call(owner, source, owner);
+    let { owner, source, opts, key } = this;
+    return opts.modelName.call(owner, source, owner, key);
   }
 
   @diff(asObject)
   props() {
-    let { owner, source, opts } = this;
-    return opts.mapping.call(owner, source, owner);
+    let { owner, source, opts, key } = this;
+    return opts.mapping.call(owner, source, owner, key);
   }
 
-  constructor(owner, source, opts) {
+  constructor(owner, source, opts, key) {
     setOwner(this, getOwner(owner));
     this.owner = owner;
     this.source = source;
     this.opts = opts;
+    this.key = key;
   }
 
 }
@@ -62,11 +63,11 @@ export default class ModelsProperty extends Property {
   //
 
   createModel(source) {
-    let { owner, opts } = this;
+    let { owner, opts, key } = this;
     assert(`@models().named(fn) is required`, !!opts.modelName);
     assert(`@models().mapping(fn) is required`, !!opts.mapping);
 
-    let marker = new Marker(owner, source, opts);
+    let marker = new Marker(owner, source, opts, key);
 
     let model = this.factory.create(marker.modelName.current, marker.props.current);
     setMarker(model, marker);
