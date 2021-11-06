@@ -34,6 +34,16 @@ export default class Auth extends ZugletObject {
 
   //
 
+  verifyPasswordResetCode(code) {
+    return this._withAuth(auth => auth.verifyPasswordResetCode(code));
+  }
+
+  confirmPasswordReset(code, password) {
+    return this._withAuth(auth => auth.confirmPasswordReset(code, password));
+  }
+
+  //
+
   get _auth() {
     return this.store.firebase.auth();
   }
