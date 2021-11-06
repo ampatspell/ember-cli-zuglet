@@ -12,21 +12,22 @@ class Marker {
 
   @diff(asString)
   modelName() {
-    let { owner, source, opts } = this;
-    return opts.modelName.call(owner, source, owner);
+    let { owner, source, opts, key } = this;
+    return opts.modelName.call(owner, source, owner, key);
   }
 
   @diff(asObject)
   props() {
-    let { owner, source, opts } = this;
-    return opts.mapping.call(owner, source, owner);
+    let { owner, source, opts, key } = this;
+    return opts.mapping.call(owner, source, owner, key);
   }
 
-  constructor(owner, source, opts) {
+  constructor(owner, source, opts, key) {
     setOwner(this, getOwner(owner));
     this.owner = owner;
     this.source = source;
     this.opts = opts;
+    this.key = key;
   }
 
 }
@@ -62,16 +63,24 @@ export default class ModelsProperty extends Property {
   //
 
   createModel(source) {
-    let { owner, opts } = this;
+    let { owner, opts, key } = this;
     assert(`@models().named(fn) is required`, !!opts.modelName);
     assert(`@models().mapping(fn) is required`, !!opts.mapping);
 
-    let marker = new Marker(owner, source, opts);
+    let marker = new Marker(owner, source, opts, key);
 
     let model = this.factory.create(marker.modelName.current, marker.props.current);
     setMarker(model, marker);
 
     return model;
+  }
+
+  registerLoad(model) {
+    let { owner, opts: { load } } = this;
+    if(!load) {
+      return;
+    }
+    getState(model).setLoadOnActivated(() => load.call(model, model, owner));
   }
 
   //
@@ -108,15 +117,18 @@ export default class ModelsProperty extends Property {
           if(marker.modelName.updated) {
             model = this.createModel(doc);
             added.push(model);
+            this.registerLoad(model);
           } else {
             let props = marker.props;
             if(props.updated) {
               if(isFunction(model.mappingDidChange)) {
                 model.mappingDidChange.call(model, props.current);
                 removeObject(removed, model);
+                this.registerLoad(model);
               } else {
                 model = this.createModel(doc);
                 added.push(model);
+                this.registerLoad(model);
               }
             } else {
               removeObject(removed, model);
@@ -125,12 +137,15 @@ export default class ModelsProperty extends Property {
         } else {
           model = this.createModel(doc);
           added.push(model);
+          this.registerLoad(model);
         }
         models.push(model);
       });
     }
 
-    if(this.isActivated) {
+    let { isActivated } = this;
+
+    if(isActivated) {
       this.deactivateValues(removed);
       this.activateValues(added);
     }
@@ -243,7 +258,8 @@ export const models = () => {
   let opts = {
     source: null,
     modelName: null,
-    mapping: null
+    mapping: null,
+    load: null
   };
 
   let extend = () => {
@@ -264,6 +280,11 @@ export const models = () => {
     curr.mapping = fn => {
       assert(`@models().mapping(fn) must be function not '${fn}'`, isFunction(fn));
       opts.mapping = fn;
+      return extend();
+    }
+    curr.load = fn => {
+      assert(`@models().load(fn) must be function not '${fn}'`, isFunction(fn));
+      opts.load = fn;
       return extend();
     }
     return curr;
