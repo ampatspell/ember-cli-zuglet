@@ -33,3 +33,15 @@ Auth [methods](api/auth/methods).
 let auth = store.auth;
 await auth.methods.anonymous.signIn();
 ```
+
+## async verifyPasswordResetCode(code) `→ string`
+
+``` javascript
+let email = await auth.store.verifyPasswordResetCode(code);
+```
+
+## async confirmPasswordReset(code, password) `→ Void`
+
+``` javascript
+await auth.store.confirmPasswordReset(code, password);
+```
