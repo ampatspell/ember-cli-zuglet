@@ -13,4 +13,8 @@ export default class Post extends ZugletObject {
   @data('title') title;
   @data('position') position;
 
+  load(type) {
+    console.log('load', type, this+'');
+  }
+
 }

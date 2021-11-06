@@ -1,7 +1,7 @@
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
-import { root, models, activate } from 'zuglet/decorators';
+import { root, models, model, activate } from 'zuglet/decorators';
 import { inject as service } from '@ember/service';
 import { setGlobal, toString } from 'zuglet/utils';
 import { prevObject, nextObject } from '../../../util/array';
@@ -26,7 +26,18 @@ export default class RoutePlaygroundReorderingComponent extends Component {
     .source(({ query }) => query.content)
     .named('post')
     .mapping(doc => ({ doc }))
+    .load(model => model.load('array'))
   models;
+
+  @activate()
+    .content(({ store }) => store.collection('posts').orderBy('position').limit(1).query({ type: 'first' }))
+  _first;
+
+  @model()
+    .named(({ _first: { content: doc } }) => doc && 'post')
+    .mapping(({ _first: { content: doc } }) => ({ doc }))
+    .load(model => model.load('first'))
+  first;
 
   //
 

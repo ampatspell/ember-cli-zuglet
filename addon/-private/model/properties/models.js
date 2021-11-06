@@ -74,6 +74,14 @@ export default class ModelsProperty extends Property {
     return model;
   }
 
+  registerLoad(model) {
+    let { owner, opts: { load } } = this;
+    if(!load) {
+      return;
+    }
+    getState(model).setLoadOnActivated(() => load.call(model, model, owner));
+  }
+
   //
 
   sourceArrayDidChange(source, markers) {
@@ -108,15 +116,18 @@ export default class ModelsProperty extends Property {
           if(marker.modelName.updated) {
             model = this.createModel(doc);
             added.push(model);
+            this.registerLoad(model);
           } else {
             let props = marker.props;
             if(props.updated) {
               if(isFunction(model.mappingDidChange)) {
                 model.mappingDidChange.call(model, props.current);
                 removeObject(removed, model);
+                this.registerLoad(model);
               } else {
                 model = this.createModel(doc);
                 added.push(model);
+                this.registerLoad(model);
               }
             } else {
               removeObject(removed, model);
@@ -125,12 +136,15 @@ export default class ModelsProperty extends Property {
         } else {
           model = this.createModel(doc);
           added.push(model);
+          this.registerLoad(model);
         }
         models.push(model);
       });
     }
 
-    if(this.isActivated) {
+    let { isActivated } = this;
+
+    if(isActivated) {
       this.deactivateValues(removed);
       this.activateValues(added);
     }
@@ -243,7 +257,8 @@ export const models = () => {
   let opts = {
     source: null,
     modelName: null,
-    mapping: null
+    mapping: null,
+    load: null
   };
 
   let extend = () => {
@@ -264,6 +279,11 @@ export const models = () => {
     curr.mapping = fn => {
       assert(`@models().mapping(fn) must be function not '${fn}'`, isFunction(fn));
       opts.mapping = fn;
+      return extend();
+    }
+    curr.load = fn => {
+      assert(`@models().load(fn) must be function not '${fn}'`, isFunction(fn));
+      opts.load = fn;
       return extend();
     }
     return curr;

@@ -32,7 +32,7 @@ export const activate = () => {
   let extend = () => {
     let curr = define(opts);
     curr.content = value => {
-      assert(`@activate().contnet(fn) must be function not '${value}'`, isFunction(value));
+      assert(`@activate().content(fn) must be function not '${value}'`, isFunction(value));
       opts.value = value;
       opts.type = 'content';
       return extend();

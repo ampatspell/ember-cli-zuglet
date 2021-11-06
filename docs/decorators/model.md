@@ -24,7 +24,10 @@ export default class NiceComponent extends Component {
   @tracked
   id
 
-  @model().named(({ type }) => type).mapping(({ store, id }) => ({ store, id }))
+  @model()
+    .named(({ type }) => type)
+    .mapping(({ store, id }) => ({ store, id }))
+    .load(model => model.load()) // optional callback to load inner dependencies on 1st model activation
   model
 
 }
