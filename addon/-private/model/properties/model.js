@@ -1,5 +1,6 @@
 import Property, { property } from './property';
 import { getFactory } from '../../factory/get-factory';
+import { getState } from '../state';
 import ObjectActivator from './activate/activators/object';
 import { diff, asOptionalString, asOptionalObject, asIdentity } from '../decorators/diff';
 import { isFunction } from '../../util/types';
@@ -21,6 +22,14 @@ export default class ModelProperty extends Property {
     }
   }
 
+  registerLoad(model) {
+    let { owner, opts: { load } } = this;
+    if(!load) {
+      return;
+    }
+    getState(model).setLoadOnActivated(() => load.call(model, model, owner));
+  }
+
   @diff(asIdentity)
   _value(current) {
     let modelName = this._modelName;
@@ -32,15 +41,20 @@ export default class ModelProperty extends Property {
       if(props.updated) {
         if(isFunction(current.mappingDidChange)) {
           current.mappingDidChange.call(current, props.current);
+          this.registerLoad(current);
         } else {
-          return create();
+          let model = create();
+          this.registerLoad(model);
+          return model;
         }
       }
       return current;
     }
 
     if(modelName.current) {
-      return create();
+      let model = create();
+      this.registerLoad(model);
+      return model;
     }
 
     return null;
@@ -97,7 +111,8 @@ export const model = () => {
 
   let opts = {
     modelName: null,
-    mapping: null
+    mapping: null,
+    load: null,
   };
 
   let extend = () => {
@@ -113,6 +128,11 @@ export const model = () => {
     curr.mapping = mapping => {
       assert(`@model().mapping(fn) must be function not '${mapping}'`, isFunction(mapping));
       opts.mapping = mapping;
+      return extend();
+    }
+    curr.load = fn => {
+      assert(`@model().load(fn) must be function not '${fn}'`, isFunction(fn));
+      opts.load = fn;
       return extend();
     }
     return curr;

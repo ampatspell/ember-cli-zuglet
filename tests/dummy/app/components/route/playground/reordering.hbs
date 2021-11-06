@@ -11,6 +11,12 @@
   </div>
 
   <div class="row">
+    {{#let this.first as |model|}}
+      #{{model.position}}: {{model.title}}
+    {{/let}}
+  </div>
+
+  <div class="row">
     {{#each this.query.content as |doc|}}
       <div>
         #{{doc.data.position}}: {{doc.data.title}}

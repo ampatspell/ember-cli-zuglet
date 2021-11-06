@@ -43,6 +43,22 @@ export default class State extends ZugletObject {
 
   //
 
+  _loadOnActivated = null;
+
+  setLoadOnActivated(fn) {
+    this._loadOnActivated = fn;
+  }
+
+  _invokeOnActivatedHooks() {
+    let { _loadOnActivated } = this;
+    if(_loadOnActivated) {
+      _loadOnActivated();
+      this._loadOnActivated = null;
+    }
+  }
+
+  //
+
   get isActivated() {
     return this.activators.size > 0;
   }
@@ -51,6 +67,7 @@ export default class State extends ZugletObject {
     registerActivated(this.owner);
     this.withProperties(property => property.onActivated());
     this.invokeOnOwner('onActivated');
+    this._invokeOnActivatedHooks();
   }
 
   onDeactivated() {
@@ -60,7 +77,7 @@ export default class State extends ZugletObject {
   }
 
   activate(activator) {
-    assert(`activator is requied`, !!activator);
+    assert(`activator is required`, !!activator);
 
     let { activators } = this;
     activators.add(activator);
@@ -71,7 +88,7 @@ export default class State extends ZugletObject {
   }
 
   deactivate(activator) {
-    assert(`activator is requied`, !!activator);
+    assert(`activator is required`, !!activator);
 
     let { activators } = this;
     activators.delete(activator);

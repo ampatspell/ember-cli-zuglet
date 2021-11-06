@@ -29,6 +29,7 @@ export default class MessagesComponent extends Component {
     .source(({ query }) => query.content)
     .named(doc => doc.data.type) // if name changes, model is recreated
     .mapping(doc => ({ doc })) // if mapping changes, model.mappingDidChange is invoked or model is recreated
+    .load(model => model.load()) // optional callback to load inner dependencies on 1st model activation
   models
 
   @action
