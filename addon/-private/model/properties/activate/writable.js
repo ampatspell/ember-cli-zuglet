@@ -1,7 +1,7 @@
 import BaseActivateProperty from './activate';
 import { consumeKey, dirtyKey } from '../../tracking/tag';
 
-export default class WirtableActivateProperty extends BaseActivateProperty {
+export default class WritableActivateProperty extends BaseActivateProperty {
 
   getPropertyValue() {
     consumeKey(this, 'activator');
