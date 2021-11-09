@@ -1,9 +1,10 @@
 import ZugletObject from '../object';
 import { getStores } from './get-stores';
 import { A } from '@ember/array';
-import { isPromise } from '../util/types';
+import { isFunction, isPromise } from '../util/types';
 import { next } from '../util/runloop';
 import { join } from '@ember/runloop';
+import { assert } from '@ember/debug';
 
 export default class Stats extends ZugletObject {
 
@@ -33,6 +34,12 @@ export default class Stats extends ZugletObject {
       });
     });
     return result;
+  }
+
+  _registerCallback(model, label, fn) {
+    return (...args) => {
+      return join(null, fn, ...args);
+    };
   }
 
   _registerPromise(model, label, promise) {
@@ -71,8 +78,13 @@ export const getStats = owner => getStores(owner).stats;
 export const registerActivated = model => getStats(model)._registerActivated(model);
 export const unregisterActivated = model => getStats(model)._unregisterActivated(model);
 
-export const registerObserver = (model, cancel) => {
+export const registerObserver = (model, fn) => {
+  assert(`model is required`, model);
+  assert(`fn must be function not '${fn}'`, isFunction(fn));
   let observer = getStats(model)._registerObserver(model);
+  let wrap = fn => (...args) => join(null, fn, ...args);
+  let cancel = fn(wrap);
+  assert(`cancel fn is required`, isFunction(cancel));
   return () => {
     observer();
     cancel();

@@ -125,11 +125,13 @@ export default class Auth extends ZugletObject {
 
   onActivated() {
     this._deferred = defer();
-    this._cancel = registerObserver(this, this._auth.onAuthStateChanged(user => {
-      this._onAuthStateChange(user);
-    }, err => {
-      this.store.onObserverError(this, err);
-    }));
+    this._cancel = registerObserver(this, wrap => {
+      return this._auth.onAuthStateChanged(wrap(user => {
+        this._onAuthStateChange(user);
+      }), wrap(err => {
+        this.store.onObserverError(this, err);
+      }));
+    });
   }
 
   _cancelObserver() {
