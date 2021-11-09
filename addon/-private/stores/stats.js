@@ -79,12 +79,12 @@ export const registerActivated = model => getStats(model)._registerActivated(mod
 export const unregisterActivated = model => getStats(model)._unregisterActivated(model);
 
 export const registerObserver = (model, fn) => {
-  assert(`model is required`, model);
+  assert('model is required', model);
   assert(`fn must be function not '${fn}'`, isFunction(fn));
   let observer = getStats(model)._registerObserver(model);
   let wrap = fn => (...args) => join(null, fn, ...args);
   let cancel = fn(wrap);
-  assert(`cancel fn is required`, isFunction(cancel));
+  assert(`cancel must be function not '${cancel}'`, isFunction(cancel));
   return () => {
     observer();
     cancel();
