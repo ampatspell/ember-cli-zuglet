@@ -3,6 +3,7 @@ import { getStores } from './get-stores';
 import { A } from '@ember/array';
 import { isPromise } from '../util/types';
 import { next } from '../util/runloop';
+import { join } from '@ember/runloop';
 
 export default class Stats extends ZugletObject {
 
@@ -23,8 +24,20 @@ export default class Stats extends ZugletObject {
     return () => this.observers.removeObject(model);
   }
 
+  _wrapPromise(promise) {
+    let result = new Promise((resolve, reject) => {
+      promise.then(result => {
+        join(null, resolve, result);
+      }, err => {
+        join(null, reject, err);
+      });
+    });
+    return result;
+  }
+
   _registerPromise(model, label, promise) {
     if(isPromise(promise)) {
+      promise = this._wrapPromise(promise);
       promise.stats = { model, label };
       this.promises.pushObject(promise);
       let done = () => this.promises.removeObject(promise);
