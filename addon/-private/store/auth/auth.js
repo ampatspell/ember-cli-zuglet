@@ -35,11 +35,15 @@ export default class Auth extends ZugletObject {
   //
 
   verifyPasswordResetCode(code) {
-    return this._withAuth(auth => auth.verifyPasswordResetCode(code));
+    return this._withAuth(auth => {
+      return registerPromise(this, 'verify-password-reset-code', auth.verifyPasswordResetCode(code));
+    });
   }
 
   confirmPasswordReset(code, password) {
-    return this._withAuth(auth => auth.confirmPasswordReset(code, password));
+    return this._withAuth(auth => {
+      return registerPromise(this, 'confirm-password-reset', auth.confirmPasswordReset(code, password));
+    });
   }
 
   //
