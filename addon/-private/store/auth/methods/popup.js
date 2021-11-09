@@ -1,7 +1,7 @@
 import AuthMethod from './method';
 import { cached } from '../../../model/decorators/cached';
 
-export default class AuthPopopMethod extends AuthMethod {
+export default class AuthPopupMethod extends AuthMethod {
 
   _method(name) {
     return this.auth.methods._method(`popup/${name}`);
