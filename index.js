@@ -7,7 +7,7 @@ const defaults = {
   proxyClassicSupport: false,
   version: {
     zuglet: require('./package.json').version,
-    firebase: require('firebase').SDK_VERSION
+    firebase: require('firebase/package.json').version
   }
 };
 
