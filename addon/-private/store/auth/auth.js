@@ -1,4 +1,4 @@
-import 'firebase/auth';
+import 'firebase/compat/auth';
 import ZugletObject from '../../object';
 import { defer } from '../../util/defer';
 import { activate } from '../../model/properties/activate';

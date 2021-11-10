@@ -1,4 +1,4 @@
-import firebase from "firebase/app";
+import firebase from "firebase/compat/app";
 import ZugletObject from '../../../object';
 import { objectToJSON } from '../../util/object-to-json';
 import { tracked } from '@glimmer/tracking';
