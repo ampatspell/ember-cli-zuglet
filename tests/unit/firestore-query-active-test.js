@@ -26,7 +26,7 @@ module('firestore / query / active', function(hooks) {
     ]);
 
     this.activate(query);
-    await query.promise;
+    await query.promise.cached;
 
     assert.deepEqual(query.content.map(doc => doc.id), [ 'blue', 'orange', 'red' ]);
 
@@ -60,7 +60,7 @@ module('firestore / query / active', function(hooks) {
 
     let query = ref.orderBy('name', 'asc').query();
     this.activate(query);
-    await query.promise;
+    await query.promise.cached;
 
     assert.deepEqual(query.content.map(doc => doc.id), [ 'green', 'yellow' ]);
 
@@ -83,7 +83,7 @@ module('firestore / query / active', function(hooks) {
     assert.strictEqual(query.isLoading, false);
     this.activate(query);
     assert.strictEqual(query.isLoading, true);
-    await query.promise;
+    await query.promise.cached;
     assert.strictEqual(query.isLoading, false);
     assert.strictEqual(query.isLoaded, true);
 
@@ -106,7 +106,7 @@ module('firestore / query / active', function(hooks) {
     ]);
 
     this.activate(query);
-    await query.promise;
+    await query.promise.cached;
 
     assert.strictEqual(query.content.id, 'red');
 
