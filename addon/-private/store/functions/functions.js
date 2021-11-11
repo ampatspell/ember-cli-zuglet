@@ -51,7 +51,7 @@ export default class Functions extends ZugletObject {
   //
 
   get serialized() {
-    let region = this._defaultRegion._region;
+    let region = this._defaultRegion.region;
     let serialized = {
       region
     };
@@ -68,7 +68,7 @@ export default class Functions extends ZugletObject {
   }
 
   toStringExtension() {
-    return `${this._defaultRegion._region}`;
+    return `${this._defaultRegion.region}`;
   }
 
 }
