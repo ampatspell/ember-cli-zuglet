@@ -5,6 +5,9 @@ const promiseForType = (model, type) => {
     return;
   }
   let { promise } = model;
+  if(!promise) {
+    return;
+  }
   if(type) {
     let nested = promise[type];
     if(nested) {

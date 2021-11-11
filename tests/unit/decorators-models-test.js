@@ -78,7 +78,7 @@ module('decorators / @models', function(hooks) {
     });
 
     this.activate(box);
-    await load(box.query);
+    await load.cached(box.query);
 
     assert.ok(box.models);
     assert.strictEqual(box.models.length, 3);
@@ -118,7 +118,7 @@ module('decorators / @models', function(hooks) {
 
     this.activate(box);
 
-    await load(box.query);
+    await load.cached(box.query);
 
     assert.deepEqual(box.models.map(model => model.doc.id), [ 'one' ]);
 
