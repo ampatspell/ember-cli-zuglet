@@ -45,7 +45,7 @@
     "patch": "npm version patch; npm run tags",
     "client:build:base": "npm run build -- --output-path ./firebase/public",
     "client:build:with-fastboot": "WITH_FASTBOOT=true npm run client:build:base",
-    "client:build": "npm run client:build:base",
+    "client:build": "npm run client:build:with-fastboot",
     "deploy:hosting": "npm run client:build && (cd firebase && firebase deploy --only hosting --project ember-cli-zuglet)",
     "deploy:all": "npm run client:build && (cd firebase && firebase deploy --project ember-cli-zuglet)",
     "deploy:rules": "(cd firebase && firebase deploy --only firestore,storage --project ember-cli-zuglet && firebase deploy --only firestore,storage --project ember-cli-zuglet-travis)",
@@ -54,13 +54,14 @@
   "dependencies": {
     "broccoli-file-creator": "^2.1.1",
     "broccoli-merge-trees": "^4.2.0",
-    "ember-auto-import": "^2.2.3",
+    "ember-auto-import": "^1.11.3",
     "ember-cli-babel": "^7.26.6",
     "ember-cli-htmlbars": "^5.7.1",
     "firebase": "^9.4.0",
     "node-fetch": "^2.6.1",
     "webpack": "^5.63.0",
-    "xmlhttprequest": "^1.8.0"
+    "xmlhttprequest": "^1.8.0",
+    "fetch-headers": "^2.0.0"
   },
   "devDependencies": {
     "@ember/optional-features": "^2.0.0",
@@ -125,7 +126,8 @@
       "node-fetch",
       "xmlhttprequest",
       "buffer",
-      "simple-dom"
+      "simple-dom",
+      "fetch-headers"
     ]
   }
 }
