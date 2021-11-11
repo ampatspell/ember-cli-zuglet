@@ -1,3 +1,4 @@
+import 'firebase/compat/storage';
 import ZugletObject from '../../../object';
 import { assert } from '@ember/debug';
 import { toJSON } from '../../util/to-json';

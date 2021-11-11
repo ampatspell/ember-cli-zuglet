@@ -141,16 +141,18 @@ export default class Query extends ZugletObject {
         this._state.setProperties({ isLoading: true, isError: false, error: null });
         let refresh = true;
         this._deferred = cachedRemoteDefer(this);
-        this._cancel = registerObserver(this, onSnapshot(this.ref._ref, { includeMetadataChanges: true }, snapshot => {
-          this._onSnapshot(snapshot, refresh);
-          refresh = false;
-          this._state.setProperties({ isLoading: false, isLoaded: true });
-          this._onSnapshotMetadata(snapshot);
-        }, error => {
-          this._state.setProperties({ isLoading: false, isError: true, error });
-          this.store.onObserverError(this, error);
-          this._deferred.reject('remote', error);
-        }));
+        this._cancel = registerObserver(this, wrap => {
+          return onSnapshot(this.ref._ref, { includeMetadataChanges: true }, wrap(snapshot => {
+            this._onSnapshot(snapshot, refresh);
+            refresh = false;
+            this._state.setProperties({ isLoading: false, isLoaded: true });
+            this._onSnapshotMetadata(snapshot);
+          }, wrap(error => {
+            this._state.setProperties({ isLoading: false, isError: true, error });
+            this.store.onObserverError(this, error);
+            this._deferred.reject('remote', error);
+          })));
+        });
       }
     }
   }

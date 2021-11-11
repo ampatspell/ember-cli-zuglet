@@ -1,3 +1,4 @@
+import 'firebase/compat/firestore';
 import ZugletObject from '../object';
 import { registerDestructor } from '@ember/destroyable';
 import { assert } from '@ember/debug';

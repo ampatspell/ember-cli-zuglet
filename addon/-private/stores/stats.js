@@ -1,8 +1,10 @@
 import ZugletObject from '../object';
 import { getStores } from './get-stores';
 import { A } from '@ember/array';
-import { isPromise } from '../util/types';
+import { isFunction, isPromise } from '../util/types';
 import { next } from '../util/runloop';
+import { join } from '@ember/runloop';
+import { assert } from '@ember/debug';
 
 export default class Stats extends ZugletObject {
 
@@ -23,8 +25,26 @@ export default class Stats extends ZugletObject {
     return () => this.observers.removeObject(model);
   }
 
+  _wrapPromise(promise) {
+    let result = new Promise((resolve, reject) => {
+      promise.then(result => {
+        join(null, resolve, result);
+      }, err => {
+        join(null, reject, err);
+      });
+    });
+    return result;
+  }
+
+  _registerCallback(model, label, fn) {
+    return (...args) => {
+      return join(null, fn, ...args);
+    };
+  }
+
   _registerPromise(model, label, promise) {
     if(isPromise(promise)) {
+      promise = this._wrapPromise(promise);
       promise.stats = { model, label };
       this.promises.pushObject(promise);
       let done = () => this.promises.removeObject(promise);
@@ -58,8 +78,13 @@ export const getStats = owner => getStores(owner).stats;
 export const registerActivated = model => getStats(model)._registerActivated(model);
 export const unregisterActivated = model => getStats(model)._unregisterActivated(model);
 
-export const registerObserver = (model, cancel) => {
+export const registerObserver = (model, fn) => {
+  assert('model is required', model);
+  assert(`fn must be function not '${fn}'`, isFunction(fn));
   let observer = getStats(model)._registerObserver(model);
+  let wrap = fn => (...args) => join(null, fn, ...args);
+  let cancel = fn(wrap);
+  assert(`cancel must be function not '${cancel}'`, isFunction(cancel));
   return () => {
     observer();
     cancel();

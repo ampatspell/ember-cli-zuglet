@@ -12,7 +12,7 @@ export default class FunctionsRegion extends ZugletObject {
   }
 
   get identifier() {
-    return this._region.region;
+    return this._region._region;
   }
 
   //

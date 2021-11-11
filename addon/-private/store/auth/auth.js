@@ -35,11 +35,15 @@ export default class Auth extends ZugletObject {
   //
 
   verifyPasswordResetCode(code) {
-    return this._withAuth(auth => auth.verifyPasswordResetCode(code));
+    return this._withAuth(auth => {
+      return registerPromise(this, 'verify-password-reset-code', auth.verifyPasswordResetCode(code));
+    });
   }
 
   confirmPasswordReset(code, password) {
-    return this._withAuth(auth => auth.confirmPasswordReset(code, password));
+    return this._withAuth(auth => {
+      return registerPromise(this, 'confirm-password-reset', auth.confirmPasswordReset(code, password));
+    });
   }
 
   //
@@ -121,11 +125,13 @@ export default class Auth extends ZugletObject {
 
   onActivated() {
     this._deferred = defer();
-    this._cancel = registerObserver(this, this._auth.onAuthStateChanged(user => {
-      this._onAuthStateChange(user);
-    }, err => {
-      this.store.onObserverError(this, err);
-    }));
+    this._cancel = registerObserver(this, wrap => {
+      return this._auth.onAuthStateChanged(wrap(user => {
+        this._onAuthStateChange(user);
+      }), wrap(err => {
+        this.store.onObserverError(this, err);
+      }));
+    });
   }
 
   _cancelObserver() {

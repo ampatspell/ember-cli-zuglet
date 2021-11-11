@@ -85,11 +85,13 @@ export default class StorageTask extends ZugletObject {
     if(!isRunning) {
       return;
     }
-    this._taskObserver = registerObserver(this, this._task.on(STATE_CHANGED,
-      snapshot => this._onSnapshot(snapshot),
-      err => this._onError(err),
-      () => this._onCompleted()
-    ));
+    this._taskObserver = registerObserver(this, wrap => {
+      return this._task.on(STATE_CHANGED,
+        wrap(snapshot => this._onSnapshot(snapshot)),
+        wrap(err => this._onError(err)),
+        wrap(() => this._onCompleted())
+      )
+    });
   }
 
   onDeactivated() {
