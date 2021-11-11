@@ -53,10 +53,10 @@
     "broccoli-file-creator": "^2.1.1",
     "broccoli-merge-trees": "^4.2.0",
     "ember-auto-import": "^2.2.3",
-    "webpack": "^5.59.0",
+    "webpack": "^5.63.0",
     "ember-cli-babel": "^7.26.6",
     "ember-cli-htmlbars": "^5.7.1",
-    "firebase": "^8.9.1",
+    "firebase": "^9.4.0",
     "node-fetch": "^2.6.1",
     "xmlhttprequest": "^1.8.0"
   },

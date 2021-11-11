@@ -1,5 +1,5 @@
 import Method from '../method';
-import firebase from "firebase/app";
+import firebase from "firebase/compat/app";
 import { registerPromise } from '../../../../stores/stats';
 
 export default class PopupGoogleAuthMethod extends Method {

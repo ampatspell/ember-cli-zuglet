@@ -1,9 +1,11 @@
+import 'firebase/compat/storage';
 import ZugletObject from '../../../object';
 import { assert } from '@ember/debug';
 import { toJSON } from '../../util/to-json';
 import { registerPromise } from '../../stores/stats';
-import firebase from "firebase/app";
+import firebase from "firebase/compat/app";
 import { getFactory } from '../../factory/get-factory';
+
 
 const {
   StringFormat

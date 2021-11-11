@@ -1,6 +1,7 @@
 <div class="block-toc">
   <div class="header">
     <LinkTo class="title" @route="index">{{this.config.name}} <span class="version">v{{this.config.version}}</span></LinkTo>
+    <div class="firebase">Firebase <span class="version">v{{this.config.firebase}}</span></div>
     <LinkTo @route="docs" @activeClass="-active">Documentation</LinkTo>
   </div>
   <Block::Toc::Pages @pages={{@pages}}/>

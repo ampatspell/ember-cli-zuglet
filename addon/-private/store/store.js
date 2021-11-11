@@ -1,7 +1,8 @@
+import 'firebase/compat/firestore';
 import ZugletObject from '../object';
 import { registerDestructor } from '@ember/destroyable';
 import { assert } from '@ember/debug';
-import firebase from 'firebase/app';
+import firebase from 'firebase/compat/app';
 import { initializeApp, enablePersistence, destroyApp } from './firebase';
 import { cached, getCached } from '../model/decorators/cached';
 import { toJSON } from '../util/to-json';
