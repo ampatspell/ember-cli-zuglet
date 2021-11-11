@@ -90,6 +90,8 @@
     }
   }
   > .header {
+    display: flex;
+    flex-direction: column;
     > a {
       display: block;
       font-size: $font-size-smaller;
@@ -101,6 +103,10 @@
         font-weight: 400;
         font-size: $font-size-smaller;
       }
+    }
+    > .firebase {
+      font-size: $font-size-smaller;
+      margin-bottom: 10px;
     }
     margin-bottom: 15px;
   }
