@@ -124,7 +124,7 @@ module('util', function(hooks) {
       resolve();
     }
 
-    await resolve(null, [ doc, null, undefined ], null, undefined, { ok: true }, { then });
+    await resolve.cached(null, [ doc, null, undefined ], null, undefined, { ok: true }, { then });
 
     assert.ok(invoked);
     assert.true(doc.isLoaded);

@@ -13,7 +13,7 @@ module('firestore / document / active', function(hooks) {
     await doc.save({ merge: true });
 
     this.activate(doc);
-    await doc.promise;
+    await doc.promise.cached;
 
     assert.deepEqual(doc.data, {
       name: 'yellow',
@@ -31,7 +31,7 @@ module('firestore / document / active', function(hooks) {
     assert.strictEqual(doc.isLoading, true);
     assert.strictEqual(doc.isLoaded, false);
 
-    await doc.promise;
+    await doc.promise.cached;
 
     assert.strictEqual(doc.isLoading, false);
     assert.strictEqual(doc.isLoaded, true);
@@ -51,7 +51,7 @@ module('firestore / document / active', function(hooks) {
     assert.strictEqual(doc.isLoading, true);
     assert.strictEqual(doc.isLoaded, false);
 
-    await doc.promise;
+    await doc.promise.cached;
 
     assert.strictEqual(doc.isLoading, false);
     assert.strictEqual(doc.isLoaded, true);
@@ -83,7 +83,7 @@ module('firestore / document / active', function(hooks) {
     });
 
     this.activate(doc);
-    await deferred.promise;
+    await deferred.promise.cached;
   });
 
   test('on delete', async function(assert) {
@@ -114,7 +114,7 @@ module('firestore / document / active', function(hooks) {
     });
 
     this.activate(doc);
-    await doc.promise;
+    await doc.promise.cached;
 
     let snapshot;
 
