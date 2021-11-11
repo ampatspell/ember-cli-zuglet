@@ -3,7 +3,6 @@ import ZugletObject from '../../../object';
 import { toJSON } from '../../util/to-json';
 import { getFactory } from '../../factory/get-factory';
 import { getStorage, ref } from 'firebase/storage';
-import { assert } from '@ember/debug';
 
 export default class Storage extends ZugletObject {
 
