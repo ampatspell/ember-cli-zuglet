@@ -53,11 +53,11 @@
     "broccoli-file-creator": "^2.1.1",
     "broccoli-merge-trees": "^4.2.0",
     "ember-auto-import": "^2.2.3",
-    "webpack": "^5.63.0",
     "ember-cli-babel": "^7.26.6",
     "ember-cli-htmlbars": "^5.7.1",
     "firebase": "^9.4.0",
     "node-fetch": "^2.6.1",
+    "webpack": "^5.63.0",
     "xmlhttprequest": "^1.8.0"
   },
   "devDependencies": {
@@ -69,7 +69,7 @@
     "@glimmer/tracking": "^1.0.4",
     "babel-eslint": "^10.1.0",
     "broccoli-asset-rev": "^3.0.0",
-    "ember-cli": "~3.28.1",
+    "ember-cli": "~3.28.4",
     "ember-cli-code-coverage": "^1.0.2",
     "ember-cli-dependency-checker": "^3.2.0",
     "ember-cli-fastboot": "^2.2.3",
