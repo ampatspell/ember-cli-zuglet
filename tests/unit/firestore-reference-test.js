@@ -120,7 +120,7 @@ module('firestore / reference', function(hooks) {
 
   test('condition toStringExtension', function(assert) {
     let ref = this.store.collection('ducks').where('name', '==', 'yellow').limit(1);
-    assert.equal(ref.toStringExtension(), `ducks.where('name', '==', 'yellow').limit(1)`);
+    assert.strictEqual(ref.toStringExtension(), `ducks.where('name', '==', 'yellow').limit(1)`);
   });
 
   test('condition serialized', function(assert) {
@@ -162,8 +162,8 @@ module('firestore / reference', function(hooks) {
     try {
       await coll.first();
     } catch(err) {
-      assert.equal(err.message, 'Document missing');
-      assert.equal(err.code, 'zuglet/document/missing');
+      assert.strictEqual(err.message, 'Document missing');
+      assert.strictEqual(err.code, 'zuglet/document/missing');
     }
   });
 
@@ -221,9 +221,9 @@ module('firestore / reference', function(hooks) {
   test('collection group id and string', async function(assert) {
     let cond = this.store.group('feathers').where('duck', '==', 'yellow').orderBy('name', 'asc');
     let group = cond.parent.parent;
-    assert.equal(group.id, 'feathers');
-    assert.equal(group.string, 'group(feathers)');
-    assert.equal(cond.string, "group(feathers).where('duck', '==', 'yellow').orderBy('name', 'asc')");
+    assert.strictEqual(group.id, 'feathers');
+    assert.strictEqual(group.string, 'group(feathers)');
+    assert.strictEqual(cond.string, "group(feathers).where('duck', '==', 'yellow').orderBy('name', 'asc')");
   });
 
 });
