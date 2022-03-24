@@ -6,12 +6,12 @@ import { tracked } from '@glimmer/tracking';
 
 export default class RouteAuthComponent extends Component {
 
-  @service
-  store
+  @service store;
+  @service router;
 
-  @tracked email
-  @tracked password
-  @tracked error
+  @tracked email;
+  @tracked password;
+  @tracked error;
 
   constructor() {
     super(...arguments);
@@ -49,6 +49,29 @@ export default class RouteAuthComponent extends Component {
     this.error = null;
     try {
       await this.store.auth.methods.popup.google.signIn();
+    } catch(err) {
+      this.error = err;
+    }
+  }
+
+  absoluteUrl(path) {
+    let { protocol, host } = window.location;
+    return `${protocol}//${host}${path}`;
+  }
+
+  @action
+  async sendPasswordlessSignIn() {
+    let { email } = this;
+    if(!email) {
+      return;
+    }
+
+    this.error = null;
+    let url = this.absoluteUrl(this.router.urlFor('playground.auth.email', email));
+    try {
+      await this.store.auth.methods.email.sendSignInLink(email, {
+        url
+      });
     } catch(err) {
       this.error = err;
     }
