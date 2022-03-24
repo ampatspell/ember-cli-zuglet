@@ -2,6 +2,10 @@ import AuthMethod from './method';
 import firebase from 'firebase/compat/app';
 import { registerPromise } from '../../../stores/stats';
 
+const {
+  assign
+} = Object;
+
 export default class EmailAuthMethod extends AuthMethod {
 
   signIn(email, password) {
@@ -14,6 +18,20 @@ export default class EmailAuthMethod extends AuthMethod {
   signUp(email, password) {
     return this.auth._withAuthReturningUser(async auth => {
       let { user } = await registerPromise(this, 'sign-up', auth.createUserWithEmailAndPassword(email, password));
+      return { user };
+    });
+  }
+
+  sendSignInLink(email, opts) {
+    opts = assign({ handleCodeInApp: true }, opts);
+    return this.auth._withAuth(async auth => {
+      await registerPromise(this, 'send-link', auth.sendSignInLinkToEmail(email, opts));
+    });
+  }
+
+  signInWithLink(email, link) {
+    return this.auth._withAuthReturningUser(async auth => {
+      let { user } = await registerPromise(this, 'sign-in-with-link', auth.signInWithEmailLink(email, link));
       return { user };
     });
   }

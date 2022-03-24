@@ -22,6 +22,27 @@ Sign up with user and password
 let user = await store.auth.methods.email.signUp(email, password);
 ```
 
+## async sendSignInLink(email, opts) `→ undefined`
+
+Sends sign in link to provided email address
+
+``` javascript
+await store.auth.methods.email.sendSignInLink(email, {
+  url: window.location.href
+});
+```
+
+## async signInWithLink(email, link) `→ User`
+
+Signs in with a link
+
+* `email` → user's email address
+* `link` → optional, defaults to `window.location.href`
+
+``` javascript
+let user = await store.auth.methods.email.signInWithLink(email);
+```
+
 ## async sendPasswordReset(email, opts) `→ undefined`
 
 ``` javascript
