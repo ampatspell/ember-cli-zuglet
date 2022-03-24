@@ -70,3 +70,9 @@ Link user accounts.
 ``` javascript
 await store.auth.user.link('email', 'email@address.com', 'heythere')
 ```
+
+## async updatePassword(newPassword) `→ undefined`
+
+``` javascript
+await store.auth.user.updatePassword(newPassword);
+```
