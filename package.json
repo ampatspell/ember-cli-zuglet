@@ -125,7 +125,8 @@
       "node-fetch",
       "xmlhttprequest",
       "buffer",
-      "simple-dom"
+      "simple-dom",
+      "firebase"
     ]
   }
 }
