@@ -52,4 +52,13 @@
     </div>
   </div>
 
+  <div class="row">
+    <div class="row">
+      <Input @type="text" @value={{this.token}} placeholder="token"/>
+    </div>
+    <div class="row">
+      <input type="button" value="Sign in with custom token" {{on "click" this.tokenSignIn}}/>
+    </div>
+  </div>
+
 </div>

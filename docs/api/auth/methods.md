@@ -13,6 +13,10 @@ anonymous accounts
 
 email-based accounts
 
+## token
+
+sign in with custom token
+
 ## popup
 
 popup-based sign-in

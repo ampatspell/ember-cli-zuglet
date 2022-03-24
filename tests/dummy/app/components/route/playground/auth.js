@@ -11,6 +11,7 @@ export default class RouteAuthComponent extends Component {
 
   @tracked email;
   @tracked password;
+  @tracked token;
   @tracked error;
 
   constructor() {
@@ -72,6 +73,17 @@ export default class RouteAuthComponent extends Component {
       await this.store.auth.methods.email.sendSignInLink(email, {
         url
       });
+    } catch(err) {
+      this.error = err;
+    }
+  }
+
+  @action
+  async tokenSignIn() {
+    let { token } = this;
+    this.error = null;
+    try {
+      await this.store.auth.methods.token.signIn(token);
     } catch(err) {
       this.error = err;
     }
