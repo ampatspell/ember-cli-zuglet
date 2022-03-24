@@ -58,7 +58,7 @@
     "ember-cli-babel": "^7.26.11",
     "ember-cli-htmlbars": "^6.0.1",
     "firebase": "^9.6.9",
-    "node-fetch": "^3.2.0",
+    "node-fetch": "^2.6.1",
     "webpack": "^5.68.0",
     "xmlhttprequest": "^1.8.0"
   },
@@ -74,7 +74,7 @@
     "ember-cli": "~4.2.0",
     "ember-cli-code-coverage": "^1.0.2",
     "ember-cli-dependency-checker": "^3.2.0",
-    "ember-cli-fastboot": "^2.2.3",
+    "ember-cli-fastboot": "^3.3.0",
     "ember-cli-inject-live-reload": "^2.1.0",
     "ember-cli-remark-static": "^3.0.6",
     "ember-cli-sass": "^10.0.1",
