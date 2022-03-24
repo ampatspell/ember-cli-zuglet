@@ -1,9 +1,8 @@
 import Property from './property';
-import { property, createProperty } from './decorator';
+import { property } from './decorator';
 
 export {
-  property,
-  createProperty
+  property
 }
 
 export default Property;
