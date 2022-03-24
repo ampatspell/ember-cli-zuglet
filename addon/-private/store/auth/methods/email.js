@@ -4,6 +4,8 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   sendPasswordResetEmail,
+  sendSignInLinkToEmail,
+  signInWithEmailLink,
   EmailAuthProvider
 } from 'firebase/auth';
 
@@ -30,13 +32,13 @@ export default class EmailAuthMethod extends AuthMethod {
   sendSignInLink(email, opts) {
     opts = assign({ handleCodeInApp: true }, opts);
     return this.auth._withAuth(async auth => {
-      await registerPromise(this, 'send-link', auth.sendSignInLinkToEmail(email, opts));
+      await registerPromise(this, 'send-link', sendSignInLinkToEmail(auth, email, opts));
     });
   }
 
   signInWithLink(email, link) {
     return this.auth._withAuthReturningUser(async auth => {
-      let { user } = await registerPromise(this, 'sign-in-with-link', auth.signInWithEmailLink(email, link));
+      let { user } = await registerPromise(this, 'sign-in-with-link', signInWithEmailLink(auth, email, link));
       return { user };
     });
   }
