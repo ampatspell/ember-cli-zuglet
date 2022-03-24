@@ -51,7 +51,9 @@ Router.map(function() {
     this.route('models');
     this.route('content');
     this.route('route');
-    this.route('auth');
+    this.route('auth', function() {
+      this.route('email', { path: 'email/:email' });
+    });
     this.route('storage');
     this.route('functions');
     this.route('dev');
