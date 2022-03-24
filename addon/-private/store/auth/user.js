@@ -75,6 +75,10 @@ export default class User extends ZugletObject {
     });
   }
 
+  async updatePassword(newPassword) {
+    await registerPromise(this, 'update-password', this.user.updatePassword(newPassword));
+  }
+
   //
 
   get serialized() {
