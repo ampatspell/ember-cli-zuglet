@@ -45,7 +45,19 @@
       <Input @type="text" @value={{this.password}} placeholder="password"/>
     </div>
     <div class="row">
-      <input type="button" value="Sign in" {{on "click" this.signIn}}/>
+      <input type="button" value="Sign in with password" {{on "click" this.signIn}}/>
+    </div>
+    <div class="row">
+      <input type="button" value="Sign in without password" {{on "click" this.sendPasswordlessSignIn}}/>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="row">
+      <Input @type="text" @value={{this.token}} placeholder="token"/>
+    </div>
+    <div class="row">
+      <input type="button" value="Sign in with custom token" {{on "click" this.tokenSignIn}}/>
     </div>
   </div>
 

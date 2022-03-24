@@ -1,4 +1,4 @@
-import 'firebase/storage';
+import 'firebase/compat/storage';
 import ZugletObject from '../../../object';
 import { toJSON } from '../../util/to-json';
 import { getFactory } from '../../factory/get-factory';

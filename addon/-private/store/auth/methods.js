@@ -29,4 +29,9 @@ export default class AuthMethods extends ZugletObject {
     return this._method('popup');
   }
 
+  @cached
+  get token() {
+    return this._method('token');
+  }
+
 }

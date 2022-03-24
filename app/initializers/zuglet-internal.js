@@ -30,6 +30,7 @@ import Batch from 'zuglet/-private/store/firestore/batch';
 import Auth from 'zuglet/-private/store/auth/auth';
 import AuthMethods from 'zuglet/-private/store/auth/methods';
 import AnonymousAuthMethod from 'zuglet/-private/store/auth/methods/anonymous';
+import TokenAuthMethod from 'zuglet/-private/store/auth/methods/token';
 import EmailAuthMethod from 'zuglet/-private/store/auth/methods/email';
 import PopupAuthMethod from 'zuglet/-private/store/auth/methods/popup';
 import PopupGoogleAuthMethod from 'zuglet/-private/store/auth/methods/popup/google';
@@ -80,6 +81,7 @@ export default {
     container.register('zuglet:store/auth/methods', AuthMethods);
     container.register('zuglet:store/auth/methods/anonymous', AnonymousAuthMethod);
     container.register('zuglet:store/auth/methods/email', EmailAuthMethod);
+    container.register('zuglet:store/auth/methods/token', TokenAuthMethod);
     container.register('zuglet:store/auth/methods/popup', PopupAuthMethod);
     container.register('zuglet:store/auth/methods/popup/google', PopupGoogleAuthMethod);
     container.register('zuglet:store/auth/user', User);

@@ -7,6 +7,10 @@ import {
   EmailAuthProvider
 } from 'firebase/auth';
 
+const {
+  assign
+} = Object;
+
 export default class EmailAuthMethod extends AuthMethod {
 
   signIn(email, password) {
@@ -19,6 +23,20 @@ export default class EmailAuthMethod extends AuthMethod {
   signUp(email, password) {
     return this.auth._withAuthReturningUser(async auth => {
       let { user } = await registerPromise(this, 'sign-up', createUserWithEmailAndPassword(auth, email, password));
+      return { user };
+    });
+  }
+
+  sendSignInLink(email, opts) {
+    opts = assign({ handleCodeInApp: true }, opts);
+    return this.auth._withAuth(async auth => {
+      await registerPromise(this, 'send-link', auth.sendSignInLinkToEmail(email, opts));
+    });
+  }
+
+  signInWithLink(email, link) {
+    return this.auth._withAuthReturningUser(async auth => {
+      let { user } = await registerPromise(this, 'sign-in-with-link', auth.signInWithEmailLink(email, link));
       return { user };
     });
   }
