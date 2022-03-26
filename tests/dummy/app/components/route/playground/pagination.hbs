@@ -1,0 +1,33 @@
+<div class="route-playground-pagination">
+
+  <div class="row">
+    <input type="button" value="Insert posts" {{on "click" this.insert}} disabled={{this.isInserting}}/>
+    {{#if this.isInserting}}
+      Inserting…
+    {{/if}}
+  </div>
+
+  <div class="row">
+    <input type="button" value="Load more" {{on "click" this.loadMore}}/>
+  </div>
+
+  <div class="row">
+    {{this.query}}
+  </div>
+
+  <div class="row">
+    {{#each this.query.content as |doc|}}
+      <div class="row">{{doc}} {{doc.data.title}}</div>
+    {{/each}}
+  </div>
+
+  <div class="row">
+    {{#each this.query.queries as |query|}}
+      <div class="row">{{query}}</div>
+      {{#each query.content as |doc|}}
+        <div class="row">{{doc.data.title}}</div>
+      {{/each}}
+    {{/each}}
+  </div>
+
+</div>
