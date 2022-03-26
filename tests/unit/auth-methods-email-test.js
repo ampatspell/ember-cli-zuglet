@@ -33,7 +33,7 @@ module('auth / methods / email', function(hooks) {
       await this.auth.methods.email.signIn('yellow.duck@gmail.com', 'not here yet');
       assert.ok(false);
     } catch(err) {
-      assert.strictEqual(err.message, 'Firebase: There is no user record corresponding to this identifier. The user may have been deleted. (auth/user-not-found).');
+      assert.strictEqual(err.message, 'Firebase: Error (auth/user-not-found).');
       assert.strictEqual(err.code, 'auth/user-not-found');
     }
   });
@@ -63,7 +63,7 @@ module('auth / methods / email', function(hooks) {
       user = await this.auth.methods.email.signIn(email, password);
       assert.ok(false);
     } catch(err) {
-      assert.strictEqual(err.message, 'Firebase: There is no user record corresponding to this identifier. The user may have been deleted. (auth/user-not-found).');
+      assert.strictEqual(err.message, 'Firebase: Error (auth/user-not-found).');
       assert.strictEqual(err.code, 'auth/user-not-found');
     }
   });

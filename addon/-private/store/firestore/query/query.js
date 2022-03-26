@@ -8,6 +8,7 @@ import { isFastBoot } from '../../../util/fastboot';
 import { state, readable }  from '../../../model/tracking/state';
 import { Listeners } from '../../../util/listeners';
 import { snapshotToDeferredType } from '../../../util/snapshot';
+import { onSnapshot, getDocs } from 'firebase/firestore';
 
 const {
   assign
@@ -76,7 +77,7 @@ export default class Query extends ZugletObject {
     }
     this._state.setProperties({ isLoading: true, isError: false, error: null });
     try {
-      let snapshot = await registerPromise(this, 'load', this.ref._ref.get());
+      let snapshot = await registerPromise(this, 'load', getDocs(this.ref._ref));
       this._onLoad(snapshot);
       this._state.setProperties({ isLoading: false, isLoaded: true });
       this._onSnapshotMetadata(snapshot);
@@ -141,7 +142,7 @@ export default class Query extends ZugletObject {
         let refresh = true;
         this._deferred = cachedRemoteDefer(this);
         this._cancel = registerObserver(this, wrap => {
-          return this.ref._ref.onSnapshot({ includeMetadataChanges: true }, wrap(snapshot => {
+          return onSnapshot(this.ref._ref, { includeMetadataChanges: true }, wrap(snapshot => {
             this._onSnapshot(snapshot, refresh);
             refresh = false;
             this._state.setProperties({ isLoading: false, isLoaded: true });

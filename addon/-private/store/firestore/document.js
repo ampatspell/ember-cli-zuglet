@@ -12,6 +12,7 @@ import { Listeners } from '../../util/listeners';
 import { isFastBoot } from '../../util/fastboot';
 import { state, readable } from '../../model/tracking/state';
 import { isServerTimestamp } from '../../util/types';
+import { setDoc, getDoc, deleteDoc, onSnapshot } from 'firebase/firestore';
 
 const {
   assign
@@ -139,8 +140,8 @@ export default class Document extends ZugletObject {
   _onSnapshot(snapshot, opts) {
     this._snapshot = snapshot;
     let { source } = opts || {};
-    let { exists } = snapshot;
     let notify;
+    let exists = snapshot.exists();
     if(exists) {
       let data = snapshot.data({ serverTimestamps: 'estimate' });
       if(this._shouldApplySnapshotData(data)) {
@@ -199,7 +200,7 @@ export default class Document extends ZugletObject {
   }
 
   load(opts) {
-    return this._loadInternal(ref => ref.get(), opts);
+    return this._loadInternal(ref => getDoc(ref), opts);
   }
 
   reload() {
@@ -277,7 +278,7 @@ export default class Document extends ZugletObject {
   }
 
   save(opts) {
-    return this._saveInternal((ref, data, opts) => ref.set(data, opts), opts);
+    return this._saveInternal((ref, data, opts) => setDoc(ref, data, opts), opts);
   }
 
   _willDelete() {
@@ -315,7 +316,7 @@ export default class Document extends ZugletObject {
   }
 
   delete() {
-    return this._deleteInternal(ref => ref.delete());
+    return this._deleteInternal(ref => deleteDoc(ref));
   }
 
   //
@@ -334,7 +335,7 @@ export default class Document extends ZugletObject {
       }
       this._deferred = cachedRemoteDefer(this);
       this._cancel = registerObserver(this, wrap => {
-        return this.ref._ref.onSnapshot({ includeMetadataChanges: true }, wrap(snapshot => {
+        return onSnapshot(this.ref._ref, { includeMetadataChanges: true }, wrap(snapshot => {
           this._onSnapshot(snapshot, { source: 'subscription' });
           this._deferred.resolve(snapshotToDeferredType(snapshot), this);
         }), wrap(error => {

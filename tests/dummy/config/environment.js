@@ -2,6 +2,8 @@
 
 const getConfig = require('../../../config');
 
+let once = false;
+
 module.exports = function(environment) {
   let ENV = {
     modulePrefix: 'dummy',
@@ -31,7 +33,10 @@ module.exports = function(environment) {
     ENV.dummy.firebase = getConfig('travis').firebase;
   }
 
-  console.log('Project:', ENV.dummy.firebase.projectId);
+  if(!once) {
+    console.log('Project:', ENV.dummy.firebase.projectId);
+    once = true;
+  }
 
   if (environment === 'development') {
     //

@@ -1,14 +1,14 @@
-import firebase from "firebase/compat/app";
 import ZugletObject from '../../../object';
 import { objectToJSON } from '../../util/object-to-json';
 import { tracked } from '@glimmer/tracking';
 import { toJSON } from '../../util/to-json';
 import { state, readable }  from '../../model/tracking/state';
 import { registerObserver, registerPromise } from '../../stores/stats';
+import { _TaskEvent } from 'firebase/storage';
 
 const {
   STATE_CHANGED
-} = firebase.storage.TaskEvent;
+} = _TaskEvent;
 
 const calculateProgress = (total, transferred) => {
   let value = transferred / total * 100;

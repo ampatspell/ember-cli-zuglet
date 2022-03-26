@@ -63,6 +63,7 @@
     "xmlhttprequest": "^1.8.0"
   },
   "devDependencies": {
+    "webpack": "^5.58.1",
     "@ember/optional-features": "^2.0.0",
     "@ember/render-modifiers": "^1.0.2",
     "@ember/test-helpers": "^2.6.0",

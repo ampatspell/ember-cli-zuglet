@@ -2,6 +2,7 @@ import 'firebase/compat/storage';
 import ZugletObject from '../../../object';
 import { toJSON } from '../../util/to-json';
 import { getFactory } from '../../factory/get-factory';
+import { getStorage, ref } from 'firebase/storage';
 
 export default class Storage extends ZugletObject {
 
@@ -19,7 +20,7 @@ export default class Storage extends ZugletObject {
   }
 
   get _storage() {
-    return this.store.firebase.storage();
+    return getStorage(this.store.firebase);
   }
 
   get bucket() {
@@ -39,9 +40,9 @@ export default class Storage extends ZugletObject {
     let { path, url } = arg;
     let _ref;
     if(path) {
-      _ref = this._storage.ref(path);
+      _ref = ref(this._storage, path);
     } else {
-      _ref = this._storage.refFromURL(url);
+      _ref = ref(this._storage, url);
     }
 
     return this._createReference(_ref);
