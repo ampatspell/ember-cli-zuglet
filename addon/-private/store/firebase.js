@@ -7,6 +7,6 @@ export const destroyApp = app => app.delete();
 
 export const enablePersistence = async firestore => {
   await firestore.enablePersistence({ synchronizeTabs: true }).catch(err => {
-    console.error(err.stack);
+    console.error('firestore/enable-persistence', err.stack);
   });
 };
