@@ -57,7 +57,7 @@
     "ember-auto-import": "^2.4.1",
     "ember-cli-babel": "^7.26.11",
     "ember-cli-htmlbars": "^6.0.1",
-    "firebase": "^9.6.10",
+    "firebase": "^9.7.0",
     "node-fetch": "^2.6.1",
     "webpack": "^5.68.0",
     "xmlhttprequest": "^1.8.0"
