@@ -332,7 +332,7 @@ export default class Document extends ZugletObject {
       if(!isLoaded) {
         this._state.setProperties({ isLoading: true, isError: false, error: null });
       }
-      this._deferred = cachedRemoteDefer(this);
+      this._deferred = cachedRemoteDefer(this, true);
       this._cancel = registerObserver(this, wrap => {
         return this.ref._ref.onSnapshot({ includeMetadataChanges: true }, wrap(snapshot => {
           this._onSnapshot(snapshot, { source: 'subscription' });

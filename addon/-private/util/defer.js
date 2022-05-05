@@ -17,10 +17,13 @@ export const defer = () => {
 
 class CachedRemoteDefer {
 
-  constructor(arg) {
+  constructor(arg, track) {
     this._owner = arg;
     this._cached = defer();
     this._remote = defer();
+    if(track) {
+      registerPromise(arg, 'snapshot', true, this._remote.promise);
+    }
   }
 
   _settle(name, type, arg) {
@@ -41,12 +44,7 @@ class CachedRemoteDefer {
   }
 
   get remote() {
-    let { _remoteRegistration: registered } = this;
-    if(!registered) {
-      registered = registerPromise(this._owner, 'snapshot', true, this._remote.promise);
-      this._remoteRegistration = registered;
-    }
-    return registered;
+    return this._remote.promise;
   }
 
   resolve(type, arg) {
@@ -85,4 +83,4 @@ class CachedRemoteDefer {
 
 }
 
-export const cachedRemoteDefer = owner => new CachedRemoteDefer(owner);
+export const cachedRemoteDefer = (owner, track) => new CachedRemoteDefer(owner, track);
