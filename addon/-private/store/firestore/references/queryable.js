@@ -96,13 +96,13 @@ export default class QueryableReference extends Reference {
 
   async load(opts) {
     let { type } = assign({ type: 'doc' }, opts);
-    let snapshot = await registerPromise(this, 'load', this._ref.get());
+    let snapshot = await registerPromise(this, 'load', true, this._ref.get());
     return snapshot.docs.map(doc => this._createDocumentOrReferenceForSnapshot(doc, type));
   }
 
   async first(opts) {
     let { type, optional } = assign({ type: 'doc', optional: false }, opts);
-    let snapshot = await registerPromise(this, 'first', this._ref.get());
+    let snapshot = await registerPromise(this, 'first', true, this._ref.get());
     if(snapshot.docs.length > 1) {
       console.warn(`${this.string} yields more than 1 document`);
     }

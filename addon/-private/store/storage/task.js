@@ -41,7 +41,7 @@ export default class StorageTask extends ZugletObject {
   async _await(task) {
     let snapshot;
     try {
-      snapshot = await registerPromise(this, 'task', task);
+      snapshot = await registerPromise(this, 'task', false, task);
     } catch(err) {
       this._onError(err);
       return;

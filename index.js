@@ -5,6 +5,7 @@ const writeFile = require('broccoli-file-creator');
 
 const defaults = {
   proxyClassicSupport: false,
+  stallThreshold: 5000,
   version: {
     zuglet: require('./package.json').version,
     firebase: require('firebase/package.json').version

@@ -18,7 +18,7 @@ export default class Batch extends ZugletObject {
 
   async commit() {
     try {
-      await registerPromise(this, 'commit', this._batch.commit());
+      await registerPromise(this, 'commit', true, this._batch.commit());
       this._callbacks.forEach(hash => hash.resolve());
     } catch(err) {
       this._callbacks.forEach(hash => hash.reject(err));

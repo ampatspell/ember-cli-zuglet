@@ -2,8 +2,8 @@ import ZugletObject from '../../../../object';
 import { objectToJSON } from '../../../util/object-to-json';
 import { toJSON } from '../../../util/to-json';
 import { activate } from '../../../model/properties/activate';
-import { cachedRemoteDefer } from '../../../util/defer';
-import { registerObserver, registerPromise } from '../../../stores/stats';
+import { cachedRemoteDefer, replaceCachedRemoteDefer, registerObserverWithCachedRemoteDefer } from '../../../util/defer';
+import { registerPromise } from '../../../stores/stats';
 import { isFastBoot } from '../../../util/fastboot';
 import { state, readable }  from '../../../model/tracking/state';
 import { Listeners } from '../../../util/listeners';
@@ -76,7 +76,7 @@ export default class Query extends ZugletObject {
     }
     this._state.setProperties({ isLoading: true, isError: false, error: null });
     try {
-      let snapshot = await registerPromise(this, 'load', this.ref._ref.get());
+      let snapshot = await registerPromise(this, 'load', true, this.ref._ref.get());
       this._onLoad(snapshot);
       this._state.setProperties({ isLoading: false, isLoaded: true });
       this._onSnapshotMetadata(snapshot);
@@ -131,7 +131,7 @@ export default class Query extends ZugletObject {
     if(this.isPassive) {
       let { isLoaded } = this._state.untracked.getProperties('isLoaded');
       if(!isLoaded) {
-        this._deferred = cachedRemoteDefer(this);
+        replaceCachedRemoteDefer(this, '_deferred');
         this.load().then(() => {}, err => this.store.onObserverError(this, err));
       }
     } else {
@@ -139,8 +139,7 @@ export default class Query extends ZugletObject {
       if(!cancel) {
         this._state.setProperties({ isLoading: true, isError: false, error: null });
         let refresh = true;
-        this._deferred = cachedRemoteDefer(this);
-        this._cancel = registerObserver(this, wrap => {
+        this._cancel = registerObserverWithCachedRemoteDefer(this, '_deferred', wrap => {
           return this.ref._ref.onSnapshot({ includeMetadataChanges: true }, wrap(snapshot => {
             this._onSnapshot(snapshot, refresh);
             refresh = false;

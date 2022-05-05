@@ -80,3 +80,17 @@
     flex: 1;
   }
 }
+
+.block-stalled {
+  position: fixed;
+  top: 75px;
+  left: calc(50% - 100px);
+  background: fade-out(#000, 0.2);
+  color: #fff;
+  padding: 10px 15px;
+  width: 200px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  border-radius: 3px;
+}

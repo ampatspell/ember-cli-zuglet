@@ -8,15 +8,13 @@ import { alias } from 'macro-decorators';
 @root()
 export default class RouteDocumentComponent extends Component {
 
-  @service
-  store
+  @service store;
 
   @activate()
     .content(({ store }) => store.doc('messages/first').existing())
-  doc
+  doc;
 
-  @alias('doc.data.name')
-  name
+  @alias('doc.data.name') name;
 
   constructor() {
     super(...arguments);

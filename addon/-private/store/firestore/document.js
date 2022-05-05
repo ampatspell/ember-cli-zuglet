@@ -3,9 +3,9 @@ import { object, raw, update } from '../../model/properties/object';
 import { objectToJSON } from '../../util/object-to-json';
 import { toJSON } from '../../util/to-json';
 import { assert } from '@ember/debug';
-import { cachedRemoteDefer } from '../../util/defer';
+import { cachedRemoteDefer, replaceCachedRemoteDefer, registerObserverWithCachedRemoteDefer } from '../../util/defer';
 import { snapshotToDeferredType } from '../../util/snapshot';
-import { registerObserver, registerPromise } from '../../stores/stats';
+import { registerPromise } from '../../stores/stats';
 import { cached } from '../../model/decorators/cached';
 import { randomString } from '../../util/random-string';
 import { Listeners } from '../../util/listeners';
@@ -186,7 +186,7 @@ export default class Document extends ZugletObject {
     }
     this._state.setProperties({ isLoading: true, isError: false, error: null });
     try {
-      let snapshot = await registerPromise(this, 'load', get(this.ref._ref));
+      let snapshot = await registerPromise(this, 'load', true, get(this.ref._ref));
       this._onSnapshot(snapshot, { source: 'load' });
       this._onSnapshotMetadata(snapshot);
       this._maybeSubscribeToOnSnapshot();
@@ -250,7 +250,7 @@ export default class Document extends ZugletObject {
     let state = this._willSave();
     try {
       let data = this._saveData(token);
-      await registerPromise(this, 'save', set(this.ref._ref, data, { merge }));
+      await registerPromise(this, 'save', true, set(this.ref._ref, data, { merge }));
       this._didSave();
     } catch(error) {
       this._saveDidFail(state, error);
@@ -296,7 +296,7 @@ export default class Document extends ZugletObject {
   async _deleteInternal(del) {
     this._willDelete();
     try {
-      await registerPromise(this, 'delete', del(this.ref._ref));
+      await registerPromise(this, 'delete', true, del(this.ref._ref));
       this._didDelete();
     } catch(error) {
       this._deleteDidFail(error);
@@ -324,7 +324,7 @@ export default class Document extends ZugletObject {
     if(this.isPassive) {
       let { isLoaded } = this._state.untracked.getProperties('isLoaded');
       if(!isLoaded) {
-        this._deferred = cachedRemoteDefer(this);
+        replaceCachedRemoteDefer(this, '_deferred');
         this.load().then(() => {}, err => this.store.onObserverError(this, err));
       }
     } else {
@@ -332,8 +332,7 @@ export default class Document extends ZugletObject {
       if(!isLoaded) {
         this._state.setProperties({ isLoading: true, isError: false, error: null });
       }
-      this._deferred = cachedRemoteDefer(this);
-      this._cancel = registerObserver(this, wrap => {
+      this._cancel = registerObserverWithCachedRemoteDefer(this, '_deferred', wrap => {
         return this.ref._ref.onSnapshot({ includeMetadataChanges: true }, wrap(snapshot => {
           this._onSnapshot(snapshot, { source: 'subscription' });
           this._deferred.resolve(snapshotToDeferredType(snapshot), this);

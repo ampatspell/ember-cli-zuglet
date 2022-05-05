@@ -1,4 +1,6 @@
 import { deprecate } from '@ember/debug';
+import { registerPromise, registerObserver } from '../stores/stats';
+import { cancelledError } from './error';
 
 export const defer = () => {
   let resolve;
@@ -16,10 +18,14 @@ export const defer = () => {
 
 class CachedRemoteDefer {
 
-  constructor(arg) {
+  constructor(arg, track) {
     this._owner = arg;
     this._cached = defer();
     this._remote = defer();
+    this._track = track;
+    if(track) {
+      registerPromise(arg, 'snapshot', true, this._remote.promise);
+    }
   }
 
   _settle(name, type, arg) {
@@ -35,10 +41,6 @@ class CachedRemoteDefer {
     }
   }
 
-  _deprecate(name) {
-    deprecate(`deferred.${name} is deprecated for ${this._owner}. use deferred.{cached,remote}.${name} instead`, false, { id: 'deferred', for: 'zuglet' ,since:'2.4.37', until: '2.6' });
-  }
-
   get cached() {
     return this._cached.promise;
   }
@@ -47,17 +49,23 @@ class CachedRemoteDefer {
     return this._remote.promise;
   }
 
-  get promise() {
-    this._deprecate('promise');
-    return this.cached;
-  }
-
   resolve(type, arg) {
     this._settle('resolve', type, arg);
   }
 
   reject(type, arg) {
     this._settle('reject', type, arg);
+  }
+
+  //
+
+  _deprecate(name) {
+    deprecate(`deferred.${name} is deprecated for ${this._owner}. use deferred.{cached,remote}.${name} instead`, false, { id: 'deferred', for: 'zuglet' ,since:'2.4.37', until: '2.6' });
+  }
+
+  get promise() {
+    this._deprecate('promise');
+    return this.cached;
   }
 
   then(...args) {
@@ -77,4 +85,22 @@ class CachedRemoteDefer {
 
 }
 
-export const cachedRemoteDefer = owner => new CachedRemoteDefer(owner);
+export const cachedRemoteDefer = (owner, track) => new CachedRemoteDefer(owner, track);
+
+export const replaceCachedRemoteDefer = (owner, key, track) => {
+  let existing = owner[key];
+  if(existing && existing._track) {
+    existing.reject('remote', cancelledError());
+  }
+  let deferred = cachedRemoteDefer(owner, track);
+  owner[key] = deferred;
+};
+
+export const registerObserverWithCachedRemoteDefer = (owner, key, cb) => {
+  replaceCachedRemoteDefer(owner, key, true);
+  let cancel = registerObserver(owner, wrap => cb(wrap));
+  return () => {
+    cancel();
+    replaceCachedRemoteDefer(owner, key);
+  };
+};

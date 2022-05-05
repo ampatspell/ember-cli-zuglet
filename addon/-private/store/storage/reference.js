@@ -52,13 +52,13 @@ export default class StorageReference extends ZugletObject {
   //
 
   async url() {
-    return await registerPromise(this, 'url', this._ref.getDownloadURL());
+    return await registerPromise(this, 'url', true, this._ref.getDownloadURL());
   }
 
   async _metadata(opts) {
     let { optional } = assign({ optional: false }, opts);
     try {
-      return await registerPromise(this, 'metadata', this._ref.getMetadata());
+      return await registerPromise(this, 'metadata', true, this._ref.getMetadata());
     } catch(err) {
       if(err.code === 'storage/object-not-found' && optional) {
         return;
@@ -90,13 +90,13 @@ export default class StorageReference extends ZugletObject {
   }
 
   async update(metadata) {
-    await registerPromise(this, 'update', this._ref.updateMetadata(metadata));
+    await registerPromise(this, 'update', true, this._ref.updateMetadata(metadata));
   }
 
   async delete(opts) {
     let { optional } = assign({ optional: false }, opts);
     try {
-      await registerPromise(this, 'delete', this._ref.delete());
+      await registerPromise(this, 'delete', true, this._ref.delete());
     } catch(err) {
       if(err.code === 'storage/object-not-found' && optional) {
         return false;
