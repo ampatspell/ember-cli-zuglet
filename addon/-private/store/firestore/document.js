@@ -3,9 +3,9 @@ import { object, raw, update } from '../../model/properties/object';
 import { objectToJSON } from '../../util/object-to-json';
 import { toJSON } from '../../util/to-json';
 import { assert } from '@ember/debug';
-import { cachedRemoteDefer, replaceCachedRemoteDefer } from '../../util/defer';
+import { cachedRemoteDefer, replaceCachedRemoteDefer, registerObserverWithCachedRemoteDefer } from '../../util/defer';
 import { snapshotToDeferredType } from '../../util/snapshot';
-import { registerObserver, registerPromise } from '../../stores/stats';
+import { registerPromise } from '../../stores/stats';
 import { cached } from '../../model/decorators/cached';
 import { randomString } from '../../util/random-string';
 import { Listeners } from '../../util/listeners';
@@ -332,8 +332,7 @@ export default class Document extends ZugletObject {
       if(!isLoaded) {
         this._state.setProperties({ isLoading: true, isError: false, error: null });
       }
-      replaceCachedRemoteDefer(this, '_deferred', true);
-      this._cancel = registerObserver(this, wrap => {
+      this._cancel = registerObserverWithCachedRemoteDefer(this, '_deferred', wrap => {
         return this.ref._ref.onSnapshot({ includeMetadataChanges: true }, wrap(snapshot => {
           this._onSnapshot(snapshot, { source: 'subscription' });
           this._deferred.resolve(snapshotToDeferredType(snapshot), this);

@@ -2,8 +2,8 @@ import ZugletObject from '../../../../object';
 import { objectToJSON } from '../../../util/object-to-json';
 import { toJSON } from '../../../util/to-json';
 import { activate } from '../../../model/properties/activate';
-import { cachedRemoteDefer, replaceCachedRemoteDefer } from '../../../util/defer';
-import { registerObserver, registerPromise } from '../../../stores/stats';
+import { cachedRemoteDefer, replaceCachedRemoteDefer, registerObserverWithCachedRemoteDefer } from '../../../util/defer';
+import { registerPromise } from '../../../stores/stats';
 import { isFastBoot } from '../../../util/fastboot';
 import { state, readable }  from '../../../model/tracking/state';
 import { Listeners } from '../../../util/listeners';
@@ -139,8 +139,7 @@ export default class Query extends ZugletObject {
       if(!cancel) {
         this._state.setProperties({ isLoading: true, isError: false, error: null });
         let refresh = true;
-        replaceCachedRemoteDefer(this, '_deferred', true);
-        this._cancel = registerObserver(this, wrap => {
+        this._cancel = registerObserverWithCachedRemoteDefer(this, '_deferred', wrap => {
           return this.ref._ref.onSnapshot({ includeMetadataChanges: true }, wrap(snapshot => {
             this._onSnapshot(snapshot, refresh);
             refresh = false;

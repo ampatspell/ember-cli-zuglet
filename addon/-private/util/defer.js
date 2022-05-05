@@ -1,5 +1,5 @@
 import { deprecate } from '@ember/debug';
-import { registerPromise } from '../stores/stats';
+import { registerPromise, registerObserver } from '../stores/stats';
 import { cancelledError } from './error';
 
 export const defer = () => {
@@ -94,4 +94,13 @@ export const replaceCachedRemoteDefer = (owner, key, track) => {
   }
   let deferred = cachedRemoteDefer(owner, track);
   owner[key] = deferred;
+};
+
+export const registerObserverWithCachedRemoteDefer = (owner, key, cb) => {
+  replaceCachedRemoteDefer(owner, key, true);
+  let cancel = registerObserver(owner, wrap => cb(wrap));
+  return () => {
+    cancel();
+    replaceCachedRemoteDefer(owner, key);
+  };
 };
