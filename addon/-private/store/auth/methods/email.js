@@ -10,14 +10,14 @@ export default class EmailAuthMethod extends AuthMethod {
 
   signIn(email, password) {
     return this.auth._withAuthReturningUser(async auth => {
-      let { user } = await registerPromise(this, 'sign-in', auth.signInWithEmailAndPassword(email, password));
+      let { user } = await registerPromise(this, 'sign-in', true, auth.signInWithEmailAndPassword(email, password));
       return { user };
     });
   }
 
   signUp(email, password) {
     return this.auth._withAuthReturningUser(async auth => {
-      let { user } = await registerPromise(this, 'sign-up', auth.createUserWithEmailAndPassword(email, password));
+      let { user } = await registerPromise(this, 'sign-up', true, auth.createUserWithEmailAndPassword(email, password));
       return { user };
     });
   }
@@ -25,13 +25,13 @@ export default class EmailAuthMethod extends AuthMethod {
   sendSignInLink(email, opts) {
     opts = assign({ handleCodeInApp: true }, opts);
     return this.auth._withAuth(async auth => {
-      await registerPromise(this, 'send-link', auth.sendSignInLinkToEmail(email, opts));
+      await registerPromise(this, 'send-link', true, auth.sendSignInLinkToEmail(email, opts));
     });
   }
 
   signInWithLink(email, link) {
     return this.auth._withAuthReturningUser(async auth => {
-      let { user } = await registerPromise(this, 'sign-in-with-link', auth.signInWithEmailLink(email, link));
+      let { user } = await registerPromise(this, 'sign-in-with-link', true, auth.signInWithEmailLink(email, link));
       return { user };
     });
   }
@@ -42,7 +42,7 @@ export default class EmailAuthMethod extends AuthMethod {
 
   sendPasswordReset(email, opts) {
     return this.auth._withAuth(auth => {
-      return registerPromise(this, 'send-password-reset', auth.sendPasswordResetEmail(email, opts));
+      return registerPromise(this, 'send-password-reset', true, auth.sendPasswordResetEmail(email, opts));
     });
   }
 

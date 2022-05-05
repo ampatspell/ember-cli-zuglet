@@ -48,18 +48,18 @@ export default class DocumentReference extends Reference {
   }
 
   async delete() {
-    await registerPromise(this, 'delete', this._ref.delete());
+    await registerPromise(this, 'delete', true, this._ref.delete());
     return this;
   }
 
   async data() {
-    let snapshot = await registerPromise(this, 'data', this._ref.get());
+    let snapshot = await registerPromise(this, 'data', true, this._ref.get());
     return snapshot.data();
   }
 
   async save(data, opts) {
     let { merge } = assign({ merge: false }, opts);
-    await registerPromise(this, 'save', this._ref.set(data, { merge }));
+    await registerPromise(this, 'save', true, this._ref.set(data, { merge }));
     return this;
   }
 
@@ -68,7 +68,7 @@ export default class DocumentReference extends Reference {
   async _loadInternal(get, opts) {
     let { optional } = assign({ optional: false }, opts);
     let { _ref } = this;
-    let snapshot = await registerPromise(this, 'load', get(_ref));
+    let snapshot = await registerPromise(this, 'load', true, get(_ref));
     if(!snapshot.exists) {
       if(optional) {
         return;
@@ -79,7 +79,7 @@ export default class DocumentReference extends Reference {
   }
 
   async _deleteInternal(del) {
-    await registerPromise(this, 'delete', del(this._ref));
+    await registerPromise(this, 'delete', true, del(this._ref));
   }
 
   _batchDelete(batch) {

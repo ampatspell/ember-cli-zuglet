@@ -186,7 +186,7 @@ export default class Document extends ZugletObject {
     }
     this._state.setProperties({ isLoading: true, isError: false, error: null });
     try {
-      let snapshot = await registerPromise(this, 'load', get(this.ref._ref));
+      let snapshot = await registerPromise(this, 'load', true, get(this.ref._ref));
       this._onSnapshot(snapshot, { source: 'load' });
       this._onSnapshotMetadata(snapshot);
       this._maybeSubscribeToOnSnapshot();
@@ -250,7 +250,7 @@ export default class Document extends ZugletObject {
     let state = this._willSave();
     try {
       let data = this._saveData(token);
-      await registerPromise(this, 'save', set(this.ref._ref, data, { merge }));
+      await registerPromise(this, 'save', true, set(this.ref._ref, data, { merge }));
       this._didSave();
     } catch(error) {
       this._saveDidFail(state, error);
@@ -296,7 +296,7 @@ export default class Document extends ZugletObject {
   async _deleteInternal(del) {
     this._willDelete();
     try {
-      await registerPromise(this, 'delete', del(this.ref._ref));
+      await registerPromise(this, 'delete', true, del(this.ref._ref));
       this._didDelete();
     } catch(error) {
       this._deleteDidFail(error);

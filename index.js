@@ -8,7 +8,8 @@ const defaults = {
   version: {
     zuglet: require('./package.json').version,
     firebase: require('firebase/package.json').version
-  }
+  },
+  stallThreshold: 5000
 };
 
 module.exports = {

@@ -76,7 +76,7 @@ export default class Query extends ZugletObject {
     }
     this._state.setProperties({ isLoading: true, isError: false, error: null });
     try {
-      let snapshot = await registerPromise(this, 'load', this.ref._ref.get());
+      let snapshot = await registerPromise(this, 'load', true, this.ref._ref.get());
       this._onLoad(snapshot);
       this._state.setProperties({ isLoading: false, isLoaded: true });
       this._onSnapshotMetadata(snapshot);

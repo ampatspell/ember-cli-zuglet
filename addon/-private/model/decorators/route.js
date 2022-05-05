@@ -31,7 +31,7 @@ const extend = Class => class ActivatingRoute extends Class {
       let model = await super.model(...arguments);
       this.active = model;
       if(!transition.isAborted && isFunction(this.load)) {
-        await registerPromise(this, 'load', this.load(model));
+        await registerPromise(this, 'load', false, this.load(model));
       }
       if(transition.isAborted) {
         deactivateRoute(this);

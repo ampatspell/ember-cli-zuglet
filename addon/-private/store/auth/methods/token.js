@@ -5,7 +5,7 @@ export default class TokenAuthMethod extends AuthMethod {
 
   signIn(token) {
     return this.auth._withAuthReturningUser(async auth => {
-      let { user } = await registerPromise(this, 'sign-in', auth.signInWithCustomToken(token));
+      let { user } = await registerPromise(this, 'sign-in', true, auth.signInWithCustomToken(token));
       return { user };
     });
   }

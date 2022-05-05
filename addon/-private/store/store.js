@@ -92,7 +92,7 @@ export default class Store extends ZugletObject {
     if(options.emulators.firestore) {
       this._firestore.useEmulator(options.emulators.firestore.host, options.emulators.firestore.port);
     } else if(options.firestore.persistenceEnabled && !isFastBoot(this)) {
-      this.enablePersistencePromise = registerPromise(this, 'enable-persistence', enablePersistence(this._firestore));
+      this.enablePersistencePromise = registerPromise(this, 'enable-persistence', false, enablePersistence(this._firestore));
     }
   }
 
@@ -127,7 +127,7 @@ export default class Store extends ZugletObject {
   }
 
   transaction(cb) {
-    return registerPromise(this, 'transaction', this._firestore.runTransaction(async tx => {
+    return registerPromise(this, 'transaction', true, this._firestore.runTransaction(async tx => {
       let transaction = this._createTransaction(tx);
       return await cb(transaction);
     }));

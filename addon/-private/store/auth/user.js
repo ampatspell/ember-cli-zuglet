@@ -57,9 +57,9 @@ export default class User extends ZugletObject {
   async token(opts) {
     let { type, refresh } = assign({ type: 'string', refresh: false }, opts);
     if(type === 'string') {
-      return await registerPromise(this, 'token', this.user.getIdToken(refresh));
+      return await registerPromise(this, 'token', true, this.user.getIdToken(refresh));
     } else if(type === 'json') {
-      return await registerPromise(this, 'token', this.user.getIdTokenResult(refresh));
+      return await registerPromise(this, 'token', true, this.user.getIdTokenResult(refresh));
     } else {
       assert('Unsupported token type', false);
     }
@@ -70,13 +70,13 @@ export default class User extends ZugletObject {
     assert(`Unsupported method '${_method}'`, method);
     let credential = method.credential(...args);
     return await this.store.auth._withAuthReturningUser(async () => {
-      let { user } = await registerPromise(this, 'link', this.user.linkWithCredential(credential));
+      let { user } = await registerPromise(this, 'link', true, this.user.linkWithCredential(credential));
       return { user };
     });
   }
 
   async updatePassword(newPassword) {
-    await registerPromise(this, 'update-password', this.user.updatePassword(newPassword));
+    await registerPromise(this, 'update-password', true, this.user.updatePassword(newPassword));
   }
 
   //

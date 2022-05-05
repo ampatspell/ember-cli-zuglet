@@ -27,7 +27,7 @@ export default class Auth extends ZugletObject {
 
   async signOut() {
     await this._withAuthReturningUser(async auth => {
-      await registerPromise(this, 'sign-out', auth.signOut());
+      await registerPromise(this, 'sign-out', true, auth.signOut());
       return null;
     });
   }
@@ -36,13 +36,13 @@ export default class Auth extends ZugletObject {
 
   verifyPasswordResetCode(code) {
     return this._withAuth(auth => {
-      return registerPromise(this, 'verify-password-reset-code', auth.verifyPasswordResetCode(code));
+      return registerPromise(this, 'verify-password-reset-code', true, auth.verifyPasswordResetCode(code));
     });
   }
 
   confirmPasswordReset(code, password) {
     return this._withAuth(auth => {
-      return registerPromise(this, 'confirm-password-reset', auth.confirmPasswordReset(code, password));
+      return registerPromise(this, 'confirm-password-reset', true, auth.confirmPasswordReset(code, password));
     });
   }
 
@@ -90,7 +90,7 @@ export default class Auth extends ZugletObject {
       } else {
         user = this._createUser(internal);
         this.user = user;
-        await registerPromise(this, 'restore', user.restore(internal, details));
+        await registerPromise(this, 'restore', true, user.restore(internal, details));
       }
     } else {
       user = null;
@@ -103,7 +103,7 @@ export default class Auth extends ZugletObject {
     let internal = user.user;
     assert(`user.user must exist`, !!internal);
     await this._withAuthReturningUser(async () => {
-      await registerPromise(this, 'delete', internal.delete());
+      await registerPromise(this, 'delete', true, internal.delete());
       return null;
     });
   }

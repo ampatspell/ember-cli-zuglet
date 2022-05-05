@@ -5,6 +5,9 @@ import { isFunction, isPromise } from '../util/types';
 import { next } from '../util/runloop';
 import { join } from '@ember/runloop';
 import { assert } from '@ember/debug';
+import flags from 'zuglet/-private/flags';
+
+const { stallThreshold } = flags;
 
 export default class Stats extends ZugletObject {
 
@@ -36,15 +39,37 @@ export default class Stats extends ZugletObject {
     return result;
   }
 
-  _registerPromise(model, label, promise) {
+  _registerPromise(model, label, track, promise) {
+    assert(`model is required`, !!model);
+    assert(`label must be string`, typeof label === 'string');
+    assert(`track must be boolean`, typeof track === 'boolean');
     if(isPromise(promise)) {
       promise = this._wrapPromise(promise);
-      promise.stats = { model, label };
+      let start = null;
+      if(track) {
+        start = new Date();
+      }
+      promise.stats = { model, label, start };
       this.promises.pushObject(promise);
       let done = () => this.promises.removeObject(promise);
       promise.then(done, done);
     }
     return promise;
+  }
+
+  get stalledPromises() {
+    let now = new Date();
+    return this.promises.filter(promise => {
+      let { stats: { start } } = promise;
+      if(!start) {
+        return false;
+      }
+      return now - start > stallThreshold;
+    });
+  }
+
+  get hasStalledPromises() {
+    return this.stalledPromises.length > 0;
   }
 
   get hasPromises() {
@@ -85,4 +110,4 @@ export const registerObserver = (model, fn) => {
   };
 }
 
-export const registerPromise = (model, label, promise) => getStats(model)._registerPromise(model, label, promise);
+export const registerPromise = (model, label, track, promise) => getStats(model)._registerPromise(model, label, track, promise);

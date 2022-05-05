@@ -10,7 +10,7 @@ export default class PopupGoogleAuthMethod extends Method {
     return this.auth._withAuthReturningUser(async auth => {
       let provider = new firebase.auth.GoogleAuthProvider();
       scopes.forEach(scope => provider.addScope(scope));
-      let { user, credential: { accessToken } } = await registerPromise(this, 'sign-in', auth.signInWithPopup(provider));
+      let { user, credential: { accessToken } } = await registerPromise(this, 'sign-in', false, auth.signInWithPopup(provider));
       return { user, google: { accessToken } };
     });
   }
