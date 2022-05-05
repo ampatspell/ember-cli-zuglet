@@ -83,7 +83,7 @@ module('firestore / document / active', function(hooks) {
     });
 
     this.activate(doc);
-    await deferred.promise.cached;
+    await deferred.promise;
   });
 
   test('on delete', async function(assert) {
