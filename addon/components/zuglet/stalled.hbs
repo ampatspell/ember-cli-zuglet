@@ -1,0 +1,5 @@
+{{#let this.stalledPromises as |stats|}}
+  {{#if stats}}
+    {{yield stats}}
+  {{/if}}
+{{/let}}
