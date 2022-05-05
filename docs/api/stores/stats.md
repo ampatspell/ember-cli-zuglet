@@ -43,6 +43,16 @@ promise.stats.model // → <Document…>
 promise.stats.label // → 'load'
 ```
 
+## stalledPromises
+
+List of currently running promises that are past configured `stallThreshold`. See [Initialize/Flags](api/initialize)
+
+``` javascript
+let promise = stats.stalledPromises[0];
+promise.stats.model // → <Document…>
+promise.stats.label // → 'snapshot'
+```
+
 ## async settle()
 
 Resolves when all currently running `stats.promises` settle.

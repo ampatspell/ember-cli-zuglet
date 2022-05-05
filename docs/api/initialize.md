@@ -40,9 +40,11 @@ export default {
 // ember-cli-build.js
 let app = new EmberApp(defaults, {
   zuglet: {
-    proxyClassicSupport: false
+    proxyClassicSupport: false,
+    stallThreshold: 5000
   }
 });
 ```
 
 * `proxyClassicSupport` → if enabled, for compatibility with `computed`, `doc.data` will invoke `notifyPropertyChange`. Defaults to `false`
+* `stallThreshold` → milliseconds until operation (save, load, onSnapshot) is considered stalled. Defaults to 5000
