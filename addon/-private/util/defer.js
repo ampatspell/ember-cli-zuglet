@@ -1,5 +1,6 @@
 import { deprecate } from '@ember/debug';
 import { registerPromise } from '../stores/stats';
+import { cancelledError } from './error';
 
 export const defer = () => {
   let resolve;
@@ -21,6 +22,7 @@ class CachedRemoteDefer {
     this._owner = arg;
     this._cached = defer();
     this._remote = defer();
+    this._track = track;
     if(track) {
       registerPromise(arg, 'snapshot', true, this._remote.promise);
     }
@@ -84,3 +86,12 @@ class CachedRemoteDefer {
 }
 
 export const cachedRemoteDefer = (owner, track) => new CachedRemoteDefer(owner, track);
+
+export const replaceCachedRemoteDefer = (owner, key, track) => {
+  let existing = owner[key];
+  if(existing && existing._track) {
+    existing.reject('remote', cancelledError());
+  }
+  let deferred = cachedRemoteDefer(owner, track);
+  owner[key] = deferred;
+};

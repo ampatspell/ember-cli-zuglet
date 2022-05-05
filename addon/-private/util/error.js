@@ -43,6 +43,11 @@ export const documentNotFoundError = () => error({
   code: 'document/missing'
 });
 
+export const cancelledError = () => error({
+  message: 'Snapshot cancelled',
+  code: 'snapshot/cancelled'
+});
+
 export const assert = (message, condition) => {
   if(!condition) {
     if(isFunction(message)) {
