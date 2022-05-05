@@ -36,12 +36,6 @@ export default class Stats extends ZugletObject {
     return result;
   }
 
-  _registerCallback(model, label, fn) {
-    return (...args) => {
-      return join(null, fn, ...args);
-    };
-  }
-
   _registerPromise(model, label, promise) {
     if(isPromise(promise)) {
       promise = this._wrapPromise(promise);
