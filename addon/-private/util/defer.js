@@ -1,4 +1,5 @@
 import { deprecate } from '@ember/debug';
+import { registerPromise } from '../stores/stats';
 
 export const defer = () => {
   let resolve;
@@ -35,21 +36,17 @@ class CachedRemoteDefer {
     }
   }
 
-  _deprecate(name) {
-    deprecate(`deferred.${name} is deprecated for ${this._owner}. use deferred.{cached,remote}.${name} instead`, false, { id: 'deferred', for: 'zuglet' ,since:'2.4.37', until: '2.6' });
-  }
-
   get cached() {
     return this._cached.promise;
   }
 
   get remote() {
-    return this._remote.promise;
-  }
-
-  get promise() {
-    this._deprecate('promise');
-    return this.cached;
+    let { _remoteRegistration: registered } = this;
+    if(!registered) {
+      registered = registerPromise(this._owner, 'snapshot', true, this._remote.promise);
+      this._remoteRegistration = registered;
+    }
+    return registered;
   }
 
   resolve(type, arg) {
@@ -58,6 +55,17 @@ class CachedRemoteDefer {
 
   reject(type, arg) {
     this._settle('reject', type, arg);
+  }
+
+  //
+
+  _deprecate(name) {
+    deprecate(`deferred.${name} is deprecated for ${this._owner}. use deferred.{cached,remote}.${name} instead`, false, { id: 'deferred', for: 'zuglet' ,since:'2.4.37', until: '2.6' });
+  }
+
+  get promise() {
+    this._deprecate('promise');
+    return this.cached;
   }
 
   then(...args) {
