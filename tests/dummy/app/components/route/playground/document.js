@@ -4,23 +4,23 @@ import { inject as service } from '@ember/service';
 import { setGlobal, toString } from 'zuglet/utils';
 import { action } from '@ember/object';
 import { alias } from 'macro-decorators';
+import { load } from 'zuglet/utils';
 
 @root()
 export default class RouteDocumentComponent extends Component {
 
-  @service
-  store
+  @service store;
 
   @activate()
     .content(({ store }) => store.doc('messages/first').existing())
-  doc
+  doc;
 
-  @alias('doc.data.name')
-  name
+  @alias('doc.data.name') name;
 
   constructor() {
     super(...arguments);
     setGlobal({ component: this });
+    load.remote(this.doc);
   }
 
   @action
