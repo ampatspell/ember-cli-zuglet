@@ -12,6 +12,10 @@ import { Listeners } from '../../util/listeners';
 import { isFastBoot } from '../../util/fastboot';
 import { state, readable } from '../../model/tracking/state';
 import { isServerTimestamp } from '../../util/types';
+import { activate } from '../../util/activate';
+import { later, next, cancel } from '@ember/runloop';
+import { defer } from '../../util/defer';
+import { cancelledError } from '../../util/error';
 
 const {
   assign
@@ -20,6 +24,52 @@ const {
 export const isDocument = arg => arg instanceof Document;
 
 const noop = () => {};
+
+class WaitFor {
+
+  constructor(doc, cb, timeout) {
+    this.doc = doc;
+    this.cb = cb;
+    this.deferred = defer();
+
+    this._activate = activate(doc);
+    this._timeout = later(() => this.onTimeout(), timeout);
+    this._onData = doc.onData(() => this.update());
+
+    this.update();
+  }
+
+  onDone() {
+    cancel(this._timeout);
+    cancel(this._next);
+    this._onData();
+    this._activate();
+  }
+
+  onTimeout() {
+    this.onDone();
+    this.deferred.reject(cancelledError());
+  }
+
+  onResolve() {
+    this.onDone();
+    this.deferred.resolve(this.doc);
+  }
+
+  update() {
+    cancel(this._next);
+    this._next = next(() => {
+      if(this.cb(this.doc)) {
+        this.onResolve()
+      }
+    });
+  }
+
+  get promise() {
+    return this.deferred.promise;
+  }
+
+}
 
 export default class Document extends ZugletObject {
 
@@ -379,6 +429,13 @@ export default class Document extends ZugletObject {
 
   _onDeleted() {
     this._state.setProperties({ exists: false });
+  }
+
+  //
+
+  async waitFor(cb, { timeout=10000 }={}) {
+    let waiter = new WaitFor(this, cb, timeout);
+    return waiter.promise;
   }
 
   //
