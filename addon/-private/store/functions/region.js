@@ -18,7 +18,7 @@ export default class FunctionsRegion extends ZugletObject {
 
   async call(name, props) {
     let callable = this._region.httpsCallable(name);
-    let result = await registerPromise(this, 'call', true, callable(props));
+    let result = await registerPromise(this, 'call', false, callable(props));
     return result;
   }
 
