@@ -147,6 +147,14 @@ let doc = await store.doc('messages/first').existing();
 await doc.delete();
 ```
 
+## async waitFor(cb, { timeout=10000 }) `→ this`
+
+Calls callback function on every snapshot. Resolves when cb return `true` or rejects after `timeout`.
+
+``` javascript
+await store.doc('messages/first').waitFor(doc => doc.data.status === 'processed');
+```
+
 ## passive() `→ this`
 
 Makes document not to subscribe to onSnapshot observer. Instead, when document is activated, it is loaded using `doc.load()`
