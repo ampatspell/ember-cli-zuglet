@@ -15,7 +15,7 @@ import { isServerTimestamp } from '../../util/types';
 import { activate } from '../../util/activate';
 import { later, next, cancel } from '@ember/runloop';
 import { defer } from '../../util/defer';
-import { cancelledError } from '../../util/error';
+import { timeoutError } from '../../util/error';
 
 const {
   assign
@@ -48,7 +48,7 @@ class WaitFor {
 
   onTimeout() {
     this.onDone();
-    this.deferred.reject(cancelledError());
+    this.deferred.reject(timeoutError());
   }
 
   onResolve() {
@@ -433,7 +433,7 @@ export default class Document extends ZugletObject {
 
   //
 
-  async waitFor(cb, { timeout=10000 }={}) {
+  async waitFor(cb, { timeout=60000 }={}) {
     let waiter = new WaitFor(this, cb, timeout);
     return waiter.promise;
   }

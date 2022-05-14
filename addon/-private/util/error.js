@@ -48,6 +48,11 @@ export const cancelledError = () => error({
   code: 'snapshot/cancelled'
 });
 
+export const timeoutError = () => error({
+  message: 'Snapshot timeout',
+  code: 'snapshot/timeout'
+});
+
 export const assert = (message, condition) => {
   if(!condition) {
     if(isFunction(message)) {
