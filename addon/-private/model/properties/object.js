@@ -42,9 +42,8 @@ export default class ObjectProperty extends Property {
   }
 
   onDirty() {
-    let onDirty = this.opts.onDirty;
-    let owner = this.owner;
-    onDirty && onDirty.call(owner, owner);
+    let { owner, opts: { onDirty } } = this;
+    onDirty?.call(owner, owner);
   }
 
   getRaw() {

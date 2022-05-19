@@ -259,12 +259,13 @@ export default class DataManager {
   setValue(value) {
     dirtyKey(this, 'proxy');
     this.proxy = this.wrap(value);
+    this.dirty();
     return true;
   }
 
   dirty() {
     dirtyKey(this, 'raw');
-    this.delegate.onDirty && this.delegate.onDirty();
+    this.delegate.onDirty?.();
   }
 
   getRaw() {

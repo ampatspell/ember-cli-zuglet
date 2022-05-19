@@ -189,4 +189,20 @@ module('firestore / document / active', function(hooks) {
     assert.deepEqual(doc.serialized.data, { map: null });
   });
 
+  test('doc data set to empty object', async function(assert) {
+    let ref = this.store.doc('ducks/yellow');
+    let doc = ref.new({ map: { ok: true } });
+    await doc.save();
+
+    doc.data = {};
+
+    assert.deepEqual(doc.serialized.data, {});
+    assert.deepEqual(doc._data, {});
+    assert.strictEqual(doc.isDirty, true);
+    await doc.save();
+
+    let loaded = await ref.load();
+    assert.deepEqual(loaded.serialized.data, {});
+  });
+
 });
