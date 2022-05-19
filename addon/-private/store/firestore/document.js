@@ -101,6 +101,7 @@ export default class Document extends ZugletObject {
     if(data) {
       this.data = data;
       this._state.untracked.setProperties({ isNew: true, isDirty: true });
+      this._deferred.resolve('remote', this);
     } else {
       this.data = {};
       if(snapshot) {

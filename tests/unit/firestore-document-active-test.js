@@ -151,4 +151,14 @@ module('firestore / document / active', function(hooks) {
     cancel();
   });
 
+  test('new documents are resolved', async function(assert) {
+    let ref = this.store.doc('ducks/yellow');
+    await ref.delete();
+
+    let doc = ref.new({ name: 'yellow', createdAt: this.store.serverTimestamp });
+    this.activate(doc);
+
+    let res = await doc.promise.remote;
+    assert.ok(res === doc);
+  });
 });
