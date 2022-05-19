@@ -162,6 +162,19 @@ module('firestore / document / active', function(hooks) {
     assert.ok(res === doc);
   });
 
+  test('new documents after save resolves', async function(assert) {
+    let ref = this.store.doc('ducks/yellow');
+    await ref.delete();
+
+    let doc = ref.new({ name: 'yellow', createdAt: this.store.serverTimestamp });
+    this.activate(doc);
+
+    await doc.save();
+
+    let res = await doc.promise.remote;
+    assert.ok(res === doc);
+  });
+
   test('document data map set to null', async function(assert) {
     let ref = this.store.doc('ducks/yellow');
     let doc = ref.new({ map: { ok: true } });
