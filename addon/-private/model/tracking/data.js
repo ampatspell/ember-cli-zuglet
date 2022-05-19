@@ -88,7 +88,6 @@ const createArrayProxy = (property, target) => {
     if(!isArray(object)) {
       return false;
     }
-
     object.forEach((item, idx) => {
       if(isProxy(proxy[idx])) {
         if(!updateProxy(proxy[idx], item)) {
@@ -160,7 +159,7 @@ const createObjectProxy = (property, target) => {
   });
 
   let update = (object) => {
-    if(typeof object !== 'object') {
+    if(typeof object !== 'object' || object === null) {
       return false;
     }
     let remove = A(Object.keys(proxy));
