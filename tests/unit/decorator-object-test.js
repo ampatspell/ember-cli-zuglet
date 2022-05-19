@@ -18,6 +18,8 @@ module('decorator / @object', function(hooks) {
         @update('data')
         update
 
+        _dataDidChange() {}
+
       });
       return this.store.models.create('model');
     }
@@ -29,6 +31,50 @@ module('decorator / @object', function(hooks) {
     assert.deepEqual(model.data, { ok: true });
   });
 
+  test('map to null', async function(assert) {
+    let model = this.model();
+    model.data = { map: { ok: true } };
+    assert.deepEqual(model.data, {
+      map: { ok: true }
+    });
+    model.data.map = null;
+    assert.deepEqual(model.data, {
+      map: null
+    });
+  });
 
+  test('map to undefined', async function(assert) {
+    let model = this.model();
+    model.data = { map: { ok: true } };
+    assert.deepEqual(model.data, {
+      map: { ok: true }
+    });
+    model.data.map = undefined;
+    assert.deepEqual(model.data, {
+    });
+  });
+
+  test('update map to null', async function(assert) {
+    let model = this.model();
+    model.data = { map: { ok: true } };
+    assert.deepEqual(model.data, {
+      map: { ok: true }
+    });
+    model.update({ map: null });
+    assert.deepEqual(model.data, {
+      map: null
+    });
+  });
+
+  test('update map to undefined', async function(assert) {
+    let model = this.model();
+    model.data = { map: { ok: true } };
+    assert.deepEqual(model.data, {
+      map: { ok: true }
+    });
+    model.update({ map: undefined });
+    assert.deepEqual(model.data, {
+    });
+  });
 
 });

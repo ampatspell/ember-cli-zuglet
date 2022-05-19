@@ -151,4 +151,58 @@ module('firestore / document / active', function(hooks) {
     cancel();
   });
 
+  test('new documents are resolved', async function(assert) {
+    let ref = this.store.doc('ducks/yellow');
+    await ref.delete();
+
+    let doc = ref.new({ name: 'yellow', createdAt: this.store.serverTimestamp });
+    this.activate(doc);
+
+    let res = await doc.promise.remote;
+    assert.ok(res === doc);
+  });
+
+  test('new documents after save resolves', async function(assert) {
+    let ref = this.store.doc('ducks/yellow');
+    await ref.delete();
+
+    let doc = ref.new({ name: 'yellow', createdAt: this.store.serverTimestamp });
+    this.activate(doc);
+
+    await doc.save();
+
+    let res = await doc.promise.remote;
+    assert.ok(res === doc);
+  });
+
+  test('document data map set to null', async function(assert) {
+    let ref = this.store.doc('ducks/yellow');
+    let doc = ref.new({ map: { ok: true } });
+    this.activate(doc);
+
+    await doc.save();
+
+    let promise = doc.waitFor(doc => doc.data.map === null);
+    await ref.save({ map: null });
+    await promise;
+
+    assert.deepEqual(doc.serialized.data, { map: null });
+  });
+
+  test('doc data set to empty object', async function(assert) {
+    let ref = this.store.doc('ducks/yellow');
+    let doc = ref.new({ map: { ok: true } });
+    await doc.save();
+
+    doc.data = {};
+
+    assert.deepEqual(doc.serialized.data, {});
+    assert.deepEqual(doc._data, {});
+    assert.strictEqual(doc.isDirty, true);
+    await doc.save();
+
+    let loaded = await ref.load();
+    assert.deepEqual(loaded.serialized.data, {});
+  });
+
 });
