@@ -1,6 +1,6 @@
 'use strict';
 
-const getChannelURL = require('ember-source-channel-url');
+// const getChannelURL = require('ember-source-channel-url');
 const { embroiderSafe, /* embroiderOptimized */ } = require('@embroider/test-setup');
 
 module.exports = async function() {
@@ -22,22 +22,22 @@ module.exports = async function() {
           },
         },
       },
-      {
-        name: 'ember-release',
-        npm: {
-          devDependencies: {
-            'ember-source': await getChannelURL('release')
-          }
-        }
-      },
-      {
-        name: 'ember-beta',
-        npm: {
-          devDependencies: {
-            'ember-source': await getChannelURL('beta'),
-          },
-        },
-      },
+      // {
+      //   name: 'ember-release',
+      //   npm: {
+      //     devDependencies: {
+      //       'ember-source': await getChannelURL('release')
+      //     }
+      //   }
+      // },
+      // {
+      //   name: 'ember-beta',
+      //   npm: {
+      //     devDependencies: {
+      //       'ember-source': await getChannelURL('beta'),
+      //     },
+      //   },
+      // },
       // {
       //   name: 'ember-canary',
       //   npm: {
