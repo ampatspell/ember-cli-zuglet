@@ -60,10 +60,10 @@
     "firebase": "^9.15.0",
     "node-fetch": "^2.6.1",
     "webpack": "^5.68.0",
-    "xmlhttprequest": "^1.8.0"
+    "xmlhttprequest": "^1.8.0",
+    "@ember/string": "^3.0.1"
   },
   "devDependencies": {
-    "@ember/string": "^3.0.1",
     "@ember/optional-features": "^2.0.0",
     "@ember/render-modifiers": "^1.0.2",
     "@ember/test-helpers": "^2.6.0",
