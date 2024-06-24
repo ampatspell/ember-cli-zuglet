@@ -23,6 +23,7 @@ import CollectionGroupReference from 'zuglet/-private/store/firestore/references
 import Document from 'zuglet/-private/store/firestore/document';
 import QueryArray from 'zuglet/-private/store/firestore/query/array';
 import QuerySingle from 'zuglet/-private/store/firestore/query/single';
+import QueryPaginated from 'zuglet/-private/store/firestore/query/paginated';
 
 import Transaction from 'zuglet/-private/store/firestore/transaction';
 import Batch from 'zuglet/-private/store/firestore/batch';
@@ -71,8 +72,10 @@ export default {
     container.register('zuglet:store/firestore/reference/collection-group', CollectionGroupReference);
 
     container.register('zuglet:store/firestore/document', Document);
+
     container.register('zuglet:store/firestore/query/array', QueryArray);
     container.register('zuglet:store/firestore/query/single', QuerySingle);
+    container.register('zuglet:store/firestore/query/paginated', QueryPaginated);
 
     container.register('zuglet:store/firestore/transaction', Transaction);
     container.register('zuglet:store/firestore/batch', Batch);
